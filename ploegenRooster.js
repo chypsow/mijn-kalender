@@ -3,25 +3,38 @@ import { generateYearCalendar } from './jaarKalender1.js';
 import { generateYearCalendarTable } from './jaarKalender2.js';
 import { generateMonthCalendar } from './maandKalender.js';
 
-const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V-12'];
-const week2 = ['L', 'L', 'x', 'N', 'N', 'N', 'N-12'];
+const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V12'];
+const week2 = ['L', 'L', 'x', 'N', 'N', 'N', 'N12'];
 const week3 = ['x', 'x', 'L', 'L', 'L', 'L', 'x'];
 const week4 = ['V', 'V', 'V', 'V', 'V', 'x', 'x'];
 const week5 = ['D', 'D', 'D', 'D', 'D', 'x', 'x'];
 const ploegSchema = [...week1, ...week2, ...week3, ...week4, ...week5];
 
 const startDatums = {
-    1: "2023-01-09", 
-    2: "2023-01-30", 
-    3: "2023-01-02", 
-    4: "2023-01-16", 
-    5: "2023-01-23"
+    1: "2010-02-01", 
+    2: "2010-01-18", 
+    3: "2010-01-25", 
+    4: "2010-01-04", 
+    5: "2010-01-11"
 };
 
-export const patternClass = {
-    'N':'night', 'N-12':'night-12', 'V':'early', 'V-12':'early-12',
-    'x':'home', 'L':'late', 'D':'day', 'DT':'deeltijds'
-    };
+const shiftenData = [
+    {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
+    {symbool:'N', naam:'nacht', kleur:'#4a91e2'},
+    {symbool:'V12', naam:'vroege-12u', kleur:'#fc761cb0'},
+    {symbool:'V', naam:'vroege', kleur:'#f39251e1'},
+    {symbool:'L', naam:'late', kleur:'#4c9182cb'},
+    {symbool:'x', naam:'thuis', kleur:'#cfcfcf'},
+    {symbool:'D', naam:'dag', kleur:'#949494'}
+];
+
+let shiftenGegevens = JSON.parse(localStorage.getItem("shiftenGegevens")) || shiftenData;
+
+export function getNaamBijSymbool(symbool) {
+    const shift = shiftenGegevens.find(item => item.symbool === symbool);
+    return shift ? shift.naam : 'Symbool niet gevonden';
+};
+
 export const monthYear = document.getElementById('month-year');
 export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
 export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
@@ -32,11 +45,8 @@ export function getDaysSinceStart(date, date0) {
         date0 = new Date(date0);
     }
     const diffTime = date - date0;
-    return Math.round(diffTime / (1000 * 60 * 60 * 24)); // Dagen verschil
-}
-
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
+    return Math.round(diffTime / (1000 * 60 * 60 * 24));
+};
 
 // Elementen in de DOM
 const DOM = {
@@ -46,66 +56,150 @@ const DOM = {
     container: document.getElementById('container'),
     ploeg: document.getElementById('ploeg'),
     titel: document.getElementById('titel'),
+    addShift: document.getElementById('add-shift'),
     ploegSysteem: document.getElementById('ploegenSysteem'),
     legende: document.getElementById('legende'),
-    calendar: document.getElementById('calendar')
+    calendar: document.getElementById('calendar'),
+    modalOverlay: document.getElementById("modal-overlay"),
+    modal: document.getElementById("modal"),
+    overlay: document.getElementById('overlay')
 };
 
-for(const btn of DOM.topNav.children) {
-    btn.onclick = function() {
-      for(const child of DOM.topNav.children) {
-        child.classList.remove("active");
-      }
-      this.classList.add("active");
-    }
-  }
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+let count = 0;
+let tabBlad = 0;
+let selectedPloeg = 1;
+
+const defaultSettings = [
+    {pagina: 0, ploeg: 1, maand: currentMonth, jaar: currentYear},
+    {pagina: 1, ploeg: 1, maand: currentMonth, jaar: currentYear},
+    {pagina: 2, ploeg: 1, maand: currentMonth, jaar: currentYear},
+    {pagina: 3, ploeg: 1, maand: currentMonth, jaar: currentYear}
+]
+saveToSessionStorage('standaardInstellingen', defaultSettings)
+
+function saveToSessionStorage(key, value) {
+    sessionStorage.setItem(key, JSON.stringify(value));
+};
+function maakLegende() {
+        shiftenGegevens.forEach(shift => {
+        const legendeItem = document.createElement('div');
+        legendeItem.classList.add('legende-item');
+        
+        const kleurVak = document.createElement('span');
+        kleurVak.classList.add('legende-vak');
+        kleurVak.style.backgroundColor = shift.kleur;
+        legendeItem.appendChild(kleurVak);
+
+        const beschrijving = document.createElement('span');
+        beschrijving.textContent = `${shift.symbool} : ${shift.naam.charAt(0).toUpperCase()}${shift.naam.slice(1)}`;
+        legendeItem.appendChild(beschrijving);
+
+        DOM.legende.appendChild(legendeItem);
+    });
+
+};
+
+Array.from(DOM.topNav.children).forEach((elt, index) => {
+    elt.addEventListener('click', () => {
+        DOM.topNav.querySelector('.active').classList.remove("active");
+        elt.classList.add("active");
+        tabBlad = index;
+        generateCalendar();
+    });
+});
 
 DOM.ploeg.onchange = function () {
-    const selectedPloeg = this.value; 
+    selectedPloeg = Number(this.value); 
     startDate = startDates[selectedPloeg];
+    updateSessionStorage(selectedPloeg,currentMonth,currentYear);
     generateCalendar();
 };
 
-let blad = 0;
-const bladeren = document.querySelectorAll(".side-bar a");
-bladeren.forEach((elt, index) => {
-    elt.addEventListener('click', () => {
-        DOM.ploegSysteem.hidden = index === 0 ? false : true;
-        blad = index;
-        generateCalendar();
-    })
-});
-
-const modalOverlay = document.getElementById("modal-overlay");
-const modal = document.getElementById("modal");
-
 function toggleModal(show) {
-    modalOverlay.style.display = show ? "block" : "none";
-    modal.style.display = show ? "block" : "none";
-}
+    DOM.modalOverlay.style.display = show ? "block" : "none";
+    DOM.modal.style.display = show ? "block" : "none";
+};
 
 function closeModal() {
     toggleModal(false);
-}
-
-let count = 0;
-DOM.ploegSysteem.onclick = function() {
-    Object.keys(startDates).forEach(i => {
-        document.getElementById(`date${i}`).value = startDates[i];
-        Array.from({ length: 7 }).forEach((_, j) => {
-            const dayElement = document.getElementById(`day-${i}${j + 1}`);
-            if (dayElement) {
-                dayElement.value = shiftPattern[count] || '';
-                count++;
-            }
-        });
-    });
-    count = 0;
-    toggleModal(true);
 };
 
-document.getElementById('sluiten').addEventListener('click', closeModal);
-document.getElementById('opslaan').onclick = function () {
+DOM.ploegSysteem.onclick = function() {
+    DOM.overlay.innerHTML = '';
+    count = 0;
+    Array.from({ length: 5}).forEach((_, i) => {
+        const label = document.createElement('label');
+        const span = document.createElement('span');
+        span.textContent = `Week ${i+1}: `;
+        label.appendChild(span);
+        Array.from({ length: 7 }).forEach((_, j) => {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `day-${i+1}${j+1}`;
+            input.className = 'shift-input';
+            input.value = shiftPattern[count] || '';
+            count++;
+            label.appendChild(input);
+        });
+        overlay.appendChild(label);
+    });
+
+    DOM.overlay.appendChild(document.createElement('br'));
+    DOM.overlay.appendChild(document.createElement('br'));
+
+    Object.keys(startDates).forEach(i => {
+        const label = document.createElement('label');
+        const span = document.createElement('span');
+        span.textContent = `Startdatum ${i}: `;
+        label.appendChild(span);
+        const input = document.createElement('input');
+        input.type = 'date';
+        input.id = `date${i}`;
+        input.className = 'date-input';
+        input.value = startDates[i] || '';
+        label.appendChild(input);
+        overlay.appendChild(label);
+    });
+
+    DOM.overlay.appendChild(document.createElement('br'));
+    DOM.overlay.appendChild(document.createElement('br'));
+
+    const reset = document.createElement('button');
+    reset.className = "reset";
+    reset.textContent = "Reset to default settings";
+    reset.addEventListener('click', resetDefaultSettings);
+    DOM.overlay.appendChild(reset);
+
+    const button = document.createElement('button');
+    button.className = "btnOverlay";
+    button.textContent = "Opslaan";
+    button.addEventListener('click', ploegSysteemOpslaan);
+    DOM.overlay.appendChild(button);
+
+    toggleModal(true);
+};
+function checkIngevoerdeWaarden(cyclus) {
+    return cyclus.every(cyc => {
+        return shiftenGegevens.some(item => item.symbool === cyc);
+    });
+}
+
+function resetDefaultSettings() {
+    let counter = 0;
+    for(let i = 1; i <= 5; i++) {
+        const datum = document.getElementById(`date${i}`);
+        datum.value = startDatums[i];
+        for(let j = 1; j <= 7; j++) {
+            const dayElement = document.getElementById(`day-${i}${j}`);
+            dayElement.value = ploegSchema[counter];
+            counter++;
+        }
+    }
+};
+
+function ploegSysteemOpslaan() {
     let cyclus = [];
     let datums = {};
     for(let i = 1; i <= 5; i++) {
@@ -113,94 +207,133 @@ document.getElementById('opslaan').onclick = function () {
         datums[i] = datum;
         for(let j = 1; j <= 7; j++) {
             const dayElement = document.getElementById(`day-${i}${j}`);
-            if (dayElement) {
-                cyclus.push(dayElement.value === 'x' ? dayElement.value.toLowerCase() : dayElement.value.toUpperCase());
-            } else {
-                console.warn(`Element day-${i}${j} bestaat niet in de DOM.`);
-            }
+            cyclus.push(dayElement.value === 'x' ? dayElement.value.toLowerCase() : dayElement.value.toUpperCase());
         }
     }
-    shiftPattern = cyclus;
-    startDates = datums;
-    startDate = startDates[DOM.ploeg.value];
-    saveToLocalStorage('shiftPattern', cyclus);
-    saveToLocalStorage('startDates', datums);
-    closeModal();
-    generateCalendar();
-}
+    const isValid = checkIngevoerdeWaarden(cyclus);
+    if (isValid) {
+        shiftPattern = cyclus;
+        startDates = datums;
+        startDate = startDates[DOM.ploeg.value];
+        saveToLocalStorage('shiftPattern', cyclus);
+        saveToLocalStorage('startDates', datums);
+        alert("Wijzigingen succesvol opgeslagen!");
+        closeModal();
+        generateCalendar();
+    } else {
+        alert('Sommige velden zijn niet correct ingevuld !');
+    }
+};
+
+document.getElementById('sluiten').addEventListener('click', closeModal);
 
 function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
-}
+};
 
 const calendarGenerators = {
     0: () => {
+        DOM.addShift.hidden = false;
+        DOM.ploegSysteem.hidden = false;
         DOM.ploeg.hidden = false;
         DOM.legende.style.display = '';
         DOM.titel.textContent = 'Maandkalender';
         DOM.container.className = 'month-container';
         DOM.calendar.className = 'calendar';
+        getSettingsFromSessionStorage();
         generateMonthCalendar(currentMonth, currentYear);
     },
     1: () => {
+        DOM.addShift.hidden = true;
+        DOM.ploegSysteem.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.legende.style.display = '';
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container1';
         DOM.calendar.className = 'year-calendar-grid';
+        getSettingsFromSessionStorage();
         generateYearCalendar(currentYear);
     },
     2: () => {
+        DOM.addShift.hidden = true;
+        DOM.ploegSysteem.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.legende.style.display = 'none';
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container2';
         DOM.calendar.className = 'year-calendar-table';
+        getSettingsFromSessionStorage();
         generateYearCalendarTable(currentYear);
     },
     3: () => {
+        DOM.addShift.hidden = true;
+        DOM.ploegSysteem.hidden = true;
         DOM.ploeg.hidden = true;
         DOM.legende.style.display = 'none';
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';
+        getSettingsFromSessionStorage();
         generateTeamCalendar(currentMonth, currentYear);
     }
 };
 
 function generateCalendar() {
-    if (calendarGenerators[blad]) {
-        calendarGenerators[blad]();
+    if (calendarGenerators[tabBlad]) {
+        calendarGenerators[tabBlad]();
     } else {
-        console.error(`Geen kalendergenerator gevonden voor blad: ${blad}`);
+        console.error(`Geen kalendergenerator gevonden voor blad: ${tabBlad}`);
     }
+};
+
+function getSettingsFromSessionStorage() {
+    const instellingen = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || defaultSettings;
+    let instelling = instellingen.find(item => item.pagina === tabBlad);
+    selectedPloeg = instelling.ploeg;
+    DOM.ploeg.value = selectedPloeg;
+    startDate = startDates[selectedPloeg];
+    currentMonth = instelling.maand;
+    currentYear = instelling.jaar;
+}
+
+function updateSessionStorage(ploeg, month, year) {
+    let instellingen = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || defaultSettings;
+    let instelling = instellingen.find(item => item.pagina === tabBlad);
+    instelling.ploeg = ploeg;
+    instelling.maand = month;
+    instelling.jaar = year;
+
+    saveToSessionStorage('standaardInstellingen', instellingen);
 }
 
 function triggerPrev() {
-    if(blad === 0 || blad === 3) {
+    if(tabBlad === 0 || tabBlad === 3) {
         currentMonth = (currentMonth - 1 + 12) % 12;
         if (currentMonth === 11) currentYear -= 1;
-        generateCalendar();
     } else {
         currentYear -= 1;
-        generateCalendar();
     }
-}
+    updateSessionStorage(selectedPloeg,currentMonth, currentYear);
+    generateCalendar();
+};
 
 function triggerNext() {
-    if(blad === 0 || blad === 3) {
+    if(tabBlad === 0 || tabBlad === 3) {
         currentMonth = (currentMonth + 1) % 12;
         if (currentMonth === 0) currentYear += 1;
-        generateCalendar();
     } else {
         currentYear += 1;
-        generateCalendar();
     }
-}
+    updateSessionStorage(selectedPloeg,currentMonth, currentYear);
+    generateCalendar();
+};
 
 DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 
+
+
+maakLegende();
 // Initialiseer de kalender bij het laden
 generateCalendar();
 

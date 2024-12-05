@@ -1,4 +1,4 @@
-import { getDaysSinceStart, patternClass, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
 
 export function generateMonthCalendar(month, year) {
     calendar.innerHTML = '';
@@ -35,7 +35,7 @@ export function generateMonthCalendar(month, year) {
         if(daysSinceStart >= 0) {
             const shiftIndex = daysSinceStart % shiftPattern.length;
             const shift = shiftPattern[shiftIndex];
-            const shiftClass = `shift-${patternClass[shift]}`;
+            const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
             // Voeg de dag en shift toe aan de cel
             cell.classList.add(shiftClass); // Voeg de juiste kleur toe
         }

@@ -1,4 +1,4 @@
-import { getDaysSinceStart, patternClass, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
 
 export function generateYearCalendar(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
@@ -51,7 +51,7 @@ export function generateYearCalendar(year) {
       if(daysSinceStart >= 0) {
         const shiftIndex = daysSinceStart % shiftPattern.length;
         const shift = shiftPattern[shiftIndex];
-        const shiftClass = `shift-${patternClass[shift]}`;
+        const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
         dayCell.classList.add(shiftClass);
       }
       calendarGrid.appendChild(dayCell);

@@ -1,4 +1,4 @@
-import { getDaysSinceStart, patternClass, shiftPattern, startDates ,  monthYear} from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDates ,  monthYear} from "./ploegenRooster.js";
 
 export function generateTeamCalendar(month, year) {
     calendar.innerHTML = '';
@@ -42,7 +42,7 @@ export function generateTeamCalendar(month, year) {
                 if(daysSinceStart >= 0) {
                     const shiftIndex = daysSinceStart % shiftPattern.length;
                     const shift = shiftPattern[shiftIndex];
-                    const shiftClass = `shift-${patternClass[shift]}`;
+                    const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
                     dayCell.textContent = shift; // Voeg de shiftletter toe
                     if(shift === 'x' || shift === 'DT') dayCell.classList.add(shiftClass);
                     //dayCell.classList.add(shiftClass); // Voeg de kleurklasse toe

@@ -84,28 +84,52 @@ body {
     min-width: 200px;
     color: #dbdbdb;
 }
+
 /*Legende*/
 .legende-container {
     position: absolute  ;
-    top: 20px;
-    display: grid;
-    
-    gap: 5px;
-}
-.legende {
-    padding: 5px 10px;
+    top: 120px;
+    right: 20px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 8px;
+    padding: 10px;
+    background: linear-gradient(360deg,#022124 10%,#efefef 360%);
+    color: rgba(255, 255, 255, 0.829);
     border-radius: 3px;
+}
+.legende-item {
+    display: flex;
+    /*align-items: center;*/
+    gap: 10px;
+}
+.legende-vak {
+    width: 45px;
+    height: 20px;
+    /*border: 3px solid #dbdbdb;*/
+    border-radius: 4px;
+}
+#add-shift {
+    position: absolute;
+    padding: 10px 54px;
+    outline: none;
+    font-size: 15px;
+    top: 50px;
+    right: 20px;
+}
+#ploegenSysteem {
+    position: absolute;
+    padding: 10px 50px 10px 5px;
+    outline: none;
+    font-size: 20px;
+    top: 213px;
+    left: 16%;
+    max-width: 15%;
 }
 .btnGreen {
     background: linear-gradient(360deg,#022124 10%,#efefef 360%);
     color: #aaaaaaad;
-    position: absolute;
-    padding: 10px 20px;
-    outline: none;
-    font-size: 20px;
-    top: 400px;
-    left: 16%;
-    max-width: 15%;
+    
     transition: all 0.20s ease-in-out;
 }
 .btnGreen:hover {
@@ -130,29 +154,44 @@ body {
 .shift-input {
     width: 50px;
     padding: 5px;
+    margin-right: 10px;
     text-align: center;
     font-size: 0.9em;
-    background-color: #093a41;
-    color: #d4d4d4;
+    background-color: #9eaba2;
+    color: #2e2e2e;
     border-radius: 4px;
+    outline: none;
+    transition: all 0.10s ease-in-out;
+}
+
+.shift-input:focus {
+    box-shadow: 0 0 15px rgba(238, 238, 238, 0.9);
+    background-color: white;
 }
 .date-input {
     font-size: 0.9em;
     padding: 3px 5px;
     border-radius: 4px;
-    background-color: #093a41;
-    color: #d4d4d4;
+    background-color: #9eaba2;
+    color: #2e2e2e;
+    outline: none;
+    transition: all 0.10s ease-in-out;
+}
+.date-input:focus {
+    box-shadow: 0 0 15px rgba(238, 238, 238, 0.9);
+    background-color: white;
 }
 .overlay {
-    display: grid;
-    text-align: left;
-    gap: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
 }
 .overlay button {
-    background-color: #d1d1d1;
-    color: #063831;
+    background-color: #444444;
+    color: #000000;
     border-radius: 3px;
-    width: 200px;
+    width: 250px;
     display: inline;
     padding: 5px 10px;
     font-size: 1em;
@@ -160,8 +199,9 @@ body {
     transition: all 0.20s ease-in-out;
 }
 .overlay button:hover {
-    background-color: #0f4440;
-    color: #e2e2e2;
+    cursor: pointer;
+    background-color: #adadad;;
+    color: #070707;
     
 }
 #overlay label {
@@ -191,7 +231,7 @@ body {
     color: rgba(212, 212, 212, 0.884);
     box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
     border-radius: 7px;
-    /*border: 8px solid rgb(206, 206, 206);*/
+    border: 4px solid #9eaba2;
     z-index: 2;
     transform: translate(-50%, -50%) scale(0); /* Start klein, gecentreerd */
     animation: zoom 0.4s forwards; /* Gebruik forwards om animatie op het einde te bewaren */
@@ -221,19 +261,19 @@ body {
     background: transparent;
 }
 /*kleuren voor de shiften*/
-.shift-night {
+.shift-nacht {
     background: #4a91e2;
     color: white;
 }
-.shift-night-12 {
+.shift-nacht-12u {
     background: #0158bb;
     color: white;
 }
-.shift-early {
+.shift-vroege {
    background: #f39251e1;
    color: white;
 }
-.shift-early-12 {
+.shift-vroege-12u {
     background: #fc761cb0;
     color: white;
 }
@@ -241,16 +281,16 @@ body {
     background: #4c9182cb;
     color: white;
 }
-.shift-day {
+.shift-dag {
     background: #949494;
     color: rgba(0, 0, 0, 0.63);
 }
-.shift-home {
+.shift-thuis {
     background: #cfcfcf;
     color: rgba(41, 41, 41, 0.63);
 }
 .shift-deeltijds {
     
-    background: #cfcfcf;
-    color: rgba(41, 41, 41, 0.63);
+    background: #af0d0d;
+    color: rgba(221, 221, 221, 0.89);
 }
