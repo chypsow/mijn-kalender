@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,89 +28,27 @@
                 <option value="4">Ploeg 4</option>
                 <option value="5">Ploeg 5</option>
             </select>
-            <div id='legende' class="legende-container">
-                <div class="shift-night legende"><span>Nacht ploeg</span></div>
-                <div class="shift-early legende"><span>Vroege ploeg</span></div>
-                <div class="shift-late legende"><span>Late ploeg</span></div>
-                <div class="shift-day legende"><span>Dag ploeg</span></div>
-                <div class="shift-home legende"><span>Rust dag</span></div>
-                <div class="shift-deeltijds legende"><span>Deeltijds</span></div>
+            <div id='legende' class="legende-container"></div>
+            <div>
+                <button id="add-shift" class="btnGreen">Add new shift</button>
             </div>
             <div>
-                <button id="ploegenSysteem" class="btnGreen">Ploegensysteem aanpassen</button>
+                <button id="ploegenSysteem" class="btnGreen"><i class="fa fa-cog" aria-hidden="true"></i> Instellingen</button>
             </div>
             <div id="modal-overlay" class="modal-overlay">
                 <div id="modal" class="modal">
                     <i class="fa fa-close" id="sluiten"></i>
-                    <div id="overlay" class="overlay">
-                        <label>Week 1: &nbsp;
-                            <input type="text" id="day-11" class="shift-input">
-                            <input type="text" id="day-12" class="shift-input">
-                            <input type="text" id="day-13" class="shift-input">
-                            <input type="text" id="day-14" class="shift-input">
-                            <input type="text" id="day-15" class="shift-input">
-                            <input type="text" id="day-16" class="shift-input">
-                            <input type="text" id="day-17" class="shift-input">
-                        </label>
-                        <label>Week 2: &nbsp;
-                            <input type="text" id="day-21" class="shift-input">
-                            <input type="text" id="day-22" class="shift-input">
-                            <input type="text" id="day-23" class="shift-input">
-                            <input type="text" id="day-24" class="shift-input">
-                            <input type="text" id="day-25" class="shift-input">
-                            <input type="text" id="day-26" class="shift-input">
-                            <input type="text" id="day-27" class="shift-input">
-                        </label>
-                        <label>Week 3: &nbsp;
-                            <input type="text" id="day-31" class="shift-input">
-                            <input type="text" id="day-32" class="shift-input">
-                            <input type="text" id="day-33" class="shift-input">
-                            <input type="text" id="day-34" class="shift-input">
-                            <input type="text" id="day-35" class="shift-input">
-                            <input type="text" id="day-36" class="shift-input">
-                            <input type="text" id="day-37" class="shift-input">
-                        </label>
-                        <label>Week 4: &nbsp;
-                            <input type="text" id="day-41" class="shift-input">
-                            <input type="text" id="day-42" class="shift-input">
-                            <input type="text" id="day-43" class="shift-input">
-                            <input type="text" id="day-44" class="shift-input">
-                            <input type="text" id="day-45" class="shift-input">
-                            <input type="text" id="day-46" class="shift-input">
-                            <input type="text" id="day-47" class="shift-input">
-                        </label>
-                        <label>Week 5: &nbsp;
-                            <input type="text" id="day-51" class="shift-input">
-                            <input type="text" id="day-52" class="shift-input">
-                            <input type="text" id="day-53" class="shift-input">
-                            <input type="text" id="day-54" class="shift-input">
-                            <input type="text" id="day-55" class="shift-input">
-                            <input type="text" id="day-56" class="shift-input">
-                            <input type="text" id="day-57" class="shift-input">
-                        </label>
-                        <br>
-                        <br>
-                        <label>Startdatum 1: &nbsp;<input type="date" id="date1" class="date-input"></label>
-                        <label>Startdatum 2: &nbsp;<input type="date" id="date2" class="date-input"></label>
-                        <label>Startdatum 3: &nbsp;<input type="date" id="date3" class="date-input"></label>
-                        <label>Startdatum 4: &nbsp;<input type="date" id="date4" class="date-input"></label>
-                        <label>Startdatum 5: &nbsp;<input type="date" id="date5" class="date-input"></label>
-                        <br>
-                        <br>
-                        <button id="opslaan" class="btnOverlay">Opslaan</button>
-                        <!--<button id="annuleren">Annuleren</button>-->
-
-                    </div>
+                    <div id="overlay" class="overlay"></div>
                 </div>
             </div>
         </div>
-        <div id="container"> <!--class = month-container/year-container1/year-container2/team-container-->
+        <div id="container">
             <div id="calendar-nav" class="calendar-nav">
                 <button id="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
                 <span id="month-year" class="month-year"></span>
                 <button id="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
             </div>
-            <div id="calendar"></div> <!--class = calender/year-calendar-grid/year-calendar-table-->
+            <div id="calendar"></div>
             
         </div>
     </div>
