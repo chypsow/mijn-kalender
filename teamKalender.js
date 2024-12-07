@@ -1,4 +1,4 @@
-import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDates ,  monthYear} from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDates ,  monthYear } from "./ploegenRooster.js";
 
 export function generateTeamCalendar(month, year) {
     calendar.innerHTML = '';
@@ -54,5 +54,6 @@ export function generateTeamCalendar(month, year) {
         calendar.appendChild(teamRow);
     }
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
-    monthYear.textContent = `${monthName} ${year}`;
+    monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    //monthYear.innerHTML = `${monthSelect.options[monthSelect.selectedIndex].text} ${year}`;
 }

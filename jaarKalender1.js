@@ -1,5 +1,25 @@
 import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
 
+export function updateYearCalendar(year) {
+  const monthElementen = document.querySelectorAll('#calendar .month');
+  monthElementen.forEach((month, index) => {
+    const dayElementen = month.querySelectorAll('.day-klein');
+    dayElementen.forEach(day => {
+      const myDay = parseInt(day.textContent);
+      const currentDate = new Date(year, index, myDay);
+      const daysSinceStart = getDaysSinceStart(currentDate, startDate);
+      if(daysSinceStart >= 0) {
+        const shiftIndex = daysSinceStart % shiftPattern.length;
+        const shift = shiftPattern[shiftIndex];
+        const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
+        day.className = '';
+        day.classList.add('day-klein');
+        day.classList.add(shiftClass);
+      }
+    });
+  });
+};
+
 export function generateYearCalendar(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
 
@@ -13,17 +33,16 @@ export function generateYearCalendar(year) {
     monthName.textContent = new Date(year, month).toLocaleString("nl", { month: "long" });
     monthContainer.appendChild(monthName);
 
+    // Voeg header toe
     const monthDays = document.createElement('div');
     monthDays.classList.add('month-days');
-    monthContainer.appendChild(monthDays);
-
     const dagen = ['ma', 'di', 'wo', 'do', 'vr','za', 'zo'];
     dagen.forEach(dag => {
       const header = document.createElement('div');
-      header.classList.add('header');
       header.textContent = dag;
       monthDays.appendChild(header);
     });
+    monthContainer.appendChild(monthDays);
 
     // Voeg de dagen van de maand toe
     const calendarGrid = document.createElement("div");
@@ -35,14 +54,14 @@ export function generateYearCalendar(year) {
     // Voeg lege cellen toe voor dagen vóór de eerste dag
     for (let i = 0; i < (firstDay + 6) % 7; i++) {
         const emptyCell = document.createElement("div");
-        emptyCell.classList.add("empty");
+        emptyCell.classList.add("emptyCell");
         calendarGrid.appendChild(emptyCell);
     }
 
     // Voeg dagen toe
     for (let day = 1; day <= daysInMonth; day++) {
       const dayCell = document.createElement("div");
-      dayCell.classList.add("day");
+      dayCell.classList.add("day-klein");
       dayCell.textContent = day;
 
       // Bereken de ploeg
@@ -61,4 +80,4 @@ export function generateYearCalendar(year) {
     calendar.appendChild(monthContainer);
   }
   monthYear.textContent = year;
-}
+};

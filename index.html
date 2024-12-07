@@ -33,7 +33,7 @@
                 <button id="add-shift" class="btnGreen">Add new shift</button>
             </div>
             <div>
-                <button id="ploegenSysteem" class="btnGreen"><i class="fa fa-cog" aria-hidden="true"></i> Instellingen</button>
+                <button id="instellingen" class="btnGreen"><i class="fa fa-cog" aria-hidden="true"></i> Instellingen</button>
             </div>
             <div id="modal-overlay" class="modal-overlay">
                 <div id="modal" class="modal">
@@ -46,6 +46,16 @@
             <div id="calendar-nav" class="calendar-nav">
                 <button id="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
                 <span id="month-year" class="month-year"></span>
+                <div id="select-overlay" class="modal-overlay">
+                    <div id="dropdowns" class="dropdowns">
+                        <select id="month-select" class="monthDropdown">
+                            <!-- Maanden worden dynamisch toegevoegd via JavaScript -->
+                        </select>
+                        <select id="year-select" class="yearDropdown">
+                            <!-- Jaren worden dynamisch toegevoegd via JavaScript -->
+                        </select>
+                    </div>
+                </div>
                 <button id="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
             </div>
             <div id="calendar"></div>

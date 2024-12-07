@@ -1,7 +1,7 @@
 import { generateTeamCalendar } from './teamKalender.js';
-import { generateYearCalendar } from './jaarKalender1.js';
-import { generateYearCalendarTable } from './jaarKalender2.js';
-import { generateMonthCalendar } from './maandKalender.js';
+import { generateYearCalendar, updateYearCalendar } from './jaarKalender1.js';
+import { generateYearCalendarTable, updateYearCalendarTable } from './jaarKalender2.js';
+import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
 
 const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V12'];
 const week2 = ['L', 'L', 'x', 'N', 'N', 'N', 'N12'];
@@ -35,6 +35,8 @@ export function getNaamBijSymbool(symbool) {
     return shift ? shift.naam : 'Symbool niet gevonden';
 };
 
+export const monthSelect = document.getElementById("month-select");
+export const yearSelect = document.getElementById("year-select");
 export const monthYear = document.getElementById('month-year');
 export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
 export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
@@ -52,12 +54,14 @@ export function getDaysSinceStart(date, date0) {
 const DOM = {
     prev: document.getElementById('prev'),
     next: document.getElementById('next'),
+    selectOverlay: document.getElementById('select-overlay'),
+    dropdowns: document.getElementById("dropdowns"),
     topNav: document.getElementById("top-nav"),
     container: document.getElementById('container'),
     ploeg: document.getElementById('ploeg'),
     titel: document.getElementById('titel'),
     addShift: document.getElementById('add-shift'),
-    ploegSysteem: document.getElementById('ploegenSysteem'),
+    instellingen: document.getElementById('instellingen'),
     legende: document.getElementById('legende'),
     calendar: document.getElementById('calendar'),
     modalOverlay: document.getElementById("modal-overlay"),
@@ -113,8 +117,21 @@ Array.from(DOM.topNav.children).forEach((elt, index) => {
 DOM.ploeg.onchange = function () {
     selectedPloeg = Number(this.value); 
     startDate = startDates[selectedPloeg];
-    updateSessionStorage(selectedPloeg,currentMonth,currentYear);
-    generateCalendar();
+    updateSessionStorage();
+    updateCalendar();
+};
+Array.from(DOM.ploeg.options).forEach(option => {
+    option.style.color = 'black';
+});
+function updateCalendar() {
+    if (tabBlad === 0) {
+        updateMonthCalendar(currentMonth, currentYear);
+    } else if (tabBlad === 1) {
+        updateYearCalendar(currentYear);
+    } else if (tabBlad === 2) {
+        updateYearCalendarTable(currentYear);
+        
+    }
 };
 
 function toggleModal(show) {
@@ -126,7 +143,7 @@ function closeModal() {
     toggleModal(false);
 };
 
-DOM.ploegSysteem.onclick = function() {
+DOM.instellingen.onclick = function() {
     DOM.overlay.innerHTML = '';
     count = 0;
     Array.from({ length: 5}).forEach((_, i) => {
@@ -234,7 +251,7 @@ function saveToLocalStorage(key, value) {
 const calendarGenerators = {
     0: () => {
         DOM.addShift.hidden = false;
-        DOM.ploegSysteem.hidden = false;
+        DOM.instellingen.hidden = false;
         DOM.ploeg.hidden = false;
         DOM.legende.style.display = '';
         DOM.titel.textContent = 'Maandkalender';
@@ -245,7 +262,7 @@ const calendarGenerators = {
     },
     1: () => {
         DOM.addShift.hidden = true;
-        DOM.ploegSysteem.hidden = true;
+        DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.legende.style.display = '';
         DOM.titel.textContent = 'Jaarkalender';
@@ -256,7 +273,7 @@ const calendarGenerators = {
     },
     2: () => {
         DOM.addShift.hidden = true;
-        DOM.ploegSysteem.hidden = true;
+        DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.legende.style.display = 'none';
         DOM.titel.textContent = 'Jaarkalender';
@@ -267,7 +284,7 @@ const calendarGenerators = {
     },
     3: () => {
         DOM.addShift.hidden = true;
-        DOM.ploegSysteem.hidden = true;
+        DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = true;
         DOM.legende.style.display = 'none';
         DOM.titel.textContent = 'Teamkalender';
@@ -296,15 +313,83 @@ function getSettingsFromSessionStorage() {
     currentYear = instelling.jaar;
 }
 
-function updateSessionStorage(ploeg, month, year) {
+function updateSessionStorage() {
     let instellingen = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || defaultSettings;
     let instelling = instellingen.find(item => item.pagina === tabBlad);
-    instelling.ploeg = ploeg;
-    instelling.maand = month;
-    instelling.jaar = year;
+    instelling.ploeg = selectedPloeg;
+    instelling.maand = currentMonth;
+    instelling.jaar = currentYear;
 
     saveToSessionStorage('standaardInstellingen', instellingen);
 }
+
+
+
+function populateDropdowns() {
+    // Maanden toevoegen
+    const months = [
+        "januari", "februari", "maart", "april", "mei", "juni",
+        "juli", "augustus", "september", "oktober", "november", "december"
+    ];
+    monthSelect.innerHTML = "";
+    months.forEach((month, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = month;
+        option.style.color = 'black';
+        if (index === currentMonth) option.selected = true;
+        monthSelect.appendChild(option);
+    });
+
+    // Jaren toevoegen (bijv. van 2000 tot 2030)
+    yearSelect.innerHTML = "";
+    for (let year = 2010; year <= 2040; year++) {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        option.style.color = 'black';
+        if (year === currentYear) option.selected = true;
+        yearSelect.appendChild(option);
+    }
+}
+
+monthYear.addEventListener("click", () => {
+    monthYear.style.color = 'transparent';
+    const rect = monthYear.getBoundingClientRect();
+    DOM.dropdowns.style.top = `${rect.top + window.scrollY - 10}px`;
+    DOM.dropdowns.style.left = `${rect.left + window.scrollX + Math.round(rect.width/2 - DOM.dropdowns.style.width/2)}px`;
+    DOM.selectOverlay.style.display = 'block';
+    populateDropdowns();
+    DOM.dropdowns.classList.toggle("visible");
+    if(tabBlad === 0 || tabBlad === 3) {
+        monthSelect.classList.toggle("visible");
+    }
+    yearSelect.classList.toggle('visible');
+});
+
+// Verberg de dropdowns als er buiten wordt geklikt
+document.addEventListener("click", (event) => {
+    if (!dropdowns.contains(event.target) && event.target !== monthYear && event.target !== DOM.instellingen) {
+        monthYear.style.color = '';
+        DOM.selectOverlay.style.display = 'none';
+        DOM.dropdowns.classList.remove("visible");
+        monthSelect.classList.remove("visible");
+        yearSelect.classList.remove("visible");
+    }
+});
+
+monthSelect.addEventListener("change", (event) => {
+    currentMonth = parseInt(event.target.value, 10);
+    updateSessionStorage();
+    generateCalendar();
+});
+
+yearSelect.addEventListener("change", (event) => {
+    currentYear = parseInt(event.target.value, 10);
+    updateSessionStorage();
+    generateCalendar();
+});
+
 
 function triggerPrev() {
     if(tabBlad === 0 || tabBlad === 3) {
@@ -313,7 +398,7 @@ function triggerPrev() {
     } else {
         currentYear -= 1;
     }
-    updateSessionStorage(selectedPloeg,currentMonth, currentYear);
+    updateSessionStorage();
     generateCalendar();
 };
 
@@ -324,17 +409,14 @@ function triggerNext() {
     } else {
         currentYear += 1;
     }
-    updateSessionStorage(selectedPloeg,currentMonth, currentYear);
+    updateSessionStorage();
     generateCalendar();
 };
-
 DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 
-
-
 maakLegende();
-// Initialiseer de kalender bij het laden
+populateDropdowns();
 generateCalendar();
 
 

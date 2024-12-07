@@ -1,4 +1,22 @@
-import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear } from "./ploegenRooster.js";
+
+export function updateMonthCalendar(month, year) {
+    const dayElementen = document.querySelectorAll('#calendar .day-groot');
+    dayElementen.forEach(day => {
+        const myDay = parseInt(day.textContent);
+        const currentDate = new Date(year, month, myDay);
+        const daysSinceStart = getDaysSinceStart(currentDate, startDate);
+        if(daysSinceStart >= 0) {
+            const shiftIndex = daysSinceStart % shiftPattern.length;
+            const shift = shiftPattern[shiftIndex];
+            const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
+            day.className = '';
+            day.classList.add('day-groot');
+            day.classList.add(shiftClass);
+        }
+    });
+}
+
 
 export function generateMonthCalendar(month, year) {
     calendar.innerHTML = '';
@@ -20,7 +38,7 @@ export function generateMonthCalendar(month, year) {
     // Lege vakjes vóór de eerste dag van de maand
     for (let i = 0; i < firstDayMondayBased; i++) {
         const emptyCell = document.createElement('div');
-        emptyCell.classList.add("emptyCell");
+        //emptyCell.classList.add("emptyCell");
         calendar.appendChild(emptyCell);
     }
 
@@ -28,7 +46,7 @@ export function generateMonthCalendar(month, year) {
     for (let day = 1; day <= daysInMonth; day++) {
         const cell = document.createElement('div');
         cell.textContent = day; // Toon de dag
-        cell.classList.add('day');
+        cell.classList.add('day-groot');
         // Bereken de ploeg
         const currentDate = new Date(year, month, day);
         const daysSinceStart = getDaysSinceStart(currentDate, startDate);
@@ -53,5 +71,6 @@ export function generateMonthCalendar(month, year) {
 
     // Toon de maand en het jaar
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
-    monthYear.textContent = `${monthName} ${year}`;
+    monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    //monthYear.textContent = `${monthSelect.options[monthSelect.selectedIndex].text} ${year}`;
 }

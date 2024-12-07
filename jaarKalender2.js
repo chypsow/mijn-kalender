@@ -1,5 +1,30 @@
 import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
 
+export function updateYearCalendarTable(year) {
+  const monthElementen = document.querySelectorAll('#calendar .row');
+  monthElementen.forEach((month, index) => {
+    const dayElementen = month.querySelectorAll('.cell');
+    dayElementen.forEach((day, i) => {
+      if(i > 0) {
+        day.textContent = '';
+        day.className = '';
+        day.classList.add('cell');
+        const currentDate = new Date(year, index-1, i);
+        const daysSinceStart = getDaysSinceStart(currentDate, startDate);
+        if(daysSinceStart >= 0) {
+          const shiftIndex = daysSinceStart % shiftPattern.length;
+          const shift = shiftPattern[shiftIndex];
+          day.textContent = shift; // Voeg de shiftletter toe
+          if(shift === 'x' || shift === 'DT') {
+            const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
+            day.classList.add(shiftClass);
+          }
+        }
+      }
+    });
+  });
+};
+
 export function generateYearCalendarTable(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
   

@@ -31,16 +31,21 @@
     /*transition: transform 0.2s ease; Animatie bij het verschuiven */
     /*position: relative;*/
 }
-
-.emptyCell {
-    /*border-radius: 3px;*/
-    background-color: rgba(59, 59, 59, 0);
-}   
-.calendar div {
+.day-groot {
+    border: 3px solid transparent;
+    font-size: 1.5em;
     padding: 10px;
-    font-size: 1.2em;
+    border-radius: 2px;
+    transition: all 0.25s ease-in-out;
+    
 }
+.day-groot:hover {
+    cursor: default;
+    border: 3px solid white;    
+}
+
 .calendar div.header {
+    font-size: 1.2em;
     padding: 10px;
     font-weight: bold;
     /*background-color: #e2e2e2;*/
@@ -57,18 +62,7 @@
 
 
 
-.month-container {
-    max-width: 800px;
-    margin: 50px auto;
-    text-align: center;
-}
-.month-calendar-nav {
-    display: flex;
-    justify-content: center;
-    /*align-items: center;*/
-    margin: 20px 0;
-    font-size: 20px;
-}
+
 /* Voor de verschuivingseffecten */
 .calendar.slide-left {
     transform: translateX(-100%); /* Beweeg de oude maand naar links */
@@ -80,31 +74,6 @@
 
 .calendar.reset {
     transform: translateX(0); /* Reset naar de standaardpositie */
-}
-
-.calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 7px;
-    /*transition: transform 0.2s ease; Animatie bij het verschuiven */
-    /*position: relative;*/
-}
-
-.emptyCell {
-    /*border-radius: 3px;*/
-    background-color: rgba(59, 59, 59, 0);
-}   
-.calendar div {
-    padding: 10px;
-    font-size: 1.2em;
-}
-.calendar div.header {
-    padding: 10px;
-    font-weight: bold;
-    /*background-color: #e2e2e2;*/
-    border: 1px solid #636363;
-    border-radius: 4px;
-    color: #ccc;
 }
 
 
