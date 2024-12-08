@@ -61,6 +61,7 @@ const DOM = {
     ploeg: document.getElementById('ploeg'),
     titel: document.getElementById('titel'),
     addShift: document.getElementById('add-shift'),
+    feestdagen: document.getElementById('feestdagen'),
     instellingen: document.getElementById('instellingen'),
     legende: document.getElementById('legende'),
     calendar: document.getElementById('calendar'),
@@ -246,6 +247,98 @@ document.getElementById('sluiten').addEventListener('click', closeModal);
 
 function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
+};
+
+const feestdagenLijst = {
+    1: () => {
+        return new Date(currentYear, 0, 1);
+    },
+    2: () => {
+        const Y = currentYear;
+        const a = Y % 19;
+        const b = Math.floor(Y / 100);
+        const c = Y % 100;
+        const d = Math.floor(b / 4);
+        const e = b % 4;
+        const f = Math.floor((b + 8) / 25);
+        const g = Math.floor((b - f + 1) / 3);
+        const h = (19 * a + b - d - g + 15) % 30;
+        const i = Math.floor(c / 4);
+        const k = c % 4;
+        const l = (32 + 2 * e + 2 * i - h - k) % 7;
+        const m = Math.floor((a + 11 * h + 22 * l) / 451);
+        const maand = Math.floor((h + l - 7 * m + 114) / 31);
+        const dag = ((h + l - 7 * m + 114) % 31) + 1;
+        const paasdatum = new Date(Y, maand - 1, dag);
+        const paasmaandag = new Date(paasdatum);
+        paasmaandag.setDate(paasdatum.getDate() + 1);
+        return paasmaandag;
+    },
+    3: () => {
+        return new Date(currentYear, 4, 1);
+    },
+    4: () => {
+        const paasdatum = feestdagenLijst[2]();
+        const hemelvaart = paasdatum.setDate(paasdatum.getDate() + 3);
+        return hemelvaart;
+    },
+    5: () => {
+        return new Date(currentYear, 4, 1);
+        
+    },
+    6: () => {
+        return new Date(currentYear, 4, 1);
+    },
+    7: () => {
+        return new Date(currentYear, 4, 1);
+    },
+    8: () => {
+        return new Date(currentYear, 4, 1);
+    },
+    9: () => {
+        return new Date(currentYear, 4, 1);
+    },
+    10: () => {
+        return new Date(currentYear, 4, 1);
+    }
+};
+const formatter = new Intl.DateTimeFormat('nl-NL', {
+    weekday: 'long', // Volledige dagnaam
+    day: 'numeric',  // Dag van de maand
+    month: 'long',   // Volledige maandnaam
+    year: 'numeric'  // Volledig jaar
+});
+function voegFeestdagToe(lijst, naam, datum) {
+    const feestdag = document.createElement('li');
+    feestdag.classList.add('feestdag');
+    const naamSpan = document.createElement('span');
+    naamSpan.textContent = naam;
+    naamSpan.classList.add('spanLinks');
+    const datumSpan = document.createElement('span');
+    datumSpan.textContent = datum;
+    datumSpan.classList.add('spanRechts');
+    feestdag.appendChild(naamSpan);
+    feestdag.appendChild(datumSpan);
+    lijst.appendChild(feestdag);
+};
+DOM.feestdagen.onclick = function () {
+    DOM.overlay.innerHTML = '';
+    const lijst = document.createElement('ul');
+    lijst.classList.add('feestdagen');
+
+    voegFeestdagToe(lijst, 'Nieuwjaarsdag', formatter.format(feestdagenLijst[1]()));
+    voegFeestdagToe(lijst, 'Paasmaandag', formatter.format(feestdagenLijst[2]()));
+    voegFeestdagToe(lijst, 'Feest van de Arbeid', formatter.format(feestdagenLijst[3]()));
+    voegFeestdagToe(lijst, 'O.L.V. Hemelvaart', formatter.format(feestdagenLijst[4]()));
+    voegFeestdagToe(lijst, 'Pinkstermaandag', formatter.format(feestdagenLijst[5]()));
+    voegFeestdagToe(lijst, 'Nationale Feestdag', formatter.format(feestdagenLijst[6]()));
+    voegFeestdagToe(lijst, 'O.L.V. Tenhemelopneming', formatter.format(feestdagenLijst[7]()));
+    voegFeestdagToe(lijst, 'Allerheiligen', formatter.format(feestdagenLijst[8]()));
+    voegFeestdagToe(lijst, 'Wapenstilstand', formatter.format(feestdagenLijst[9]()));
+    voegFeestdagToe(lijst, 'Kerstmis', formatter.format(feestdagenLijst[10]()));
+
+    DOM.overlay.appendChild(lijst);
+    toggleModal(true);
 };
 
 const calendarGenerators = {

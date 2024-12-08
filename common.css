@@ -181,6 +181,39 @@ body {
     padding: 10px 50px 10px 5px;
     outline: none;
     font-size: 20px;
+    top: 225px;
+    left: 16%;
+}
+/* Zorg dat de ul en li een nette lijst vormen */
+.feestdagen {
+list-style: none; /* Verwijder de standaard opsommingstekens */
+padding: 0; /* Verwijder ongewenste padding */
+margin: 0;
+min-width: 80%;
+}
+
+.feestdag {
+display: flex; /* Gebruik flexbox om elementen in lijn te plaatsen */
+justify-content: space-between; /* Verspreid de items over de volledige breedte */
+padding: 8px 0; /* Voeg wat ruimte tussen de items toe */
+border-bottom: 1px solid #424242; /* Optioneel: een onderlijning voor duidelijkheid */
+}
+/* Optioneel: voeg een elegante font toe */
+.feestdag span {
+font-family: monospace  , sans-serif;
+
+}
+.feestdag .spanLinks {
+    color: #1ff503;
+}
+.feestdag .spanRechts {
+    color: rgb(184, 184, 184);
+}
+#feestdagen {
+    position: absolute;
+    padding: 10px 30px;
+    outline: none;
+    font-size: 20px;
     top: 155px;
     left: 16%;
 }
