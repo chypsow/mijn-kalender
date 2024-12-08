@@ -25,8 +25,8 @@
     display: table-cell;
     /*border: 1px solid #ccc;*/
     padding: 5px;
-    width: 30px;
-    height: 30px;
+    width: 33px;
+    height: 33px;
 }
 /* Header voor de dagen */
 .year-calendar-table .header-cell {
@@ -57,4 +57,8 @@
     display: table-cell;
     background-color: #cacacac5; 
     border: 1px solid #a0a0a0a1;
+}
+
+.hollyday {
+    background-color: #8fb8d3;
 }

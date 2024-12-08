@@ -1,5 +1,41 @@
 import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear, feestdagenLijstDatums} from "./ploegenRooster.js";
 
+export function updateCalendarWithoutHolidays(year) {
+  const hollydays = feestdagenLijstDatums(year).map(date => date.toDateString());
+  const monthElementen = document.querySelectorAll('#calendar .row');
+  monthElementen.forEach((month, index) => {
+    const dayElementen = month.querySelectorAll('.cell');
+    dayElementen.forEach((day, i) => {
+      const myDate = new Date(year, index-1, i);
+      if(i > 0) {
+        if(hollydays.includes(myDate.toDateString())) {
+          day.classList.remove('hollyday');
+          if(day.textContent.includes('fd')) day.textContent = day.textContent.slice(0, -5);
+        }
+      }
+    });
+  });
+}
+
+export function updateCalendarWithHolidays(year) {
+  const hollydays = feestdagenLijstDatums(year).map(date => date.toDateString());
+  const monthElementen = document.querySelectorAll('#calendar .row');
+  monthElementen.forEach((month, index) => {
+    const dayElementen = month.querySelectorAll('.cell');
+    dayElementen.forEach((day, i) => {
+      const myDate = new Date(year, index-1, i);
+      if(i > 0) {
+        if(hollydays.includes(myDate.toDateString())) {
+          if(day.textContent !== 'x' && day.textContent !== 'DT') {
+            day.classList.add('hollyday');
+          }
+          day.textContent += ' - fd';
+        }
+      }
+    });
+  });
+}
+
 export function updateYearCalendarTable(year) {
   const monthElementen = document.querySelectorAll('#calendar .row');
   monthElementen.forEach((month, index) => {

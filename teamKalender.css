@@ -18,8 +18,8 @@
 .team-calendar-table .table-cell, .team-header-cell {
     display: table-cell;
     padding: 5px;
-    width: 30px;
-    height: 30px;
+    width: 33px;
+    height: 33px;
 }
 .team-calendar-table .team-header-cell {
     font-weight: bold;
