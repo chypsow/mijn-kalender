@@ -275,7 +275,7 @@ const feestdagenLijst = {
     10: (year) => new Date(year, 11, 25)
 };
 export const feestdagenLijstDatums = (year) => Object.values(feestdagenLijst).map(datums => datums(year));
-console.log(feestdagenLijstDatums(currentYear));
+//console.log(feestdagenLijstDatums(currentYear));
 
 const formatter = new Intl.DateTimeFormat('nl-NL', {
     weekday: 'long', // Volledige dagnaam
