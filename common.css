@@ -189,7 +189,7 @@ body {
 list-style: none; /* Verwijder de standaard opsommingstekens */
 padding: 0; /* Verwijder ongewenste padding */
 margin: 0;
-min-width: 80%;
+width: 100%;
 }
 
 .feestdag {
@@ -211,7 +211,7 @@ font-family: monospace  , sans-serif;
 }
 #feestdagen {
     position: absolute;
-    padding: 10px 30px;
+    padding: 10px 45px 10px 5px;
     outline: none;
     font-size: 20px;
     top: 155px;

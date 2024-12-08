@@ -250,11 +250,11 @@ function saveToLocalStorage(key, value) {
 };
 
 const feestdagenLijst = {
-    1: () => {
-        return new Date(currentYear, 0, 1);
+    1: (year) => {
+        return new Date(year, 0, 1);
     },
-    2: () => {
-        const Y = currentYear;
+    2: (year) => {
+        const Y = year;
         const a = Y % 19;
         const b = Math.floor(Y / 100);
         const c = Y % 100;
@@ -274,32 +274,33 @@ const feestdagenLijst = {
         paasmaandag.setDate(paasdatum.getDate() + 1);
         return paasmaandag;
     },
-    3: () => {
-        return new Date(currentYear, 4, 1);
+    3: (year) => {
+        return new Date(year, 4, 1);
     },
-    4: () => {
-        const paasdatum = feestdagenLijst[2]();
-        const hemelvaart = paasdatum.setDate(paasdatum.getDate() + 3);
+    4: (year) => {
+        const paasdatum = feestdagenLijst[2](year);
+        const hemelvaart = paasdatum.setDate(paasdatum.getDate() + 38);
         return hemelvaart;
     },
-    5: () => {
-        return new Date(currentYear, 4, 1);
-        
+    5: (year) => {
+        const paasdatum = feestdagenLijst[2](year);
+        const pinkster = paasdatum.setDate(paasdatum.getDate() + 49);
+        return pinkster;
     },
-    6: () => {
-        return new Date(currentYear, 4, 1);
+    6: (year) => {
+        return new Date(year, 6, 21);
     },
-    7: () => {
-        return new Date(currentYear, 4, 1);
+    7: (year) => {
+        return new Date(year, 7, 15);
     },
-    8: () => {
-        return new Date(currentYear, 4, 1);
+    8: (year) => {
+        return new Date(year, 10, 1);
     },
-    9: () => {
-        return new Date(currentYear, 4, 1);
+    9: (year) => {
+        return new Date(year, 10, 11);
     },
-    10: () => {
-        return new Date(currentYear, 4, 1);
+    10: (year) => {
+        return new Date(year, 11, 25);
     }
 };
 const formatter = new Intl.DateTimeFormat('nl-NL', {
@@ -321,23 +322,50 @@ function voegFeestdagToe(lijst, naam, datum) {
     feestdag.appendChild(datumSpan);
     lijst.appendChild(feestdag);
 };
+function voegFeestdagenToe(lijst, year) {
+    const oldList = DOM.overlay.querySelector('.feestdagen');
+    if(oldList) DOM.overlay.removeChild(oldList);
+    voegFeestdagToe(lijst, 'Nieuwjaarsdag', formatter.format(feestdagenLijst[1](year)));
+    voegFeestdagToe(lijst, 'Paasmaandag', formatter.format(feestdagenLijst[2](year)));
+    voegFeestdagToe(lijst, 'Feest van de Arbeid', formatter.format(feestdagenLijst[3](year)));
+    voegFeestdagToe(lijst, 'O.L.V. Hemelvaart', formatter.format(feestdagenLijst[4](year)));
+    voegFeestdagToe(lijst, 'Pinkstermaandag', formatter.format(feestdagenLijst[5](year)));
+    voegFeestdagToe(lijst, 'Nationale Feestdag', formatter.format(feestdagenLijst[6](year)));
+    voegFeestdagToe(lijst, 'O.L.V. Tenhemelopneming', formatter.format(feestdagenLijst[7](year)));
+    voegFeestdagToe(lijst, 'Allerheiligen', formatter.format(feestdagenLijst[8](year)));
+    voegFeestdagToe(lijst, 'Wapenstilstand', formatter.format(feestdagenLijst[9](year)));
+    voegFeestdagToe(lijst, 'Kerstmis', formatter.format(feestdagenLijst[10](year)));
+    DOM.overlay.appendChild(lijst);
+}
 DOM.feestdagen.onclick = function () {
+    let jaar = currentYear;
     DOM.overlay.innerHTML = '';
+    DOM.overlay.innerHTML += `
+        <div class="calendar-nav">
+            <button class="vorig"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+            <span id="jaar" class="month-year">${jaar}</span>
+            <button class="volgend" ><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+    `;
+    DOM.overlay.querySelector('button.vorig').onclick = function() {
+        jaar -= 1;
+        document.getElementById('jaar').textContent = jaar;
+        const lijst = document.createElement('ul');
+        lijst.classList.add('feestdagen');
+        voegFeestdagenToe(lijst, jaar);
+    }
+    DOM.overlay.querySelector('button.volgend').onclick = function() {
+        jaar += 1;
+        document.getElementById('jaar').textContent = jaar;
+        const lijst = document.createElement('ul');
+        lijst.classList.add('feestdagen');
+        voegFeestdagenToe(lijst, jaar);
+    }
+
     const lijst = document.createElement('ul');
     lijst.classList.add('feestdagen');
+    voegFeestdagenToe(lijst, jaar);
 
-    voegFeestdagToe(lijst, 'Nieuwjaarsdag', formatter.format(feestdagenLijst[1]()));
-    voegFeestdagToe(lijst, 'Paasmaandag', formatter.format(feestdagenLijst[2]()));
-    voegFeestdagToe(lijst, 'Feest van de Arbeid', formatter.format(feestdagenLijst[3]()));
-    voegFeestdagToe(lijst, 'O.L.V. Hemelvaart', formatter.format(feestdagenLijst[4]()));
-    voegFeestdagToe(lijst, 'Pinkstermaandag', formatter.format(feestdagenLijst[5]()));
-    voegFeestdagToe(lijst, 'Nationale Feestdag', formatter.format(feestdagenLijst[6]()));
-    voegFeestdagToe(lijst, 'O.L.V. Tenhemelopneming', formatter.format(feestdagenLijst[7]()));
-    voegFeestdagToe(lijst, 'Allerheiligen', formatter.format(feestdagenLijst[8]()));
-    voegFeestdagToe(lijst, 'Wapenstilstand', formatter.format(feestdagenLijst[9]()));
-    voegFeestdagToe(lijst, 'Kerstmis', formatter.format(feestdagenLijst[10]()));
-
-    DOM.overlay.appendChild(lijst);
     toggleModal(true);
 };
 
