@@ -1,4 +1,4 @@
-import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear, feestdagenLijstDatums} from "./ploegenRooster.js";
 
 export function updateYearCalendarTable(year) {
   const monthElementen = document.querySelectorAll('#calendar .row');

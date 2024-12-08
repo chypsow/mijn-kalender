@@ -184,17 +184,19 @@ DOM.instellingen.onclick = function() {
     DOM.overlay.appendChild(document.createElement('br'));
     DOM.overlay.appendChild(document.createElement('br'));
 
-    const reset = document.createElement('button');
-    reset.className = "reset";
-    reset.textContent = "Reset to default settings";
-    reset.addEventListener('click', resetDefaultSettings);
-    DOM.overlay.appendChild(reset);
-
+    const div = document.createElement('div');
+    div.classList.add('button-container');
     const button = document.createElement('button');
     button.className = "btnOverlay";
     button.textContent = "Opslaan";
     button.addEventListener('click', ploegSysteemOpslaan);
-    DOM.overlay.appendChild(button);
+    div.appendChild(button);
+    const reset = document.createElement('button');
+    reset.className = "reset";
+    reset.textContent = "standaardinstellingen terugzetten";
+    reset.addEventListener('click', resetDefaultSettings);
+    div.appendChild(reset);
+    DOM.overlay.appendChild(div);
 
     toggleModal(true);
 };
@@ -232,7 +234,7 @@ function ploegSysteemOpslaan() {
     if (isValid) {
         shiftPattern = cyclus;
         startDates = datums;
-        startDate = startDates[DOM.ploeg.value];
+        startDate = startDates[selectedPloeg];
         saveToLocalStorage('shiftPattern', cyclus);
         saveToLocalStorage('startDates', datums);
         alert("Wijzigingen succesvol opgeslagen!");
@@ -272,6 +274,8 @@ const feestdagenLijst = {
     9: (year) => new Date(year, 10, 11),
     10: (year) => new Date(year, 11, 25)
 };
+export const feestdagenLijstDatums = (year) => Object.values(feestdagenLijst).map(datums => datums(year));
+console.log(feestdagenLijstDatums(currentYear));
 
 const formatter = new Intl.DateTimeFormat('nl-NL', {
     weekday: 'long', // Volledige dagnaam
@@ -323,7 +327,7 @@ DOM.feestdagen.onclick = () => {
     // Navigatieknoppen
     DOM.overlay.querySelector('.vorig').onclick = () => updateFeestdagen(jaar - 1);
     DOM.overlay.querySelector('.volgend').onclick = () => updateFeestdagen(jaar + 1);
-    
+
     // Initiële lijst
     voegFeestdagenToe(lijst, jaar);
     toggleModal(true);
