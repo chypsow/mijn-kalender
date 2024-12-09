@@ -26,7 +26,7 @@ export function generateTeamCalendar(month, year) {
         // Eerste cel: ploegnaam
         const teamCell = document.createElement("div");
         teamCell.classList.add("table-cell", "team-cell");
-        teamCell.textContent = `Ploeg ${team}`;
+        teamCell.textContent = `PLOEG ${team}`;
         teamRow.appendChild(teamCell);
 
         // Cellen voor de dagen (1–31)

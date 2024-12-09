@@ -369,6 +369,7 @@ input[type=checkbox] {
     opacity: 1;
   }
 }
+
 /*kleuren voor de shiften*/
 .shift-nacht {
     background: #4a91e2;
@@ -401,4 +402,11 @@ input[type=checkbox] {
 .shift-deeltijds {
     background: #af0d0d;
     color: rgba(221, 221, 221, 0.89);
+}
+
+.highlight {
+    background-color: rgb(252, 253, 200);
+    outline-style: auto;
+    /*color: #ececec;*/
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.9);
 }

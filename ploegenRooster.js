@@ -76,8 +76,9 @@ let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 let count = 0;
 let tabBlad = 0;
-let selectedPloeg = 1;
+export let selectedPloeg = 1;
 let hollydaysChecked = false;
+let cellCoordinates = JSON.parse(sessionStorage.getItem("selectedCell")) || {};
 
 const defaultSettings = [
     {pagina: 0, ploeg: 1, maand: currentMonth, jaar: currentYear},
@@ -85,7 +86,7 @@ const defaultSettings = [
     {pagina: 2, ploeg: 1, maand: currentMonth, jaar: currentYear},
     {pagina: 3, ploeg: 1, maand: currentMonth, jaar: currentYear}
 ]
-saveToSessionStorage('standaardInstellingen', defaultSettings)
+saveToSessionStorage('standaardInstellingen', defaultSettings);
 
 function saveToSessionStorage(key, value) {
     sessionStorage.setItem(key, JSON.stringify(value));
@@ -126,7 +127,7 @@ DOM.hollydays.onchange = function () {
 DOM.ploeg.onchange = function () {
     selectedPloeg = Number(this.value); 
     startDate = startDates[selectedPloeg];
-    updateSessionStorage();
+    updateSettingsInSessionStorage();
     updateCalendar();
 };
 Array.from(DOM.ploeg.options).forEach(option => {
@@ -352,7 +353,7 @@ const calendarGenerators = {
         DOM.titel.textContent = 'Maandkalender';
         DOM.container.className = 'month-container';
         DOM.calendar.className = 'calendar';
-        getSettingsFromSessionStorage();
+        updateSettingsFromSessionStorage();
         generateMonthCalendar(currentMonth, currentYear);
     },
     1: () => {
@@ -364,7 +365,7 @@ const calendarGenerators = {
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container1';
         DOM.calendar.className = 'year-calendar-grid';
-        getSettingsFromSessionStorage();
+        updateSettingsFromSessionStorage();
         generateYearCalendar(currentYear);
     },
     2: () => {
@@ -376,7 +377,7 @@ const calendarGenerators = {
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container2';
         DOM.calendar.className = 'year-calendar-table';
-        getSettingsFromSessionStorage();
+        updateSettingsFromSessionStorage();
         generateYearCalendarTable(currentYear);
         if(hollydaysChecked) updateCalendarWithHolidays(currentYear);
     },
@@ -389,7 +390,7 @@ const calendarGenerators = {
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';
-        getSettingsFromSessionStorage();
+        updateSettingsFromSessionStorage();
         generateTeamCalendar(currentMonth, currentYear);
     }
 };
@@ -409,7 +410,7 @@ function refreshCalendar() {
     DOM.calendar.classList.add("fade-animation");
 };
 
-function getSettingsFromSessionStorage() {
+function updateSettingsFromSessionStorage() {
     const instellingen = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || defaultSettings;
     let instelling = instellingen.find(item => item.pagina === tabBlad);
     selectedPloeg = instelling.ploeg;
@@ -419,7 +420,7 @@ function getSettingsFromSessionStorage() {
     currentYear = instelling.jaar;
 }
 
-function updateSessionStorage() {
+function updateSettingsInSessionStorage() {
     let instellingen = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || defaultSettings;
     let instelling = instellingen.find(item => item.pagina === tabBlad);
     instelling.ploeg = selectedPloeg;
@@ -473,8 +474,9 @@ monthYear.addEventListener("click", () => {
     yearSelect.classList.toggle('visible');
 });
 
-// Verberg de dropdowns als er buiten wordt geklikt
+
 document.addEventListener("click", (event) => {
+    // Verberg de dropdowns als er buiten wordt geklikt
     if (!dropdowns.contains(event.target) && event.target !== monthYear && event.target !== DOM.instellingen) {
         monthYear.style.color = '';
         DOM.selectOverlay.style.display = 'none';
@@ -482,17 +484,34 @@ document.addEventListener("click", (event) => {
         monthSelect.classList.remove("visible");
         yearSelect.classList.remove("visible");
     }
+
+    if (tabBlad === 2) {
+        const cellArray = DOM.calendar.querySelectorAll('.cell');
+        if(event.target.classList.contains('cell') && !event.target.classList.contains('month-cell')) {
+            //console.log('Cell geklikt:', event.target.dataset.coordinates);
+            const setting = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || defaultSettings;
+            cellCoordinates.datum = event.target.dataset.datum;
+            cellCoordinates.team = setting[2].ploeg;
+            
+            saveToSessionStorage("selectedCell", cellCoordinates);
+            cellArray.forEach(cel => cel.classList.remove('highlight'));
+            event.target.classList.add('highlight');
+
+        } else {
+            cellArray.forEach(cel => cel.classList.remove('highlight'));
+        }
+    }
 });
 
 monthSelect.addEventListener("change", (event) => {
     currentMonth = parseInt(event.target.value, 10);
-    updateSessionStorage();
+    updateSettingsInSessionStorage();
     generateCalendar();
 });
 
 yearSelect.addEventListener("change", (event) => {
     currentYear = parseInt(event.target.value, 10);
-    updateSessionStorage();
+    updateSettingsInSessionStorage();
     generateCalendar();
 });
 
@@ -504,7 +523,7 @@ function triggerPrev() {
     } else {
         currentYear -= 1;
     }
-    updateSessionStorage();
+    updateSettingsInSessionStorage();
     generateCalendar();
 };
 
@@ -515,7 +534,7 @@ function triggerNext() {
     } else {
         currentYear += 1;
     }
-    updateSessionStorage();
+    updateSettingsInSessionStorage();
     generateCalendar();
 };
 DOM.prev.addEventListener("click", triggerPrev);
