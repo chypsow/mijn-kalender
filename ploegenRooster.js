@@ -345,8 +345,8 @@ DOM.feestdagen.onclick = () => {
 
 const calendarGenerators = {
     0: () => {
-        DOM.addShift.hidden = false;
-        DOM.instellingen.hidden = false;
+        //DOM.addShift.hidden = false;
+        //DOM.instellingen.hidden = false;
         DOM.ploeg.hidden = false;
         DOM.checkBox.hidden = true;
         DOM.legende.style.display = '';
@@ -357,8 +357,8 @@ const calendarGenerators = {
         generateMonthCalendar(currentMonth, currentYear);
     },
     1: () => {
-        DOM.addShift.hidden = true;
-        DOM.instellingen.hidden = true;
+        //DOM.addShift.hidden = true;
+        //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.checkBox.hidden = true;
         DOM.legende.style.display = '';
@@ -369,8 +369,8 @@ const calendarGenerators = {
         generateYearCalendar(currentYear);
     },
     2: () => {
-        DOM.addShift.hidden = true;
-        DOM.instellingen.hidden = true;
+        //DOM.addShift.hidden = true;
+        //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.checkBox.hidden = false;
         DOM.legende.style.display = 'none';
@@ -382,10 +382,10 @@ const calendarGenerators = {
         if(hollydaysChecked) updateCalendarWithHolidays(currentYear);
     },
     3: () => {
-        DOM.addShift.hidden = true;
-        DOM.instellingen.hidden = true;
+        //DOM.addShift.hidden = true;
+        //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = true;
-        DOM.checkBox.hidden = false;
+        DOM.checkBox.hidden = true;
         DOM.legende.style.display = 'none';
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
