@@ -202,7 +202,7 @@ DOM.instellingen.onclick = function() {
     div.appendChild(button);
     const reset = document.createElement('button');
     reset.className = "reset";
-    reset.textContent = "standaardinstellingen terugzetten";
+    reset.textContent = "Standaardinstellingen terugzetten";
     reset.addEventListener('click', resetDefaultSettings);
     div.appendChild(reset);
     DOM.overlay.appendChild(div);
@@ -397,9 +397,16 @@ const calendarGenerators = {
 function generateCalendar() {
     if (calendarGenerators[tabBlad]) {
         calendarGenerators[tabBlad]();
+        refreshCalendar();
     } else {
         console.error(`Geen kalendergenerator gevonden voor blad: ${tabBlad}`);
     }
+};
+function refreshCalendar() {
+    // Reset de animatie door de klasse te verwijderen en opnieuw toe te voegen
+    DOM.calendar.classList.remove("fade-animation");
+    void DOM.calendar.offsetWidth; // Forceer een reflow (truc om animatie te resetten)
+    DOM.calendar.classList.add("fade-animation");
 };
 
 function getSettingsFromSessionStorage() {
