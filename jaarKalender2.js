@@ -1,4 +1,4 @@
-import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate, monthYear, feestdagenLijstDatums } from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate, monthYear, feestdagenLijstDatums, selectedPloeg } from "./ploegenRooster.js";
 
 export function updateCalendarWithoutHolidays(year) {
   const hollydays = feestdagenLijstDatums(year).map(date => date.toDateString());
@@ -37,6 +37,10 @@ export function updateCalendarWithHolidays(year) {
 }
 
 export function updatePloegYearCalendarTable(year) {
+  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
+  let selectActief = false;
+  if(geselecteerd) selectActief = true;
+
   const monthElementen = document.querySelectorAll('#calendar .row');
   monthElementen.forEach((month, index) => {
     const dayElementen = month.querySelectorAll('.cell');
@@ -52,6 +56,13 @@ export function updatePloegYearCalendarTable(year) {
           const shift = shiftPattern[shiftIndex];
           day.textContent = shift; // Voeg de shiftletter toe
           //day.dataset.team = selectedPloeg;
+          if(selectActief) {
+            if(currentDate.toLocaleDateString() === geselecteerd.datum && 
+              selectedPloeg === geselecteerd.team) {
+              selectActief === false;
+              day.classList.add('highlight');
+            }
+          }
           if(shift === 'x' || shift === 'DT') {
             const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
             day.classList.add(shiftClass);
@@ -64,7 +75,10 @@ export function updatePloegYearCalendarTable(year) {
 
 export function generateYearCalendarTable(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
-  
+  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
+  let selectActief = false;
+  if(geselecteerd) selectActief = true;
+
   // Header rij (1–31 voor de dagen van de maand)
   const headerRow = document.createElement("div");
   headerRow.classList.add("row");
@@ -96,7 +110,7 @@ export function generateYearCalendarTable(year) {
     for (let day = 1; day <= 31; day++) {
       const dayCell = document.createElement("div");
       dayCell.classList.add("cell");
-      dayCell.dataset.datum =`${year},${month},${day}`;
+      dayCell.dataset.datum =`${String(day).padStart(2, "0")}/${String(month+1).padStart(2, "0")}/${year}`;
       //dayCell.dataset.team = selectedPloeg;
       const currentDate = new Date(year, month, day);
       // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
@@ -108,6 +122,13 @@ export function generateYearCalendarTable(year) {
           const shift = shiftPattern[shiftIndex];
           const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
           dayCell.textContent = shift; // Voeg de shiftletter toe
+          if(selectActief) {
+            if(currentDate.toLocaleDateString() === geselecteerd.datum && 
+              selectedPloeg === geselecteerd.team) {
+              selectActief === false;
+              dayCell.classList.add('highlight');
+            }
+          }
           if(shift === 'x' || shift === 'DT') dayCell.classList.add(shiftClass);
           //dayCell.classList.add(shiftClass); // Voeg de kleurklasse toe
         }
