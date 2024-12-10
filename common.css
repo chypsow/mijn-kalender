@@ -404,9 +404,3 @@ input[type=checkbox] {
     color: rgba(221, 221, 221, 0.89);
 }
 
-.highlight {
-    background-color: rgb(252, 253, 200);
-    outline-style: auto;
-    /*color: #ececec;*/
-    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.9);
-}

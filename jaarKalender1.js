@@ -1,6 +1,6 @@
 import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
 
-export function updateYearCalendar(year) {
+export function updatePloegYearCalendar(year) {
   const monthElementen = document.querySelectorAll('#calendar .month');
   monthElementen.forEach((month, index) => {
     const dayElementen = month.querySelectorAll('.day-klein');

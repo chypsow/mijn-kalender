@@ -36,7 +36,7 @@ export function updateCalendarWithHolidays(year) {
   });
 }
 
-export function updateYearCalendarTable(year) {
+export function updatePloegYearCalendarTable(year) {
   const monthElementen = document.querySelectorAll('#calendar .row');
   monthElementen.forEach((month, index) => {
     const dayElementen = month.querySelectorAll('.cell');
