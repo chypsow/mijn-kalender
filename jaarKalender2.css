@@ -1,5 +1,5 @@
 .year-container2 {
-    margin: 170px auto 0;
+    margin: 150px auto 0;
     text-align: center;
 }
 
@@ -72,6 +72,66 @@
     border: 1px solid #a0a0a0a1;
 }
 
-.hollyday {
-    background-color: #8fb8d3;
+.verlof-container {
+    margin: 50px auto 0;
+    align-items: center;
+    max-width: 500px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    text-align: center;
+}
+.verlofCollection {
+    cursor: default;
+    text-align: center;
+    padding: 5px 5px;
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
+    border: 3px solid transparent;
+    
+    transition: all 0.15s ease-out;
+}
+.verlofCollection:hover {
+    border: 3px solid white;
+    box-shadow: 0 0 15px gray;
+}
+.restore {
+    cursor: pointer;
+    padding: 10px;
+    width: 60px;
+    border: 1px solid gray;
+}
+.restore:hover {
+    border: 1px solid rgb(228, 228, 228);
+    color: white;
+    box-shadow: 0 0 15px gray;
+}
+.BV {
+    background-color: #FCD5B4;
+    color: white;
+}
+.CS {
+    background-color: #D5A0C7;
+    color: white;
+}
+.ADV {
+    background-color: #D3AF81;
+    color: white;
+}
+.BF {
+    background-color: rgb(152, 210, 224);
+    color: white;
+}
+.AV {
+    background-color: #32AA96;
+    color: white;
+}
+.HP {
+    background-color: #a5a5a5;
+    color: white;
+}
+.Z {
+    background-color: #F4A54E;
+    color: white;
 }

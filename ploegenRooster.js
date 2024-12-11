@@ -50,6 +50,12 @@ export function getDaysSinceStart(date, date0) {
     return Math.round(diffTime / (1000 * 60 * 60 * 24));
 };
 
+export let verlofdagenPloeg1 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg1')) || {};
+export let verlofdagenPloeg2 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg2')) || {};
+export let verlofdagenPloeg3 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg3')) || {};
+export let verlofdagenPloeg4 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg4')) || {};
+export let verlofdagenPloeg5 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg5')) || {};
+
 // Elementen in de DOM
 const DOM = {
     prev: document.getElementById('prev'),
@@ -58,6 +64,7 @@ const DOM = {
     dropdowns: document.getElementById("dropdowns"),
     topNav: document.getElementById("top-nav"),
     container: document.getElementById('container'),
+    verlofContainer: document.getElementById('verlof-container'),
     checkBox: document.getElementById('checkBox'),
     hollydays: document.getElementById('hollydays'),
     ploeg: document.getElementById('ploeg'),
@@ -109,6 +116,60 @@ function maakLegende() {
     });
 
 };
+
+function maakVerlofContainer() {
+    const restore = document.createElement('div');
+    restore.textContent = 'Cancel';
+    restore.addEventListener('click', cancelAanvraag);
+    restore.classList.add('restore');
+    DOM.verlofContainer.appendChild(restore);
+    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
+    verlofDagen.forEach(verlof => {
+        const verlofDag = document.createElement('div');
+        verlofDag.textContent = verlof;
+        verlofDag.classList.add(verlof);
+        verlofDag.classList.add('verlofCollection');
+        verlofDag.addEventListener('click', verlofAanvraag);
+        DOM.verlofContainer.appendChild(verlofDag);
+    });
+};
+function cancelAanvraag() {
+    const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
+    if(!selectedCell) return;
+    if(selectedCell.team !== selectedPloeg) return;
+    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
+    Array.from(DOM.calendar.querySelectorAll('.cell')).forEach(cel => {
+        if(cel.textContent !== 'x') {
+            if(cel.dataset.datum === selectedCell.datum) {
+                cel.classList.forEach(className => {
+                    if(verlofDagen.includes(className)) {
+                        cel.classList.remove(className);
+                        cel.textContent = cel.dataset.shift;
+                    }
+                });
+            }
+        }
+    });
+}
+function verlofAanvraag(e) {
+    const aanvraag = e.target.textContent;
+    const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
+    if(!selectedCell) return;
+    if(selectedCell.team !== selectedPloeg) return;
+    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
+    Array.from(DOM.calendar.querySelectorAll('.cell')).forEach(cel => {
+        if(cel.textContent !== 'x') {
+            if(cel.dataset.datum === selectedCell.datum) {
+                cel.classList.forEach(className => {
+                    if(verlofDagen.includes(className)) cel.classList.remove(className);
+                })
+                cel.textContent = aanvraag;
+                cel.classList.add(aanvraag);
+            }
+        }
+    });
+}
+
 
 Array.from(DOM.topNav.children).forEach((elt, index) => {
     elt.addEventListener('click', () => {
@@ -349,6 +410,7 @@ const calendarGenerators = {
         //DOM.instellingen.hidden = false;
         DOM.ploeg.hidden = false;
         DOM.checkBox.hidden = true;
+        DOM.verlofContainer.style.display = 'none';
         DOM.legende.style.display = '';
         DOM.titel.textContent = 'Maandkalender';
         DOM.container.className = 'month-container';
@@ -361,6 +423,7 @@ const calendarGenerators = {
         //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.checkBox.hidden = true;
+        DOM.verlofContainer.style.display = 'none';
         DOM.legende.style.display = '';
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container1';
@@ -373,6 +436,7 @@ const calendarGenerators = {
         //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.checkBox.hidden = false;
+        DOM.verlofContainer.style.display = 'grid';
         DOM.legende.style.display = 'none';
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container2';
@@ -386,6 +450,7 @@ const calendarGenerators = {
         //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = true;
         DOM.checkBox.hidden = true;
+        DOM.verlofContainer.style.display = 'none';
         DOM.legende.style.display = 'none';
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
@@ -409,6 +474,8 @@ function refreshCalendar() {
     void DOM.calendar.offsetWidth; // Forceer een reflow (truc om animatie te resetten)
     DOM.calendar.classList.add("fade-animation");
 };
+
+
 
 function getSettingsFromSessionStorage() {
     const instellingen = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || defaultSettings;
@@ -537,6 +604,7 @@ DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 
 maakLegende();
+maakVerlofContainer();
 populateDropdowns();
 generateCalendar();
 

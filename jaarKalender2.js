@@ -1,4 +1,6 @@
 import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate, monthYear, feestdagenLijstDatums, selectedPloeg } from "./ploegenRooster.js";
+import { verlofdagenPloeg1, verlofdagenPloeg2, verlofdagenPloeg3, verlofdagenPloeg4, verlofdagenPloeg5 } from "./ploegenRooster.js";
+
 
 export function updateCalendarWithoutHolidays(year) {
   const hollydays = feestdagenLijstDatums(year).map(date => date.toDateString());
@@ -9,7 +11,7 @@ export function updateCalendarWithoutHolidays(year) {
       const myDate = new Date(year, index-1, i);
       if(i > 0) {
         if(hollydays.includes(myDate.toDateString())) {
-          day.classList.remove('hollyday');
+          day.classList.remove('BF');
           if(day.textContent.includes('fd')) day.textContent = day.textContent.slice(0, -5);
         }
       }
@@ -27,7 +29,7 @@ export function updateCalendarWithHolidays(year) {
       if(i > 0) {
         if(hollydays.includes(myDate.toDateString())) {
           if(day.textContent !== 'x' && day.textContent !== 'DT') {
-            day.classList.add('hollyday');
+            day.classList.add('BF');
           }
           day.textContent += ' - fd';
         }
@@ -111,6 +113,7 @@ export function generateYearCalendarTable(year) {
       const dayCell = document.createElement("div");
       dayCell.classList.add("cell");
       dayCell.dataset.datum =`${String(day).padStart(2, "0")}/${String(month+1).padStart(2, "0")}/${year}`;
+      
       //dayCell.dataset.team = selectedPloeg;
       const currentDate = new Date(year, month, day);
       // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
@@ -122,6 +125,7 @@ export function generateYearCalendarTable(year) {
           const shift = shiftPattern[shiftIndex];
           const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
           dayCell.textContent = shift; // Voeg de shiftletter toe
+          dayCell.dataset.shift = shift;
           if(selectActief) {
             if(currentDate.toLocaleDateString() === geselecteerd.datum && 
               selectedPloeg === geselecteerd.team) {
