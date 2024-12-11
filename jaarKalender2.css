@@ -56,6 +56,10 @@
     /*color: #ececec;*/
     /*box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.9);*/
 }
+.hollyday {
+    background-color: rgb(152, 210, 224);
+    color: white;
+}
 .year-calendar-table .month-cell {
     /*font-weight: bold;*/
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -82,9 +86,12 @@
     text-align: center;
 }
 .verlofCollection {
+    color: black;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     cursor: default;
     text-align: center;
-    padding: 5px 5px;
+    padding: 10px 5px 0px 5px;
     width: 35px;
     height: 35px;
     border-radius: 5px;
@@ -97,8 +104,12 @@
     box-shadow: 0 0 15px gray;
 }
 .restore {
+    font-size: 1.2em;
+    background: linear-gradient(360deg,#022124 10%,#efefef 360%);
+    color: #aaaaaa;
+    transition: all 0.20s ease-in-out;
     cursor: pointer;
-    padding: 10px;
+    padding: 8px 15px;
     width: 60px;
     border: 1px solid gray;
 }
@@ -109,29 +120,29 @@
 }
 .BV {
     background-color: #FCD5B4;
-    color: white;
+    /*color: white;*/
 }
 .CS {
     background-color: #D5A0C7;
-    color: white;
+    /*color: white;*/
 }
 .ADV {
     background-color: #D3AF81;
-    color: white;
+    /*color: white;*/
 }
 .BF {
     background-color: rgb(152, 210, 224);
-    color: white;
+    /*color: white;*/
 }
 .AV {
     background-color: #32AA96;
-    color: white;
+    /*color: white;*/
 }
 .HP {
     background-color: #a5a5a5;
-    color: white;
+    /*color: white;*/
 }
 .Z {
     background-color: #F4A54E;
-    color: white;
+    /*color: white;*/
 }

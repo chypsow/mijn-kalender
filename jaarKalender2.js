@@ -1,5 +1,5 @@
 import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate, monthYear, feestdagenLijstDatums, selectedPloeg } from "./ploegenRooster.js";
-import { verlofdagenPloeg1, verlofdagenPloeg2, verlofdagenPloeg3, verlofdagenPloeg4, verlofdagenPloeg5 } from "./ploegenRooster.js";
+
 
 
 export function updateCalendarWithoutHolidays(year) {
@@ -11,7 +11,7 @@ export function updateCalendarWithoutHolidays(year) {
       const myDate = new Date(year, index-1, i);
       if(i > 0) {
         if(hollydays.includes(myDate.toDateString())) {
-          day.classList.remove('BF');
+          day.classList.remove('hollyday');
           if(day.textContent.includes('fd')) day.textContent = day.textContent.slice(0, -5);
         }
       }
@@ -22,16 +22,19 @@ export function updateCalendarWithoutHolidays(year) {
 export function updateCalendarWithHolidays(year) {
   const hollydays = feestdagenLijstDatums(year).map(date => date.toDateString());
   const monthElementen = document.querySelectorAll('#calendar .row');
+  const dagenThuis = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'x', 'DT'];
   monthElementen.forEach((month, index) => {
     const dayElementen = month.querySelectorAll('.cell');
     dayElementen.forEach((day, i) => {
       const myDate = new Date(year, index-1, i);
       if(i > 0) {
         if(hollydays.includes(myDate.toDateString())) {
-          if(day.textContent !== 'x' && day.textContent !== 'DT') {
-            day.classList.add('BF');
-          }
+          if(!dagenThuis.includes(day.textContent)) {
+            day.classList.add('hollyday');
+          
           day.textContent += ' - fd';
+          //day.dataset.shift = day.textContent;
+          }
         }
       }
     });

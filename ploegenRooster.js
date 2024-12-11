@@ -49,12 +49,20 @@ export function getDaysSinceStart(date, date0) {
     const diffTime = date - date0;
     return Math.round(diffTime / (1000 * 60 * 60 * 24));
 };
-
-export let verlofdagenPloeg1 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg1')) || {};
-export let verlofdagenPloeg2 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg2')) || {};
-export let verlofdagenPloeg3 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg3')) || {};
-export let verlofdagenPloeg4 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg4')) || {};
-export let verlofdagenPloeg5 = JSON.parse(sessionStorage.getItem('verlofdagenPloeg5')) || {};
+export const verlofdagenPloegen = {
+    verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
+    verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
+    verlofdagenPloeg3: JSON.parse(localStorage.getItem('verlofdagenPloeg3')) || [],
+    verlofdagenPloeg4: JSON.parse(localStorage.getItem('verlofdagenPloeg4')) || [],
+    verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || []
+};
+const localStoragePloegen = {
+    1: 'verlofdagenPloeg1',
+    2: 'verlofdagenPloeg2',
+    3: 'verlofdagenPloeg3',
+    4: 'verlofdagenPloeg4',
+    5: 'verlofdagenPloeg5'
+}
 
 // Elementen in de DOM
 const DOM = {
@@ -145,12 +153,25 @@ function cancelAanvraag() {
                     if(verlofDagen.includes(className)) {
                         cel.classList.remove(className);
                         cel.textContent = cel.dataset.shift;
+                        const canceledDatum = selectedCell.datum;
+                        verwijderVerlofDatum(selectedPloeg, canceledDatum);
                     }
                 });
             }
         }
     });
-}
+};
+
+function verwijderVerlofDatum(ploeg, datum) {
+    const ploegKey = `verlofdagenPloeg${ploeg}`;
+    const index = verlofdagenPloegen[ploegKey].findIndex(obj => obj.datum === datum);
+
+    if (index !== -1) {
+        verlofdagenPloegen[ploegKey].splice(index, 1);
+        saveToLocalStorage(localStoragePloegen[ploeg], verlofdagenPloegen[ploegKey]);
+    }
+};
+
 function verlofAanvraag(e) {
     const aanvraag = e.target.textContent;
     const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
@@ -158,18 +179,36 @@ function verlofAanvraag(e) {
     if(selectedCell.team !== selectedPloeg) return;
     const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     Array.from(DOM.calendar.querySelectorAll('.cell')).forEach(cel => {
-        if(cel.textContent !== 'x') {
+        if(!cel.textContent.includes('x')) {
             if(cel.dataset.datum === selectedCell.datum) {
                 cel.classList.forEach(className => {
                     if(verlofDagen.includes(className)) cel.classList.remove(className);
-                })
+                });
                 cel.textContent = aanvraag;
                 cel.classList.add(aanvraag);
+                voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
             }
         }
     });
-}
+};
+function voegVerlofDatumToe(ploeg, datum, soort) {
+    const ploegKey = `verlofdagenPloeg${ploeg}`;
+    const array = verlofdagenPloegen[ploegKey];
 
+    // Zoek het object met dezelfde datum
+    const index = array.findIndex(obj => obj.datum === datum);
+
+    if (index === -1) {
+        // Geen bestaande aanvraag gevonden, voeg nieuw object toe
+        array.push({ datum, soort });
+    } else if (array[index].soort !== soort) {
+        // Bestaande aanvraag met ander soort, update het soort
+        array[index].soort = soort;
+    }
+
+    // Sla de gewijzigde array op in localStorage
+    saveToLocalStorage(localStoragePloegen[ploeg], array);
+};
 
 Array.from(DOM.topNav.children).forEach((elt, index) => {
     elt.addEventListener('click', () => {
@@ -195,11 +234,11 @@ Array.from(DOM.ploeg.options).forEach(option => {
     option.style.color = 'black';
 });
 function updatePloegCalendar() {
-    if (tabBlad === 0) {
+    if (tabBlad === 2) {
         updatePloegMonthCalendar(currentMonth, currentYear);
     } else if (tabBlad === 1) {
         updatePloegYearCalendar(currentYear);
-    } else if (tabBlad === 2) {
+    } else if (tabBlad === 0) {
         updatePloegYearCalendarTable(currentYear);
         hollydaysChecked ? updateCalendarWithHolidays(currentYear) : updateCalendarWithoutHolidays(currentYear);
         
@@ -405,7 +444,7 @@ DOM.feestdagen.onclick = () => {
 };
 
 const calendarGenerators = {
-    0: () => {
+    2: () => {
         //DOM.addShift.hidden = false;
         //DOM.instellingen.hidden = false;
         DOM.ploeg.hidden = false;
@@ -431,7 +470,7 @@ const calendarGenerators = {
         getSettingsFromSessionStorage();
         generateYearCalendar(currentYear);
     },
-    2: () => {
+    0: () => {
         //DOM.addShift.hidden = true;
         //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = false;
@@ -531,7 +570,7 @@ monthYear.addEventListener("click", () => {
     DOM.selectOverlay.style.display = 'block';
     populateDropdowns();
     DOM.dropdowns.classList.toggle("visible");
-    if(tabBlad === 0 || tabBlad === 3) {
+    if(tabBlad === 2 || tabBlad === 3) {
         monthSelect.classList.toggle("visible");
     }
     yearSelect.classList.toggle('visible');
@@ -548,13 +587,13 @@ document.addEventListener("click", (event) => {
         yearSelect.classList.remove("visible");
     }
 
-    if (tabBlad === 2) {
+    if (tabBlad === 0) {
         const cellArray = DOM.calendar.querySelectorAll('.cell');
         if(event.target.classList.contains('cell') && !event.target.classList.contains('month-cell')) {
             //console.log('Cell geklikt:', event.target.dataset.coordinates);
             const settings = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || defaultSettings;
             cellCoordinates.datum = event.target.dataset.datum;
-            cellCoordinates.team = settings[2].ploeg;
+            cellCoordinates.team = settings[tabBlad].ploeg;
             
             saveToSessionStorage("selectedCell", cellCoordinates);
             cellArray.forEach(cel => cel.classList.remove('highlight'));
@@ -578,7 +617,7 @@ yearSelect.addEventListener("change", (event) => {
 
 
 function triggerPrev() {
-    if(tabBlad === 0 || tabBlad === 3) {
+    if(tabBlad === 2 || tabBlad === 3) {
         currentMonth = (currentMonth - 1 + 12) % 12;
         if (currentMonth === 11) currentYear -= 1;
     } else {
@@ -590,7 +629,7 @@ function triggerPrev() {
 };
 
 function triggerNext() {
-    if(tabBlad === 0 || tabBlad === 3) {
+    if(tabBlad === 2 || tabBlad === 3) {
         currentMonth = (currentMonth + 1) % 12;
         if (currentMonth === 0) currentYear += 1;
     } else {
