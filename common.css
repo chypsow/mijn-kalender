@@ -148,7 +148,7 @@ body {
 /*Legende*/
 .legende-container {
     position: absolute  ;
-    top: 120px;
+    top: 50px;
     right: 20px;
     display: flex;
     flex-direction: column-reverse;
@@ -228,6 +228,7 @@ font-family: monospace  , sans-serif;
     box-shadow: 0 0 15px rgba(113, 136, 139, 0.9);
     color: #dddddd;
 }
+
 .fa-close {
     cursor: pointer;
     position: absolute;

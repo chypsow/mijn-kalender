@@ -126,11 +126,7 @@ function maakLegende() {
 };
 
 function maakVerlofContainer() {
-    const restore = document.createElement('div');
-    restore.textContent = 'Cancel';
-    restore.addEventListener('click', cancelAanvraag);
-    restore.classList.add('restore');
-    DOM.verlofContainer.appendChild(restore);
+    
     const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     verlofDagen.forEach(verlof => {
         const verlofDag = document.createElement('div');
@@ -140,6 +136,11 @@ function maakVerlofContainer() {
         verlofDag.addEventListener('click', verlofAanvraag);
         DOM.verlofContainer.appendChild(verlofDag);
     });
+    const restore = document.createElement('div');
+    restore.textContent = 'Annuleren';
+    restore.addEventListener('click', cancelAanvraag);
+    restore.classList.add('restore');
+    DOM.verlofContainer.appendChild(restore);
 };
 function cancelAanvraag() {
     const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
@@ -475,7 +476,7 @@ const calendarGenerators = {
         //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.checkBox.hidden = false;
-        DOM.verlofContainer.style.display = 'grid';
+        DOM.verlofContainer.style.display = 'flex';
         DOM.legende.style.display = 'none';
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container2';
@@ -513,6 +514,7 @@ function refreshCalendar() {
     void DOM.calendar.offsetWidth; // Forceer een reflow (truc om animatie te resetten)
     DOM.calendar.classList.add("fade-animation");
 };
+
 
 
 

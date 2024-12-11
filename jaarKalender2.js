@@ -1,4 +1,4 @@
-import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate, monthYear, feestdagenLijstDatums, selectedPloeg } from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate, monthYear, feestdagenLijstDatums, selectedPloeg, verlofdagenPloegen } from "./ploegenRooster.js";
 
 
 
@@ -72,6 +72,7 @@ export function updatePloegYearCalendarTable(year) {
             const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
             day.classList.add(shiftClass);
           }
+          voegVerlofdagToeVolgensLocalStorage(selectedPloeg, day);
         }
       }
     });
@@ -138,6 +139,7 @@ export function generateYearCalendarTable(year) {
           }
           if(shift === 'x' || shift === 'DT') dayCell.classList.add(shiftClass);
           //dayCell.classList.add(shiftClass); // Voeg de kleurklasse toe
+          voegVerlofdagToeVolgensLocalStorage(selectedPloeg, dayCell);
         }
       } else {
         dayCell.classList.remove("cell");
@@ -148,4 +150,13 @@ export function generateYearCalendarTable(year) {
     calendar.appendChild(monthRow);
   }
   monthYear.textContent = year;
+};
+function voegVerlofdagToeVolgensLocalStorage(ploeg, cell) {
+  const ploegKey = `verlofdagenPloeg${ploeg}`;
+  verlofdagenPloegen[ploegKey].forEach(obj => { 
+    if(obj.datum === cell.dataset.datum) {
+      cell.textContent = obj.soort;
+      cell.classList.add(obj.soort);
+    }
+  });
 }
