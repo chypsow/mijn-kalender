@@ -78,7 +78,7 @@
 
 .verlof-container {
     margin: 50px auto 0;
-    max-width: 600px;
+    /*max-width: 600px;*/
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -86,14 +86,14 @@
 }
 .verlofCollection {
     color: black;
-    font-weight: bold;
+    /*font-weight: bold;*/
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 0.9em;
     cursor: pointer;
     text-align: center;
-    padding: 8px 5px 0px 5px;
-    width: 50px;
-    height: 30px;
+    padding: 10px 5px 0px 5px;
+    width: 35px;
+    height: 35px;
     border-radius: 5px;
     border: 3px solid transparent;
     transition: all 0.15s ease-out;
@@ -113,7 +113,7 @@
     transition: all 0.20s ease-in-out;
     cursor: pointer;
     text-align: center;
-    padding: 10px ;
+    padding: 12px ;
     width: 100px;
     border: 2px solid rgb(75, 75, 75);
     border-radius: 3px;
