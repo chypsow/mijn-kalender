@@ -12,7 +12,7 @@
 .month {
     /*border: 1px solid #585858;*/
     padding: 10px;
-    /*border-radius: 5px;*/
+    border-radius: 5px;
     /*box-shadow: 5px 5px 15px rgba(112, 112, 112, 0.781);*/
     background: #ffffff1e;
 }
@@ -39,17 +39,23 @@
     gap: 5px;
 }
 
-.day-klein {
+.day-klein, .emptyCellKlein{
     border: 3px solid transparent;
     font-size: 0.8em;
     padding: 3px;
     border-radius: 2px;
-    transition: all 0.25s ease-out;
+    transition: all 0.2s ease-out;
 }
 .day-klein:hover {
     cursor: default;
     border: 3px solid white;    
 }
-
+.emptyCellKlein {
+    color: transparent;
+}
+.emptyCellKlein:hover {
+    cursor: default;
+    /*border: 3px solid white;*/    
+}
 
 

@@ -31,19 +31,25 @@
     /*transition: transform 0.2s ease; Animatie bij het verschuiven */
     /*position: relative;*/
 }
-.day-groot {
+
+.day-groot, .emptyCellGroot {
     border: 3px solid transparent;
     font-size: 1.5em;
     padding: 10px;
     border-radius: 2px;
-    transition: all 0.25s ease-in-out;
+    /*transition: all 0.15s ease-in-out;*/
     
 }
 .day-groot:hover {
     cursor: default;
     border: 3px solid white;    
 }
-
+.emptyCellGroot {
+    color: transparent;
+}
+.emptyCellGroot:hover {
+    cursor: default;
+}
 .calendar div.header {
     font-size: 1.2em;
     padding: 10px;

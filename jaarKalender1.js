@@ -1,28 +1,52 @@
 import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
 
-export function updatePloegYearCalendar(year) {
+export function updateYearCalendar(year) {
+  monthYear.textContent = year;
+  const totalCells = 42;
   const monthElementen = document.querySelectorAll('#calendar .month');
   monthElementen.forEach((month, index) => {
-    const dayElementen = month.querySelectorAll('.day-klein');
-    dayElementen.forEach(day => {
-      const myDay = parseInt(day.textContent);
-      const currentDate = new Date(year, index, myDay);
+    const monthDays = month.querySelectorAll('.emptyCellKlein, .day-klein');
+    const daysInMonth = new Date(year, index+1, 0).getDate();
+    const firstDay = new Date(year, index, 1).getDay();
+    let counter = 0;
+    for(let i = 0; i < (firstDay + 6) % 7; i++) {
+      const myDay = monthDays[counter];
+      counter++;
+      myDay.textContent = 0;
+      myDay.className = '';
+      myDay.classList.add('emptyCellKlein');
+    }
+    for(let day = 1; day <= daysInMonth; day++) {
+      const myDay = monthDays[counter];
+      counter++;
+      
+      myDay.className = '';
+      myDay.textContent = day;
+      myDay.classList.add('day-klein');
+
+      const currentDate = new Date(year, index, day);
       const daysSinceStart = getDaysSinceStart(currentDate, startDate);
       if(daysSinceStart >= 0) {
         const shiftIndex = daysSinceStart % shiftPattern.length;
         const shift = shiftPattern[shiftIndex];
         const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
-        day.className = '';
-        day.classList.add('day-klein');
-        day.classList.add(shiftClass);
+        myDay.classList.add(shiftClass);
       }
-    });
+    }
+    const remainingCells = totalCells - (firstDay + 6) % 7 - daysInMonth;
+    for (let i = 0; i < remainingCells; i++) {
+      const myDay = monthDays[counter];
+      counter++;
+      myDay.textContent = 0;
+      myDay.className = '';
+      myDay.classList.add('emptyCellKlein');
+    }
   });
 };
 
 export function generateYearCalendar(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
-
+  monthYear.textContent = year;
   for (let month = 0; month < 12; month++) {
     const monthContainer = document.createElement("div");
     monthContainer.classList.add("month");
@@ -54,7 +78,8 @@ export function generateYearCalendar(year) {
     // Voeg lege cellen toe voor dagen vóór de eerste dag
     for (let i = 0; i < (firstDay + 6) % 7; i++) {
         const emptyCell = document.createElement("div");
-        emptyCell.classList.add("emptyCell");
+        emptyCell.textContent = 0;
+        emptyCell.classList.add("emptyCellKlein");
         calendarGrid.appendChild(emptyCell);
     }
 
@@ -76,8 +101,17 @@ export function generateYearCalendar(year) {
       calendarGrid.appendChild(dayCell);
     }
 
+    // Lege cellen om het grid compleet te maken
+    const totalCells = 42;
+    const remainingCells = totalCells - (firstDay + 6) % 7 - daysInMonth;
+    for (let i = 0; i < remainingCells; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.textContent = 0;
+        emptyCell.classList.add("emptyCellKlein");
+        calendarGrid.appendChild(emptyCell);
+    }
+
     monthContainer.appendChild(calendarGrid);
     calendar.appendChild(monthContainer);
   }
-  monthYear.textContent = year;
 };

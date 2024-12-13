@@ -1,66 +1,24 @@
-import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate, monthYear, feestdagenLijstDatums, selectedPloeg, verlofdagenPloegen } from "./ploegenRooster.js";
+import { getDaysSinceStart, shiftPattern, startDate, monthYear, feestdagenLijstDatums, selectedPloeg, verlofdagenPloegen } from "./ploegenRooster.js";
 
-
-
-export function updateCalendarWithoutHolidays(year) {
-  const hollydays = feestdagenLijstDatums(year).map(date => date.toDateString());
-  const monthElementen = document.querySelectorAll('#calendar .row');
-  monthElementen.forEach((month, index) => {
-    const dayElementen = month.querySelectorAll('.cell');
-    dayElementen.forEach((day, i) => {
-      const myDate = new Date(year, index-1, i);
-      if(i > 0) {
-        if(hollydays.includes(myDate.toDateString())) {
-          day.classList.remove('hollyday');
-          if(day.textContent.includes('fd')) day.textContent = day.textContent.slice(0, -5);
-        }
-      }
-    });
-  });
-}
-
-export function updateCalendarWithHolidays(year) {
-  const hollydays = feestdagenLijstDatums(year).map(date => date.toDateString());
-  const monthElementen = document.querySelectorAll('#calendar .row');
-  const dagenThuis = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'x', 'DT'];
-  monthElementen.forEach((month, index) => {
-    const dayElementen = month.querySelectorAll('.cell');
-    dayElementen.forEach((day, i) => {
-      const myDate = new Date(year, index-1, i);
-      if(i > 0) {
-        if(hollydays.includes(myDate.toDateString())) {
-          if(!dagenThuis.includes(day.textContent)) {
-            day.classList.add('hollyday');
-          
-          day.textContent += ' - fd';
-          //day.dataset.shift = day.textContent;
-          }
-        }
-      }
-    });
-  });
-}
-
-export function updatePloegYearCalendarTable(year) {
+export function updateYearCalendarTable(year) {
+  monthYear.textContent = year;
+  const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;
   if(geselecteerd) selectActief = true;
-
   const monthElementen = document.querySelectorAll('#calendar .row');
   monthElementen.forEach((month, index) => {
     const dayElementen = month.querySelectorAll('.cell');
     dayElementen.forEach((day, i) => {
       if(i > 0) {
         day.textContent = '';
+        day.dataset.shift = '';
+        day.dataset.datum = '';
         day.className = '';
         day.classList.add('cell');
         const currentDate = new Date(year, index-1, i);
-        const daysSinceStart = getDaysSinceStart(currentDate, startDate);
-        if(daysSinceStart >= 0) {
-          const shiftIndex = daysSinceStart % shiftPattern.length;
-          const shift = shiftPattern[shiftIndex];
-          day.textContent = shift; // Voeg de shiftletter toe
-          //day.dataset.team = selectedPloeg;
+        if (currentDate.getMonth() === index-1) {
+          shiftenInvullen(day, currentDate, hollydays);
           if(selectActief) {
             if(currentDate.toLocaleDateString() === geselecteerd.datum && 
               selectedPloeg === geselecteerd.team) {
@@ -68,11 +26,8 @@ export function updatePloegYearCalendarTable(year) {
               day.classList.add('highlight');
             }
           }
-          if(shift === 'x' || shift === 'DT') {
-            const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
-            day.classList.add(shiftClass);
-          }
-          voegVerlofdagToeVolgensLocalStorage(selectedPloeg, day);
+        } else {
+          day.classList.add('emptyDay');
         }
       }
     });
@@ -81,6 +36,8 @@ export function updatePloegYearCalendarTable(year) {
 
 export function generateYearCalendarTable(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
+  monthYear.textContent = year;
+  const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;
   if(geselecteerd) selectActief = true;
@@ -116,41 +73,44 @@ export function generateYearCalendarTable(year) {
     for (let day = 1; day <= 31; day++) {
       const dayCell = document.createElement("div");
       dayCell.classList.add("cell");
-      dayCell.dataset.datum =`${String(day).padStart(2, "0")}/${String(month+1).padStart(2, "0")}/${year}`;
       
-      //dayCell.dataset.team = selectedPloeg;
       const currentDate = new Date(year, month, day);
       // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
       if (currentDate.getMonth() === month) {
-        // Bereken de ploeg
-        const daysSinceStart = getDaysSinceStart(currentDate, startDate);
-        if(daysSinceStart >= 0) {
-          const shiftIndex = daysSinceStart % shiftPattern.length;
-          const shift = shiftPattern[shiftIndex];
-          const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
-          dayCell.textContent = shift; // Voeg de shiftletter toe
-          dayCell.dataset.shift = shift;
-          if(selectActief) {
-            if(currentDate.toLocaleDateString() === geselecteerd.datum && 
-              selectedPloeg === geselecteerd.team) {
-              selectActief === false;
-              dayCell.classList.add('highlight');
-            }
+        shiftenInvullen(dayCell, currentDate, hollydays);
+        if(selectActief) {
+          if(currentDate.toLocaleDateString() === geselecteerd.datum && 
+            selectedPloeg === geselecteerd.team) {
+            selectActief === false;
+            dayCell.classList.add('highlight');
           }
-          if(shift === 'x' || shift === 'DT') dayCell.classList.add(shiftClass);
-          //dayCell.classList.add(shiftClass); // Voeg de kleurklasse toe
-          voegVerlofdagToeVolgensLocalStorage(selectedPloeg, dayCell);
         }
       } else {
-        dayCell.classList.remove("cell");
         dayCell.classList.add("emptyDay");
       }
       monthRow.appendChild(dayCell);
     }
     calendar.appendChild(monthRow);
   }
-  monthYear.textContent = year;
 };
+
+function shiftenInvullen(elt, date, hollydays) {
+  const daysSinceStart = getDaysSinceStart(date, startDate);
+  if(daysSinceStart >= 0) {
+    const myDate = date.toLocaleDateString();
+    const shiftIndex = daysSinceStart % shiftPattern.length;
+    let shift = shiftPattern[shiftIndex];
+    if(shift === 'x') elt.classList.add('shift-thuis');
+    if(hollydays.includes(myDate)) {
+      shift += '- fd';
+    }
+    elt.textContent = shift;
+    elt.dataset.shift = shift;
+    elt.dataset.datum =myDate;
+    voegVerlofdagToeVolgensLocalStorage(selectedPloeg, elt);
+  }
+};
+
 function voegVerlofdagToeVolgensLocalStorage(ploeg, cell) {
   const ploegKey = `verlofdagenPloeg${ploeg}`;
   verlofdagenPloegen[ploegKey].forEach(obj => { 
@@ -159,4 +119,4 @@ function voegVerlofdagToeVolgensLocalStorage(ploeg, cell) {
       cell.classList.add(obj.soort);
     }
   });
-}
+};

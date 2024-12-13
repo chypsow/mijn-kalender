@@ -1,7 +1,53 @@
-import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDates ,  monthYear } from "./ploegenRooster.js";
+import { getDaysSinceStart, shiftPattern, startDates , monthYear, feestdagenLijstDatums, } from "./ploegenRooster.js";
+
+export function updateTeamCalendar(month, year) {
+    const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
+    monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
+    const teamElementen = document.querySelectorAll('#calendar .team-row');
+    const legeCellen = new Set();
+    teamElementen.forEach((team, index) => {
+        const dayElementen = team.querySelectorAll('.table-cell');
+        dayElementen.forEach((day, i) => {
+            if(i > 0) {
+                day.textContent = '';
+                day.className = '';
+                day.classList.add('table-cell');
+                const currentDate = new Date(year, month, i);
+                if(currentDate.getMonth() === month) {
+                    const daysSinceStart = getDaysSinceStart(currentDate, startDates[index]);
+                    if(daysSinceStart >= 0) {
+                        const myDate = currentDate.toLocaleDateString();
+                        const shiftIndex = daysSinceStart % shiftPattern.length;
+                        let shift = shiftPattern[shiftIndex];
+                        if(shift === 'x') day.classList.add('shift-thuis');
+                        if(hollydays.includes(myDate)) {
+                            shift += '- fd';
+                        }
+                        day.textContent = shift;
+                    }
+                } else {
+                    day.classList.add('emptyDay');
+                    legeCellen.add(i);
+                }
+            }
+        });
+    });
+    for (let i = 31; i >= 28; i--) {
+        const headerCell = teamElementen[0].children[i];
+        if (legeCellen.has(parseInt(headerCell.textContent), 10)) {
+            headerCell.classList.add('emptyDay');
+        } else {
+            headerCell.classList.remove('emptyDay');
+        }
+    }
+}
 
 export function generateTeamCalendar(month, year) {
     calendar.innerHTML = '';
+    const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
+    monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
     // Header rij (1–31 voor de dagen van de maand)
     const headerRow = document.createElement("div");
     headerRow.classList.add("team-row");
@@ -18,6 +64,7 @@ export function generateTeamCalendar(month, year) {
     }
     calendar.appendChild(headerRow);
     // Genereer rijen voor elke ploeg
+    const legeCellen = new Set();
     for (let team = 1; team < 6; team++) {
         const teamRow = document.createElement("div");
         teamRow.classList.add("team-row");
@@ -30,6 +77,7 @@ export function generateTeamCalendar(month, year) {
         teamRow.appendChild(teamCell);
 
         // Cellen voor de dagen (1–31)
+        
         for (let day = 1; day <= 31; day++) {
             const dayCell = document.createElement("div");
             dayCell.classList.add("table-cell");
@@ -40,20 +88,29 @@ export function generateTeamCalendar(month, year) {
                 // Bereken de ploeg
                 const daysSinceStart = getDaysSinceStart(currentDate, startDates[team]);
                 if(daysSinceStart >= 0) {
+                    const myDate = currentDate.toLocaleDateString();
                     const shiftIndex = daysSinceStart % shiftPattern.length;
-                    const shift = shiftPattern[shiftIndex];
-                    const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
-                    dayCell.textContent = shift; // Voeg de shiftletter toe
-                    if(shift === 'x' || shift === 'DT') dayCell.classList.add(shiftClass);
-                    //dayCell.classList.add(shiftClass); // Voeg de kleurklasse toe
+                    let shift = shiftPattern[shiftIndex];
+                    if(shift === 'x') dayCell.classList.add('shift-thuis');
+                    if(hollydays.includes(myDate)) {
+                        shift += '- fd';
+                    }
+                    dayCell.textContent = shift;
                 }
-            
+            } else {
+                dayCell.classList.add('emptyDay');
+                legeCellen.add(day);      //if (!legeCellen.includes(day)) legeCellen.push(day);   
             }
             teamRow.appendChild(dayCell);
         }
         calendar.appendChild(teamRow);
     }
-    const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
-    monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-    //monthYear.innerHTML = `${monthSelect.options[monthSelect.selectedIndex].text} ${year}`;
-}
+
+    // Markeer lege dagen in de header
+    for (let i = 31; i >= 28; i--) {
+        const headerCell = headerRow.children[i];
+        if (legeCellen.has(parseInt(headerCell.textContent, 10))) {
+            headerCell.classList.add('emptyDay');
+        }
+    }
+};

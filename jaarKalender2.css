@@ -56,10 +56,7 @@
     /*color: #ececec;*/
     /*box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.9);*/
 }
-.hollyday {
-    background-color: rgb(152, 210, 224);
-    /*color: white;*/
-}
+
 .year-calendar-table .month-cell {
     /*font-weight: bold;*/
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -80,9 +77,10 @@
     margin: 50px auto 0;
     /*max-width: 600px;*/
     display: flex;
-    flex-direction: row;
+    /*flex-direction: row;*/
     justify-content: center;
     gap: 7px;
+    align-content: center;
 }
 .verlofCollection {
     color: black;
@@ -106,14 +104,16 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 0.9em;
     font-weight: bold;
-    margin-left: 20px;
+    margin-left: 40px;
+    
     /*background: linear-gradient(360deg,#022124 10%,#efefef 360%);*/
     background-color: #e0e0e0;
     color: rgb(70, 70, 70);
     transition: all 0.20s ease-in-out;
     cursor: pointer;
+    align-content: center;
     text-align: center;
-    padding: 12px ;
+    padding: 0 15px;
     width: 100px;
     border: 2px solid rgb(75, 75, 75);
     border-radius: 3px;
