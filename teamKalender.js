@@ -1,8 +1,9 @@
-import { getDaysSinceStart, shiftPattern, startDates , monthYear, feestdagenLijstDatums, } from "./ploegenRooster.js";
+import { DOM, shiftPattern, startDates, feestdagenLijstDatums } from "./ploegenRooster.js";
+import { getDaysSinceStart } from "./functies.js";
 
 export function updateTeamCalendar(month, year) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
-    monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
     const teamElementen = document.querySelectorAll('#calendar .team-row');
     const legeCellen = new Set();
@@ -46,7 +47,7 @@ export function updateTeamCalendar(month, year) {
 export function generateTeamCalendar(month, year) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
-    monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
     // Header rij (1–31 voor de dagen van de maand)
     const headerRow = document.createElement("div");

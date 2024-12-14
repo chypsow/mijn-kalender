@@ -1,15 +1,17 @@
 import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
-import { generateYearCalendar, updateYearCalendar } from './jaarKalender1.js';
-import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalender2.js';
+import { generateYearCalendar, updateYearCalendar } from './jaarKalenderGrid.js';
+import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
+import { saveToSessionStorage, updateSessionStorage, getSettingsFromSessionStorage, saveToLocalStorage } from './functies.js';
+import { maakPloegDropdown, maakLegende, maakDropdowns, maakVerlofContainer } from './componentenMaken.js';
 
+// default settings
 const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V12'];
 const week2 = ['L', 'L', 'x', 'N', 'N', 'N', 'N12'];
 const week3 = ['x', 'x', 'L', 'L', 'L', 'L', 'x'];
 const week4 = ['V', 'V', 'V', 'V', 'V', 'x', 'x'];
 const week5 = ['D', 'D', 'D', 'D', 'D', 'x', 'x'];
 const ploegSchema = [...week1, ...week2, ...week3, ...week4, ...week5];
-
 const startDatums = {
     1: "2010-02-01", 
     2: "2010-01-18", 
@@ -17,7 +19,20 @@ const startDatums = {
     4: "2010-01-04", 
     5: "2010-01-11"
 };
+function resetDefaultSettings() {
+    let counter = 0;
+    for(let i = 1; i <= 5; i++) {
+        const datum = document.getElementById(`date${i}`);
+        datum.value = startDatums[i];
+        for(let j = 1; j <= 7; j++) {
+            const dayElement = document.getElementById(`day-${i}${j}`);
+            dayElement.value = ploegSchema[counter];
+            counter++;
+        }
+    }
+};
 
+//
 const shiftenData = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
     {symbool:'N', naam:'nacht', kleur:'#4a91e2'},
@@ -28,27 +43,12 @@ const shiftenData = [
     {symbool:'D', naam:'dag', kleur:'#949494'}
 ];
 
-let shiftenGegevens = JSON.parse(localStorage.getItem("shiftenGegevens")) || shiftenData;
-
-export function getNaamBijSymbool(symbool) {
-    const shift = shiftenGegevens.find(item => item.symbool === symbool);
-    return shift ? shift.naam : 'Symbool niet gevonden';
-};
-
-export const monthSelect = document.getElementById("month-select");
-export const yearSelect = document.getElementById("year-select");
-export const monthYear = document.getElementById('month-year');
+export let shiftenGegevens = JSON.parse(localStorage.getItem("shiftenGegevens")) || shiftenData;
 export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
 export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
 export let startDate = startDates[1];
 
-export function getDaysSinceStart(date, date0) {
-    if (typeof date0 === "string") {
-        date0 = new Date(date0);
-    }
-    const diffTime = date - date0;
-    return Math.round(diffTime / (1000 * 60 * 60 * 24));
-};
+
 export const verlofdagenPloegen = {
     verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
     verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
@@ -56,7 +56,7 @@ export const verlofdagenPloegen = {
     verlofdagenPloeg4: JSON.parse(localStorage.getItem('verlofdagenPloeg4')) || [],
     verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || []
 };
-const localStoragePloegen = {
+export const localStoragePloegen = {
     1: 'verlofdagenPloeg1',
     2: 'verlofdagenPloeg2',
     3: 'verlofdagenPloeg3',
@@ -65,7 +65,10 @@ const localStoragePloegen = {
 }
 
 // Elementen in de DOM
-const DOM = {
+export const DOM = {
+    monthYear: document.getElementById('month-year'),
+    monthSelect: document.getElementById("month-select"),
+    yearSelect: document.getElementById("year-select"),
     prev: document.getElementById('prev'),
     next: document.getElementById('next'),
     selectOverlay: document.getElementById('select-overlay'),
@@ -74,7 +77,6 @@ const DOM = {
     container: document.getElementById('container'),
     verlofContainer: document.getElementById('verlof-container'),
     checkBox: document.getElementById('checkBox'),
-    //hollydays: document.getElementById('hollydays'),
     ploeg: document.getElementById('ploeg'),
     titel: document.getElementById('titel'),
     addShift: document.getElementById('add-shift'),
@@ -87,129 +89,18 @@ const DOM = {
     overlay: document.getElementById('overlay')
 };
 
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
-let count = 0;
-let tabBlad = 0;
+export let currentMonth = new Date().getMonth();
+export let currentYear = new Date().getFullYear();
+export let tabBlad = 0;
 export let selectedPloeg = 1;
-//let hollydaysChecked = false;
 let cellCoordinates = JSON.parse(sessionStorage.getItem("selectedCell")) || {};
 
-const defaultSettings = [
+export const defaultSettings = [
     {pagina: 0, ploeg: 1, maand: currentMonth, jaar: currentYear},
     {pagina: 1, ploeg: 1, maand: currentMonth, jaar: currentYear},
     {pagina: 2, ploeg: 1, maand: currentMonth, jaar: currentYear},
     {pagina: 3, ploeg: 1, maand: currentMonth, jaar: currentYear}
 ]
-saveToSessionStorage('standaardInstellingen', defaultSettings);
-
-function saveToSessionStorage(key, value) {
-    sessionStorage.setItem(key, JSON.stringify(value));
-};
-function maakLegende() {
-        shiftenGegevens.forEach(shift => {
-        const legendeItem = document.createElement('div');
-        legendeItem.classList.add('legende-item');
-        
-        const kleurVak = document.createElement('span');
-        kleurVak.classList.add('legende-vak');
-        kleurVak.style.backgroundColor = shift.kleur;
-        legendeItem.appendChild(kleurVak);
-
-        const beschrijving = document.createElement('span');
-        beschrijving.textContent = `${shift.symbool} : ${shift.naam.charAt(0).toUpperCase()}${shift.naam.slice(1)}`;
-        legendeItem.appendChild(beschrijving);
-
-        DOM.legende.appendChild(legendeItem);
-    });
-
-};
-
-function maakVerlofContainer() {
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
-    verlofDagen.forEach(verlof => {
-        const verlofDag = document.createElement('div');
-        verlofDag.textContent = verlof;
-        verlofDag.classList.add(verlof);
-        verlofDag.classList.add('verlofCollection');
-        verlofDag.addEventListener('click', verlofAanvraag);
-        DOM.verlofContainer.appendChild(verlofDag);
-    });
-    const restore = document.createElement('div');
-    restore.textContent = 'Annuleren';
-    restore.addEventListener('click', cancelAanvraag);
-    restore.classList.add('restore');
-    DOM.verlofContainer.appendChild(restore);
-};
-
-function cancelAanvraag() {
-    const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
-    if(!selectedCell) return;
-    if(selectedCell.team !== selectedPloeg) return;
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
-    Array.from(DOM.calendar.querySelectorAll('.cell')).forEach(cel => {
-        if(cel.textContent !== 'x') {
-            if(cel.dataset.datum === selectedCell.datum) {
-                cel.classList.forEach(className => {
-                    if(verlofDagen.includes(className)) {
-                        cel.classList.remove(className);
-                        cel.textContent = cel.dataset.shift;
-                        const canceledDatum = selectedCell.datum;
-                        verwijderVerlofDatum(selectedPloeg, canceledDatum);
-                    }
-                });
-            }
-        }
-    });
-};
-
-function verwijderVerlofDatum(ploeg, datum) {
-    const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const index = verlofdagenPloegen[ploegKey].findIndex(obj => obj.datum === datum);
-
-    if (index !== -1) {
-        verlofdagenPloegen[ploegKey].splice(index, 1);
-        saveToLocalStorage(localStoragePloegen[ploeg], verlofdagenPloegen[ploegKey]);
-    }
-};
-
-function verlofAanvraag(e) {
-    const aanvraag = e.target.textContent;
-    const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
-    if(!selectedCell) return;
-    if(selectedCell.team !== selectedPloeg) return;
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
-    Array.from(DOM.calendar.querySelectorAll('.cell')).forEach(cel => {
-        if(!cel.textContent.includes('x')) {
-            if(cel.dataset.datum === selectedCell.datum) {
-                cel.classList.forEach(className => {
-                    if(verlofDagen.includes(className)) cel.classList.remove(className);
-                });
-                cel.textContent = aanvraag;
-                cel.classList.add(aanvraag);
-                voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
-            }
-        }
-    });
-};
-function voegVerlofDatumToe(ploeg, datum, soort) {
-    const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const array = verlofdagenPloegen[ploegKey];
-
-    // Zoek het object met dezelfde datum
-    const index = array.findIndex(obj => obj.datum === datum);
-
-    if (index === -1) {
-        // Geen bestaande aanvraag gevonden, voeg nieuw object toe
-        array.push({ datum, soort });
-    } else if (array[index].soort !== soort) {
-        // Bestaande aanvraag met ander soort, update het soort
-        array[index].soort = soort;
-    }
-
-    // Sla de gewijzigde array op in localStorage
-    saveToLocalStorage(localStoragePloegen[ploeg], array);
-};
 
 Array.from(DOM.topNav.children).forEach((elt, index) => {
     elt.addEventListener('click', () => {
@@ -220,15 +111,11 @@ Array.from(DOM.topNav.children).forEach((elt, index) => {
     });
 });
 
-/*DOM.hollydays.onchange = function () {
-    hollydaysChecked = this.checked;
-    hollydaysChecked ? updateCalendarWithHolidays(currentYear) : updateCalendarWithoutHolidays(currentYear);
-}*/
-
+maakPloegDropdown();
 DOM.ploeg.onchange = function () {
     selectedPloeg = Number(this.value); 
     startDate = startDates[selectedPloeg];
-    updateSessionStorage('standaardInstellingen', tabBlad,'ploeg', selectedPloeg);
+    updateSessionStorage('standaardInstellingen', tabBlad,'ploeg', selectedPloeg, defaultSettings);
     updateCalendar();
 };
 Array.from(DOM.ploeg.options).forEach(option => {
@@ -262,7 +149,7 @@ function closeModal() {
 
 DOM.instellingen.onclick = function() {
     DOM.overlay.innerHTML = '';
-    count = 0;
+    let count = 0;
     Array.from({ length: 5}).forEach((_, i) => {
         const label = document.createElement('label');
         const span = document.createElement('span');
@@ -277,7 +164,7 @@ DOM.instellingen.onclick = function() {
             count++;
             label.appendChild(input);
         });
-        overlay.appendChild(label);
+        DOM.overlay.appendChild(label);
     });
 
     DOM.overlay.appendChild(document.createElement('br'));
@@ -294,7 +181,7 @@ DOM.instellingen.onclick = function() {
         input.className = 'date-input';
         input.value = startDates[i] || '';
         label.appendChild(input);
-        overlay.appendChild(label);
+        DOM.overlay.appendChild(label);
     });
 
     DOM.overlay.appendChild(document.createElement('br'));
@@ -322,19 +209,6 @@ function checkIngevoerdeWaarden(cyclus) {
     });
 };
 
-function resetDefaultSettings() {
-    let counter = 0;
-    for(let i = 1; i <= 5; i++) {
-        const datum = document.getElementById(`date${i}`);
-        datum.value = startDatums[i];
-        for(let j = 1; j <= 7; j++) {
-            const dayElement = document.getElementById(`day-${i}${j}`);
-            dayElement.value = ploegSchema[counter];
-            counter++;
-        }
-    }
-};
-
 function ploegSysteemOpslaan() {
     let cyclus = [];
     let datums = {};
@@ -360,12 +234,7 @@ function ploegSysteemOpslaan() {
         alert('Sommige velden zijn niet correct ingevuld !');
     }
 };
-
 document.getElementById('sluiten').addEventListener('click', closeModal);
-
-function saveToLocalStorage(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-};
 
 const berekenPaasdatum = (year) => {
     const a = year % 19, b = Math.floor(year / 100), c = year % 100;
@@ -450,35 +319,7 @@ DOM.feestdagen.onclick = () => {
 };
 
 const calendarGenerators = {
-    2: () => {
-        //DOM.addShift.hidden = false;
-        //DOM.instellingen.hidden = false;
-        DOM.ploeg.hidden = false;
-        DOM.checkBox.hidden = true;
-        DOM.verlofContainer.style.display = 'none';
-        DOM.legende.style.display = '';
-        DOM.titel.textContent = 'Maandkalender';
-        DOM.container.className = 'month-container';
-        DOM.calendar.className = 'calendar';
-        getSettingsFromSessionStorage();
-        generateMonthCalendar(currentMonth, currentYear);
-    },
-    1: () => {
-        //DOM.addShift.hidden = true;
-        //DOM.instellingen.hidden = true;
-        DOM.ploeg.hidden = false;
-        DOM.checkBox.hidden = true;
-        DOM.verlofContainer.style.display = 'none';
-        DOM.legende.style.display = '';
-        DOM.titel.textContent = 'Jaarkalender';
-        DOM.container.className = 'year-container1';
-        DOM.calendar.className = 'year-calendar-grid';
-        getSettingsFromSessionStorage();
-        generateYearCalendar(currentYear);
-    },
     0: () => {
-        //DOM.addShift.hidden = true;
-        //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = false;
         DOM.checkBox.hidden = true;
         DOM.verlofContainer.style.display = 'flex';
@@ -486,13 +327,29 @@ const calendarGenerators = {
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container2';
         DOM.calendar.className = 'year-calendar-table';
-        getSettingsFromSessionStorage();
         generateYearCalendarTable(currentYear);
-        //if(hollydaysChecked) updateCalendarWithHolidays(currentYear);
+    },
+    1: () => {
+        DOM.ploeg.hidden = false;
+        DOM.checkBox.hidden = true;
+        DOM.verlofContainer.style.display = 'none';
+        DOM.legende.style.display = '';
+        DOM.titel.textContent = 'Jaarkalender';
+        DOM.container.className = 'year-container1';
+        DOM.calendar.className = 'year-calendar-grid';
+        generateYearCalendar(currentYear);
+    },
+    2: () => {
+        DOM.ploeg.hidden = false;
+        DOM.checkBox.hidden = true;
+        DOM.verlofContainer.style.display = 'none';
+        DOM.legende.style.display = '';
+        DOM.titel.textContent = 'Maandkalender';
+        DOM.container.className = 'month-container';
+        DOM.calendar.className = 'calendar';
+        generateMonthCalendar(currentMonth, currentYear);
     },
     3: () => {
-        //DOM.addShift.hidden = true;
-        //DOM.instellingen.hidden = true;
         DOM.ploeg.hidden = true;
         DOM.checkBox.hidden = true;
         DOM.verlofContainer.style.display = 'none';
@@ -500,13 +357,19 @@ const calendarGenerators = {
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';
-        getSettingsFromSessionStorage();
         generateTeamCalendar(currentMonth, currentYear);
     }
 };
 
 function generateCalendar() {
     if (calendarGenerators[tabBlad]) {
+        const settings = getSettingsFromSessionStorage(tabBlad, defaultSettings);
+        if (settings) {
+            DOM.ploeg.value = settings.selectedPloeg;
+            startDate = startDates[settings.selectedPloeg];
+            currentMonth = settings.currentMonth;
+            currentYear = settings.currentYear;
+        }
         calendarGenerators[tabBlad]();
         refreshCalendar();
     } else {
@@ -520,78 +383,28 @@ function refreshCalendar() {
     DOM.calendar.classList.add("fade-animation");
 };
 
-
-
-
-function getSettingsFromSessionStorage() {
-    const instellingen = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || defaultSettings;
-    let instelling = instellingen.find(item => item.pagina === tabBlad);
-    selectedPloeg = instelling.ploeg;
-    DOM.ploeg.value = selectedPloeg;
-    startDate = startDates[selectedPloeg];
-    currentMonth = instelling.maand;
-    currentYear = instelling.jaar;
-}
-
-function updateSessionStorage(settings, index, key, value) {
-    const instellingen = JSON.parse(sessionStorage.getItem(settings)) || defaultSettings;
-    //let instelling = instellingen.find(item => item.pagina === index);
-    instellingen[index][key] = value;
-    
-    saveToSessionStorage(settings, instellingen);
-}
-
-function populateDropdowns() {
-    // Maanden toevoegen
-    const months = [
-        "januari", "februari", "maart", "april", "mei", "juni",
-        "juli", "augustus", "september", "oktober", "november", "december"
-    ];
-    monthSelect.innerHTML = "";
-    months.forEach((month, index) => {
-        const option = document.createElement("option");
-        option.value = index;
-        option.textContent = month;
-        option.style.color = 'black';
-        if (index === currentMonth) option.selected = true;
-        monthSelect.appendChild(option);
-    });
-
-    // Jaren toevoegen (bijv. van 2000 tot 2030)
-    yearSelect.innerHTML = "";
-    for (let year = 2010; year <= 2040; year++) {
-        const option = document.createElement("option");
-        option.value = year;
-        option.textContent = year;
-        option.style.color = 'black';
-        if (year === currentYear) option.selected = true;
-        yearSelect.appendChild(option);
-    }
-}
-
-monthYear.addEventListener("click", () => {
-    monthYear.style.color = 'transparent';
-    const rect = monthYear.getBoundingClientRect();
+DOM.monthYear.addEventListener("click", () => {
+    DOM.monthYear.style.color = 'transparent';
+    const rect = DOM.monthYear.getBoundingClientRect();
     DOM.dropdowns.style.top = `${rect.top + window.scrollY - 10}px`;
     DOM.dropdowns.style.left = `${rect.left + window.scrollX + Math.round(rect.width/2 - DOM.dropdowns.style.width/2)}px`;
     DOM.selectOverlay.style.display = 'block';
-    populateDropdowns();
+    maakDropdowns();
     DOM.dropdowns.classList.toggle("visible");
     if(tabBlad === 2 || tabBlad === 3) {
-        monthSelect.classList.toggle("visible");
+        DOM.monthSelect.classList.toggle("visible");
     }
-    yearSelect.classList.toggle('visible');
+    DOM.yearSelect.classList.toggle('visible');
 });
-
 
 document.addEventListener("click", (event) => {
     // Verberg de dropdowns als er buiten wordt geklikt
-    if (!dropdowns.contains(event.target) && event.target !== monthYear && event.target !== DOM.instellingen) {
-        monthYear.style.color = '';
+    if (!dropdowns.contains(event.target) && event.target !== DOM.monthYear && event.target !== DOM.instellingen) {
+        DOM.monthYear.style.color = '';
         DOM.selectOverlay.style.display = 'none';
         DOM.dropdowns.classList.remove("visible");
-        monthSelect.classList.remove("visible");
-        yearSelect.classList.remove("visible");
+        DOM.monthSelect.classList.remove("visible");
+        DOM.yearSelect.classList.remove("visible");
     }
 
     if (tabBlad === 0) {
@@ -609,19 +422,17 @@ document.addEventListener("click", (event) => {
     }
 });
 
-monthSelect.addEventListener("change", (event) => {
+DOM.monthSelect.addEventListener("change", (event) => {
     currentMonth = parseInt(event.target.value, 10);
-    updateSessionStorage('standaardInstellingen', tabBlad, 'maand', currentMonth);
+    updateSessionStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, defaultSettings);
     updateCalendar();
 });
 
-yearSelect.addEventListener("change", (event) => {
+DOM.yearSelect.addEventListener("change", (event) => {
     currentYear = parseInt(event.target.value, 10);
-    updateSessionStorage('standaardInstellingen', tabBlad, 'jaar', currentYear);
+    updateSessionStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
     updateCalendar();
 });
-
-
 
 function triggerPrev() {
     if(tabBlad === 2 || tabBlad === 3) {
@@ -630,8 +441,8 @@ function triggerPrev() {
     } else {
         currentYear -= 1;
     }
-    updateSessionStorage('standaardInstellingen', tabBlad, 'maand', currentMonth);
-    updateSessionStorage('standaardInstellingen', tabBlad, 'jaar', currentYear);
+    updateSessionStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, defaultSettings);
+    updateSessionStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
     updateCalendar();
 };
 
@@ -642,16 +453,17 @@ function triggerNext() {
     } else {
         currentYear += 1;
     }
-    updateSessionStorage('standaardInstellingen', tabBlad, 'maand', currentMonth);
-    updateSessionStorage('standaardInstellingen', tabBlad, 'jaar', currentYear);
+    updateSessionStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, defaultSettings);
+    updateSessionStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
     updateCalendar();
 };
 DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 
+saveToSessionStorage('standaardInstellingen', defaultSettings);
 maakLegende();
 maakVerlofContainer();
-populateDropdowns();
+maakDropdowns();
 generateCalendar();
 
 

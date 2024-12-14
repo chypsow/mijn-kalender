@@ -1,7 +1,8 @@
-import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear} from "./ploegenRooster.js";
+import { DOM, shiftPattern, shiftenGegevens, startDate } from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool } from "./functies.js";
 
 export function updateYearCalendar(year) {
-  monthYear.textContent = year;
+  DOM.monthYear.textContent = year;
   const totalCells = 42;
   const monthElementen = document.querySelectorAll('#calendar .month');
   monthElementen.forEach((month, index) => {
@@ -29,7 +30,7 @@ export function updateYearCalendar(year) {
       if(daysSinceStart >= 0) {
         const shiftIndex = daysSinceStart % shiftPattern.length;
         const shift = shiftPattern[shiftIndex];
-        const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
+        const shiftClass = `shift-${getNaamBijSymbool(shiftenGegevens, shift)}`;
         myDay.classList.add(shiftClass);
       }
     }
@@ -46,7 +47,7 @@ export function updateYearCalendar(year) {
 
 export function generateYearCalendar(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
-  monthYear.textContent = year;
+  DOM.monthYear.textContent = year;
   for (let month = 0; month < 12; month++) {
     const monthContainer = document.createElement("div");
     monthContainer.classList.add("month");
@@ -95,7 +96,7 @@ export function generateYearCalendar(year) {
       if(daysSinceStart >= 0) {
         const shiftIndex = daysSinceStart % shiftPattern.length;
         const shift = shiftPattern[shiftIndex];
-        const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
+        const shiftClass = `shift-${getNaamBijSymbool(shiftenGegevens, shift)}`;
         dayCell.classList.add(shiftClass);
       }
       calendarGrid.appendChild(dayCell);

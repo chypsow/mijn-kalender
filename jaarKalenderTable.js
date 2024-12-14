@@ -1,7 +1,8 @@
-import { getDaysSinceStart, shiftPattern, startDate, monthYear, feestdagenLijstDatums, selectedPloeg, verlofdagenPloegen } from "./ploegenRooster.js";
+import { DOM, shiftPattern, startDate, feestdagenLijstDatums, selectedPloeg, verlofdagenPloegen } from "./ploegenRooster.js";
+import { getDaysSinceStart } from "./functies.js";
 
 export function updateYearCalendarTable(year) {
-  monthYear.textContent = year;
+  DOM.monthYear.textContent = year;
   const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;
@@ -36,7 +37,7 @@ export function updateYearCalendarTable(year) {
 
 export function generateYearCalendarTable(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
-  monthYear.textContent = year;
+  DOM.monthYear.textContent = year;
   const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;

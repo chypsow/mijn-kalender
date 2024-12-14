@@ -1,8 +1,9 @@
-import { getDaysSinceStart, getNaamBijSymbool, shiftPattern, startDate ,  monthYear } from "./ploegenRooster.js";
+import { DOM, shiftPattern, shiftenGegevens, startDate } from "./ploegenRooster.js";
+import { getDaysSinceStart, getNaamBijSymbool } from "./functies.js";
 
 export function updateMonthCalendar(month, year) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
-    monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const totalCells = 42;
     const firstDay = new Date(year, month, 1).getDay();
     const firstDayMondayBased = (firstDay + 6) % 7; // Pas aan voor maandag als startdag
@@ -29,7 +30,7 @@ export function updateMonthCalendar(month, year) {
         if(daysSinceStart >= 0) {
           const shiftIndex = daysSinceStart % shiftPattern.length;
           const shift = shiftPattern[shiftIndex];
-          const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
+          const shiftClass = `shift-${getNaamBijSymbool(shiftenGegevens, shift)}`;
           myDay.classList.add(shiftClass);
         }
     }
@@ -47,7 +48,7 @@ export function updateMonthCalendar(month, year) {
 export function generateMonthCalendar(month, year) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
-    monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
 
     // Eerste dag van de maand en aantal dagen in de maand
     const firstDay = new Date(year, month, 1).getDay();
@@ -82,7 +83,7 @@ export function generateMonthCalendar(month, year) {
         if(daysSinceStart >= 0) {
             const shiftIndex = daysSinceStart % shiftPattern.length;
             const shift = shiftPattern[shiftIndex];
-            const shiftClass = `shift-${getNaamBijSymbool(shift)}`;
+            const shiftClass = `shift-${getNaamBijSymbool(shiftenGegevens, shift)}`;
             // Voeg de dag en shift toe aan de cel
             cell.classList.add(shiftClass); // Voeg de juiste kleur toe
         }
