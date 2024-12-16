@@ -1,4 +1,4 @@
-.year-container2 {
+.year-container-table {
     margin: 150px auto 0;
     text-align: center;
 }
@@ -17,6 +17,7 @@
 /* Rij voor maanden en dagen */
 .year-calendar-table .row {
     display: table-row;
+    
     /*text-align: center;*/
 }
 
@@ -46,15 +47,10 @@
     cursor: default;
     background-color: #ececec;
     color: #000;
-    border: 1px solid #a0a0a0a1;
+    border: 1px solid #a0a0a075;
+    border-radius: 4px;
     text-align: left;
-    transition: all 0.2s ease-out;
-}
-.highlight {
-    /*background-color: rgb(252, 253, 200);*/
-    outline-style: auto;
-    /*color: #ececec;*/
-    /*box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.9);*/
+    /*transition: all 0.1s ease-out;*/
 }
 
 .year-calendar-table .month-cell {
@@ -62,6 +58,7 @@
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1.3em;
     padding-left: 15px;
+    border-radius:0px;
     background-color: #292929; /*#f5f5f5*/
     border: 1px solid #6d6d6da1;
     color: #ffffffc7;
@@ -82,24 +79,6 @@
     gap: 7px;
     align-content: center;
 }
-.verlofCollection {
-    color: black;
-    /*font-weight: bold;*/
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 0.9em;
-    cursor: pointer;
-    text-align: center;
-    padding: 10px 5px 0px 5px;
-    width: 35px;
-    height: 35px;
-    border-radius: 5px;
-    border: 3px solid transparent;
-    transition: all 0.15s ease-out;
-}
-.verlofCollection:hover {
-    border: 3px solid white;
-    box-shadow: 0 0 15px gray;
-}
 .restore {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 0.9em;
@@ -114,41 +93,99 @@
     align-content: center;
     text-align: center;
     padding: 0 15px;
-    width: 100px;
+    /*width: 100px;*/
     border: 2px solid rgb(75, 75, 75);
-    border-radius: 3px;
+    border-radius: 5px;
 }
 .restore:hover {
     border: 2px solid rgba(228, 228, 228, 0.575);
     color: rgb(0, 0, 0);
-    
     box-shadow: 0 0 15px gray;
 }
+
+.verlofCollection {
+    color: black;
+    /*font-weight: bold;*/
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.9em;
+    cursor: pointer;
+    text-align: center;
+    padding: 10px 5px 0px 5px;
+    width: 35px;
+    height: 35px;
+    /*outline: 2px solid rgb(80, 80, 80);
+    outline-style: dashed;
+    outline-offset: -4px;*/
+    border-radius: 5px;
+    border: 3px solid transparent;
+    transition: all 0.15s ease-out;
+}
+.verlofCollection:hover {
+    border: 3px solid white;
+    box-shadow: 0 0 15px gray;
+}
+
+
 .BV {
+    outline: 1px solid rgba(255, 255, 255, 0.712);
+    /*outline-style: dashed;*/
+    outline-offset: -2px;
+    border-radius: 3px;
     background-color: #FCD5B4;
     /*color: white;*/
 }
 .CS {
+    outline: 1px solid rgba(255, 255, 255, 0.712);
+    /*outline-style: dashed;*/
+    outline-offset: -2px;
+    border-radius: 3px;
     background-color: #D5A0C7;
     /*color: white;*/
 }
 .ADV {
+    outline: 1px solid rgba(255, 255, 255, 0.712);
+    /*outline-style: dashed;*/
+    outline-offset: -2px;
+    border-radius: 3px;
     background-color: #D3AF81;
     /*color: white;*/
 }
 .BF {
+    outline: 1px solid rgba(255, 255, 255, 0.712);
+    /*outline-style: dashed;*/
+    outline-offset: -2px;
+    border-radius: 3px;
     background-color: rgb(152, 210, 224);
     /*color: white;*/
 }
 .AV {
+    outline: 1px solid rgba(255, 255, 255, 0.712);
+    /*outline-style: dashed;*/
+    outline-offset: -2px;
+    border-radius: 3px;
     background-color: #32AA96;
     /*color: white;*/
 }
 .HP {
+    outline: 1px solid rgba(255, 255, 255, 0.712);
+    /*outline-style: dashed;*/
+    outline-offset: -2px;
+    border-radius: 3px;
     background-color: #a5a5a5;
     /*color: white;*/
 }
 .Z {
+    outline: 1px solid rgba(255, 255, 255, 0.712);
+    /*outline-style: dashed;*/
+    outline-offset: -2px;
+    border-radius: 3px;
     background-color: #F4A54E;
     /*color: white;*/
+}
+
+.highlight {
+    /*background-color: rgb(252, 253, 200);*/
+    outline-style: auto;
+    outline-color: black ;
+    /*box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.9);*/
 }

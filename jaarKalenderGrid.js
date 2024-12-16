@@ -1,4 +1,4 @@
-import { DOM, shiftPattern, shiftenGegevens, startDate } from "./ploegenRooster.js";
+import { DOM, shiftPattern, shiftenGegevens, startDate } from "./main.js";
 import { getDaysSinceStart, getNaamBijSymbool } from "./functies.js";
 
 export function updateYearCalendar(year) {

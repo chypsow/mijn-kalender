@@ -6,6 +6,19 @@ export function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
 };
 
+export function resetDefaultSettings(obj, arr) {
+    let counter = 0;
+    for(let i = 1; i <= 5; i++) {
+        const datum = document.getElementById(`date${i}`);
+        datum.value = obj[i];
+        for(let j = 1; j <= 7; j++) {
+            const dayElement = document.getElementById(`day-${i}${j}`);
+            dayElement.value = arr[counter];
+            counter++;
+        }
+    }
+};
+
 export function getSettingsFromSessionStorage(blad, setting) {
     let instellingen;
     try {

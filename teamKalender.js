@@ -1,4 +1,4 @@
-import { DOM, shiftPattern, startDates, feestdagenLijstDatums } from "./ploegenRooster.js";
+import { DOM, shiftPattern, startDates, feestdagenLijstDatums } from "./main.js";
 import { getDaysSinceStart } from "./functies.js";
 
 export function updateTeamCalendar(month, year) {

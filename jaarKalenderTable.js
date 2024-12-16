@@ -1,4 +1,4 @@
-import { DOM, shiftPattern, startDate, feestdagenLijstDatums, selectedPloeg, verlofdagenPloegen } from "./ploegenRooster.js";
+import { DOM, shiftPattern, startDate, feestdagenLijstDatums, selectedPloeg, verlofdagenPloegen } from "./main.js";
 import { getDaysSinceStart } from "./functies.js";
 
 export function updateYearCalendarTable(year) {

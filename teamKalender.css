@@ -10,9 +10,11 @@
     margin-top: 20px;
     font-family: Arial, sans-serif;
     font-size: 0.9em;
+    
 }
 .team-calendar-table .team-row {
     display: table-row;
+    
     
 }
 .team-calendar-table .table-cell, .team-header-cell {
@@ -38,6 +40,7 @@
     background-color: #ececec;
     color: #000;
     border: 1px solid #a0a0a0a1;
+    border-radius: 4px;
     text-align: left;
     transition: all 0.2s ease-out;
 }

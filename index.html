@@ -12,26 +12,14 @@
     <link rel="stylesheet" href="common.css">
 </head>
 <body>
-    <div id="top-nav" class="side-bar">
-        <a href="#" id="jaarKalenderTable" class="active" >Jaarkalender : Tabel</a>
-        <a href="#" id="jaarKalenderGrid">Jaarkalender : Raster</a> 
-        <a href="#" id="maandKalender">Maandkalender</a> 
-        <a href="#" id="teamKalender">TeamKalender</a>
-    </div>
+    <div id="top-nav" class="side-bar"></div>
     <div class="hoofd-container">
         <div class="top">
             <h1 id="titel"></h1>
             <select id="ploeg"></select>
             <div id='legende' class="legende-container"></div>
-            <!--<div>
-                <button id="add-shift" class="btnGreen">Add new shift</button>
-            </div>-->
-            <div>
-                <button id="instellingen" class="btnGreen"><i class="fa fa-cog" aria-hidden="true"></i> Instellingen</button>
-            </div>
-            <div>
-                <button id="feestdagen" class="btnGreen"><i class="fa fa-calendar" aria-hidden="true"></i> Feestdagen</button>
-            </div>
+            <div><button id="instellingen" class="btnGreen"><i class="fa fa-cog" aria-hidden="true"></i> Instellingen</button></div>
+            <div><button id="feestdagen" class="btnGreen"><i class="fa fa-calendar" aria-hidden="true"></i> Feestdagen</button></div>
             <div id="modal-overlay" class="modal-overlay">
                 <div id="modal" class="modal">
                     <i class="fa fa-close" id="sluiten"></i>
@@ -41,29 +29,21 @@
         </div>
         <div id="verlof-container" class="verlof-container"></div>
         <div id="container">
-            
             <div id="calendar-nav" class="calendar-nav">
-                <div id="checkBox" class="checkBox-container">
-                    <label for="hollydays"><input type="checkbox" id="hollydays">Feestdagen</label>
-                </div>
+                <!--<div id="checkBox" class="checkBox-container"><label for="hollydays"><input type="checkbox" id="hollydays">Feestdagen</label></div>-->
                 <button id="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
                 <span id="month-year" class="month-year"></span>
                 <div id="select-overlay" class="modal-overlay">
                     <div id="dropdowns" class="dropdowns">
-                        <select id="month-select" class="monthDropdown">
-                            <!-- Maanden worden dynamisch toegevoegd via JavaScript -->
-                        </select>
-                        <select id="year-select" class="yearDropdown">
-                            <!-- Jaren worden dynamisch toegevoegd via JavaScript -->
-                        </select>
+                        <select id="month-select" class="monthDropdown"></select>
+                        <select id="year-select" class="yearDropdown"></select>
                     </div>
                 </div>
                 <button id="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
             </div>
             <div id="calendar"></div>
-            
         </div>
     </div>
-<script type="module" src="ploegenRooster.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
