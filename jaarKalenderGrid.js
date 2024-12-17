@@ -1,8 +1,11 @@
-import { DOM, shiftPattern, shiftenGegevens, startDate } from "./main.js";
-import { getDaysSinceStart, getNaamBijSymbool } from "./functies.js";
+import { DOM, shiftPattern, shiftenGegevens, startDates, defaultSettings } from "./main.js";
+import { getDaysSinceStart, getNaamBijSymbool, getSettingsFromSessionStorage } from "./functies.js";
 
-export function updateYearCalendar(year) {
+export function updateYearCalendarGrid() {
+  const year = getSettingsFromSessionStorage(1, defaultSettings).currentYear;
   DOM.monthYear.textContent = year;
+  const selectedPloeg = getSettingsFromSessionStorage(1, defaultSettings).selectedPloeg;
+  const startDate = startDates[selectedPloeg];
   const totalCells = 42;
   const monthElementen = document.querySelectorAll('#calendar .month');
   monthElementen.forEach((month, index) => {
@@ -48,6 +51,8 @@ export function updateYearCalendar(year) {
 export function generateYearCalendar(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
   DOM.monthYear.textContent = year;
+  const selectedPloeg = getSettingsFromSessionStorage(1, defaultSettings).selectedPloeg;
+  const startDate = startDates[selectedPloeg];
   for (let month = 0; month < 12; month++) {
     const monthContainer = document.createElement("div");
     monthContainer.classList.add("month");

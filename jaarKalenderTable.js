@@ -1,8 +1,12 @@
-import { DOM, shiftPattern, startDate, feestdagenLijstDatums, selectedPloeg, verlofdagenPloegen } from "./main.js";
-import { getDaysSinceStart } from "./functies.js";
+import { DOM, shiftPattern, startDates, defaultSettings } from "./main.js";
+import { getDaysSinceStart, getSettingsFromSessionStorage } from "./functies.js";
+import { verlofdagenPloegen } from './componentenMaken.js'
+import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 
-export function updateYearCalendarTable(year) {
+export function updateYearCalendarTable() {
+  const year = getSettingsFromSessionStorage(0, defaultSettings).currentYear;
   DOM.monthYear.textContent = year;
+  const selectedPloeg = getSettingsFromSessionStorage(0, defaultSettings).selectedPloeg;
   const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;
@@ -19,7 +23,7 @@ export function updateYearCalendarTable(year) {
         day.classList.add('cell');
         const currentDate = new Date(year, index-1, i);
         if (currentDate.getMonth() === index-1) {
-          shiftenInvullen(day, currentDate, hollydays);
+          shiftenInvullen(day, currentDate, hollydays, selectedPloeg);
           if(selectActief) {
             if(currentDate.toLocaleDateString() === geselecteerd.datum && 
               selectedPloeg === geselecteerd.team) {
@@ -38,6 +42,7 @@ export function updateYearCalendarTable(year) {
 export function generateYearCalendarTable(year) {
   calendar.innerHTML = ""; // Maak de kalender leeg
   DOM.monthYear.textContent = year;
+  const selectedPloeg = getSettingsFromSessionStorage(0, defaultSettings).selectedPloeg;
   const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;
@@ -78,7 +83,7 @@ export function generateYearCalendarTable(year) {
       const currentDate = new Date(year, month, day);
       // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
       if (currentDate.getMonth() === month) {
-        shiftenInvullen(dayCell, currentDate, hollydays);
+        shiftenInvullen(dayCell, currentDate, hollydays, selectedPloeg);
         if(selectActief) {
           if(currentDate.toLocaleDateString() === geselecteerd.datum && 
             selectedPloeg === geselecteerd.team) {
@@ -95,7 +100,8 @@ export function generateYearCalendarTable(year) {
   }
 };
 
-function shiftenInvullen(elt, date, hollydays) {
+function shiftenInvullen(elt, date, hollydays, ploeg) {
+  const startDate = startDates[ploeg];
   const daysSinceStart = getDaysSinceStart(date, startDate);
   if(daysSinceStart >= 0) {
     const myDate = date.toLocaleDateString();
@@ -108,7 +114,7 @@ function shiftenInvullen(elt, date, hollydays) {
     elt.textContent = shift;
     elt.dataset.shift = shift;
     elt.dataset.datum =myDate;
-    voegVerlofdagToeVolgensLocalStorage(selectedPloeg, elt);
+    voegVerlofdagToeVolgensLocalStorage(ploeg, elt);
   }
 };
 

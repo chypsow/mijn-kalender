@@ -1,9 +1,18 @@
-import { DOM, shiftPattern, shiftenGegevens, startDate } from "./main.js";
-import { getDaysSinceStart, getNaamBijSymbool } from "./functies.js";
+import { DOM, shiftPattern, shiftenGegevens, startDates, defaultSettings } from "./main.js";
+import { getDaysSinceStart, getNaamBijSymbool, getSettingsFromSessionStorage } from "./functies.js";
 
-export function updateMonthCalendar(month, year) {
+export function updateMonthCalendar() {
+    let month = 0;
+    let year = 0;
+    const settings = getSettingsFromSessionStorage(2, defaultSettings);
+    if (settings) {
+        month = settings.currentMonth;
+        year = settings.currentYear;
+    }
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    const selectedPloeg = getSettingsFromSessionStorage(2, defaultSettings).selectedPloeg;
+    const startDate = startDates[selectedPloeg];
     const totalCells = 42;
     const firstDay = new Date(year, month, 1).getDay();
     const firstDayMondayBased = (firstDay + 6) % 7; // Pas aan voor maandag als startdag
@@ -49,7 +58,8 @@ export function generateMonthCalendar(month, year) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-
+    const selectedPloeg = getSettingsFromSessionStorage(2, defaultSettings).selectedPloeg;
+    const startDate = startDates[selectedPloeg];
     // Eerste dag van de maand en aantal dagen in de maand
     const firstDay = new Date(year, month, 1).getDay();
     const firstDayMondayBased = (firstDay + 6) % 7; // Pas aan voor maandag als startdag

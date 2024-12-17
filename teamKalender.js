@@ -1,7 +1,15 @@
-import { DOM, shiftPattern, startDates, feestdagenLijstDatums } from "./main.js";
-import { getDaysSinceStart } from "./functies.js";
+import { DOM, shiftPattern, startDates, defaultSettings } from "./main.js";
+import { getDaysSinceStart, getSettingsFromSessionStorage } from "./functies.js";
+import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 
-export function updateTeamCalendar(month, year) {
+export function updateTeamCalendar() {
+    let month = 0;
+    let year = 0;
+    const settings = getSettingsFromSessionStorage(3, defaultSettings);
+    if (settings) {
+        month = settings.currentMonth;
+        year = settings.currentYear;
+    }
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());

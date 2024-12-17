@@ -1,5 +1,22 @@
-import { shiftenGegevens, DOM, setTabBlad, currentMonth, currentYear, selectedPloeg, generateCalendar, verlofdagenPloegen, localStoragePloegen } from './main.js';
-import { saveToLocalStorage } from './functies.js';
+import { shiftenGegevens, DOM, generateCalendar, defaultSettings } from './main.js';
+import { saveToLocalStorage, getSettingsFromSessionStorage } from './functies.js';
+
+export const verlofdagenPloegen = {
+    verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
+    verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
+    verlofdagenPloeg3: JSON.parse(localStorage.getItem('verlofdagenPloeg3')) || [],
+    verlofdagenPloeg4: JSON.parse(localStorage.getItem('verlofdagenPloeg4')) || [],
+    verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || []
+};
+const localStoragePloegen = {
+    1: 'verlofdagenPloeg1',
+    2: 'verlofdagenPloeg2',
+    3: 'verlofdagenPloeg3',
+    4: 'verlofdagenPloeg4',
+    5: 'verlofdagenPloeg5'
+};
+
+export let tabBlad = 0;
 
 export function maakSidebar() {
     const tabArray = ['Jaarkalender : Tabel', 'Jaarkalender : Raster', 'Maandkalender', 'TeamKalender'];
@@ -16,7 +33,7 @@ export function maakSidebar() {
             activeLink.classList.remove("active");
             activeLink.setAttribute('aria-selected', 'false');
             hyperlink.classList.add("active");
-            setTabBlad(index);
+            tabBlad = index;
             generateCalendar();
         });
         DOM.topNav.appendChild(hyperlink);
@@ -52,6 +69,13 @@ export function maakLegende() {
 };
 
 export function maakDropdowns() {
+    let currentMonth = new Date();
+    let currentYear = new Date();
+    const settings = getSettingsFromSessionStorage(tabBlad, defaultSettings);
+    if (settings) {
+        currentMonth = settings.currentMonth;
+        currentYear = settings.currentYear;
+    }
     const months = [
         "januari", "februari", "maart", "april", "mei", "juni",
         "juli", "augustus", "september", "oktober", "november", "december"
@@ -99,6 +123,7 @@ export function maakVerlofContainer() {
     DOM.verlofContainer.appendChild(restoreAll);
 };
 function verlofAanvraag(e) {
+    const selectedPloeg = getSettingsFromSessionStorage(tabBlad, defaultSettings).selectedPloeg;
     const aanvraag = e.target.textContent;
     const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
     if(!selectedCell) return;
@@ -129,6 +154,7 @@ function voegVerlofDatumToe(ploeg, datum, soort) {
     saveToLocalStorage(localStoragePloegen[ploeg], array);
 };
 function cancelAanvraag() {
+    const selectedPloeg = getSettingsFromSessionStorage(tabBlad, defaultSettings).selectedPloeg;
     const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
     if(!selectedCell) return;
     if(selectedCell.team !== selectedPloeg) return;
@@ -158,6 +184,7 @@ function verwijderVerlofDatum(ploeg, datum) {
     }
 };
 function cancelAlleAanvragen() {
+    let selectedPloeg = getSettingsFromSessionStorage(tabBlad, defaultSettings).selectedPloeg;
     const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     const cellen = DOM.calendar.querySelectorAll('.cell');
     const bestaandeVerlof = Array.from(cellen).some(cel => verlofDagen.includes(cel.textContent));

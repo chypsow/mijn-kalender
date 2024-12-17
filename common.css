@@ -169,22 +169,8 @@ body {
     /*border: 3px solid #dbdbdb;*/
     border-radius: 4px;
 }
-#add-shift {
-    position: absolute;
-    padding: 10px 38px;
-    outline: none;
-    font-size: 20px;
-    top: 50px;
-    right: 20px;
-}
-#instellingen {
-    position: absolute;
-    padding: 10px 50px 10px 5px;
-    outline: none;
-    font-size: 20px;
-    top: 120px;
-    left: 16%;
-}
+
+
 /* Zorg dat de ul en li een nette lijst vormen */
 .feestdagen {
 list-style: none; /* Verwijder de standaard opsommingstekens */
@@ -210,18 +196,27 @@ font-family: monospace  , sans-serif;
 .feestdag .spanRechts {
     color: rgb(184, 184, 184);
 }
-#feestdagen {
-    position: absolute;
-    padding: 10px 45px 10px 5px;
-    outline: none;
-    font-size: 20px;
+#instellingen {
     top: 50px;
-    left: 16%;
+}
+#feestdagen {
+    top: 110px;
+}
+#rapport {
+    top: 170px;
 }
 .btnGreen {
+    text-align: left;
+    position: absolute;
+    left: 16%;
+    font-size: 20px;
+    padding: 10px 10px 10px 5px;
+    outline: none;
     background: linear-gradient(360deg,#022124 10%,#efefef 360%);
     color: #aaaaaaad;
+    width: 250px;
     transition: all 0.20s ease-in-out;
+
 }
 .btnGreen:hover {
     cursor: pointer;
