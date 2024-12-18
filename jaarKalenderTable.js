@@ -1,6 +1,6 @@
 import { DOM, shiftPattern, startDates, defaultSettings } from "./main.js";
 import { getDaysSinceStart, getSettingsFromSessionStorage } from "./functies.js";
-import { verlofdagenPloegen } from './componentenMaken.js'
+import { verlofdagenPloegen } from './herplanningen.js'
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 
 export function updateYearCalendarTable() {

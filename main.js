@@ -3,7 +3,7 @@ import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
 import { saveToSessionStorage, updateSessionStorage, getSettingsFromSessionStorage, saveToLocalStorage } from './functies.js';
-import { tabBlad, maakSidebar, maakPloegDropdown, maakLegende, maakDropdowns, maakVerlofContainer } from './componentenMaken.js';
+import { tabBlad, maakSidebar, maakPloegDropdown, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 import { makeModalInstellingen, toggleModal } from './makeModalSettings.js';
 import { makeModalFeestdagen } from './makeModalHolidays.js';
 
@@ -49,7 +49,8 @@ export const DOM = {
     instellingen: document.getElementById('instellingen'),
     feestdagen: document.getElementById('feestdagen'),
     rapport: document.getElementById('rapport'),
-    legende: document.getElementById('legende'),
+    ploegenLegende: document.getElementById('ploegenLegende'),
+    verlofLegende: document.getElementById('verlofLegende'),
     calendar: document.getElementById('calendar'),
     modalOverlay: document.getElementById("modal-overlay"),
     modal: document.getElementById("modal"),
@@ -97,7 +98,8 @@ const calendarGenerators = {
         DOM.ploeg.hidden = false;
         DOM.rapport.style.display = '';
         DOM.verlofContainer.style.display = 'flex';
-        DOM.legende.style.display = 'none';
+        DOM.ploegenLegende.style.display = 'none';
+        DOM.verlofLegende.style.display = '';
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-table';
         DOM.calendar.className = 'year-calendar-table';
@@ -107,7 +109,8 @@ const calendarGenerators = {
         DOM.ploeg.hidden = false;
         DOM.rapport.style.display = '';
         DOM.verlofContainer.style.display = 'none';
-        DOM.legende.style.display = '';
+        DOM.ploegenLegende.style.display = '';
+        DOM.verlofLegende.style.display = 'none';
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-grid';
         DOM.calendar.className = 'year-calendar-grid';
@@ -117,7 +120,8 @@ const calendarGenerators = {
         DOM.ploeg.hidden = false;
         DOM.rapport.style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
-        DOM.legende.style.display = '';
+        DOM.ploegenLegende.style.display = '';
+        DOM.verlofLegende.style.display = 'none';
         DOM.titel.textContent = 'Maandkalender';
         DOM.container.className = 'month-container';
         DOM.calendar.className = 'calendar';
@@ -127,7 +131,8 @@ const calendarGenerators = {
         DOM.ploeg.hidden = true;
         DOM.rapport.style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
-        DOM.legende.style.display = 'none';
+        DOM.ploegenLegende.style.display = 'none';
+        DOM.verlofLegende.style.display = 'none';
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';
@@ -256,7 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     saveToSessionStorage('standaardInstellingen', defaultSettings());
     maakSidebar();
     maakPloegDropdown();
-    maakLegende();
+    maakPloegenLegende();
+    maakVerlofLegende();
     maakVerlofContainer();
     maakDropdowns();
     generateCalendar();

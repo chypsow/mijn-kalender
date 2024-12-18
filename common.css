@@ -76,6 +76,12 @@ body {
 .calendar-nav button {
     padding: 0.5em;
     font-size: 0.8em;
+    background-color: #575757;
+    transition: background-color 0.3s;
+}
+.calendar-nav button:hover {
+    cursor: pointer;
+    background-color: #d1d1d1;
 }
 .fa {
     padding: 0 10px;
@@ -146,7 +152,7 @@ body {
 
 
 /*Legende*/
-.legende-container {
+.ploegenLegende-container {
     position: absolute  ;
     top: 50px;
     right: 20px;
@@ -158,18 +164,40 @@ body {
     color: rgba(255, 255, 255, 0.829);
     border-radius: 3px;
 }
-.legende-item {
+.ploegenLegende-item {
     display: flex;
     /*align-items: center;*/
     gap: 10px;
 }
-.legende-vak {
+.ploegenLegende-vak {
     width: 45px;
     height: 20px;
     /*border: 3px solid #dbdbdb;*/
     border-radius: 4px;
 }
-
+.verlofLegende-container {
+    position: absolute  ;
+    top: 50px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: linear-gradient(360deg,#022124 10%,#efefef 360%);
+    color: rgba(255, 255, 255, 0.829);
+    border-radius: 3px;
+}
+.verlofLegende-item {
+    display: flex;
+    /*align-items: center;*/
+    gap: 10px;
+}
+.verlofLegende-vak {
+    width: 45px;
+    height: 20px;
+    /*border: 3px solid #dbdbdb;*/
+    border-radius: 4px;
+}
 
 /* Zorg dat de ul en li een nette lijst vormen */
 .feestdagen {
