@@ -80,7 +80,7 @@ body {
     transition: background-color 0.3s;
 }
 .calendar-nav button:hover {
-    cursor: pointer;
+    /*cursor: pointer;*/
     background-color: #d1d1d1;
 }
 .fa {
@@ -91,7 +91,6 @@ body {
     color: #dbdbdb;
     cursor: pointer;
     /*font-weight: bold;*/
-    
 }
 .dropdowns {
     display: none;
@@ -176,6 +175,7 @@ body {
     border-radius: 4px;
 }
 .verlofLegende-container {
+    
     position: absolute  ;
     top: 50px;
     right: 20px;
@@ -193,8 +193,12 @@ body {
     gap: 10px;
 }
 .verlofLegende-vak {
-    width: 45px;
-    height: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.8em;
+    padding: 6px;
+    width: 25px;
+    /*height: 25px;*/
+    color: black;
     /*border: 3px solid #dbdbdb;*/
     border-radius: 4px;
 }
@@ -244,7 +248,6 @@ font-family: monospace  , sans-serif;
     color: #aaaaaaad;
     width: 250px;
     transition: all 0.20s ease-in-out;
-
 }
 .btnGreen:hover {
     cursor: pointer;

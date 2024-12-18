@@ -1,5 +1,4 @@
-import { DOM, startDatums, ploegSchema, shiftenGegevens, gegevensOpslaan } from "./main.js";
-import { resetDefaultSettings } from "./functies.js";
+import { DOM, ploegenGegevens, gegevensOpslaan, standaardTerugstellen } from "./main.js";
 
 export function makeModalInstellingen(obj, arr) {
     DOM.overlay.innerHTML = '';
@@ -51,9 +50,7 @@ export function makeModalInstellingen(obj, arr) {
     const reset = document.createElement('button');
     reset.className = "reset";
     reset.textContent = "Standaardinstellingen terugzetten";
-    reset.addEventListener('click', () => {
-        resetDefaultSettings(startDatums, ploegSchema);
-    });
+    reset.addEventListener('click', standaardTerugstellen);
     div.appendChild(reset);
     DOM.overlay.appendChild(div);
 
@@ -84,6 +81,6 @@ function ploegSysteemOpslaan() {
 };
 function checkIngevoerdeWaarden(cyclus) {
     return cyclus.every(cyc => {
-        return shiftenGegevens.some(item => item.symbool === cyc);
+        return ploegenGegevens.some(item => item.symbool === cyc);
     });
 };

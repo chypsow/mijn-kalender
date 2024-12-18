@@ -2,7 +2,7 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { saveToSessionStorage, updateSessionStorage, getSettingsFromSessionStorage, saveToLocalStorage } from './functies.js';
+import { saveToSessionStorage, updateSessionStorage, getSettingsFromSessionStorage, saveToLocalStorage, resetDefaultSettings } from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 import { makeModalInstellingen, toggleModal } from './makeModalSettings.js';
 import { makeModalFeestdagen } from './makeModalHolidays.js';
@@ -13,15 +13,15 @@ const week2 = ['L', 'L', 'x', 'N', 'N', 'N', 'N12'];
 const week3 = ['x', 'x', 'L', 'L', 'L', 'L', 'x'];
 const week4 = ['V', 'V', 'V', 'V', 'V', 'x', 'x'];
 const week5 = ['D', 'D', 'D', 'D', 'D', 'x', 'x'];
-export const ploegSchema = [...week1, ...week2, ...week3, ...week4, ...week5];
-export const startDatums = {
+const ploegSchema = [...week1, ...week2, ...week3, ...week4, ...week5];
+const startDatums = {
     1: "2010-02-01", 
     2: "2010-01-18", 
     3: "2010-01-25", 
     4: "2010-01-04", 
     5: "2010-01-11"
 };
-const shiftenData = [
+const shiftData = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
     {symbool:'N', naam:'nacht', kleur:'#4a91e2'},
     {symbool:'V12', naam:'vroege-12u', kleur:'#fc761cb0'},
@@ -30,7 +30,8 @@ const shiftenData = [
     {symbool:'x', naam:'thuis', kleur:'#cfcfcf'},
     {symbool:'D', naam:'dag', kleur:'#949494'}
 ];
-export let shiftenGegevens = JSON.parse(localStorage.getItem("shiftenGegevens")) || shiftenData;
+//
+export const ploegenGegevens = JSON.parse(localStorage.getItem("shiftenGegevens")) || shiftData;
 export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
 export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
 export const DOM = {
@@ -69,29 +70,34 @@ export const defaultSettings = () => {
         jaar: currentYear
     }));
 };
-const updateCalendar = () => {
-    switch (tabBlad) {
-        case 0:
-            updateYearCalendarTable();
-            break;
-        case 1:
-            updateYearCalendarGrid();
-            break;
-        case 2:
-            updateMonthCalendar();
-            break;
-        case 3:
-            updateTeamCalendar();
-    }
+export const standaardTerugstellen = () => {
+    resetDefaultSettings(startDatums, ploegSchema);
 };
 export const gegevensOpslaan = (cyclus, datums) => {
     shiftPattern = cyclus;
     startDates = datums;
-    //startDate = startDates[selectedPloeg];
     saveToLocalStorage('shiftPattern', cyclus);
     saveToLocalStorage('startDates', datums);
     alert("Wijzigingen succesvol opgeslagen!");
     updateCalendar();
+};
+export function generateCalendar() {
+    if (calendarGenerators[tabBlad]) {
+        let currentMonth = 0;
+        let currentYear = 0;
+        let selectedPloeg = 0;
+        const settings = getSettingsFromSessionStorage(tabBlad, defaultSettings);
+        if (settings) {
+            currentMonth = settings.currentMonth;
+            currentYear = settings.currentYear;
+            selectedPloeg = settings.selectedPloeg;
+        }
+        DOM.ploeg.value = selectedPloeg;
+        (tabBlad === 2 || tabBlad === 3) ? calendarGenerators[tabBlad](currentMonth, currentYear) : calendarGenerators[tabBlad](currentYear);
+        refreshCalendar();
+    } else {
+        console.error(`Geen kalendergenerator gevonden voor blad: ${tabBlad}`);
+    }
 };
 const calendarGenerators = {
     0: (year) => {
@@ -139,29 +145,26 @@ const calendarGenerators = {
         generateTeamCalendar(month, year);
     }
 };
-export function generateCalendar() {
-    if (calendarGenerators[tabBlad]) {
-        let currentMonth = 0;
-        let currentYear = 0;
-        let selectedPloeg = 0;
-        const settings = getSettingsFromSessionStorage(tabBlad, defaultSettings);
-        if (settings) {
-            currentMonth = settings.currentMonth;
-            currentYear = settings.currentYear;
-            selectedPloeg = settings.selectedPloeg;
-        }
-        DOM.ploeg.value = selectedPloeg;
-        (tabBlad === 2 || tabBlad === 3) ? calendarGenerators[tabBlad](currentMonth, currentYear) : calendarGenerators[tabBlad](currentYear);
-        refreshCalendar();
-    } else {
-        console.error(`Geen kalendergenerator gevonden voor blad: ${tabBlad}`);
-    }
-};
 function refreshCalendar() {
     // Reset de animatie door de klasse te verwijderen en opnieuw toe te voegen
     DOM.calendar.classList.remove("fade-animation");
     void DOM.calendar.offsetWidth; // Forceer een reflow (truc om animatie te resetten)
     DOM.calendar.classList.add("fade-animation");
+};
+const updateCalendar = () => {
+    switch (tabBlad) {
+        case 0:
+            updateYearCalendarTable();
+            break;
+        case 1:
+            updateYearCalendarGrid();
+            break;
+        case 2:
+            updateMonthCalendar();
+            break;
+        case 3:
+            updateTeamCalendar();
+    }
 };
 function triggerPrev() {
     let currentMonth = 0;

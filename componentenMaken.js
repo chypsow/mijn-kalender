@@ -1,4 +1,4 @@
-import { shiftenGegevens, DOM, generateCalendar, defaultSettings } from './main.js';
+import { ploegenGegevens, DOM, generateCalendar, defaultSettings } from './main.js';
 import { getSettingsFromSessionStorage } from './functies.js';
 import { verlofAanvraag, cancelAanvraag, cancelAlleAanvragen } from './herplanningen.js';
 
@@ -37,7 +37,7 @@ export function maakPloegDropdown(numberOfTeams = 5) {
 };
 
 export function maakPloegenLegende() {
-    shiftenGegevens.forEach(shift => {
+    ploegenGegevens.forEach(shift => {
     const legendeItem = document.createElement('div');
     legendeItem.classList.add('ploegenLegende-item');
     
@@ -55,7 +55,7 @@ export function maakPloegenLegende() {
 };
 
 export function maakVerlofLegende() {
-    const verlofBeschrijving = {'BV': 'Betaald verlof', 'CS':'Compensatie shift', 'ADV':'Arbeidsvermindering',
+    const verlofBeschrijving = {'BV': 'Betaald verlof', 'CS':'Compensatieshift', 'ADV':'Arbeidsvermindering',
         'BF':'Betaalde feestdag', 'AV':'Ancieniteitsverlof','HP':'Herplanning', 'Z':'Ziek'};
     Object.entries(verlofBeschrijving).forEach(([kort, lang]) => {
     const legendeItem = document.createElement('div');
@@ -63,6 +63,7 @@ export function maakVerlofLegende() {
     
     const kleurVak = document.createElement('span');
     kleurVak.classList.add('verlofLegende-vak');
+    kleurVak.textContent = kort;
     kleurVak.classList.add(kort);
     legendeItem.appendChild(kleurVak);
 

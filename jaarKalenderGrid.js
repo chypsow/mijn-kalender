@@ -1,10 +1,12 @@
-import { DOM, shiftPattern, shiftenGegevens, startDates, defaultSettings } from "./main.js";
+import { DOM, shiftPattern, ploegenGegevens, startDates, defaultSettings } from "./main.js";
 import { getDaysSinceStart, getNaamBijSymbool, getSettingsFromSessionStorage } from "./functies.js";
+import { tabBlad } from "./componentenMaken.js";
 
 export function updateYearCalendarGrid() {
-  const year = getSettingsFromSessionStorage(1, defaultSettings).currentYear;
+  const setting = getSettingsFromSessionStorage(tabBlad, defaultSettings);
+  const selectedPloeg = setting.selectedPloeg;
+  const year = setting.currentYear;
   DOM.monthYear.textContent = year;
-  const selectedPloeg = getSettingsFromSessionStorage(1, defaultSettings).selectedPloeg;
   const startDate = startDates[selectedPloeg];
   const totalCells = 42;
   const monthElementen = document.querySelectorAll('#calendar .month');
@@ -33,7 +35,7 @@ export function updateYearCalendarGrid() {
       if(daysSinceStart >= 0) {
         const shiftIndex = daysSinceStart % shiftPattern.length;
         const shift = shiftPattern[shiftIndex];
-        const shiftClass = `shift-${getNaamBijSymbool(shiftenGegevens, shift)}`;
+        const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
         myDay.classList.add(shiftClass);
       }
     }
@@ -49,9 +51,9 @@ export function updateYearCalendarGrid() {
 };
 
 export function generateYearCalendar(year) {
-  calendar.innerHTML = ""; // Maak de kalender leeg
+  calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
-  const selectedPloeg = getSettingsFromSessionStorage(1, defaultSettings).selectedPloeg;
+  const selectedPloeg = getSettingsFromSessionStorage(tabBlad, defaultSettings).selectedPloeg;
   const startDate = startDates[selectedPloeg];
   for (let month = 0; month < 12; month++) {
     const monthContainer = document.createElement("div");
@@ -101,7 +103,7 @@ export function generateYearCalendar(year) {
       if(daysSinceStart >= 0) {
         const shiftIndex = daysSinceStart % shiftPattern.length;
         const shift = shiftPattern[shiftIndex];
-        const shiftClass = `shift-${getNaamBijSymbool(shiftenGegevens, shift)}`;
+        const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
         dayCell.classList.add(shiftClass);
       }
       calendarGrid.appendChild(dayCell);

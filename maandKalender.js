@@ -1,17 +1,14 @@
-import { DOM, shiftPattern, shiftenGegevens, startDates, defaultSettings } from "./main.js";
+import { DOM, shiftPattern, ploegenGegevens, startDates, defaultSettings } from "./main.js";
 import { getDaysSinceStart, getNaamBijSymbool, getSettingsFromSessionStorage } from "./functies.js";
+import { tabBlad } from "./componentenMaken.js";
 
 export function updateMonthCalendar() {
-    let month = 0;
-    let year = 0;
-    const settings = getSettingsFromSessionStorage(2, defaultSettings);
-    if (settings) {
-        month = settings.currentMonth;
-        year = settings.currentYear;
-    }
+    const settings = getSettingsFromSessionStorage(tabBlad, defaultSettings);
+    const month = settings.currentMonth;
+    const year = settings.currentYear;
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-    const selectedPloeg = getSettingsFromSessionStorage(2, defaultSettings).selectedPloeg;
+    const selectedPloeg = settings.selectedPloeg;
     const startDate = startDates[selectedPloeg];
     const totalCells = 42;
     const firstDay = new Date(year, month, 1).getDay();
@@ -39,7 +36,7 @@ export function updateMonthCalendar() {
         if(daysSinceStart >= 0) {
           const shiftIndex = daysSinceStart % shiftPattern.length;
           const shift = shiftPattern[shiftIndex];
-          const shiftClass = `shift-${getNaamBijSymbool(shiftenGegevens, shift)}`;
+          const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
           myDay.classList.add(shiftClass);
         }
     }
@@ -58,7 +55,7 @@ export function generateMonthCalendar(month, year) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-    const selectedPloeg = getSettingsFromSessionStorage(2, defaultSettings).selectedPloeg;
+    const selectedPloeg = getSettingsFromSessionStorage(tabBlad, defaultSettings).selectedPloeg;
     const startDate = startDates[selectedPloeg];
     // Eerste dag van de maand en aantal dagen in de maand
     const firstDay = new Date(year, month, 1).getDay();
@@ -93,7 +90,7 @@ export function generateMonthCalendar(month, year) {
         if(daysSinceStart >= 0) {
             const shiftIndex = daysSinceStart % shiftPattern.length;
             const shift = shiftPattern[shiftIndex];
-            const shiftClass = `shift-${getNaamBijSymbool(shiftenGegevens, shift)}`;
+            const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
             // Voeg de dag en shift toe aan de cel
             cell.classList.add(shiftClass); // Voeg de juiste kleur toe
         }
