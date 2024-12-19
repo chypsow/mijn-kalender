@@ -1,3 +1,17 @@
+import { beginrechtVerlof, defaultSettings } from "./main.js";
+import { tabBlad } from "./componentenMaken.js";
+
+export function handleBlur(e) {
+    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const verlof = e.target.id;
+    const myValue = e.target.value;
+    beginrechtVerlof[selectedPloeg-1][verlof] = Number(myValue);
+    saveToLocalStorage('beginrechtVerlof', beginrechtVerlof);
+};
+export function handleInput(e) {
+
+};
+
 export function saveToSessionStorage(key, value) {
     sessionStorage.setItem(key, JSON.stringify(value));
 };
@@ -19,10 +33,10 @@ export function resetDefaultSettings(obj, arr) {
     }
 };
 
-export function getSettingsFromSessionStorage(blad, setting) {
+export function getSettingsFromLocalStorage(blad, setting) {
     let instellingen;
     try {
-        instellingen = JSON.parse(sessionStorage.getItem('standaardInstellingen')) || setting;
+        instellingen = JSON.parse(localStorage.getItem('standaardInstellingen')) || setting;
     } catch (error) {
         console.error("Failed to parse session storage settings:", error);
         instellingen = setting;
@@ -37,13 +51,13 @@ export function getSettingsFromSessionStorage(blad, setting) {
         selectedPloeg: instelling.ploeg,
         currentMonth: instelling.maand,
         currentYear: instelling.jaar,
-    };
+    }; 
 };
 
-export function updateSessionStorage(settings, index, key, value, defaultSet) {
-    const instellingen = JSON.parse(sessionStorage.getItem(settings)) || defaultSet;
+export function updateLocalStorage(settings, index, key, value, defaultSet) {
+    const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet;
     instellingen[index][key] = value;
-    saveToSessionStorage(settings, instellingen);
+    saveToLocalStorage(settings, instellingen);
 };
 
 export function getNaamBijSymbool(obj, mark) {

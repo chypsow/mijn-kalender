@@ -1,8 +1,9 @@
-import { ploegenGegevens, DOM, generateCalendar, defaultSettings } from './main.js';
-import { getSettingsFromSessionStorage } from './functies.js';
+import { ploegenGegevens, DOM, generateCalendar, defaultSettings, beginrechtVerlof } from './main.js';
+import { getSettingsFromLocalStorage, handleBlur, handleInput } from './functies.js';
 import { verlofAanvraag, cancelAanvraag, cancelAlleAanvragen } from './herplanningen.js';
 
 export let tabBlad = 0;
+
 
 export function maakSidebar() {
     const tabArray = ['Jaarkalender : Tabel', 'Jaarkalender : Raster', 'Maandkalender', 'TeamKalender'];
@@ -78,7 +79,7 @@ export function maakVerlofLegende() {
 export function maakDropdowns() {
     let currentMonth = new Date();
     let currentYear = new Date();
-    const settings = getSettingsFromSessionStorage(tabBlad, defaultSettings);
+    const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
     if (settings) {
         currentMonth = settings.currentMonth;
         currentYear = settings.currentYear;
@@ -108,6 +109,11 @@ export function maakDropdowns() {
 };
 
 export function maakVerlofContainer() {
+    const container = document.createElement('div');
+    container.classList.add('verlof-inhoud');
+    const legeCel1 = document.createElement('div');
+    legeCel1.classList.add('legeCel');
+    container.appendChild(legeCel1);
     const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     verlofDagen.forEach(verlof => {
         const verlofDag = document.createElement('div');
@@ -115,8 +121,57 @@ export function maakVerlofContainer() {
         verlofDag.classList.add(verlof);
         verlofDag.classList.add('verlofCollection');
         verlofDag.addEventListener('click', verlofAanvraag);
-        DOM.verlofContainer.appendChild(verlofDag);
+        container.appendChild(verlofDag);
     });
+    
+    const beginRecht = document.createElement('div');
+    beginRecht.classList.add('titel');
+    beginRecht.textContent = 'Beginrecht';
+    container.appendChild(beginRecht);
+
+    Object.entries(beginrechtVerlof[0]).forEach(([verlof,aantal]) => {
+        const inputVak = document.createElement('input');
+        inputVak.classList.add('inputVak');
+        inputVak.id = verlof;
+        inputVak.value = aantal;
+        inputVak.addEventListener('blur', handleBlur);
+        //inputVak.addEventListener('input', handleInput);
+        container.appendChild(inputVak);
+    });
+    
+    const totaal1 = document.createElement('div');
+    totaal1.classList.add('totaal');
+    totaal1.textContent = 'Totaal:';
+
+    const span = document.createElement('span');
+    span.id = 'totaalBeginrecht';
+    totaal1.appendChild(span);
+    container.appendChild(totaal1);
+
+    const saldo = document.createElement('div');
+    saldo.classList.add('titel');
+    saldo.textContent = 'Saldo';
+    container.appendChild(saldo);
+
+    Array.from({ length: 6}).forEach((_,index) => {
+        const outputVak = document.createElement('div');
+        outputVak.classList.add('outputVak');
+        outputVak.id = `saldo-${index}`;
+        //outputVak.textContent = 0;
+        container.appendChild(outputVak);
+    });
+
+    const totaal2 = document.createElement('div');
+    totaal2.classList.add('totaal');
+    totaal2.textContent = 'Totaal:';
+
+    const span2 = document.createElement('span');
+    span2.id = 'totaalSaldo';
+    totaal2.appendChild(span2);
+    container.appendChild(totaal2);
+
+    DOM.verlofContainer.appendChild(container);
+
     const restore = document.createElement('div');
     restore.textContent = 'Geselecteerd verlof annuleren';
     restore.addEventListener('click', cancelAanvraag);

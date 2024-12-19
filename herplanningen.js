@@ -1,7 +1,6 @@
 import { DOM, defaultSettings } from "./main.js";
-import { getSettingsFromSessionStorage } from "./functies.js";
+import { getSettingsFromLocalStorage, saveToLocalStorage } from "./functies.js";
 import { tabBlad } from "./componentenMaken.js";
-
 
 export const verlofdagenPloegen = {
     verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
@@ -17,8 +16,15 @@ const localStoragePloegen = {
     4: 'verlofdagenPloeg4',
     5: 'verlofdagenPloeg5'
 };
+export function savePloegenToLocalStorage() {
+    Object.values(localStoragePloegen).forEach((ploeg, index) => {
+        const ploegKey = ploeg;
+        saveToLocalStorage(`verlofdagenPloeg${index+1}`, verlofdagenPloegen[ploegKey]);
+    });
+};
+
 export function verlofAanvraag(event) {
-    const selectedPloeg = getSettingsFromSessionStorage(tabBlad, defaultSettings).selectedPloeg;
+    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const aanvraag = event.target.textContent;
     const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
     if(!selectedCell) return;
@@ -49,7 +55,7 @@ function voegVerlofDatumToe(ploeg, datum, soort) {
     saveToLocalStorage(localStoragePloegen[ploeg], array);
 };
 export function cancelAanvraag() {
-    const selectedPloeg = getSettingsFromSessionStorage(tabBlad, defaultSettings).selectedPloeg;
+    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
     if(!selectedCell) return;
     if(selectedCell.team !== selectedPloeg) return;
@@ -79,7 +85,7 @@ function verwijderVerlofDatum(ploeg, datum) {
     }
 };
 export function cancelAlleAanvragen() {
-    let selectedPloeg = getSettingsFromSessionStorage(tabBlad, defaultSettings).selectedPloeg;
+    let selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     const cellen = DOM.calendar.querySelectorAll('.cell');
     const bestaandeVerlof = Array.from(cellen).some(cel => verlofDagen.includes(cel.textContent));

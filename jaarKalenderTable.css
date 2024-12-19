@@ -1,5 +1,5 @@
 .year-container-table {
-    margin: 150px auto 0;
+    margin: 80px auto 0;
     text-align: center;
 }
 
@@ -52,6 +52,11 @@
     text-align: left;
     /*transition: all 0.1s ease-out;*/
 }
+/*.cell:hover {
+    outline: 3px solid rgba(0, 0, 0, 0.712);
+    outline-offset: -2px;
+    border-radius: 5px;
+}*/
 
 .year-calendar-table .month-cell {
     /*font-weight: bold;*/
@@ -72,19 +77,46 @@
 
 .verlof-container {
     margin: 50px auto 0;
-    /*max-width: 600px;*/
-    display: flex;
-    /*flex-direction: row;*/
+    /*max-width: 800px;*/
+    /*display: flex;
+    flex-direction: column;*/
     justify-content: center;
-    gap: 7px;
+    /*gap: 7px;*/
     align-content: center;
+}
+.verlof-inhoud {
+    margin-right: 40px;
+    max-width: 550px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 15px;
+}
+.inputVak {
+    font-size: 0.9em;
+    font-weight: bold;
+    width: 47px;
+    text-align: center;
+    padding: 2px 0;
+}
+.outputVak {
+    font-size: 0.9em;
+    width: 49px;
+    /*height: 20px;*/
+    padding: auto;
+    background-color: transparent;
+    text-align: center;
+    border: 1px dashed rgba(128, 128, 128, 0.671);
+    color: rgba(207, 207, 207, 0.747);
+}
+.titel {
+    text-align: right;
 }
 .restore {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 0.9em;
     font-weight: bold;
-    margin-left: 40px;
-    
+    margin-right: 10px;
+    height: 45px;
     /*background: linear-gradient(360deg,#022124 10%,#efefef 360%);*/
     background-color: #e0e0e0;
     color: rgb(70, 70, 70);

@@ -1,11 +1,11 @@
 import { DOM, shiftPattern, startDates, defaultSettings } from "./main.js";
-import { getDaysSinceStart, getSettingsFromSessionStorage } from "./functies.js";
+import { getDaysSinceStart, getSettingsFromLocalStorage } from "./functies.js";
 import { verlofdagenPloegen } from './herplanningen.js'
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 import { tabBlad } from "./componentenMaken.js";
 
 export function updateYearCalendarTable() {
-  const setting = getSettingsFromSessionStorage(tabBlad, defaultSettings);
+  const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
   const selectedPloeg = setting.selectedPloeg;
   const year = setting.currentYear;
   DOM.monthYear.textContent = year;
@@ -44,7 +44,7 @@ export function updateYearCalendarTable() {
 export function generateYearCalendarTable(year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
-  const selectedPloeg = getSettingsFromSessionStorage(tabBlad, defaultSettings).selectedPloeg;
+  const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
   const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;

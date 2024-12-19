@@ -1,10 +1,10 @@
 import { DOM, shiftPattern, startDates, defaultSettings } from "./main.js";
-import { getDaysSinceStart, getSettingsFromSessionStorage } from "./functies.js";
+import { getDaysSinceStart, getSettingsFromLocalStorage } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 import { tabBlad } from "./componentenMaken.js";
 
 export function updateTeamCalendar() {
-    const settings = getSettingsFromSessionStorage(tabBlad, defaultSettings);
+    const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
     const month = settings.currentMonth;
     const year = settings.currentYear;
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));

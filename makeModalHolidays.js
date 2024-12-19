@@ -1,9 +1,9 @@
 import { DOM } from "./main.js";
 import { toggleModal } from "./makeModalSettings.js";
-import { getSettingsFromSessionStorage } from "./functies.js";
+import { getSettingsFromLocalStorage } from "./functies.js";
 
 export function makeModalFeestdagen(tab, setting) {
-    let jaar = getSettingsFromSessionStorage(tab, setting).currentYear;
+    let jaar = getSettingsFromLocalStorage(tab, setting).currentYear;
     DOM.overlay.innerHTML = `
         <div class="calendar-nav">
             <button class="vorig"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
