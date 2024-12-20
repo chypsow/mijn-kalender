@@ -57,8 +57,8 @@ export const saldoVerlof = (index) => {
 };
     
 
-export const shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
-export const startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
+export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
+export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
 export const DOM = {
     monthYear: document.getElementById('month-year'),
     monthSelect: document.getElementById("month-select"),
