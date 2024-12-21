@@ -1,27 +1,9 @@
-import { DOM, defaultSettings } from "./main.js";
-import { getSettingsFromLocalStorage, saveToLocalStorage } from "./functies.js";
+import { DOM, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen } from "./main.js";
+import { getSettingsFromLocalStorage, saveToLocalStorage, behandelenSaldoVerlofdagen, behandelenRechtEnSaldoVerlofdagenNaTerugstellen, behandelenNaAllesTerugstellen } from "./functies.js";
 import { tabBlad } from "./componentenMaken.js";
 
-export const verlofdagenPloegen = {
-    verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
-    verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
-    verlofdagenPloeg3: JSON.parse(localStorage.getItem('verlofdagenPloeg3')) || [],
-    verlofdagenPloeg4: JSON.parse(localStorage.getItem('verlofdagenPloeg4')) || [],
-    verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || []
-};
-const localStoragePloegen = {
-    1: 'verlofdagenPloeg1',
-    2: 'verlofdagenPloeg2',
-    3: 'verlofdagenPloeg3',
-    4: 'verlofdagenPloeg4',
-    5: 'verlofdagenPloeg5'
-};
-export function savePloegenToLocalStorage() {
-    Object.values(localStoragePloegen).forEach((ploeg, index) => {
-        const ploegKey = ploeg;
-        saveToLocalStorage(`verlofdagenPloeg${index+1}`, verlofdagenPloegen[ploegKey]);
-    });
-};
+
+
 
 export function verlofAanvraag(event) {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
@@ -36,16 +18,19 @@ export function verlofAanvraag(event) {
                 cel.classList.forEach(className => {
                     if(verlofDagen.includes(className)) cel.classList.remove(className);
                 });
+                const inhoud = cel.textContent;
                 cel.textContent = aanvraag;
                 cel.classList.add(aanvraag);
                 voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
+                behandelenSaldoVerlofdagen(aanvraag, inhoud);
+                
             }
         }
     });
 };
 function voegVerlofDatumToe(ploeg, datum, soort) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const array = verlofdagenPloegen[ploegKey];
+    const array = opgenomenVerlofPerPloeg[ploegKey];
     const index = array.findIndex(obj => obj.datum === datum);
     if (index === -1) {
         array.push({ datum, soort });
@@ -69,6 +54,7 @@ export function cancelAanvraag() {
                         cel.textContent = cel.dataset.shift;
                         const canceledDatum = selectedCell.datum;
                         verwijderVerlofDatum(selectedPloeg, canceledDatum);
+                        behandelenRechtEnSaldoVerlofdagenNaTerugstellen(className);
                     }
                 });
             }
@@ -77,15 +63,15 @@ export function cancelAanvraag() {
 };
 function verwijderVerlofDatum(ploeg, datum) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const index = verlofdagenPloegen[ploegKey].findIndex(obj => obj.datum === datum);
+    const index = opgenomenVerlofPerPloeg[ploegKey].findIndex(obj => obj.datum === datum);
 
     if (index !== -1) {
-        verlofdagenPloegen[ploegKey].splice(index, 1);
-        saveToLocalStorage(localStoragePloegen[ploeg], verlofdagenPloegen[ploegKey]);
+        opgenomenVerlofPerPloeg[ploegKey].splice(index, 1);
+        saveToLocalStorage(localStoragePloegen[ploeg], opgenomenVerlofPerPloeg[ploegKey]);
     }
 };
 export function cancelAlleAanvragen() {
-    let selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     const cellen = DOM.calendar.querySelectorAll('.cell');
     const bestaandeVerlof = Array.from(cellen).some(cel => verlofDagen.includes(cel.textContent));
@@ -99,6 +85,7 @@ export function cancelAlleAanvragen() {
                 cel.textContent = cel.dataset.shift;
                 const canceledDatum = cel.dataset.datum;
                 verwijderVerlofDatum(selectedPloeg, canceledDatum);
+                behandelenNaAllesTerugstellen(selectedPloeg);
             }
         });
 

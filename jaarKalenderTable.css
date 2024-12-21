@@ -1,5 +1,5 @@
 .year-container-table {
-    margin: 80px auto 0;
+    margin: 40px auto 0;
     text-align: center;
 }
 
@@ -85,7 +85,7 @@
     align-content: center;
 }
 .verlof-inhoud {
-    margin-right: 40px;
+    /*margin-right: 40px;*/
     max-width: 550px;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
@@ -97,6 +97,9 @@
     width: 47px;
     text-align: center;
     padding: 2px 0;
+}
+.totaal {
+    width: 100px;
 }
 .outputVak {
     font-size: 0.9em;

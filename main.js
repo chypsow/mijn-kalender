@@ -6,7 +6,6 @@ import { saveToSessionStorage, updateLocalStorage, getSettingsFromLocalStorage, 
 import { tabBlad, maakSidebar, maakPloegDropdown, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 import { makeModalInstellingen, toggleModal } from './makeModalSettings.js';
 import { makeModalFeestdagen } from './makeModalHolidays.js';
-import { savePloegenToLocalStorage } from './herplanningen.js';
 
 // default settings
 const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V12'];
@@ -32,31 +31,104 @@ const shiftData = [
     {symbool:'D', naam:'dag', kleur:'#949494'}
 ];
 export const ploegenGegevens = JSON.parse(localStorage.getItem("shiftenGegevens")) || shiftData;
-const defaultVacations = () => {
-    return Array.from({ length: 5 }, () => ({
-        'BV': 0,
-        'CS': 0,
-        'ADV': 0,
-        'BF': 0,
-        'AV': 0,
-        'HP': 0
-    }));
-};
-console.log(defaultVacations());
-export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations();
-console.log(beginrechtVerlof[0]);
-//
-export const saldoVerlof = (index) => {
-    const ploegKey = `verlofdagenPloeg${index}`;
-    const array = verlofdagenPloegen[ploegKey];
-    if(array !== null) {
-        const arr = [];
-        
 
+//
+export const opgenomenVerlofPerPloeg = {
+    verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
+    verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
+    verlofdagenPloeg3: JSON.parse(localStorage.getItem('verlofdagenPloeg3')) || [],
+    verlofdagenPloeg4: JSON.parse(localStorage.getItem('verlofdagenPloeg4')) || [],
+    verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || []
+};
+export const localStoragePloegen = {
+    1: 'verlofdagenPloeg1',
+    2: 'verlofdagenPloeg2',
+    3: 'verlofdagenPloeg3',
+    4: 'verlofdagenPloeg4',
+    5: 'verlofdagenPloeg5'
+};
+function savePloegenToLocalStorage() {
+    Object.values(localStoragePloegen).forEach((ploeg, index) => {
+        const ploegKey = ploeg;
+        saveToLocalStorage(`verlofdagenPloeg${index+1}`, opgenomenVerlofPerPloeg[ploegKey]);
+    });
+};
+
+const defaultVacations = {
+    'BV': 0,
+    'CS': 0,
+    'ADV': 0,
+    'BF': 0,
+    'AV': 0,
+    'HP': 0
+};
+export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
+//console.log(`beginrecht verlofdagen: ${JSON.stringify(beginrechtVerlof, null, 2)}`);
+//console.log(`Totaal beginrecht: ${calculateTotals(beginrechtVerlof)}`);
+
+export function calculateSaldo(key, ploeg) {
+    const ploegKey = `verlofdagenPloeg${ploeg}`;
+    const array = opgenomenVerlofPerPloeg[ploegKey];
+    
+    const beginrecht = beginrechtVerlof[key];
+    if(array.length !== 0) {
+        let opgenomen = 0;
+        array.forEach(obj => {
+            if(obj.soort === key) opgenomen++;
+        });
+        return beginrecht - opgenomen;
+    } else {
+        return beginrecht;
     }
 };
-    
+console.log(`beginrecht 'BV': ${beginrechtVerlof['BV']}`);
 
+console.log(`saldo 'BV' ploeg 1: ${calculateSaldo('BV', 1)}`);
+
+
+export const alleVerlofSaldo = (ploeg) => {
+    const ploegKey = `verlofdagenPloeg${ploeg}`;
+    const array = opgenomenVerlofPerPloeg[ploegKey];
+    const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
+    const newArray = array.filter(obj => {
+        const year = parseInt(obj.datum.split('/')[2]);
+        console.log(year);
+        return year === currentYear;
+    });
+    console.log(`array : ${JSON.stringify(array, null, 2)}`);
+    console.log(`new array : ${JSON.stringify(newArray, null, 2)}`);
+
+    if(newArray.length !== 0) {
+        let saldo = {};
+        let count = 0;
+        Object.entries(beginrechtVerlof).forEach(([key, value]) => {
+            count = 0;
+            newArray.forEach(obj => {
+                if(obj.soort === key) count++;
+            });
+            saldo[key] = value - count;
+        });
+        return saldo;
+    } else {
+        return beginrechtVerlof;
+    };
+};
+
+
+export const defaultSettings = () => {
+    const date = new Date();
+    const currentMonth = date.getMonth();
+    const currentYear = date.getFullYear();
+
+    return Array.from({ length: 4 }, (_, index) => ({
+        pagina: index,
+        ploeg: 1,
+        maand: currentMonth,
+        jaar: currentYear
+    }));
+};   
+//console.log(`Default setting: ${JSON.stringify(defaultSettings(), null, 2)}`);
+console.log(`alle saldo verlof ploeg 1: ${JSON.stringify(alleVerlofSaldo(1), null, 2)}`);
 export const shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
 export const startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
 export const DOM = {
@@ -83,18 +155,7 @@ export const DOM = {
     overlay: document.getElementById('overlay'),
     sluiten: document.getElementById('sluiten')
 };
-export const defaultSettings = () => {
-    const date = new Date();
-    const currentMonth = date.getMonth();
-    const currentYear = date.getFullYear();
 
-    return Array.from({ length: 4 }, (_, index) => ({
-        pagina: index,
-        ploeg: 1,
-        maand: currentMonth,
-        jaar: currentYear
-    }));
-};
 export const standaardTerugstellen = () => {
     resetDefaultSettings(startDatums, ploegSchema);
 };

@@ -1,15 +1,73 @@
-import { beginrechtVerlof, defaultSettings } from "./main.js";
+import { beginrechtVerlof, alleVerlofSaldo, calculateSaldo, defaultSettings } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 
 export function handleBlur(e) {
-    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const verlof = e.target.id;
-    const myValue = e.target.value;
-    beginrechtVerlof[selectedPloeg-1][verlof] = Number(myValue);
-    saveToLocalStorage('beginrechtVerlof', beginrechtVerlof);
+    const aantal = Number(e.target.value);
+    behandelenRechtEnSaldoVerlofdagen(verlof, aantal);
 };
-export function handleInput(e) {
 
+function behandelenRechtEnSaldoVerlofdagen(verlof, aantal) {
+    //if(verlof === "Z") return;
+    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const totaal1 = document.getElementById('totaalBeginrecht');
+    const totaal2 = document.getElementById('totaalSaldo');
+    const mySaldoElt = document.getElementById(`saldo-${verlof}`);
+    const saldoOud = Number(mySaldoElt.textContent.trim());
+    
+    beginrechtVerlof[verlof] = aantal;
+    saveToLocalStorage('beginrechtVerlof', beginrechtVerlof);
+    const saldoNieuw = calculateSaldo(verlof, selectedPloeg);
+
+    totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
+    mySaldoElt.textContent = saldoNieuw;
+    totaal2.textContent = ` ${Number(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
+    
+    console.log(`oude saldo: ${saldoOud}`);
+    console.log(`nieuwe saldo: ${saldoNieuw}`);
+    //console.log(`beginrecht verlofdagen: ${JSON.stringify(beginrechtVerlof, null, 2)}`);
+    //console.log(`Totaal beginrecht: ${calculateTotals(beginrechtVerlof)}`);
+};
+export function behandelenSaldoVerlofdagen(verlof, oud) {
+    if(verlof === "Z") return;
+
+    const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP'];
+    const totaal2 = document.getElementById('totaalSaldo');
+    const saldoElt1 = document.getElementById(`saldo-${verlof}`);
+    //const beginrecht = document.getElementById(verlof);
+    const saldoOud = Number(saldoElt1.textContent);
+    //const saldoNieuw = saldoOud--;
+    saldoElt1.textContent = saldoOud - 1;
+    if(verlofdagen.includes(oud)) {
+        const saldoElt2 = document.getElementById(`saldo-${oud}`);
+        saldoElt2.textContent = Number(saldoElt2.textContent) + 1;
+    } else {
+        const totaalSaldo = Number(totaal2.textContent.trim());
+        totaal2.textContent = ` ${totaalSaldo - 1}`;
+    }
+
+    //console.log(`opgenomen: ${verlof}, oude saldo: ${saldoOud}, nieuwe saldo: ${saldoElt1.textContent}`);
+}
+export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
+    if(verlof === "Z") return;
+    const totaal2 = document.getElementById('totaalSaldo');
+    const saldoElt = document.getElementById(`saldo-${verlof}`);
+    saldoElt.textContent = Number(saldoElt.textContent) + 1;
+    const totaalSaldo = Number(totaal2.textContent.trim());
+    totaal2.textContent = ` ${totaalSaldo + 1}`;
+}
+export function behandelenNaAllesTerugstellen(ploeg, currentYear = 2024) {
+    const saldoArray = alleVerlofSaldo(ploeg);
+    Object.entries(saldoArray).forEach(([verlof,aantal]) => {
+        const elt = document.getElementById(`saldo-${verlof}`);
+        elt.textContent = aantal;
+    });
+    const saldoTotaal = calculateTotals(saldoArray);
+    document.getElementById('totaalSaldo').textContent = ` ${saldoTotaal}`;
+}
+
+export function calculateTotals(obj) {
+    return Object.values(obj).reduce((acc, x) => acc + x);
 };
 
 export function saveToSessionStorage(key, value) {

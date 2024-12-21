@@ -1,6 +1,6 @@
 import { DOM, shiftPattern, startDates, defaultSettings } from "./main.js";
-import { getDaysSinceStart, getSettingsFromLocalStorage } from "./functies.js";
-import { verlofdagenPloegen } from './herplanningen.js'
+import { getDaysSinceStart, getSettingsFromLocalStorage, behandelenNaAllesTerugstellen } from "./functies.js";
+import { opgenomenVerlofPerPloeg } from './main.js'
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 import { tabBlad } from "./componentenMaken.js";
 
@@ -39,6 +39,7 @@ export function updateYearCalendarTable() {
       }
     });
   });
+  behandelenNaAllesTerugstellen(selectedPloeg);
 };
 
 export function generateYearCalendarTable(year) {
@@ -122,7 +123,7 @@ function shiftenInvullen(elt, date, hollydays, ploeg) {
 
 function voegVerlofdagToeVolgensLocalStorage(ploeg, cell) {
   const ploegKey = `verlofdagenPloeg${ploeg}`;
-  verlofdagenPloegen[ploegKey].forEach(obj => { 
+  opgenomenVerlofPerPloeg[ploegKey].forEach(obj => { 
     if(obj.datum === cell.dataset.datum) {
       cell.textContent = obj.soort;
       cell.classList.add(obj.soort);

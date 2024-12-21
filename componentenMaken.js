@@ -1,5 +1,5 @@
-import { ploegenGegevens, DOM, generateCalendar, defaultSettings, beginrechtVerlof } from './main.js';
-import { getSettingsFromLocalStorage, handleBlur, handleInput } from './functies.js';
+import { ploegenGegevens, DOM, generateCalendar, defaultSettings, beginrechtVerlof, alleVerlofSaldo } from './main.js';
+import { calculateTotals, getSettingsFromLocalStorage, handleBlur } from './functies.js';
 import { verlofAanvraag, cancelAanvraag, cancelAlleAanvragen } from './herplanningen.js';
 
 export let tabBlad = 0;
@@ -34,7 +34,7 @@ export function maakPloegDropdown(numberOfTeams = 5) {
         option.textContent = `Ploeg ${i + 1}`;
         option.style.color = 'black';
         DOM.ploeg.appendChild(option);
-    });
+    }); 
 };
 
 export function maakPloegenLegende() {
@@ -129,7 +129,7 @@ export function maakVerlofContainer() {
     beginRecht.textContent = 'Beginrecht';
     container.appendChild(beginRecht);
 
-    Object.entries(beginrechtVerlof[0]).forEach(([verlof,aantal]) => {
+    Object.entries(beginrechtVerlof).forEach(([verlof,aantal]) => {
         const inputVak = document.createElement('input');
         inputVak.classList.add('inputVak');
         inputVak.id = verlof;
@@ -143,8 +143,11 @@ export function maakVerlofContainer() {
     totaal1.classList.add('totaal');
     totaal1.textContent = 'Totaal:';
 
+    const beginrechtTotaal = calculateTotals(beginrechtVerlof);
+    console.log(`totaal beginrecht: ${beginrechtTotaal}`);
     const span = document.createElement('span');
     span.id = 'totaalBeginrecht';
+    span.textContent = ` ${beginrechtTotaal}`;
     totaal1.appendChild(span);
     container.appendChild(totaal1);
 
@@ -153,11 +156,12 @@ export function maakVerlofContainer() {
     saldo.textContent = 'Saldo';
     container.appendChild(saldo);
 
-    Array.from({ length: 6}).forEach((_,index) => {
+    const saldoArray = alleVerlofSaldo(1);
+    Object.entries(saldoArray).forEach(([verlof,aantal]) => {
         const outputVak = document.createElement('div');
         outputVak.classList.add('outputVak');
-        outputVak.id = `saldo-${index}`;
-        //outputVak.textContent = 0;
+        outputVak.id = `saldo-${verlof}`;
+        outputVak.textContent = aantal;
         container.appendChild(outputVak);
     });
 
@@ -165,21 +169,23 @@ export function maakVerlofContainer() {
     totaal2.classList.add('totaal');
     totaal2.textContent = 'Totaal:';
 
+    const saldoTotaal = calculateTotals(saldoArray);
     const span2 = document.createElement('span');
     span2.id = 'totaalSaldo';
+    span2.textContent = ` ${saldoTotaal}`;
     totaal2.appendChild(span2);
     container.appendChild(totaal2);
 
     DOM.verlofContainer.appendChild(container);
 
     const restore = document.createElement('div');
-    restore.textContent = 'Geselecteerd verlof annuleren';
+    restore.textContent = 'Selectie terugstellen';
     restore.addEventListener('click', cancelAanvraag);
     restore.classList.add('restore');
     DOM.verlofContainer.appendChild(restore);
 
     const restoreAll = document.createElement('div');
-    restoreAll.textContent = 'Alles annuleren';
+    restoreAll.textContent = 'Alles terugstellen';
     restoreAll.addEventListener('click', cancelAlleAanvragen);
     restoreAll.classList.add('restore');
     DOM.verlofContainer.appendChild(restoreAll);
