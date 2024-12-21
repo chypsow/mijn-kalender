@@ -120,7 +120,7 @@ export function updateLocalStorage(settings, index, key, value, defaultSet) {
 
 export function getNaamBijSymbool(obj, mark) {
     const shift = obj.find(item => item.symbool === mark);
-    return shift ? shift.naam : 'Symbool niet gevonden';
+    return shift ? shift.naam : 'Symbool-niet-gevonden';
 };
 
 export function getDaysSinceStart(date, date0) {
