@@ -81,9 +81,9 @@ export function calculateSaldo(key, ploeg) {
         return beginrecht;
     }
 };
-console.log(`beginrecht 'BV': ${beginrechtVerlof['BV']}`);
+//console.log(`beginrecht 'BV': ${beginrechtVerlof['BV']}`);
 
-console.log(`saldo 'BV' ploeg 1: ${calculateSaldo('BV', 1)}`);
+//console.log(`saldo 'BV' ploeg 1: ${calculateSaldo('BV', 1)}`);
 
 
 export const alleVerlofSaldo = (ploeg) => {
@@ -92,11 +92,11 @@ export const alleVerlofSaldo = (ploeg) => {
     const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
     const newArray = array.filter(obj => {
         const year = parseInt(obj.datum.split('/')[2]);
-        console.log(year);
+        //console.log(year);
         return year === currentYear;
     });
-    console.log(`array : ${JSON.stringify(array, null, 2)}`);
-    console.log(`new array : ${JSON.stringify(newArray, null, 2)}`);
+    //console.log(`array : ${JSON.stringify(array, null, 2)}`);
+    //console.log(`new array : ${JSON.stringify(newArray, null, 2)}`);
 
     if(newArray.length !== 0) {
         let saldo = {};

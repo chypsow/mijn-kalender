@@ -56,7 +56,7 @@ export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
     const totaalSaldo = Number(totaal2.textContent.trim());
     totaal2.textContent = ` ${totaalSaldo + 1}`;
 }
-export function behandelenNaAllesTerugstellen(ploeg, currentYear = 2024) {
+export function behandelenNaAllesTerugstellen(ploeg) {
     const saldoArray = alleVerlofSaldo(ploeg);
     Object.entries(saldoArray).forEach(([verlof,aantal]) => {
         const elt = document.getElementById(`saldo-${verlof}`);

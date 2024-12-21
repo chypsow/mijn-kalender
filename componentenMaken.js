@@ -144,7 +144,7 @@ export function maakVerlofContainer() {
     totaal1.textContent = 'Totaal:';
 
     const beginrechtTotaal = calculateTotals(beginrechtVerlof);
-    console.log(`totaal beginrecht: ${beginrechtTotaal}`);
+    //console.log(`totaal beginrecht: ${beginrechtTotaal}`);
     const span = document.createElement('span');
     span.id = 'totaalBeginrecht';
     span.textContent = ` ${beginrechtTotaal}`;
