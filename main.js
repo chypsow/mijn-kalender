@@ -128,7 +128,7 @@ export const defaultSettings = () => {
     }));
 };   
 //console.log(`Default setting: ${JSON.stringify(defaultSettings(), null, 2)}`);
-console.log(`alle saldo verlof ploeg 1: ${JSON.stringify(alleVerlofSaldo(1), null, 2)}`);
+//console.log(`alle saldo verlof ploeg 1: ${JSON.stringify(alleVerlofSaldo(1), null, 2)}`);
 export const shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
 export const startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
 export const DOM = {
