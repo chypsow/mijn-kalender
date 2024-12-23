@@ -2,6 +2,41 @@ import { DOM, ploegenGegevens, gegevensOpslaan, standaardTerugstellen } from "./
 
 export function makeModalInstellingen(obj, arr) {
     DOM.overlay.innerHTML = '';
+    const topHeader = document.createElement('div');
+    const heading = document.createElement('h2');
+    heading.classList.add('heading-modal');
+    heading.textContent = 'Ploegenschema personnalizeren:';
+    topHeader.appendChild(heading);
+    const handleidingContainer = document.createElement('div');
+    handleidingContainer.classList.add('handleiding-container');
+    const icoon = document.createElement('i');
+    icoon.classList.add('fa');
+    icoon.classList.add('fa-question-circle');
+    icoon.setAttribute('aria-hidden', 'true');
+    handleidingContainer.appendChild(icoon);
+
+    const handleidingMsg = document.createElement('div');
+    handleidingMsg.classList.add('handleiding-msg');
+    handleidingMsg.innerHTML = `
+    <ul>
+        <li><h4 style="color: #864507; margin-bottom:0">Volledige cyclus:</h4>
+            Een volledige cyclus bestaat uit 5 weken. 
+            Elke ploeg werkt en rust in een specifiek patroon dat zich herhaalt na 5 weken.
+        </li>
+        <li><h4 style="color: #864507; margin-bottom:0">Startdatum:</h4>
+           Welke ploeg in welke week actief is, hangt af van een startdatum.
+            Bijvoorbeeld: als we 1 februari 2010 als startdatum kiezen voor Ploeg 1,
+             dan begint deze ploeg op die datum met de eerste week van 3 nachten. 
+             Als we voor Ploeg 2 een startdatum van 8 februari 2010 (7 dagen later) kiezen, 
+             dan begint ook deze ploeg op die datum met de week van 3 nachten, en zo verder.
+        </li>
+    </ul>
+    `;
+    handleidingContainer.appendChild(handleidingMsg);
+    topHeader.appendChild(handleidingContainer);
+    
+    DOM.overlay.appendChild(topHeader);
+
     let count = 0;
     Array.from({ length: 5}).forEach((_, i) => {
         const label = document.createElement('label');
@@ -21,7 +56,7 @@ export function makeModalInstellingen(obj, arr) {
     });
 
     DOM.overlay.appendChild(document.createElement('br'));
-    DOM.overlay.appendChild(document.createElement('br'));
+    //DOM.overlay.appendChild(document.createElement('br'));
 
     Object.keys(obj).forEach(i => {
         const label = document.createElement('label');
@@ -57,7 +92,18 @@ export function makeModalInstellingen(obj, arr) {
     toggleModal(true);
 };
 export function toggleModal(show) {
-    DOM.modalOverlay.style.display = show ? "block" : "none";
+    if(!show)  {
+        DOM.modalOverlay.classList.remove('open');
+        setTimeout(() => {
+            DOM.modalOverlay.style.display = 'none';
+        }, 300);
+    } else {
+        DOM.modalOverlay.style.display = 'block';
+        setTimeout(() => {
+            DOM.modalOverlay.classList.add('open');
+        }, 10)
+    }
+    //DOM.modalOverlay.style.display = show ? "block" : "none";
     DOM.modal.style.display = show ? "block" : "none";
 };
 function ploegSysteemOpslaan() {

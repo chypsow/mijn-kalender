@@ -12,7 +12,6 @@ export function makeModalFeestdagen(tab, setting) {
         </div>
         <ul class="feestdagen"></ul>
     `;
-
     const lijst = DOM.overlay.querySelector('.feestdagen');
     const updateFeestdagen = (newYear) => {
         jaar = newYear;

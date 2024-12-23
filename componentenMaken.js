@@ -1,5 +1,5 @@
 import { ploegenGegevens, DOM, generateCalendar, defaultSettings, beginrechtVerlof, alleVerlofSaldo } from './main.js';
-import { calculateTotals, getSettingsFromLocalStorage, handleBlur } from './functies.js';
+import { calculateTotals, getSettingsFromLocalStorage, handleBlur, handleClickBtn } from './functies.js';
 import { verlofAanvraag, cancelAanvraag, cancelAlleAanvragen } from './herplanningen.js';
 
 export let tabBlad = 0;
@@ -36,6 +36,30 @@ export function maakPloegDropdown(numberOfTeams = 5) {
         DOM.ploeg.appendChild(option);
     }); 
 };
+
+export function maakKnoppen() {
+    const knoppen = [
+        ['instellingen', 'fa-cog', 'Instellingen'],
+        ['feestdagen', 'fa-calendar', 'Feestdagen'],
+        ['vakanties', 'fa-plane', 'School vakanties'],
+        ['rapport', 'fa-calendar-check-o', 'Genereer rapport'],
+        ['afdrukken', 'fa-print', 'Afdrukken']
+    ];
+    
+    knoppen.forEach(knop => {
+        const btn = document.createElement('div');
+        btn.id = knop[0];
+        btn.classList.add('btnGreen');
+        const icoon = document.createElement('i');
+        icoon.classList.add('fa');
+        icoon.classList.add(knop[1]);
+        icoon.setAttribute('aria-hidden', 'true');
+        icoon.textContent = ` ${knop[2]}`;
+        btn.appendChild(icoon);
+        btn.addEventListener('click', handleClickBtn);
+        DOM.buttonContainer.appendChild(btn);
+    });
+}
 
 export function maakPloegenLegende() {
     ploegenGegevens.forEach(shift => {
@@ -77,17 +101,13 @@ export function maakVerlofLegende() {
 };
 
 export function maakDropdowns() {
-    let currentMonth = new Date();
-    let currentYear = new Date();
-    const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-    if (settings) {
-        currentMonth = settings.currentMonth;
-        currentYear = settings.currentYear;
-    }
+    let currentMonth = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentMonth;
+    let currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
     const months = [
         "januari", "februari", "maart", "april", "mei", "juni",
         "juli", "augustus", "september", "oktober", "november", "december"
     ];
+
     DOM.monthSelect.innerHTML = "";
     months.forEach((month, index) => {
         const option = document.createElement("option");

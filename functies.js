@@ -1,5 +1,31 @@
-import { beginrechtVerlof, alleVerlofSaldo, calculateSaldo, defaultSettings } from "./main.js";
+import { beginrechtVerlof, alleVerlofSaldo, calculateSaldo, defaultSettings, startDates, shiftPattern } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
+import { makeModalInstellingen } from "./makeModalSettings.js";
+import { makeModalFeestdagen } from "./makeModalHolidays.js";
+
+
+export function handleClickBtn(e) {
+    const btn = e.currentTarget.id; // Gebruik currentTarget om de juiste id op te halen
+    switch(btn) {
+        case 'instellingen':
+            makeModalInstellingen(startDates, shiftPattern);
+            break;
+        case 'feestdagen':
+            makeModalFeestdagen(tabBlad, defaultSettings);
+            break;
+        case 'vakanties':
+            console.log('vakantieknop is aangeklikt');
+            break;
+        case 'rapport':
+            console.log('Rapportknop is aangeklikt');
+            break;
+        case 'afdrukken':
+            console.log('Afdrukknop is aangeklikt');
+            break;
+        default:
+            console.warn('Onbekende knop-id:', btn);
+    }
+};
 
 export function handleBlur(e) {
     const verlof = e.target.id;
@@ -23,16 +49,21 @@ function behandelenRechtEnSaldoVerlofdagen(verlof, aantal) {
     mySaldoElt.textContent = saldoNieuw;
     totaal2.textContent = ` ${Number(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
     
-    console.log(`oude saldo: ${saldoOud}`);
-    console.log(`nieuwe saldo: ${saldoNieuw}`);
+    //console.log(`oude saldo: ${saldoOud}`);
+    //console.log(`nieuwe saldo: ${saldoNieuw}`);
     //console.log(`beginrecht verlofdagen: ${JSON.stringify(beginrechtVerlof, null, 2)}`);
     //console.log(`Totaal beginrecht: ${calculateTotals(beginrechtVerlof)}`);
 };
 export function behandelenSaldoVerlofdagen(verlof, oud) {
-    if(verlof === "Z") return;
-
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP'];
     const totaal2 = document.getElementById('totaalSaldo');
+    const totaalSaldo = Number(totaal2.textContent.trim());
+    if(verlof === "Z" && verlofdagen.includes(oud)) {
+        const saldoElt2 = document.getElementById(`saldo-${oud}`);
+        saldoElt2.textContent = Number(saldoElt2.textContent) + 1;
+        totaal2.textContent = ` ${totaalSaldo + 1}`;
+        return;
+    }
     const saldoElt1 = document.getElementById(`saldo-${verlof}`);
     //const beginrecht = document.getElementById(verlof);
     const saldoOud = Number(saldoElt1.textContent);
@@ -42,7 +73,6 @@ export function behandelenSaldoVerlofdagen(verlof, oud) {
         const saldoElt2 = document.getElementById(`saldo-${oud}`);
         saldoElt2.textContent = Number(saldoElt2.textContent) + 1;
     } else {
-        const totaalSaldo = Number(totaal2.textContent.trim());
         totaal2.textContent = ` ${totaalSaldo - 1}`;
     }
 

@@ -3,9 +3,8 @@ import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
 import { saveToSessionStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, resetDefaultSettings } from './functies.js';
-import { tabBlad, maakSidebar, maakPloegDropdown, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
-import { makeModalInstellingen, toggleModal } from './makeModalSettings.js';
-import { makeModalFeestdagen } from './makeModalHolidays.js';
+import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
+import {  toggleModal } from './makeModalSettings.js';
 
 // default settings
 const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V12'];
@@ -16,10 +15,10 @@ const week5 = ['D', 'D', 'D', 'D', 'D', 'x', 'x'];
 const ploegSchema = [...week1, ...week2, ...week3, ...week4, ...week5];
 const startDatums = {
     1: "2010-02-01", 
-    2: "2010-01-18", 
+    2: "2010-02-22", 
     3: "2010-01-25", 
-    4: "2010-01-04", 
-    5: "2010-01-11"
+    4: "2010-02-08", 
+    5: "2010-02-15"
 };
 const shiftData = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
@@ -63,8 +62,6 @@ const defaultVacations = {
     'HP': 0
 };
 export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
-//console.log(`beginrecht verlofdagen: ${JSON.stringify(beginrechtVerlof, null, 2)}`);
-//console.log(`Totaal beginrecht: ${calculateTotals(beginrechtVerlof)}`);
 
 export function calculateSaldo(key, ploeg) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
@@ -81,10 +78,6 @@ export function calculateSaldo(key, ploeg) {
         return beginrecht;
     }
 };
-//console.log(`beginrecht 'BV': ${beginrechtVerlof['BV']}`);
-
-//console.log(`saldo 'BV' ploeg 1: ${calculateSaldo('BV', 1)}`);
-
 
 export const alleVerlofSaldo = (ploeg) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
@@ -92,12 +85,8 @@ export const alleVerlofSaldo = (ploeg) => {
     const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
     const newArray = array.filter(obj => {
         const year = parseInt(obj.datum.split('/')[2]);
-        //console.log(year);
         return year === currentYear;
     });
-    //console.log(`array : ${JSON.stringify(array, null, 2)}`);
-    //console.log(`new array : ${JSON.stringify(newArray, null, 2)}`);
-
     if(newArray.length !== 0) {
         let saldo = {};
         let count = 0;
@@ -114,7 +103,6 @@ export const alleVerlofSaldo = (ploeg) => {
     };
 };
 
-
 export const defaultSettings = () => {
     const date = new Date();
     const currentMonth = date.getMonth();
@@ -127,10 +115,9 @@ export const defaultSettings = () => {
         jaar: currentYear
     }));
 };   
-//console.log(`Default setting: ${JSON.stringify(defaultSettings(), null, 2)}`);
-//console.log(`alle saldo verlof ploeg 1: ${JSON.stringify(alleVerlofSaldo(1), null, 2)}`);
-export const shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
-export const startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
+
+export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
+export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
 export const DOM = {
     monthYear: document.getElementById('month-year'),
     monthSelect: document.getElementById("month-select"),
@@ -144,9 +131,7 @@ export const DOM = {
     verlofContainer: document.getElementById('verlof-container'),
     ploeg: document.getElementById('ploeg'),
     titel: document.getElementById('titel'),
-    instellingen: document.getElementById('instellingen'),
-    feestdagen: document.getElementById('feestdagen'),
-    rapport: document.getElementById('rapport'),
+    buttonContainer: document.getElementById('buttonContainer'),
     ploegenLegende: document.getElementById('ploegenLegende'),
     verlofLegende: document.getElementById('verlofLegende'),
     calendar: document.getElementById('calendar'),
@@ -169,15 +154,10 @@ export const gegevensOpslaan = (cyclus, datums) => {
 };
 export function generateCalendar() {
     if (calendarGenerators[tabBlad]) {
-        let currentMonth = 0;
-        let currentYear = 0;
-        let selectedPloeg = 0;
         const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-        if (settings) {
-            currentMonth = settings.currentMonth;
-            currentYear = settings.currentYear;
-            selectedPloeg = settings.selectedPloeg;
-        }
+        let currentMonth = settings.currentMonth;
+        let currentYear = settings.currentYear;
+        let selectedPloeg = settings.selectedPloeg;
         DOM.ploeg.value = selectedPloeg;
         (tabBlad === 2 || tabBlad === 3) ? calendarGenerators[tabBlad](currentMonth, currentYear) : calendarGenerators[tabBlad](currentYear);
         refreshCalendar();
@@ -188,7 +168,7 @@ export function generateCalendar() {
 const calendarGenerators = {
     0: (year) => {
         DOM.ploeg.hidden = false;
-        DOM.rapport.style.display = '';
+        DOM.buttonContainer.children[2].style.display = '';
         DOM.verlofContainer.style.display = 'flex';
         DOM.ploegenLegende.style.display = 'none';
         DOM.verlofLegende.style.display = '';
@@ -199,7 +179,7 @@ const calendarGenerators = {
     },
     1: (year) => {
         DOM.ploeg.hidden = false;
-        DOM.rapport.style.display = '';
+        DOM.buttonContainer.children[2].style.display = '';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = '';
         DOM.verlofLegende.style.display = 'none';
@@ -210,7 +190,7 @@ const calendarGenerators = {
     },
     2: (month, year) => {
         DOM.ploeg.hidden = false;
-        DOM.rapport.style.display = 'none';
+        DOM.buttonContainer.children[2].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = '';
         DOM.verlofLegende.style.display = 'none';
@@ -221,7 +201,7 @@ const calendarGenerators = {
     },
     3: (month, year) => {
         DOM.ploeg.hidden = true;
-        DOM.rapport.style.display = 'none';
+        DOM.buttonContainer.children[2].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = 'none';
         DOM.verlofLegende.style.display = 'none';
@@ -288,8 +268,6 @@ function triggerNext() {
     updateLocalStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
     updateCalendar();
 };
-DOM.instellingen.addEventListener('click', () => makeModalInstellingen(startDates, shiftPattern));
-DOM.feestdagen.addEventListener('click', () => makeModalFeestdagen(tabBlad, defaultSettings));
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
 DOM.monthYear.addEventListener("click", () => {
     DOM.monthYear.style.color = 'transparent';
@@ -301,8 +279,10 @@ DOM.monthYear.addEventListener("click", () => {
     DOM.dropdowns.classList.toggle("visible");
     if(tabBlad === 2 || tabBlad === 3) {
         DOM.monthSelect.classList.toggle("visible");
+        DOM.monthSelect.click();
     }
     DOM.yearSelect.classList.toggle('visible');
+    DOM.yearSelect.click();
 });
 DOM.monthSelect.addEventListener("change", (event) => {
     const currentMonth = parseInt(event.target.value, 10);
@@ -323,8 +303,7 @@ DOM.ploeg.addEventListener('change', (event) => {
 DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 document.addEventListener("click", (event) => {
-    // Verberg de dropdowns als er buiten wordt geklikt
-    if (!dropdowns.contains(event.target) && event.target !== DOM.monthYear && event.target !== DOM.instellingen) {
+    if (!DOM.dropdowns.contains(event.target) && event.target !== DOM.monthYear && event.target !== DOM.instellingen) {
         DOM.monthYear.style.color = '';
         DOM.selectOverlay.style.display = 'none';
         DOM.dropdowns.classList.remove("visible");
@@ -333,16 +312,16 @@ document.addEventListener("click", (event) => {
     }
 
     if (tabBlad === 0) {
-        const cellArray = DOM.calendar.querySelectorAll('.cell');
         const selected = event.target.dataset.shift;
         if(selected) {
+            const cellArray = DOM.calendar.querySelectorAll('.cell');
             let cellCoordinates = JSON.parse(sessionStorage.getItem("selectedCell")) || {};
             const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings;
             cellCoordinates.datum = event.target.dataset.datum;
             cellCoordinates.team = settings[tabBlad].ploeg;
-            saveToSessionStorage("selectedCell", cellCoordinates);
             cellArray.forEach(cel => cel.classList.remove('highlight'));
             event.target.classList.add('highlight');
+            saveToSessionStorage("selectedCell", cellCoordinates);
         }
     }
 });
@@ -351,10 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
     savePloegenToLocalStorage();
     maakSidebar();
     maakPloegDropdown();
+    maakKnoppen();
     maakPloegenLegende();
     maakVerlofLegende();
     maakVerlofContainer();
-    maakDropdowns();
     generateCalendar();
 });
 

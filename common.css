@@ -41,6 +41,7 @@ body {
     box-sizing: border-box;
 }
 .top {
+    position: relative;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -48,8 +49,8 @@ body {
     display: inline-block;
 }
 .top select {
-    position: absolute;
-    top: 45px;
+    /*position: absolute;
+    top: 45px;*/
     background: linear-gradient(360deg,#022124 10%,#efefef 360%);
     color: #b8b8b8;
     vertical-align:text-bottom;
@@ -228,30 +229,29 @@ font-family: monospace  , sans-serif;
 .feestdag .spanRechts {
     color: rgb(184, 184, 184);
 }
-#instellingen {
-    top: 50px;
+.buttons-container {
+    /*display: flex;
+    flex-direction: column;
+    gap: 10px;*/
+    position: absolute;
+    top: 20px;
+    left: 20px;
 }
-#feestdagen {
-    top: 110px;
-}
-#rapport {
-    top: 170px;
-}
+
 .btnGreen {
     text-align: left;
-    position: absolute;
-    left: 16%;
-    font-size: 20px;
-    padding: 10px 10px 10px 5px;
+    font-size: 22px;
+    padding: 10px;
     outline: none;
-    background: linear-gradient(360deg,#022124 10%,#efefef 360%);
-    color: #aaaaaaad;
-    width: 250px;
-    transition: all 0.20s ease-in-out;
+    /*background: linear-gradient(360deg,#022124 10%,#efefef 360%);*/
+    color: #aaaaaa;
+    /*width: 250px;*/
+    /*transition: all 0.20s ease-in-out;*/
 }
 .btnGreen:hover {
     cursor: pointer;
     box-shadow: 0 0 15px rgba(113, 136, 139, 0.9);
+    background: #0221248a;
     color: #dddddd;
 }
 
@@ -267,6 +267,50 @@ font-family: monospace  , sans-serif;
 }
 .fa-close:hover {
     color: #db1c1c;
+}
+.heading-modal {
+    display: inline-block;
+    margin-top: 0;
+}
+.handleiding-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+.handleiding-msg {
+    
+    /*max-width: 800px;*/
+    min-width: 400px;
+    font-size: 0.8em;
+    /*height: 600px;*/
+    visibility: hidden;
+    background-color: #000000;
+    color: #c77e3a;
+    text-align: left;
+    padding: 15px 10px;  
+    border-radius: 5px;
+    position: absolute;
+    top: 195%; /* Boven het icoon */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.handleiding-msg::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 15px;
+    border-style: solid;
+    border-color: transparent transparent #000000 transparent;
+}
+.handleiding-container:hover .handleiding-msg {
+    visibility: visible;
+    opacity: 1;
 }
 .shift-input {
     width: 50px;
@@ -349,8 +393,15 @@ input[type=checkbox] {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.5);
+    opacity: 0;
     z-index: 1;
-}  
+    transition: opacity 0.3s ease-in-out;
+}
+.modal-overlay.open {
+    /*display: block;*/
+    opacity: 1;
+}
+
 .modal {
     font-size: 20px;
     font-family: monospace;
@@ -365,10 +416,10 @@ input[type=checkbox] {
     color: rgba(212, 212, 212, 0.884);
     box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
     border-radius: 7px;
-    border: 4px solid #00abb1;
+    border: 4px solid #353535;
     z-index: 2;
     transform: translate(-50%, -50%) scale(0); /* Start klein, gecentreerd */
-    animation: zoom 0.4s forwards; /* Gebruik forwards om animatie op het einde te bewaren */
+    animation: zoom 0.3s forwards; /* Gebruik forwards om animatie op het einde te bewaren */
 }
 @keyframes zoom {
     0% {

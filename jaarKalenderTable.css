@@ -92,14 +92,17 @@
     gap: 15px;
 }
 .inputVak {
-    font-size: 0.9em;
-    font-weight: bold;
-    width: 47px;
+    /*font-size: 0.9em;
+    font-weight: bold;*/
+    width: 48px;
     text-align: center;
     padding: 2px 0;
+    background-color: #000;
+    color: white;
 }
 .totaal {
-    width: 100px;
+    width: 200px;
+    color: #ececec;
 }
 .outputVak {
     font-size: 0.9em;
@@ -109,10 +112,11 @@
     background-color: transparent;
     text-align: center;
     border: 1px dashed rgba(128, 128, 128, 0.671);
-    color: rgba(207, 207, 207, 0.747);
+    color: rgb(207, 207, 207);
 }
 .titel {
     text-align: right;
+    color: white;
 }
 .restore {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
