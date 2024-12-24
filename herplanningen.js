@@ -2,9 +2,6 @@ import { DOM, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen } fr
 import { getSettingsFromLocalStorage, saveToLocalStorage, behandelenSaldoVerlofdagen, behandelenRechtEnSaldoVerlofdagenNaTerugstellen, behandelenNaAllesTerugstellen } from "./functies.js";
 import { tabBlad } from "./componentenMaken.js";
 
-
-
-
 export function verlofAanvraag(event) {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const aanvraag = event.target.textContent;
@@ -28,7 +25,7 @@ export function verlofAanvraag(event) {
         }
     });
 };
-function voegVerlofDatumToe(ploeg, datum, soort) {
+export function voegVerlofDatumToe(ploeg, datum, soort) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
     const array = opgenomenVerlofPerPloeg[ploegKey];
     const index = array.findIndex(obj => obj.datum === datum);

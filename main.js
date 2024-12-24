@@ -4,7 +4,7 @@ import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalen
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
 import { saveToSessionStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, resetDefaultSettings } from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
-import {  toggleModal } from './makeModalSettings.js';
+import { toggleModal } from './makeModalSettings.js';
 
 // default settings
 const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V12'];
@@ -86,7 +86,6 @@ export const berekenSaldo = (ploeg, key = null) => {
     Object.keys(beginrechtVerlof).forEach(verlofKey => {
         saldo[verlofKey] = calculateSaldo(verlofKey);
     });
-
     return saldo;
 };
 

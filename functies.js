@@ -3,7 +3,6 @@ import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 
-
 export function handleClickBtn(e) {
     const btn = e.currentTarget.id; // Gebruik currentTarget om de juiste id op te halen
     switch(btn) {

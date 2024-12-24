@@ -1,8 +1,9 @@
-import { DOM, shiftPattern, startDates, defaultSettings } from "./main.js";
-import { getDaysSinceStart, getSettingsFromLocalStorage, behandelenNaAllesTerugstellen } from "./functies.js";
+import { DOM, shiftPattern, startDates, defaultSettings, localStoragePloegen } from "./main.js";
+import { getDaysSinceStart, getSettingsFromLocalStorage, saveToLocalStorage, behandelenNaAllesTerugstellen } from "./functies.js";
 import { opgenomenVerlofPerPloeg } from './main.js'
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 import { tabBlad } from "./componentenMaken.js";
+import { voegVerlofDatumToe } from "./herplanningen.js";
 
 export function updateYearCalendarTable() {
   const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
@@ -113,7 +114,11 @@ function shiftenInvullen(elt, date, hollydays, ploeg) {
     if(shift === 'x') elt.classList.add('shift-thuis');
     if(hollydays.includes(myDate)) {
       shift += '- fd';
+      if (shift === 'D- fd' && shift !== 'x') {
+        voegVerlofDatumToe(ploeg, myDate, 'BF');
+      }
     }
+
     elt.textContent = shift;
     elt.dataset.shift = shift;
     elt.dataset.datum =myDate;

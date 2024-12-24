@@ -4,7 +4,6 @@ import { verlofAanvraag, cancelAanvraag, cancelAlleAanvragen } from './herplanni
 
 export let tabBlad = 0;
 
-
 export function maakSidebar() {
     const tabArray = ['Jaarkalender : Tabel', 'Jaarkalender : Raster', 'Maandkalender', 'TeamKalender'];
     DOM.topNav.setAttribute('role', 'tablist');
@@ -60,7 +59,7 @@ export function maakKnoppen() {
         btn.addEventListener('click', handleClickBtn);
         DOM.buttonContainer.appendChild(btn);
     });
-}
+};
 
 export function maakPloegenLegende() {
     ploegenGegevens.forEach(shift => {
