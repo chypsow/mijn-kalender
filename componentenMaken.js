@@ -1,4 +1,4 @@
-import { ploegenGegevens, DOM, generateCalendar, defaultSettings, beginrechtVerlof, alleVerlofSaldo } from './main.js';
+import { ploegenGegevens, DOM, generateCalendar, defaultSettings, beginrechtVerlof, berekenSaldo } from './main.js';
 import { calculateTotals, getSettingsFromLocalStorage, handleBlur, handleClickBtn } from './functies.js';
 import { verlofAanvraag, cancelAanvraag, cancelAlleAanvragen } from './herplanningen.js';
 
@@ -42,8 +42,9 @@ export function maakKnoppen() {
         ['instellingen', 'fa-cog', 'Instellingen'],
         ['feestdagen', 'fa-calendar', 'Feestdagen'],
         ['vakanties', 'fa-plane', 'School vakanties'],
-        ['rapport', 'fa-calendar-check-o', 'Genereer rapport'],
-        ['afdrukken', 'fa-print', 'Afdrukken']
+        
+        ['afdrukken', 'fa-print', 'Afdrukken'],
+        ['rapport', 'fa-calendar-check-o', 'Genereer rapport']
     ];
     
     knoppen.forEach(knop => {
@@ -176,7 +177,7 @@ export function maakVerlofContainer() {
     saldo.textContent = 'Saldo';
     container.appendChild(saldo);
 
-    const saldoArray = alleVerlofSaldo(1);
+    const saldoArray = berekenSaldo(1);
     Object.entries(saldoArray).forEach(([verlof,aantal]) => {
         const outputVak = document.createElement('div');
         outputVak.classList.add('outputVak');

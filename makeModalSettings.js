@@ -18,17 +18,17 @@ export function makeModalInstellingen(obj, arr) {
     const handleidingMsg = document.createElement('div');
     handleidingMsg.classList.add('handleiding-msg');
     handleidingMsg.innerHTML = `
-    <ul>
-        <li><h4 style="color: #864507; margin-bottom:0">Volledige cyclus:</h4>
+    <ul style='list-style-type: none;'>
+        <li><h4 style="color:#00abb1; margin-bottom:5px">Volledige cyclus (5 weken):</h4>
             Een volledige cyclus bestaat uit 5 weken. 
             Elke ploeg werkt en rust in een specifiek patroon dat zich herhaalt na 5 weken.
         </li>
-        <li><h4 style="color: #864507; margin-bottom:0">Startdatum:</h4>
-           Welke ploeg in welke week actief is, hangt af van een startdatum.
-            Bijvoorbeeld: als we 1 februari 2010 als startdatum kiezen voor Ploeg 1,
-             dan begint deze ploeg op die datum met de eerste week van 3 nachten. 
-             Als we voor Ploeg 2 een startdatum van 8 februari 2010 (7 dagen later) kiezen, 
-             dan begint ook deze ploeg op die datum met de week van 3 nachten, en zo verder.
+        <li><h4 style="color:#00abb1; margin-bottom:5px">Startdatum:</h4>
+            Welke ploeg in welke week actief is, hangt af van een startdatum.
+            Bijvoorbeeld: als we 1 februari 2010 als startdatum 1 kiezen, 
+            begint Ploeg 1 op die datum met week 1. Als we 25 januari 2010 (7 dagen eerder) 
+            als startdatum 2 kiezen, begint Ploeg 2 op 1 februari 2010 met week 2 (in ons geval de week van 4 nachten) en zo verder.
+            <br><br> *<b>Opmerking:</b> In ons geval zijn de startdatums zo gekozen dat het ploegnummer overeenkomt met de realiteit.*
         </li>
     </ul>
     `;

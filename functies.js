@@ -1,4 +1,4 @@
-import { beginrechtVerlof, alleVerlofSaldo, calculateSaldo, defaultSettings, startDates, shiftPattern } from "./main.js";
+import { beginrechtVerlof, berekenSaldo, defaultSettings, startDates, shiftPattern } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
@@ -29,7 +29,7 @@ export function handleClickBtn(e) {
 
 export function handleBlur(e) {
     const verlof = e.target.id;
-    const aantal = Number(e.target.value);
+    const aantal = parseInt(e.target.value);
     behandelenRechtEnSaldoVerlofdagen(verlof, aantal);
 };
 
@@ -39,15 +39,15 @@ function behandelenRechtEnSaldoVerlofdagen(verlof, aantal) {
     const totaal1 = document.getElementById('totaalBeginrecht');
     const totaal2 = document.getElementById('totaalSaldo');
     const mySaldoElt = document.getElementById(`saldo-${verlof}`);
-    const saldoOud = Number(mySaldoElt.textContent.trim());
+    const saldoOud = parseInt(mySaldoElt.textContent.trim());
     
     beginrechtVerlof[verlof] = aantal;
     saveToLocalStorage('beginrechtVerlof', beginrechtVerlof);
-    const saldoNieuw = calculateSaldo(verlof, selectedPloeg);
+    const saldoNieuw = berekenSaldo(selectedPloeg, verlof);
 
     totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
     mySaldoElt.textContent = saldoNieuw;
-    totaal2.textContent = ` ${Number(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
+    totaal2.textContent = ` ${parseInt(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
     
     //console.log(`oude saldo: ${saldoOud}`);
     //console.log(`nieuwe saldo: ${saldoNieuw}`);
@@ -57,21 +57,23 @@ function behandelenRechtEnSaldoVerlofdagen(verlof, aantal) {
 export function behandelenSaldoVerlofdagen(verlof, oud) {
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP'];
     const totaal2 = document.getElementById('totaalSaldo');
-    const totaalSaldo = Number(totaal2.textContent.trim());
-    if(verlof === "Z" && verlofdagen.includes(oud)) {
+    const totaalSaldo = parseInt(totaal2.textContent.trim());
+    if(verlof === "Z") {
+        if(verlofdagen.includes(oud)) {
         const saldoElt2 = document.getElementById(`saldo-${oud}`);
-        saldoElt2.textContent = Number(saldoElt2.textContent) + 1;
+        saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
         totaal2.textContent = ` ${totaalSaldo + 1}`;
+        }
         return;
     }
     const saldoElt1 = document.getElementById(`saldo-${verlof}`);
     //const beginrecht = document.getElementById(verlof);
-    const saldoOud = Number(saldoElt1.textContent);
+    const saldoOud = parseInt(saldoElt1.textContent);
     //const saldoNieuw = saldoOud--;
     saldoElt1.textContent = saldoOud - 1;
     if(verlofdagen.includes(oud)) {
         const saldoElt2 = document.getElementById(`saldo-${oud}`);
-        saldoElt2.textContent = Number(saldoElt2.textContent) + 1;
+        saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
     } else {
         totaal2.textContent = ` ${totaalSaldo - 1}`;
     }
@@ -82,12 +84,12 @@ export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
     if(verlof === "Z") return;
     const totaal2 = document.getElementById('totaalSaldo');
     const saldoElt = document.getElementById(`saldo-${verlof}`);
-    saldoElt.textContent = Number(saldoElt.textContent) + 1;
-    const totaalSaldo = Number(totaal2.textContent.trim());
+    saldoElt.textContent = parseInt(saldoElt.textContent) + 1;
+    const totaalSaldo = parseInt(totaal2.textContent.trim());
     totaal2.textContent = ` ${totaalSaldo + 1}`;
 }
 export function behandelenNaAllesTerugstellen(ploeg) {
-    const saldoArray = alleVerlofSaldo(ploeg);
+    const saldoArray = berekenSaldo(ploeg);
     Object.entries(saldoArray).forEach(([verlof,aantal]) => {
         const elt = document.getElementById(`saldo-${verlof}`);
         elt.textContent = aantal;

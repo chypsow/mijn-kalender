@@ -15,10 +15,10 @@ const week5 = ['D', 'D', 'D', 'D', 'D', 'x', 'x'];
 const ploegSchema = [...week1, ...week2, ...week3, ...week4, ...week5];
 const startDatums = {
     1: "2010-02-01", 
-    2: "2010-02-22", 
+    2: "2010-01-18", 
     3: "2010-01-25", 
-    4: "2010-02-08", 
-    5: "2010-02-15"
+    4: "2010-01-04", 
+    5: "2010-01-11"
 };
 const shiftData = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
@@ -63,23 +63,7 @@ const defaultVacations = {
 };
 export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
 
-export function calculateSaldo(key, ploeg) {
-    const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const array = opgenomenVerlofPerPloeg[ploegKey];
-    
-    const beginrecht = beginrechtVerlof[key];
-    if(array.length !== 0) {
-        let opgenomen = 0;
-        array.forEach(obj => {
-            if(obj.soort === key) opgenomen++;
-        });
-        return beginrecht - opgenomen;
-    } else {
-        return beginrecht;
-    }
-};
-
-export const alleVerlofSaldo = (ploeg) => {
+export const berekenSaldo = (ploeg, key = null) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
     const array = opgenomenVerlofPerPloeg[ploegKey];
     const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
@@ -87,20 +71,23 @@ export const alleVerlofSaldo = (ploeg) => {
         const year = parseInt(obj.datum.split('/')[2]);
         return year === currentYear;
     });
-    if(newArray.length !== 0) {
-        let saldo = {};
-        let count = 0;
-        Object.entries(beginrechtVerlof).forEach(([key, value]) => {
-            count = 0;
-            newArray.forEach(obj => {
-                if(obj.soort === key) count++;
-            });
-            saldo[key] = value - count;
-        });
-        return saldo;
-    } else {
-        return beginrechtVerlof;
+    if (newArray.length === 0) {
+        return key ? beginrechtVerlof[key] : beginrechtVerlof;
+    }
+    // Functie om het saldo te berekenen
+    const calculateSaldo = (verlofKey) => {
+        const opgenomen = newArray.filter(obj => obj.soort === verlofKey).length;
+        return beginrechtVerlof[verlofKey] - opgenomen;
     };
+    if (key) {
+        return calculateSaldo(key);
+    }
+    const saldo = {};
+    Object.keys(beginrechtVerlof).forEach(verlofKey => {
+        saldo[verlofKey] = calculateSaldo(verlofKey);
+    });
+
+    return saldo;
 };
 
 export const defaultSettings = () => {
@@ -168,7 +155,7 @@ export function generateCalendar() {
 const calendarGenerators = {
     0: (year) => {
         DOM.ploeg.hidden = false;
-        DOM.buttonContainer.children[2].style.display = '';
+        DOM.buttonContainer.children[3].style.display = '';
         DOM.verlofContainer.style.display = 'flex';
         DOM.ploegenLegende.style.display = 'none';
         DOM.verlofLegende.style.display = '';
@@ -179,7 +166,7 @@ const calendarGenerators = {
     },
     1: (year) => {
         DOM.ploeg.hidden = false;
-        DOM.buttonContainer.children[2].style.display = '';
+        DOM.buttonContainer.children[3].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = '';
         DOM.verlofLegende.style.display = 'none';
@@ -190,7 +177,7 @@ const calendarGenerators = {
     },
     2: (month, year) => {
         DOM.ploeg.hidden = false;
-        DOM.buttonContainer.children[2].style.display = 'none';
+        DOM.buttonContainer.children[3].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = '';
         DOM.verlofLegende.style.display = 'none';
@@ -201,7 +188,7 @@ const calendarGenerators = {
     },
     3: (month, year) => {
         DOM.ploeg.hidden = true;
-        DOM.buttonContainer.children[2].style.display = 'none';
+        DOM.buttonContainer.children[3].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = 'none';
         DOM.verlofLegende.style.display = 'none';
@@ -279,10 +266,10 @@ DOM.monthYear.addEventListener("click", () => {
     DOM.dropdowns.classList.toggle("visible");
     if(tabBlad === 2 || tabBlad === 3) {
         DOM.monthSelect.classList.toggle("visible");
-        DOM.monthSelect.click();
+        //DOM.monthSelect.click();
     }
     DOM.yearSelect.classList.toggle('visible');
-    DOM.yearSelect.click();
+    //DOM.yearSelect.click();
 });
 DOM.monthSelect.addEventListener("change", (event) => {
     const currentMonth = parseInt(event.target.value, 10);
