@@ -107,24 +107,59 @@ export function generateYearCalendarTable(year) {
 function shiftenInvullen(elt, date, hollydays, ploeg) {
   const startDate = startDates[ploeg];
   const daysSinceStart = getDaysSinceStart(date, startDate);
-  if(daysSinceStart >= 0) {
-    const myDate = date.toLocaleDateString();
-    const shiftIndex = daysSinceStart % shiftPattern.length;
-    let shift = shiftPattern[shiftIndex];
-    if(shift === 'x') elt.classList.add('shift-thuis');
-    if(hollydays.includes(myDate)) {
-      shift += '- fd';
-      if (shift === 'D- fd' && shift !== 'x') {
-        voegVerlofDatumToe(ploeg, myDate, 'BF');
-      }
-    }
+  if (daysSinceStart < 0) return;
 
-    elt.textContent = shift;
-    elt.dataset.shift = shift;
-    elt.dataset.datum =myDate;
-    voegVerlofdagToeVolgensLocalStorage(ploeg, elt);
+  const myDate = date.toLocaleDateString();
+  const shiftIndex = daysSinceStart % shiftPattern.length;
+  let shift = shiftPattern[shiftIndex];
+  const isHoliday = hollydays.includes(myDate);
+
+  // Feestdag logica
+  if (isHoliday) {
+      if (shift === 'x') {
+          setShiftProperties(elt, 'x- fd', myDate, true);
+          eerderFeestdagOpgenomenVerwijderen(ploeg, myDate, 'BF');
+          return;
+      }
+      if (shift === 'D') {
+          setShiftProperties(elt, 'D- fd', myDate, false);
+          voegVerlofDatumToe(ploeg, myDate, 'BF');
+          voegVerlofdagToeVolgensLocalStorage(ploeg, elt);
+          return; // Geen verdere acties nodig
+      }
   }
-};
+
+  // Thuiswerkdagen (geen feestdag, maar shift is 'x')
+  if (shift === 'x') {
+      setShiftProperties(elt, 'x', myDate, true);
+      return;
+  }
+
+  // Standaard gedrag
+  setShiftProperties(elt, shift, myDate, false);
+  voegVerlofdagToeVolgensLocalStorage(ploeg, elt);
+}
+
+function eerderFeestdagOpgenomenVerwijderen(ploeg, date, verlof) {
+  const ploegKey = `verlofdagenPloeg${ploeg}`;
+  const array = opgenomenVerlofPerPloeg[ploegKey];
+
+  // Filter het array om het gewenste object te verwijderen
+  const filteredArray = array.filter(obj => !(obj.datum === date && obj.soort === verlof));
+
+  // Sla het bijgewerkte array op in de lokale opslag
+  opgenomenVerlofPerPloeg[ploegKey] = filteredArray;
+  saveToLocalStorage(localStoragePloegen[ploeg], filteredArray);
+}
+
+
+// Hulpfunctie om eigenschappen van een element in te stellen
+function setShiftProperties(elt, shift, date, isHome) {
+  elt.classList.toggle('shift-thuis', isHome); // Voeg class toe of verwijder deze
+  elt.textContent = shift;
+  elt.dataset.shift = shift;
+  elt.dataset.datum = date;
+}
 
 function voegVerlofdagToeVolgensLocalStorage(ploeg, cell) {
   const ploegKey = `verlofdagenPloeg${ploeg}`;

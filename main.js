@@ -61,7 +61,46 @@ const defaultVacations = {
     'AV': 0,
     'HP': 0
 };
-export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
+export const validateAndFixBeginrechtVerlof = () => {
+    let storedValue = JSON.parse(localStorage.getItem("beginrechtVerlof"));
+
+    // Check: Als de waarde null is, gebruik defaultVacations
+    if (!storedValue) {
+        console.warn("beginrechtVerlof ontbreekt in localStorage. Default wordt gebruikt.");
+        storedValue = defaultVacations;
+    }
+
+    // Check: Als het een array is, filter en converteer naar een object
+    if (Array.isArray(storedValue)) {
+        console.warn("beginrechtVerlof was een array. Null waarden negeren en converteren naar object...");
+
+        const converted = storedValue.reduce((acc, curr) => {
+            if (curr && typeof curr === "object") { // Alleen geldige objecten verwerken
+                Object.entries(curr).forEach(([key, value]) => {
+                    acc[key] = (acc[key] || 0) + value; // Optioneel: Waarden optellen over meerdere objecten
+                });
+            }
+            return acc;
+        }, {});
+
+        // Sla het aangepaste object op in localStorage
+        localStorage.setItem("beginrechtVerlof", JSON.stringify(converted));
+        return converted;
+    }
+
+    // Check: Als het geen object is, herstellen naar default
+    if (typeof storedValue !== "object" || storedValue === null) {
+        console.error("beginrechtVerlof is niet geldig. Herstellen naar default.");
+        localStorage.setItem("beginrechtVerlof", JSON.stringify(defaultVacations));
+        return defaultVacations;
+    }
+
+    // Als alles correct is
+    return storedValue;
+};
+//export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
+export const beginrechtVerlof = validateAndFixBeginrechtVerlof();
+//console.log("Gevalideerd beginrechtVerlof:", beginrechtVerlof);
 
 export const berekenSaldo = (ploeg, key = null) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;

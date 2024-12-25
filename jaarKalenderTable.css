@@ -89,24 +89,25 @@
     max-width: 550px;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
-    gap: 15px;
+    gap: 10px;
 }
 .inputVak {
-    /*font-size: 0.9em;
-    font-weight: bold;*/
+    font-size: 1em;
+    background-color: transparent;
     width: 48px;
     text-align: center;
     padding: 2px 0;
-    background-color: #000;
-    color: white;
+    /*background-color: #d8d8d8;*/
+    color: rgb(255, 255, 255);
+    border: 1px solid rgba(128, 128, 128, 0.671);
 }
 .totaal {
     width: 200px;
     color: #ececec;
 }
 .outputVak {
-    font-size: 0.9em;
-    width: 49px;
+    font-size: 1em;
+    width: 48px;
     /*height: 20px;*/
     padding: auto;
     background-color: transparent;
