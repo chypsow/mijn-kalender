@@ -193,7 +193,7 @@ export function generateCalendar() {
 const calendarGenerators = {
     0: (year) => {
         DOM.ploeg.hidden = false;
-        DOM.buttonContainer.children[3].style.display = '';
+        DOM.buttonContainer.children[4].style.display = '';
         DOM.verlofContainer.style.display = 'flex';
         DOM.ploegenLegende.style.display = 'none';
         DOM.verlofLegende.style.display = '';
@@ -204,7 +204,7 @@ const calendarGenerators = {
     },
     1: (year) => {
         DOM.ploeg.hidden = false;
-        DOM.buttonContainer.children[3].style.display = 'none';
+        DOM.buttonContainer.children[4].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = '';
         DOM.verlofLegende.style.display = 'none';
@@ -215,7 +215,7 @@ const calendarGenerators = {
     },
     2: (month, year) => {
         DOM.ploeg.hidden = false;
-        DOM.buttonContainer.children[3].style.display = 'none';
+        DOM.buttonContainer.children[4].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = '';
         DOM.verlofLegende.style.display = 'none';
@@ -226,7 +226,7 @@ const calendarGenerators = {
     },
     3: (month, year) => {
         DOM.ploeg.hidden = true;
-        DOM.buttonContainer.children[3].style.display = 'none';
+        DOM.buttonContainer.children[4].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = 'none';
         DOM.verlofLegende.style.display = 'none';

@@ -5,7 +5,7 @@ export function makeModalInstellingen(obj, arr) {
     const topHeader = document.createElement('div');
     const heading = document.createElement('h2');
     heading.classList.add('heading-modal');
-    heading.textContent = 'Ploegenschema personnalizeren:';
+    heading.textContent = 'Ploegschema personnalizeren:';
     topHeader.appendChild(heading);
     const handleidingContainer = document.createElement('div');
     handleidingContainer.classList.add('handleiding-container');
@@ -26,9 +26,9 @@ export function makeModalInstellingen(obj, arr) {
         <li><h4 style="color:#00abb1; margin-bottom:5px">Startdatum:</h4>
             Welke ploeg in welke week actief is, hangt af van een startdatum.
             Bijvoorbeeld: als we 1 februari 2010 als startdatum 1 kiezen, 
-            begint Ploeg 1 op die datum met week 1. Als we 25 januari 2010 (7 dagen eerder) 
+            begint Ploeg 1 op die datum met week 1 (in ons geval de week van 3 nachten). Als we 25 januari 2010 (7 dagen eerder) 
             als startdatum 2 kiezen, begint Ploeg 2 op 1 februari 2010 met week 2 (in ons geval de week van 4 nachten) en zo verder.
-            <br><br> *<b>Opmerking:</b> In ons geval zijn de startdatums zo gekozen dat het ploegnummer overeenkomt met de realiteit.*
+            <br><br> *<b>Opmerking:</b> In ons geval zijn de startdatums zo gekozen dat het ploegnummer en het ploegschema overeenkomen met de realiteit.*
         </li>
     </ul>
     `;

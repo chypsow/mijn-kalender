@@ -127,6 +127,9 @@ function shiftenInvullen(elt, date, hollydays, ploeg) {
           voegVerlofdagToeVolgensLocalStorage(ploeg, elt);
           return; // Geen verdere acties nodig
       }
+      setShiftProperties(elt, `${shift}- fd`, myDate, false);
+      voegVerlofdagToeVolgensLocalStorage(ploeg, elt);
+      return;
   }
 
   // Thuiswerkdagen (geen feestdag, maar shift is 'x')

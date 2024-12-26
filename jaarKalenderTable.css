@@ -106,6 +106,7 @@
     color: #ececec;
 }
 .outputVak {
+    cursor: default;
     font-size: 1em;
     width: 48px;
     /*height: 20px;*/
