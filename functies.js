@@ -1,7 +1,48 @@
-import { beginrechtVerlof, berekenSaldo, defaultSettings, startDates, shiftPattern } from "./main.js";
+import { DOM, beginrechtVerlof, berekenSaldo, defaultSettings, startDates, shiftPattern } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
+
+export function adjustLayout() {
+    const schermGrootte = 1900;
+    if (window.innerWidth < schermGrootte) {
+    /*document.body.style.fontSize = '10px'; // Pas de fontgrootte aan naar wens
+    document.querySelectorAll('.hidden-on-small').forEach(element => {
+        element.style.display = 'none'; // Verberg elementen met inline style
+    });
+    document.querySelectorAll('.cell').forEach(element => {
+        element.style.padding = 0; 
+        
+    });*/
+        console.log(`schermgrootte is minder dan ${schermGrootte}px geweest : ${window.innerWidth}px`);
+    } else {
+    /*document.body.style.fontSize = ''; // Reset de fontgrootte
+    document.querySelectorAll('.hidden-on-small').forEach(element => {
+        element.style.display = ''; // Zet display terug naar 'flex'
+    });
+    document.querySelectorAll('.cell').forEach(element => {
+        element.style.padding = ''; 
+        
+    });*/
+    console.log(`schermgrootte: ${window.innerWidth}px`);
+    }
+}
+export function toggleModal(show, positie) {
+    if(!show)  {
+        DOM.modalOverlay.classList.remove('open');
+        setTimeout(() => {
+            DOM.modalOverlay.style.display = 'none';
+        }, 300);
+    } else {
+        DOM.modalOverlay.style.display = 'block';
+        setTimeout(() => {
+            DOM.modalOverlay.classList.add('open');
+        }, 10)
+    }
+    //DOM.modalOverlay.style.display = show ? "block" : "none";
+    DOM.modal.style.top = positie;
+    DOM.modal.style.display = show ? "block" : "none";
+};
 
 export function handleClickBtn(e) {
     const btn = e.currentTarget.id; // Gebruik currentTarget om de juiste id op te halen
@@ -57,7 +98,7 @@ export function behandelenSaldoVerlofdagen(verlof, oud) {
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP'];
     const totaal2 = document.getElementById('totaalSaldo');
     const totaalSaldo = parseInt(totaal2.textContent.trim());
-    if(verlof === "Z") {
+    if(!verlofdagen.includes(verlof)) {
         if(verlofdagen.includes(oud)) {
         const saldoElt2 = document.getElementById(`saldo-${oud}`);
         saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
@@ -80,7 +121,8 @@ export function behandelenSaldoVerlofdagen(verlof, oud) {
     //console.log(`opgenomen: ${verlof}, oude saldo: ${saldoOud}, nieuwe saldo: ${saldoElt1.textContent}`);
 }
 export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
-    if(verlof === "Z") return;
+    const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP'];
+    if(!verlofdagen.includes(verlof)) return;
     const totaal2 = document.getElementById('totaalSaldo');
     const saldoElt = document.getElementById(`saldo-${verlof}`);
     saldoElt.textContent = parseInt(saldoElt.textContent) + 1;

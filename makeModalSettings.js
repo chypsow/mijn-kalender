@@ -1,4 +1,5 @@
 import { DOM, ploegenGegevens, gegevensOpslaan, standaardTerugstellen } from "./main.js";
+import { toggleModal } from "./functies.js";
 
 export function makeModalInstellingen(obj, arr) {
     DOM.overlay.innerHTML = '';
@@ -89,23 +90,9 @@ export function makeModalInstellingen(obj, arr) {
     div.appendChild(reset);
     DOM.overlay.appendChild(div);
 
-    toggleModal(true);
+    toggleModal(true, '50%');
 };
-export function toggleModal(show) {
-    if(!show)  {
-        DOM.modalOverlay.classList.remove('open');
-        setTimeout(() => {
-            DOM.modalOverlay.style.display = 'none';
-        }, 300);
-    } else {
-        DOM.modalOverlay.style.display = 'block';
-        setTimeout(() => {
-            DOM.modalOverlay.classList.add('open');
-        }, 10)
-    }
-    //DOM.modalOverlay.style.display = show ? "block" : "none";
-    DOM.modal.style.display = show ? "block" : "none";
-};
+
 function ploegSysteemOpslaan() {
     let cyclus = [];
     let datums = {};

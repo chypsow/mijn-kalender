@@ -1,5 +1,5 @@
 .year-container-table {
-    margin: 40px auto 0;
+    margin: 20px auto 0;
     text-align: center;
 }
 
@@ -25,8 +25,9 @@
 .year-calendar-table .cell, .header-cell {
     display: table-cell;
     /*border: 1px solid #ccc;*/
-    padding: 5px;
-    width: 33px;
+    padding: 4px;
+    min-width: 33px;
+    max-width: 33px;
     height: 33px;
 }
 /* Header voor de dagen */
@@ -43,26 +44,27 @@
     background-color:transparent;
     border: none;
 }
+
 .cell {
     cursor: default;
     background-color: #ececec;
     color: #000;
-    border: 1px solid #a0a0a075;
-    border-radius: 4px;
+    border: 3px solid #ffffff;
+    /*border-radius: 4px;*/
     text-align: left;
     /*transition: all 0.1s ease-out;*/
 }
-/*.cell:hover {
-    outline: 3px solid rgba(0, 0, 0, 0.712);
-    outline-offset: -2px;
-    border-radius: 5px;
-}*/
+.cell:hover {
+    outline-offset: -4px;
+    outline: 3px solid #000000;
+}
 
 .year-calendar-table .month-cell {
     /*font-weight: bold;*/
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1.3em;
     padding-left: 15px;
+    max-width: 80px;
     border-radius:0px;
     background-color: #292929; /*#f5f5f5*/
     border: 1px solid #6d6d6da1;
@@ -71,15 +73,43 @@
 }
 .year-calendar-table .emptyDay {
     display: table-cell;
-    background-color: #cacacac5; 
-    border: 1px solid #a0a0a0a1;
+    background-color: #ffffff; 
+    border: 3px solid #ffffff;
 }
-
+.verlofLegende-container {
+    /*position: absolute  ;
+    top: 50px;
+    right: 20px;*/
+    width: 250px;
+    float: right;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: linear-gradient(360deg,#022124 10%,#efefef 360%);
+    color: rgba(255, 255, 255, 0.829);
+    border-radius: 3px;
+}
+.verlofLegende-item {
+    display: flex;
+    /*align-items: center;*/
+    gap: 10px;
+}
+.verlofLegende-vak {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.8em;
+    padding: 6px;
+    width: 25px;
+    /*height: 25px;*/
+    color: black;
+    /*border: 3px solid #dbdbdb;*/
+    border-radius: 4px;
+}
 .verlof-container {
-    margin: 50px auto 0;
-    /*max-width: 800px;*/
-    /*display: flex;
-    flex-direction: column;*/
+    margin: 60px auto;
+    /*width: 1000px;*/
+    display: flex;
+    /*flex-direction: column;*/
     justify-content: center;
     /*gap: 7px;*/
     align-content: center;
@@ -101,34 +131,50 @@
     color: rgb(255, 255, 255);
     border: 1px solid rgba(128, 128, 128, 0.671);
 }
+.inputVak:focus,
+.inputVak:hover {
+    
+    /*box-shadow: 0 0 15px rgba(238, 238, 238, 0.9);*/
+    background-color: rgb(20, 20, 20);
+    color: #d6d6d6;
+}
+ 
 .totaal {
+    padding: 5px;
     width: 200px;
     color: #ececec;
+    text-align: left;
 }
 .outputVak {
     cursor: default;
     font-size: 1em;
     width: 48px;
     /*height: 20px;*/
-    padding: auto;
+    padding: 2px 0;
     background-color: transparent;
     text-align: center;
     border: 1px dashed rgba(128, 128, 128, 0.671);
-    color: rgb(207, 207, 207);
+    color: rgb(255, 255, 255);
 }
 .titel {
+    padding: 5px;
     text-align: right;
     color: white;
+}
+.btn-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 .restore {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 0.9em;
     font-weight: bold;
-    margin-right: 10px;
-    height: 45px;
+    /*margin-right: 10px;*/
+    height: 48px;
     /*background: linear-gradient(360deg,#022124 10%,#efefef 360%);*/
-    background-color: #e0e0e0;
-    color: rgb(70, 70, 70);
+    background-color: #686868;
+    color: rgb(0, 0, 0);
     transition: all 0.20s ease-in-out;
     cursor: pointer;
     align-content: center;
@@ -139,9 +185,9 @@
     border-radius: 5px;
 }
 .restore:hover {
-    border: 2px solid rgba(228, 228, 228, 0.575);
-    color: rgb(0, 0, 0);
-    box-shadow: 0 0 15px gray;
+    /*border: 2px solid rgba(228, 228, 228, 0.575);*/
+    background-color: rgb(207, 207, 207);
+    /*box-shadow: 0 0 15px gray;*/
 }
 
 .verlofCollection {
@@ -165,68 +211,66 @@
     border: 3px solid white;
     box-shadow: 0 0 15px gray;
 }
-
+.herplanning-container {
+    display: flex;
+    margin: 0 auto;
+    /*max-width: 800px;*/
+    /*display: flex;
+    flex-direction: column;*/
+    justify-content: center;
+    /*gap: 7px;*/
+    align-content: center;
+    gap: 10px;
+    /*grid-template-columns: repeat(4, 1fr);*/
+}
 
 .BV {
-    outline: 1px solid rgba(255, 255, 255, 0.712);
-    /*outline-style: dashed;*/
-    outline-offset: -2px;
-    border-radius: 3px;
     background-color: #FCD5B4;
-    /*color: white;*/
 }
 .CS {
-    outline: 1px solid rgba(255, 255, 255, 0.712);
-    /*outline-style: dashed;*/
-    outline-offset: -2px;
-    border-radius: 3px;
     background-color: #D5A0C7;
-    /*color: white;*/
 }
 .ADV {
-    outline: 1px solid rgba(255, 255, 255, 0.712);
-    /*outline-style: dashed;*/
-    outline-offset: -2px;
-    border-radius: 3px;
-    background-color: #D3AF81;
-    /*color: white;*/
+   background-color: #D3AF81;
 }
 .BF {
-    outline: 1px solid rgba(255, 255, 255, 0.712);
-    /*outline-style: dashed;*/
-    outline-offset: -2px;
-    border-radius: 3px;
     background-color: rgb(152, 210, 224);
-    /*color: white;*/
 }
 .AV {
-    outline: 1px solid rgba(255, 255, 255, 0.712);
-    /*outline-style: dashed;*/
-    outline-offset: -2px;
-    border-radius: 3px;
-    background-color: #32AA96;
-    /*color: white;*/
+   background-color: #32AA96;
 }
 .HP {
-    outline: 1px solid rgba(255, 255, 255, 0.712);
-    /*outline-style: dashed;*/
-    outline-offset: -2px;
-    border-radius: 3px;
     background-color: #a5a5a5;
-    /*color: white;*/
 }
 .Z {
-    outline: 1px solid rgba(255, 255, 255, 0.712);
-    /*outline-style: dashed;*/
-    outline-offset: -2px;
-    border-radius: 3px;
     background-color: #F4A54E;
-    /*color: white;*/
 }
 
+.hp {
+    background-color: #a10b0b;
+    color: white;
+}
+.hpButton {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.9em;
+    font-weight: bold;
+    /*margin-right: 10px;*/
+    height: 48px;
+    background-color: #a10b0b;
+    color: rgb(0, 0, 0);
+    transition: all 0.20s ease-in-out;
+    cursor: pointer;
+    align-content: center;
+    text-align: center;
+    padding: 0 15px;
+    /*width: 100px;*/
+    border: 2px solid rgb(75, 75, 75);
+    border-radius: 5px;
+}
+.hpButton:hover {
+    box-shadow: 0 0 15px gray;
+}
 .highlight {
-    /*background-color: rgb(252, 253, 200);*/
-    outline-style: auto;
-    outline-color: black ;
-    /*box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.9);*/
+    outline-offset: -4px;
+    outline: 3px solid #000000;
 }

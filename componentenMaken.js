@@ -1,6 +1,6 @@
 import { ploegenGegevens, DOM, generateCalendar, defaultSettings, beginrechtVerlof, berekenSaldo } from './main.js';
 import { calculateTotals, getSettingsFromLocalStorage, handleBlur, handleClickBtn } from './functies.js';
-import { verlofAanvraag, cancelAanvraag, cancelAlleAanvragen } from './herplanningen.js';
+import { verlofAanvraag, cancelAanvraag, cancelAlleAanvragen, behandelHerplanning } from './herplanningen.js';
 
 export let tabBlad = 0;
 
@@ -198,15 +198,26 @@ export function maakVerlofContainer() {
 
     DOM.verlofContainer.appendChild(container);
 
-    const restore = document.createElement('div');
+    const btnContainer = document.createElement('div');
+    btnContainer.classList.add('btn-container');
+
+    const restore = document.createElement('button');
     restore.textContent = 'Selectie terugstellen';
     restore.addEventListener('click', cancelAanvraag);
     restore.classList.add('restore');
-    DOM.verlofContainer.appendChild(restore);
-
-    const restoreAll = document.createElement('div');
+    btnContainer.appendChild(restore);
+    
+    const restoreAll = document.createElement('button');
     restoreAll.textContent = 'Alles terugstellen';
     restoreAll.addEventListener('click', cancelAlleAanvragen);
     restoreAll.classList.add('restore');
-    DOM.verlofContainer.appendChild(restoreAll);
+    btnContainer.appendChild(restoreAll);
+
+    const herplanning = document.createElement('button');
+    herplanning.textContent = 'Selectie herplannen';
+    herplanning.addEventListener('click', behandelHerplanning);
+    herplanning.classList.add('hpButton');
+    btnContainer.appendChild(herplanning);
+
+    DOM.verlofContainer.appendChild(btnContainer);
 };

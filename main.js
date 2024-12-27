@@ -2,9 +2,8 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { saveToSessionStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, resetDefaultSettings } from './functies.js';
+import { toggleModal, saveToSessionStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, resetDefaultSettings, adjustLayout } from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
-import { toggleModal } from './makeModalSettings.js';
 
 // default settings
 const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V12'];
@@ -194,7 +193,7 @@ const calendarGenerators = {
     0: (year) => {
         DOM.ploeg.hidden = false;
         DOM.buttonContainer.children[4].style.display = '';
-        DOM.verlofContainer.style.display = 'flex';
+        DOM.verlofContainer.style.display = '';
         DOM.ploegenLegende.style.display = 'none';
         DOM.verlofLegende.style.display = '';
         DOM.titel.textContent = 'Jaarkalender';
@@ -294,11 +293,13 @@ function triggerNext() {
     updateCalendar();
 };
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
-DOM.monthYear.addEventListener("click", () => {
+/*DOM.monthYear.addEventListener("click", () => {
     DOM.monthYear.style.color = 'transparent';
-    const rect = DOM.monthYear.getBoundingClientRect();
-    DOM.dropdowns.style.top = `${rect.top + window.scrollY - 10}px`;
-    DOM.dropdowns.style.left = `${rect.left + window.scrollX + Math.round(rect.width/2 - DOM.dropdowns.style.width/2)}px`;
+    //const rect = DOM.monthYear.getBoundingClientRect();
+    //DOM.dropdowns.style.top = `${rect.top + window.scrollY - 10}px`;
+    //DOM.dropdowns.style.left = `${rect.left + window.scrollX + Math.round(rect.width/2 - DOM.dropdowns.style.width/2)}px`;
+    //DOM.dropdowns.style.top = DOM.monthYear.style.top;
+    //DOM.dropdowns.style.left = DOM.monthYear.style.left;
     DOM.selectOverlay.style.display = 'block';
     maakDropdowns();
     DOM.dropdowns.classList.toggle("visible");
@@ -308,7 +309,7 @@ DOM.monthYear.addEventListener("click", () => {
     }
     DOM.yearSelect.classList.toggle('visible');
     //DOM.yearSelect.click();
-});
+});*/
 DOM.monthSelect.addEventListener("change", (event) => {
     const currentMonth = parseInt(event.target.value, 10);
     updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, defaultSettings);
@@ -350,6 +351,8 @@ document.addEventListener("click", (event) => {
         }
     }
 });
+//window.addEventListener('resize', adjustLayout);
+//window.addEventListener('load', adjustLayout);
 document.addEventListener('DOMContentLoaded', () => {
     saveToLocalStorage('standaardInstellingen', defaultSettings());
     savePloegenToLocalStorage();

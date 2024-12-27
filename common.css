@@ -39,16 +39,22 @@ body {
     width: 85%;
     padding: 20px;
     box-sizing: border-box;
+    position: relative;
+}
+.header {
+    display: block;
 }
 .top {
     position: relative;
     text-align: center;
     margin-bottom: 20px;
+    
 }
-.top h1{
+header h1{
     display: inline-block;
+    margin: 0;
 }
-.top select {
+header select {
     /*position: absolute;
     top: 45px;*/
     background: linear-gradient(360deg,#022124 10%,#efefef 360%);
@@ -61,9 +67,16 @@ body {
     width: 8em;
     transition: all 0.20s ease-in-out;
 }
-.top select:hover {
+header select:hover {
     box-shadow: 0 0 15px rgba(113, 136, 139, 0.9);
     color: #b4b4b4;
+}
+section {
+    display: flex;
+    justify-content: space-between;
+}
+.calendar-container {
+    position: absolute;
 }
 .calendar-nav {
     max-width: 400px;
@@ -72,7 +85,7 @@ body {
     align-items: center;
     margin: 20px auto;
     font-size: 1.6em;
-    position: relative;
+    /*position: relative;*/
 }
 .calendar-nav button {
     padding: 0.5em;
@@ -90,7 +103,7 @@ body {
 .month-year {
     min-width: 280px;
     color: #dbdbdb;
-    cursor: pointer;
+    cursor: default;
     /*font-weight: bold;*/
 }
 .dropdowns {
@@ -153,9 +166,10 @@ body {
 
 /*Legende*/
 .ploegenLegende-container {
-    position: absolute  ;
+    /*position: absolute;
     top: 50px;
-    right: 20px;
+    right: 20px;*/
+    float: right;
     display: flex;
     flex-direction: column-reverse;
     gap: 8px;
@@ -172,34 +186,6 @@ body {
 .ploegenLegende-vak {
     width: 45px;
     height: 20px;
-    /*border: 3px solid #dbdbdb;*/
-    border-radius: 4px;
-}
-.verlofLegende-container {
-    
-    position: absolute  ;
-    top: 50px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 10px;
-    background: linear-gradient(360deg,#022124 10%,#efefef 360%);
-    color: rgba(255, 255, 255, 0.829);
-    border-radius: 3px;
-}
-.verlofLegende-item {
-    display: flex;
-    /*align-items: center;*/
-    gap: 10px;
-}
-.verlofLegende-vak {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 0.8em;
-    padding: 6px;
-    width: 25px;
-    /*height: 25px;*/
-    color: black;
     /*border: 3px solid #dbdbdb;*/
     border-radius: 4px;
 }
@@ -230,12 +216,13 @@ font-family: monospace  , sans-serif;
     color: rgb(184, 184, 184);
 }
 .buttons-container {
-    /*display: flex;
+    display: flex;
     flex-direction: column;
-    gap: 10px;*/
-    position: absolute;
+    width: 220px;
+    /*gap: 10px;*/
+    /*position: absolute;
     top: 20px;
-    left: 20px;
+    left: 20px;*/
 }
 
 .btnGreen {
@@ -344,13 +331,7 @@ font-family: monospace  , sans-serif;
     background-color: rgb(219, 219, 219);
    
 }
-.checkBox-container {
-    color: rgb(218, 218, 218);
-    position: absolute;
-    left: -520px;
-    top: 50%;
-    transform: translateY(-50%);
-}
+
 input[type=checkbox] {
     margin: 15px;
     scale: 1.5;
@@ -418,7 +399,7 @@ input[type=checkbox] {
     font-family: monospace;
     display: none; /* Verborgen standaard */
     position: fixed;
-    top: 50%;
+    /*top: 50%;*/
     left: 50%;
     min-width: 700px;
     /*min-height: 600px;*/

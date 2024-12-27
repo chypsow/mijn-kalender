@@ -1,8 +1,8 @@
 import { DOM } from "./main.js";
-import { toggleModal } from "./makeModalSettings.js";
-import { getSettingsFromLocalStorage } from "./functies.js";
+import { toggleModal, getSettingsFromLocalStorage } from "./functies.js";
 
 export function makeModalFeestdagen(tab, setting) {
+    DOM.overlay.innerHTML = '';
     let jaar = getSettingsFromLocalStorage(tab, setting).currentYear;
     DOM.overlay.innerHTML = `
         <div class="calendar-nav">
@@ -25,7 +25,7 @@ export function makeModalFeestdagen(tab, setting) {
 
     // Initiële lijst
     voegFeestdagenToe(lijst, jaar);
-    toggleModal(true);
+    toggleModal(true, '50%');
 };
 const berekenPaasdatum = (year) => {
     const a = year % 19, b = Math.floor(year / 100), c = year % 100;

@@ -15,23 +15,27 @@
     <div id="top-nav" class="side-bar"></div>
     <div class="hoofd-container">
         <div class="top">
-            <h1 id="titel"></h1>
-            <select id="ploeg"></select>
-            <div id='ploegenLegende' class="ploegenLegende-container"></div>
-            <div id='verlofLegende' class="verlofLegende-container"></div>
+            <header>
+                <h1 id="titel"></h1>
+                <select id="ploeg"></select>
+            </header>
+            <section>
             <div id="buttonContainer" class="buttons-container"></div>
+            <div id="verlof-container" class="verlof-container hidden-on-small"></div>
+            <div id='ploegenLegende' class="ploegenLegende-container hidden-on-small"></div>
+            <div id='verlofLegende' class="verlofLegende-container hidden-on-small"></div>
             <div id="modal-overlay" class="modal-overlay">
                 <div id="modal" class="modal">
                     <i class="fa fa-close" id="sluiten"></i>
                     <div id="overlay" class="overlay"></div>
                 </div>
             </div>
+            </section>
         </div>
-        <div id="verlof-container" class="verlof-container"></div>
+        
         <div id="container">
             <div id="calendar-nav" class="calendar-nav">
-                <!--<div id="checkBox" class="checkBox-container"><label for="hollydays"><input type="checkbox" id="hollydays">Feestdagen</label></div>-->
-                <button id="prev"><i class="fa fa-chevron-left" aria-hid    den="true"></i></button>
+                <button id="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
                 <span id="month-year" class="month-year"></span>
                 <div id="select-overlay" class="select-overlay">
                     <div id="dropdowns" class="dropdowns">
