@@ -33,7 +33,7 @@ function makeModalHerplanning(selectedCell, selectedPloeg) {
     toggleModal(true, '25%');
 }
 function handelAanvraag(e, selectedCell, selectedPloeg) {
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'x', 'hp'];
+    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
     const elt = e.target;
     const aanvraag = elt.textContent;
     //if(verlofDagen.includes(aanvraag) && aanvraag.includes('x')) return;
@@ -43,9 +43,9 @@ function handelAanvraag(e, selectedCell, selectedPloeg) {
             const inhoud = cel.textContent;
             if(verlofDagen.includes(aanvraag) && cel.dataset.shift.includes('x')) return;
             if(aanvraag.includes('x') && cel.dataset.shift.includes('x')) {
-
                 cel.classList.remove('hp');
-                //behandelenSaldoVerlofdagen(aanvraag, inhoud);
+                cel.textContent = 'x';
+                verwijderVerlofDatum(selectedPloeg, selectedCell.datum);
                 return;
             }
             verlofDagen.forEach(verlof => cel.classList.remove(verlof));

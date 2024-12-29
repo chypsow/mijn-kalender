@@ -9,6 +9,7 @@ export function updateYearCalendarGrid() {
   DOM.monthYear.textContent = year;
   const startDate = startDates[selectedPloeg];
   const totalCells = 42;
+  const vandaag = new Date();
   const monthElementen = document.querySelectorAll('#calendar .month');
   monthElementen.forEach((month, index) => {
     const monthDays = month.querySelectorAll('.emptyCellKlein, .day-klein');
@@ -37,6 +38,7 @@ export function updateYearCalendarGrid() {
         const shift = shiftPattern[shiftIndex];
         const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
         myDay.classList.add(shiftClass);
+        if(vandaag.toLocaleDateString() === currentDate.toLocaleDateString()) myDay.classList.add("vandaag");
       }
     }
     const remainingCells = totalCells - (firstDay + 6) % 7 - daysInMonth;
@@ -55,6 +57,7 @@ export function generateYearCalendar(year) {
   DOM.monthYear.textContent = year;
   const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
   const startDate = startDates[selectedPloeg];
+  const vandaag = new Date();
   for (let month = 0; month < 12; month++) {
     const monthContainer = document.createElement("div");
     monthContainer.classList.add("month");
@@ -105,6 +108,7 @@ export function generateYearCalendar(year) {
         const shift = shiftPattern[shiftIndex];
         const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
         dayCell.classList.add(shiftClass);
+        if(vandaag.toLocaleDateString() === currentDate.toLocaleDateString()) dayCell.classList.add("vandaag");
       }
       calendarGrid.appendChild(dayCell);
     }

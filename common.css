@@ -438,3 +438,9 @@ input[type=checkbox] {
     color: rgba(221, 221, 221, 0.89);
 }
 
+.vandaag {
+    outline-offset: -4px;
+    outline: 6px solid #fafafa;
+    /*background-color: black;
+    color: white;*/
+}

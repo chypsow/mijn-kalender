@@ -16,6 +16,7 @@ export function updateMonthCalendar() {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const dayElementen = document.querySelectorAll('#calendar .day-groot, #calendar .emptyCellGroot');
     let counter = 0;
+    const vandaag = new Date();
     for(let i = 0; i < firstDayMondayBased; i++) {
         const myDay = dayElementen[counter];
         counter++;
@@ -30,7 +31,7 @@ export function updateMonthCalendar() {
         myDay.className = '';
         myDay.textContent = day;
         myDay.classList.add('day-groot');
-  
+        
         const currentDate = new Date(year, month, day);
         const daysSinceStart = getDaysSinceStart(currentDate, startDate);
         if(daysSinceStart >= 0) {
@@ -38,6 +39,7 @@ export function updateMonthCalendar() {
           const shift = shiftPattern[shiftIndex];
           const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
           myDay.classList.add(shiftClass);
+          if(vandaag.toLocaleDateString() === currentDate.toLocaleDateString()) myDay.classList.add("vandaag");
         }
     }
     const remainingCells = totalCells - firstDayMondayBased - daysInMonth;
@@ -80,6 +82,7 @@ export function generateMonthCalendar(month, year) {
     }
 
     // Dagen van de maand
+    const vandaag = new Date();
     for (let day = 1; day <= daysInMonth; day++) {
         const cell = document.createElement('div');
         cell.textContent = day; // Toon de dag
@@ -93,6 +96,7 @@ export function generateMonthCalendar(month, year) {
             const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
             // Voeg de dag en shift toe aan de cel
             cell.classList.add(shiftClass); // Voeg de juiste kleur toe
+            if(vandaag.toLocaleDateString() === currentDate.toLocaleDateString()) cell.classList.add("vandaag");
         }
         calendar.appendChild(cell);
     }
