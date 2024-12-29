@@ -33,7 +33,7 @@ function makeModalHerplanning(selectedCell, selectedPloeg) {
     toggleModal(true, '25%');
 }
 function handelAanvraag(e, selectedCell, selectedPloeg) {
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
+    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'x', 'hp'];
     const elt = e.target;
     const aanvraag = elt.textContent;
     //if(verlofDagen.includes(aanvraag) && aanvraag.includes('x')) return;
