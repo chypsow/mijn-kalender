@@ -1,28 +1,23 @@
 body {
+    display: flex;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(150deg, #04555f 10% ,#022930 30%, #012423 80%  );
+    background: linear-gradient(150deg, #04555f 10% ,#022930 30%, #012423 80%);
     color: #999999;
-    /*background-image: url("images/bg1.png");*/
-    opacity: 0.9;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /*background-size: cover;*/
     background-attachment:fixed;
-    display: flex; /* Flexbox toevoegen om kinderen naast elkaar te plaatsen */
 }
 .side-bar {
     width: 15%;
     height: 100vh;
     background-color: #242424;
     color: rgb(194, 194, 194);
-    
     box-sizing: border-box;
 }
 .side-bar a {
     display: block;
-    /*width: 20%;*/
-    padding: 12px 20px;
+    padding: 15px 20px;
     color: white;
     font-size: 20px;
     text-decoration: none;
@@ -32,31 +27,23 @@ body {
 }
 .side-bar a.active {
   background-color: #066470;
-  /*color: white;*/
 }
-
 .hoofd-container {
     width: 85%;
     padding: 20px;
     box-sizing: border-box;
     position: relative;
 }
-.header {
-    display: block;
-}
 .top {
     position: relative;
     text-align: center;
-    margin-bottom: 20px;
-    
+    /*margin-bottom: 20px;*/
 }
 header h1{
     display: inline-block;
     margin: 0;
 }
 header select {
-    /*position: absolute;
-    top: 45px;*/
     background: linear-gradient(360deg,#022124 10%,#efefef 360%);
     color: #b8b8b8;
     vertical-align:text-bottom;
@@ -83,7 +70,7 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px auto;
+    margin: 0 auto;
     font-size: 1.6em;
     /*position: relative;*/
 }
@@ -127,7 +114,6 @@ section {
     display: none;
     margin: 5px 0;
     background: linear-gradient(360deg,#1d1d1d 10%,#efefef 360%);
-    
     color: #8d8d8d;
     outline: none;
     padding: 8px 10px;
@@ -166,9 +152,6 @@ section {
 
 /*Legende*/
 .ploegenLegende-container {
-    /*position: absolute;
-    top: 50px;
-    right: 20px;*/
     float: right;
     display: flex;
     flex-direction: column-reverse;
@@ -180,7 +163,6 @@ section {
 }
 .ploegenLegende-item {
     display: flex;
-    /*align-items: center;*/
     gap: 10px;
 }
 .ploegenLegende-vak {
@@ -190,24 +172,20 @@ section {
     border-radius: 4px;
 }
 
-/* Zorg dat de ul en li een nette lijst vormen */
 .feestdagen {
-list-style: none; /* Verwijder de standaard opsommingstekens */
-padding: 0; /* Verwijder ongewenste padding */
-margin: 0;
-width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
 }
-
 .feestdag {
-display: flex; /* Gebruik flexbox om elementen in lijn te plaatsen */
-justify-content: space-between; /* Verspreid de items over de volledige breedte */
-padding: 8px 0; /* Voeg wat ruimte tussen de items toe */
-border-bottom: 1px solid #424242; /* Optioneel: een onderlijning voor duidelijkheid */
+    display: flex;
+    justify-content: space-between; /* Verspreid de items over de volledige breedte */
+    padding: 8px 0;
+    border-bottom: 1px solid #424242;
 }
-/* Optioneel: voeg een elegante font toe */
 .feestdag span {
-font-family: monospace  , sans-serif;
-
+    font-family: monospace  , sans-serif;
 }
 .feestdag .spanLinks {
     color: #00abb1;
@@ -219,12 +197,7 @@ font-family: monospace  , sans-serif;
     display: flex;
     flex-direction: column;
     width: 220px;
-    /*gap: 10px;*/
-    /*position: absolute;
-    top: 20px;
-    left: 20px;*/
 }
-
 .btnGreen {
     text-align: left;
     font-size: 22px;
@@ -232,7 +205,6 @@ font-family: monospace  , sans-serif;
     outline: none;
     /*background: linear-gradient(360deg,#022124 10%,#efefef 360%);*/
     color: #aaaaaa;
-    /*width: 250px;*/
     /*transition: all 0.20s ease-in-out;*/
 }
 .btnGreen:hover {
@@ -265,11 +237,8 @@ font-family: monospace  , sans-serif;
     cursor: pointer;
 }
 .handleiding-msg {
-    
-    /*max-width: 800px;*/
     min-width: 600px;
     font-size: 0.8em;
-    /*height: 600px;*/
     visibility: hidden;
     background-color: #000000;
     color: rgb(197, 197, 197);
@@ -277,10 +246,9 @@ font-family: monospace  , sans-serif;
     padding: 15px 10px;  
     border-radius: 5px;
     position: absolute;
-    top: 195%; /* Boven het icoon */
+    top: 200%; /* onder het icoon */
     left: 50%;
     transform: translateX(-50%);
-    
     z-index: 1;
     opacity: 0;
     transition: opacity 0.3s;
@@ -329,7 +297,6 @@ font-family: monospace  , sans-serif;
 .date-input:focus {
     box-shadow: 0 0 15px rgba(238, 238, 238, 0.9);
     background-color: rgb(219, 219, 219);
-   
 }
 
 input[type=checkbox] {
@@ -354,14 +321,12 @@ input[type=checkbox] {
     display: inline;
     padding: 5px 10px;
     font-size: 1em;
-    
     transition: all 0.20s ease-in-out;
 }
 .overlay button:hover {
     cursor: pointer;
     background-color: #adadad;;
     color: #070707;
-    
 }
 #overlay label {
     display: block;
@@ -393,7 +358,6 @@ input[type=checkbox] {
     /*display: block;*/
     opacity: 1;
 }
-
 .modal {
     font-size: 20px;
     font-family: monospace;
@@ -422,7 +386,6 @@ input[type=checkbox] {
     }*/
     100% {
         transform: translate(-50%, -50%) scale(1);
-        
     }
 }
 

@@ -10,12 +10,9 @@
     margin-top: 20px;
     font-family: Arial, sans-serif;
     font-size: 0.9em;
-    
 }
 .team-calendar-table .team-row {
     display: table-row;
-    
-    
 }
 .team-calendar-table .table-cell, .team-header-cell {
     display: table-cell;

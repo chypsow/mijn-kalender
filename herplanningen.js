@@ -1,16 +1,18 @@
-import { DOM, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen } from "./main.js";
-import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, behandelenSaldoVerlofdagen, behandelenRechtEnSaldoVerlofdagenNaTerugstellen, behandelenNaAllesTerugstellen } from "./functies.js";
+import { DOM, defaultSettings } from "./main.js";
+import { 
+    toggleModal, getSettingsFromLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe,
+    behandelenSaldoVerlofdagen, behandelenRechtEnSaldoVerlofdagenNaTerugstellen, behandelenNaAllesTerugstellen 
+} from "./functies.js";
 import { tabBlad } from "./componentenMaken.js";
 
-
-export function behandelHerplanning() {
+export function handelHerplanning() {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
-    if(!selectedCell) return;
-    if(selectedCell.team !== selectedPloeg) return;
-    makeModalHerplanning(selectedCell);
+    if (!selectedCell || selectedCell.team !== selectedPloeg) return;
+
+    makeModalHerplanning(selectedCell, selectedPloeg);
 }
-function makeModalHerplanning(selectedCell) {
+function makeModalHerplanning(selectedCell, selectedPloeg) {
     DOM.overlay.innerHTML = '';
     const herplanningen = ['N12','N','V12','V','L','D','x','OPL'];
 
@@ -22,112 +24,102 @@ function makeModalHerplanning(selectedCell) {
         herplanning.classList.add('hp');
         herplanning.classList.add('verlofCollection');
         herplanning.addEventListener('click', (e) => {
-            herplanningAanvraag(e, selectedCell);
+            handelAanvraag(e, selectedCell, selectedPloeg);
+            toggleModal(false);
         });
         container.appendChild(herplanning);
     });
     DOM.overlay.appendChild(container);
     toggleModal(true, '25%');
 }
-function herplanningAanvraag(e, selectedCell) {
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'shift-thuis'];
-    const aanvraag = e.target.textContent;
-    Array.from(DOM.calendar.querySelectorAll('.cell')).forEach(cel => {
-        if(cel.dataset.datum === selectedCell.datum) {
-            cel.classList.forEach(className => {
-                if(verlofDagen.includes(className)) cel.classList.remove(className);
-            });
+function handelAanvraag(e, selectedCell, selectedPloeg) {
+    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
+    const elt = e.target;
+    const aanvraag = elt.textContent;
+    //if(verlofDagen.includes(aanvraag) && aanvraag.includes('x')) return;
+    const className = verlofDagen.includes(aanvraag) ? aanvraag : 'hp';
+    [...DOM.calendar.querySelectorAll('.cell')].some(cel => {
+        if (cel.dataset.datum === selectedCell.datum) {
             const inhoud = cel.textContent;
+            if(verlofDagen.includes(aanvraag) && cel.dataset.shift.includes('x')) return;
+            if(aanvraag.includes('x') && cel.dataset.shift.includes('x')) {
+
+                cel.classList.remove('hp');
+                //behandelenSaldoVerlofdagen(aanvraag, inhoud);
+                return;
+            }
+            verlofDagen.forEach(verlof => cel.classList.remove(verlof));
             cel.textContent = aanvraag;
-            cel.classList.add('hp');
-            //voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
+            
+            cel.classList.add(className);       // Voeg nieuwe klasse toe
+            voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
             behandelenSaldoVerlofdagen(aanvraag, inhoud);
+    
+            // Optioneel: voeg verlofdatum toe
+            // voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
+            return true; // Stop iteratie, match gevonden
         }
+        return false; // Geen match, verder zoeken
     });
+    
 }
-export function verlofAanvraag(event) {
+export function handelVerlofAanvraag(e) {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
-    if(!selectedCell) return;
-    if(selectedCell.team !== selectedPloeg) return;
-    
-    const aanvraag = event.target.textContent;
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
-    Array.from(DOM.calendar.querySelectorAll('.cell')).forEach(cel => {
-        if(!cel.textContent.includes('x')) {
-            if(cel.dataset.datum === selectedCell.datum) {
-                cel.classList.forEach(className => {
-                    if(verlofDagen.includes(className)) cel.classList.remove(className);
-                });
-                const inhoud = cel.textContent;
-                cel.textContent = aanvraag;
-                cel.classList.add(aanvraag);
-                voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
-                behandelenSaldoVerlofdagen(aanvraag, inhoud);
-            }
-        }
-    });
-};
-export function voegVerlofDatumToe(ploeg, datum, soort) {
-    const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const array = opgenomenVerlofPerPloeg[ploegKey];
-    const index = array.findIndex(obj => obj.datum === datum);
-    if (index === -1) {
-        array.push({ datum, soort });
-    } else if (array[index].soort !== soort) {
-        array[index].soort = soort;
-    }
-    saveToLocalStorage(localStoragePloegen[ploeg], array);
-};
+    if (!selectedCell || selectedCell.team !== selectedPloeg) return;
+
+    handelAanvraag(e, selectedCell, selectedPloeg);
+} 
+
 export function cancelAanvraag() {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const selectedCell = JSON.parse(sessionStorage.getItem('selectedCell'));
-    if(!selectedCell) return;
-    if(selectedCell.team !== selectedPloeg) return;
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
-    Array.from(DOM.calendar.querySelectorAll('.cell')).forEach(cel => {
-        //if(cel.textContent !== 'x') {
-            if(cel.dataset.datum === selectedCell.datum) {
-                cel.classList.forEach(className => {
-                    if(verlofDagen.includes(className)) {
-                        cel.classList.remove(className);
-                        cel.textContent = cel.dataset.shift;
-                        if(['x','x- fd'].includes(cel.textContent)) cel.classList.add('shift-thuis');
-                        const canceledDatum = selectedCell.datum;
-                        verwijderVerlofDatum(selectedPloeg, canceledDatum);
-                        behandelenRechtEnSaldoVerlofdagenNaTerugstellen(className);
-                    }
-                });
-            }
-        //}
+    if (!selectedCell || selectedCell.team !== selectedPloeg) return;
+    const verlofDagen = ['BV','CS','ADV','BF','AV','HP','Z','hp'];
+    [...DOM.calendar.querySelectorAll('.cell')].some(cel => {
+        if (cel.dataset.datum === selectedCell.datum) {
+            verlofDagen.forEach(className => cel.classList.remove(className));
+            const className = cel.textContent;
+            cel.textContent = cel.dataset.shift;
+            if(cel.textContent.includes('x')) cel.classList.add('x');
+            const canceledDatum = selectedCell.datum;
+            verwijderVerlofDatum(selectedPloeg, canceledDatum);
+            behandelenRechtEnSaldoVerlofdagenNaTerugstellen(className);
+            return true;
+        }
+        return false;
     });
 };
-function verwijderVerlofDatum(ploeg, datum) {
-    const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const index = opgenomenVerlofPerPloeg[ploegKey].findIndex(obj => obj.datum === datum);
 
-    if (index !== -1) {
-        opgenomenVerlofPerPloeg[ploegKey].splice(index, 1);
-        saveToLocalStorage(localStoragePloegen[ploeg], opgenomenVerlofPerPloeg[ploegKey]);
-    }
-};
 export function cancelAlleAanvragen() {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
+    const verlofDagen = ['BV','CS','ADV','BF','AV','HP','Z','hp'];
     const cellen = DOM.calendar.querySelectorAll('.cell');
-    const bestaandeVerlof = Array.from(cellen).some(cel => verlofDagen.includes(cel.textContent));
-    if(!bestaandeVerlof) return;
-    const userResponse = confirm("Bent u zeker om alle verlof dagen te verwijderen ?");
-    if(!userResponse) return;
+
+    // Controleer of er überhaupt verlofdagen zijn
+    const bestaandeVerlof = Array.from(cellen).some(cel => {
+        return Array.from(cel.classList).some(className => verlofDagen.includes(className));
+    });
+    if (!bestaandeVerlof) return;
+
+    // Bevestiging vragen aan de gebruiker
+    const userResponse = confirm("Bent u zeker om alle verlof dagen te verwijderen?");
+    if (!userResponse) return;
+
+    // Verlof annuleren
     cellen.forEach(cel => {
-        cel.classList.forEach(className => {
-            if(verlofDagen.includes(className)) {
+        Array.from(cel.classList).forEach(className => {
+            if (verlofDagen.includes(className)) {
                 cel.classList.remove(className);
-                cel.textContent = cel.dataset.shift;
+                cel.textContent = cel.dataset.shift; // Reset tekst naar oorspronkelijke waarde
                 const canceledDatum = cel.dataset.datum;
+
+                // Verlofdatum verwijderen uit de opslag
                 verwijderVerlofDatum(selectedPloeg, canceledDatum);
-                behandelenNaAllesTerugstellen(selectedPloeg);
             }
         });
     });
-};
+
+    // Alles resetten na annuleren
+    behandelenNaAllesTerugstellen(selectedPloeg);
+}

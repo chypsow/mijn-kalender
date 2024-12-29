@@ -1,8 +1,32 @@
-import { DOM, beginrechtVerlof, berekenSaldo, defaultSettings, startDates, shiftPattern } from "./main.js";
+import { DOM, beginrechtVerlof, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 
+export function verwijderVerlofDatum(ploeg, date) {
+    const ploegKey = `verlofdagenPloeg${ploeg}`;
+    /*const index = opgenomenVerlofPerPloeg[ploegKey].findIndex(obj => obj.datum === datum);
+    if (index !== -1) {
+        opgenomenVerlofPerPloeg[ploegKey].splice(index, 1);
+        saveToLocalStorage(localStoragePloegen[ploeg], opgenomenVerlofPerPloeg[ploegKey]);
+    }*/
+    const array = opgenomenVerlofPerPloeg[ploegKey];
+    const filteredArray = array.filter(obj => !(obj.datum === date));
+    opgenomenVerlofPerPloeg[ploegKey] = filteredArray;
+    saveToLocalStorage(localStoragePloegen[ploeg], filteredArray);
+};
+export function voegVerlofDatumToe(ploeg, datum, soort) {
+    const ploegKey = `verlofdagenPloeg${ploeg}`;
+    const array = opgenomenVerlofPerPloeg[ploegKey];
+    const index = array.findIndex(obj => obj.datum === datum);
+    if (index === -1) {
+        array.push({ datum, soort });
+    } else if (array[index].soort !== soort) {
+        array[index].soort = soort;
+    }
+    saveToLocalStorage(localStoragePloegen[ploeg], array);
+
+};
 export function adjustLayout() {
     const schermGrootte = 1900;
     if (window.innerWidth < schermGrootte) {

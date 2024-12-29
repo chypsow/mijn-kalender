@@ -1,5 +1,5 @@
 .year-container-table {
-    margin: 20px auto 0;
+    /*margin: 0 auto;*/
     text-align: center;
 }
 
@@ -17,8 +17,6 @@
 /* Rij voor maanden en dagen */
 .year-calendar-table .row {
     display: table-row;
-    
-    /*text-align: center;*/
 }
 
 /* Celstijl + headerstijl*/
@@ -34,7 +32,6 @@
 .year-calendar-table .header-cell {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1.3em;
-    
     background-color: #292929; /*#f5f5f5*/
     color: #ffffffc7;
     text-align: center;
@@ -44,7 +41,6 @@
     background-color:transparent;
     border: none;
 }
-
 .cell {
     cursor: default;
     background-color: #ececec;
@@ -77,9 +73,6 @@
     border: 3px solid #ffffff;
 }
 .verlofLegende-container {
-    /*position: absolute  ;
-    top: 50px;
-    right: 20px;*/
     width: 250px;
     float: right;
     display: flex;
@@ -92,7 +85,6 @@
 }
 .verlofLegende-item {
     display: flex;
-    /*align-items: center;*/
     gap: 10px;
 }
 .verlofLegende-vak {
@@ -100,22 +92,18 @@
     font-size: 0.8em;
     padding: 6px;
     width: 25px;
-    /*height: 25px;*/
     color: black;
     /*border: 3px solid #dbdbdb;*/
     border-radius: 4px;
 }
 .verlof-container {
-    margin: 60px auto;
-    /*width: 1000px;*/
+    margin: 7em auto 0;
     display: flex;
-    /*flex-direction: column;*/
     justify-content: center;
-    /*gap: 7px;*/
-    align-content: center;
+    height: 2em;
+    gap: 100px;
 }
 .verlof-inhoud {
-    /*margin-right: 40px;*/
     max-width: 550px;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
@@ -127,13 +115,11 @@
     width: 48px;
     text-align: center;
     padding: 2px 0;
-    /*background-color: #d8d8d8;*/
     color: rgb(255, 255, 255);
     border: 1px solid rgba(128, 128, 128, 0.671);
 }
 .inputVak:focus,
 .inputVak:hover {
-    
     /*box-shadow: 0 0 15px rgba(238, 238, 238, 0.9);*/
     background-color: rgb(20, 20, 20);
     color: #d6d6d6;
@@ -141,7 +127,7 @@
  
 .totaal {
     padding: 5px;
-    width: 200px;
+    width: 80px;
     color: #ececec;
     text-align: left;
 }
@@ -149,7 +135,6 @@
     cursor: default;
     font-size: 1em;
     width: 48px;
-    /*height: 20px;*/
     padding: 2px 0;
     background-color: transparent;
     text-align: center;
@@ -162,16 +147,18 @@
     color: white;
 }
 .btn-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 10px;
+    /*display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;*/
 }
 .restore {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 0.9em;
     font-weight: bold;
-    /*margin-right: 10px;*/
-    height: 48px;
+    /*height: 48px;*/
     /*background: linear-gradient(360deg,#022124 10%,#efefef 360%);*/
     background-color: #686868;
     color: rgb(0, 0, 0);
@@ -179,17 +166,33 @@
     cursor: pointer;
     align-content: center;
     text-align: center;
-    padding: 0 15px;
-    /*width: 100px;*/
+    padding: 9px 15px;
     border: 2px solid rgb(75, 75, 75);
-    border-radius: 5px;
+    /*border-radius: 5px;*/
 }
 .restore:hover {
     /*border: 2px solid rgba(228, 228, 228, 0.575);*/
     background-color: rgb(207, 207, 207);
     /*box-shadow: 0 0 15px gray;*/
 }
-
+.hpButton {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.9em;
+    font-weight: bold;
+    /*height: 48px;*/
+    background-color: #a10b0b;
+    color: rgb(0, 0, 0);
+    transition: all 0.20s ease-in-out;
+    cursor: pointer;
+    align-content: center;
+    text-align: center;
+    padding: 9px 15px;
+    border: 2px solid rgb(75, 75, 75);
+    /*border-radius: 5px;*/
+}
+.hpButton:hover {
+    box-shadow: 0 0 15px gray;
+}
 .verlofCollection {
     color: black;
     /*font-weight: bold;*/
@@ -214,14 +217,9 @@
 .herplanning-container {
     display: flex;
     margin: 0 auto;
-    /*max-width: 800px;*/
-    /*display: flex;
-    flex-direction: column;*/
     justify-content: center;
-    /*gap: 7px;*/
     align-content: center;
     gap: 10px;
-    /*grid-template-columns: repeat(4, 1fr);*/
 }
 
 .BV {
@@ -245,32 +243,23 @@
 .Z {
     background-color: #F4A54E;
 }
-
+.x {
+    background: #cfcfcf;
+    color: rgba(41, 41, 41, 0.63);
+}
+.OPL {
+    background-color: #a10b0b;
+}
 .hp {
     background-color: #a10b0b;
     color: white;
 }
-.hpButton {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 0.9em;
-    font-weight: bold;
-    /*margin-right: 10px;*/
-    height: 48px;
-    background-color: #a10b0b;
-    color: rgb(0, 0, 0);
-    transition: all 0.20s ease-in-out;
-    cursor: pointer;
-    align-content: center;
-    text-align: center;
-    padding: 0 15px;
-    /*width: 100px;*/
-    border: 2px solid rgb(75, 75, 75);
-    border-radius: 5px;
-}
-.hpButton:hover {
-    box-shadow: 0 0 15px gray;
-}
+
 .highlight {
     outline-offset: -4px;
     outline: 3px solid #000000;
+}
+.vandaag {
+    background-color: black;
+    color: white;
 }

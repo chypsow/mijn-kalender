@@ -26,9 +26,10 @@ const shiftData = [
     {symbool:'V', naam:'vroege', kleur:'#f39251e1'},
     {symbool:'L', naam:'late', kleur:'#4c9182cb'},
     {symbool:'x', naam:'thuis', kleur:'#cfcfcf'},
-    {symbool:'D', naam:'dag', kleur:'#949494'}
+    {symbool:'D', naam:'dag', kleur:'#949494'},
+    {symbool:'OPL', naam:'opleiding', kleur:'#949494'}
 ];
-export const ploegenGegevens = JSON.parse(localStorage.getItem("shiftenGegevens")) || shiftData;
+export const ploegenGegevens = JSON.parse(localStorage.getItem("ploegenGegevens")) || shiftData;
 
 //
 export const opgenomenVerlofPerPloeg = {
