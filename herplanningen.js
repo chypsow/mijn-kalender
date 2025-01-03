@@ -102,7 +102,9 @@ export function cancelAlleAanvragen() {
     });
     if (!bestaandeVerlof) return;
 
-    const userResponse = confirm("Bent u zeker om alle verlof dagen te verwijderen?");
+    const userResponse = confirm(`Bent u zeker om alle dagen terug te stellen?
+
+Als u op OK drukt zullen alle verlofdagen en herplanningen verwijderd worden.`);
     if (!userResponse) return;
 
     cellen.forEach(cel => {
@@ -110,6 +112,7 @@ export function cancelAlleAanvragen() {
             if (verlofDagen.includes(className)) {
                 cel.classList.remove(className);
                 cel.textContent = cel.dataset.shift;
+                if(cel.textContent === 'x' || cel.textContent === 'x- fd') cel.classList.add('x');
                 const canceledDatum = cel.dataset.datum;
                 verwijderVerlofDatum(selectedPloeg, canceledDatum);
             }
