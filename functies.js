@@ -94,10 +94,10 @@ export function handleClickBtn(e) {
 export function handleBlur(e) {
     const verlof = e.target.id;
     const aantal = parseInt(e.target.value);
-    behandelenRechtEnSaldoVerlofdagen(verlof, aantal);
+    behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal);
 };
 
-function behandelenRechtEnSaldoVerlofdagen(verlof, aantal) {
+function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     //if(verlof === "Z") return;
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const totaal1 = document.getElementById('totaalBeginrecht');

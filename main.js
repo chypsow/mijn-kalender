@@ -19,7 +19,7 @@ const startDatums = {
     4: "2010-01-04", 
     5: "2010-01-11"
 };
-const shiftData = [
+export const shiftData = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
     {symbool:'N', naam:'nacht', kleur:'#4a91e2'},
     {symbool:'V12', naam:'vroege-12u', kleur:'#fc761cb0'},
@@ -27,7 +27,7 @@ const shiftData = [
     {symbool:'L', naam:'late', kleur:'#4c9182cb'},
     {symbool:'x', naam:'thuis', kleur:'#cfcfcf'},
     {symbool:'D', naam:'dag', kleur:'#949494'},
-    {symbool:'OPL', naam:'opleiding', kleur:'#949494'}
+    {symbool:'OPL', naam:'opleiding', kleur:'red'}
 ];
 export const ploegenGegevens = JSON.parse(localStorage.getItem("ploegenGegevens")) || shiftData;
 
@@ -294,6 +294,7 @@ function triggerNext() {
     updateCalendar();
 };
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
+
 /*DOM.monthYear.addEventListener("click", () => {
     DOM.monthYear.style.color = 'transparent';
     //const rect = DOM.monthYear.getBoundingClientRect();
@@ -330,28 +331,29 @@ DOM.ploeg.addEventListener('change', (event) => {
 DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 document.addEventListener("click", (event) => {
-    if (!DOM.dropdowns.contains(event.target) && event.target !== DOM.monthYear && event.target !== DOM.instellingen) {
+    /*if (!DOM.dropdowns.contains(event.target) && event.target !== DOM.monthYear && event.target !== DOM.instellingen) {
         DOM.monthYear.style.color = '';
         DOM.selectOverlay.style.display = 'none';
         DOM.dropdowns.classList.remove("visible");
         DOM.monthSelect.classList.remove("visible");
         DOM.yearSelect.classList.remove("visible");
-    }
+    }*/
+    if (tabBlad !== 0) return;
+    const selected = event.target.dataset.shift;
+    if(!selected) return;
 
-    if (tabBlad === 0) {
-        const selected = event.target.dataset.shift;
-        if(selected) {
-            const cellArray = DOM.calendar.querySelectorAll('.cell');
-            let cellCoordinates = JSON.parse(sessionStorage.getItem("selectedCell")) || {};
-            const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings;
-            cellCoordinates.datum = event.target.dataset.datum;
-            cellCoordinates.team = settings[tabBlad].ploeg;
-            cellArray.forEach(cel => cel.classList.remove('highlight'));
-            event.target.classList.add('highlight');
-            saveToSessionStorage("selectedCell", cellCoordinates);
-        }
-    }
+    const cellArray = DOM.calendar.querySelectorAll('.cell');
+    let cellCoordinates = JSON.parse(sessionStorage.getItem("selectedCell")) || {};
+    const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings;
+    cellCoordinates.datum = event.target.dataset.datum;
+    cellCoordinates.team = settings[tabBlad].ploeg;
+    
+    const highlightedCell = Array.from(cellArray).find(cel => cel.classList.contains('highlight'));
+    if (highlightedCell) highlightedCell.classList.remove('highlight');
+    event.target.classList.add('highlight');
+    saveToSessionStorage("selectedCell", cellCoordinates);
 });
+
 //window.addEventListener('resize', adjustLayout);
 //window.addEventListener('load', adjustLayout);
 document.addEventListener('DOMContentLoaded', () => {
