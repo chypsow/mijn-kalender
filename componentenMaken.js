@@ -41,9 +41,8 @@ export function maakKnoppen() {
         ['instellingen', 'fa-cog', 'Instellingen'],
         ['feestdagen', 'fa-calendar', 'Feestdagen'],
         ['vakanties', 'fa-plane', 'School vakanties'],
-        
-        ['afdrukken', 'fa-print', 'Afdrukken'],
-        ['rapport', 'fa-calendar-check-o', 'Genereer rapport']
+        ['afdrukken', 'fa-print', 'Afdrukken']
+        //['rapport', 'fa-calendar-check-o', 'Genereer rapport']
     ];
     
     knoppen.forEach(knop => {
@@ -62,7 +61,9 @@ export function maakKnoppen() {
 };
 
 export function maakPloegenLegende() {
-    ploegenGegevens.forEach(shift => {
+    const mijnData = [...ploegenGegevens];
+    mijnData.pop();
+    mijnData.forEach(shift => {
     const legendeItem = document.createElement('div');
     legendeItem.classList.add('ploegenLegende-item');
     
@@ -80,8 +81,8 @@ export function maakPloegenLegende() {
 };
 
 export function maakVerlofLegende() {
-    const verlofBeschrijving = {'BV': 'Betaald verlof', 'CS':'Compensatieshift', 'ADV':'Arbeidsvermindering',
-        'BF':'Betaalde feestdag', 'AV':'Ancieniteitsverlof','HP':'Herplanning', 'Z':'Ziek', 'OPL':'Opleiding-herplanning'};
+    const verlofBeschrijving = {'BV': 'Betaald verlof', 'CS':'Compensatieshift', 'ADV':'Arbeidsduurvermindering',
+        'BF':'Betaalde feestdag', 'AV':'Ancieniteitsverlof','HP':'Recup-herplanning', 'Z':'Ziek', 'OPL':'Opleiding/herplanning'};
     Object.entries(verlofBeschrijving).forEach(([kort, lang]) => {
     const legendeItem = document.createElement('div');
     legendeItem.classList.add('verlofLegende-item');

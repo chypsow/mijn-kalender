@@ -1,9 +1,9 @@
 import { DOM, defaultSettings, shiftData } from "./main.js";
+import { tabBlad } from "./componentenMaken.js";
 import { 
     toggleModal, getSettingsFromLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe,
     behandelenSaldoVerlofdagen, behandelenRechtEnSaldoVerlofdagenNaTerugstellen, behandelenNaAllesTerugstellen 
 } from "./functies.js";
-import { tabBlad } from "./componentenMaken.js";
 
 export function handelVerlofAanvraag(e) {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;

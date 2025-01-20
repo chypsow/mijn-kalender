@@ -84,12 +84,43 @@ export function handleClickBtn(e) {
             console.log('Rapportknop is aangeklikt');
             break;
         case 'afdrukken':
-            console.log('Afdrukknop is aangeklikt');
+            afdrukVoorbereiding();
+            window.print();
             break;
         default:
             console.warn('Onbekende knop-id:', btn);
     }
 };
+
+function afdrukVoorbereiding() {
+    const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const selectedPloeg = setting.selectedPloeg;
+    const year = setting.currentYear;
+    const month = setting.currentMonth;
+    const monthStr = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
+    const afdrukken = document.getElementById("printPreview");
+    afdrukken.innerHTML='';
+    if(tabBlad === 1 || tabBlad === 2) {
+        DOM.ploegenLegende.classList.remove('no-print');
+    } else {
+        DOM.ploegenLegende.classList.add('no-print');
+    }
+    const lijst = document.createElement('ul');
+    lijst.classList.add('print-header');
+    //lijst.style.listStyleType = 'none';
+    //lijst.style.position = 'absolute';
+    //lijst.style.top = '80px';
+    //lijst.style.display = 'flex';
+    //lijst.style.gap = '50px';
+    
+    const jaar = document.createElement('li');
+    jaar.textContent = `Jaar: ${year}`;
+    lijst.appendChild(jaar);
+    const ploeg = document.createElement('li');
+    ploeg.textContent = tabBlad === 3 ? `Maand: ${monthStr}` : `Ploeg ${selectedPloeg}`;
+    lijst.appendChild(ploeg);
+    afdrukken.appendChild(lijst);
+}
 
 export function handleBlur(e) {
     const verlof = e.target.id;

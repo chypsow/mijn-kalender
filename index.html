@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ploegen rooster</title>
+    <title>Ploegenrooster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="maandKalender.css">
     <link rel="stylesheet" href="jaarKalenderGrid.css">
@@ -12,18 +12,18 @@
     <link rel="stylesheet" href="common.css">
 </head>
 <body>
-    <div id="top-nav" class="side-bar"></div>
+    <div id="top-nav" class="side-bar no-print"></div>
     <div class="hoofd-container">
         <div class="top">
             <header>
                 <h1 id="titel"></h1>
-                <select id="ploeg"></select>
+                <select id="ploeg" class="no-print"></select>
             </header>
             <section>
-            <div id="buttonContainer" class="buttons-container"></div>
-            <div id="verlof-container" class="verlof-container hidden-on-small"></div>
-            <div id='ploegenLegende' class="ploegenLegende-container hidden-on-small"></div>
-            <div id='verlofLegende' class="verlofLegende-container hidden-on-small"></div>
+            <div id="buttonContainer" class="buttons-container no-print"></div>
+            <div id="verlof-container" class="verlof-container hidden-on-small no-print"></div>
+            <div id='ploegenLegende' class="ploegenLegende-container hidden-on-small no-print"></div>
+            <div id='verlofLegende' class="verlofLegende-container hidden-on-small no-print"></div>
             <div id="modal-overlay" class="modal-overlay">
                 <div id="modal" class="modal">
                     <i class="fa fa-close" id="sluiten"></i>
@@ -32,18 +32,18 @@
             </div>
             </section>
         </div>
-        
+        <div id="printPreview" class="hidden visible-on-print"></div>
         <div id="container">
             <div id="calendar-nav" class="calendar-nav">
-                <button id="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
-                <span id="month-year" class="month-year"></span>
+                <button id="prev" class="no-print"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                <span id="month-year" class="month-year no-print"></span>
                 <div id="select-overlay" class="select-overlay">
                     <div id="dropdowns" class="dropdowns">
                         <select id="month-select" class="monthDropdown"></select>
                         <select id="year-select" class="yearDropdown"></select>
                     </div>
                 </div>
-                <button id="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                <button id="next" class="no-print"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
             </div>
             <div id="calendar"></div>
         </div>

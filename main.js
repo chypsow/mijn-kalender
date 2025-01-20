@@ -61,7 +61,8 @@ const defaultVacations = {
     'AV': 0,
     'HP': 0
 };
-export const validateAndFixBeginrechtVerlof = () => {
+export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
+/*export const validateAndFixBeginrechtVerlof = () => {
     let storedValue = JSON.parse(localStorage.getItem("beginrechtVerlof"));
 
     // Check: Als de waarde null is, gebruik defaultVacations
@@ -97,9 +98,9 @@ export const validateAndFixBeginrechtVerlof = () => {
 
     // Als alles correct is
     return storedValue;
-};
-//export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
-export const beginrechtVerlof = validateAndFixBeginrechtVerlof();
+};*/
+
+//export const beginrechtVerlof = validateAndFixBeginrechtVerlof();
 //console.log("Gevalideerd beginrechtVerlof:", beginrechtVerlof);
 
 export const berekenSaldo = (ploeg, key = null) => {
@@ -193,7 +194,7 @@ export function generateCalendar() {
 const calendarGenerators = {
     0: (year) => {
         DOM.ploeg.hidden = false;
-        DOM.buttonContainer.children[4].style.display = '';
+        //DOM.buttonContainer.children[4].style.display = '';
         DOM.verlofContainer.style.display = '';
         DOM.ploegenLegende.style.display = 'none';
         DOM.verlofLegende.style.display = '';
@@ -204,7 +205,7 @@ const calendarGenerators = {
     },
     1: (year) => {
         DOM.ploeg.hidden = false;
-        DOM.buttonContainer.children[4].style.display = 'none';
+        //DOM.buttonContainer.children[4].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = '';
         DOM.verlofLegende.style.display = 'none';
@@ -215,7 +216,7 @@ const calendarGenerators = {
     },
     2: (month, year) => {
         DOM.ploeg.hidden = false;
-        DOM.buttonContainer.children[4].style.display = 'none';
+        //DOM.buttonContainer.children[4].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = '';
         DOM.verlofLegende.style.display = 'none';
@@ -226,7 +227,7 @@ const calendarGenerators = {
     },
     3: (month, year) => {
         DOM.ploeg.hidden = true;
-        DOM.buttonContainer.children[4].style.display = 'none';
+        //DOM.buttonContainer.children[4].style.display = 'none';
         DOM.verlofContainer.style.display = 'none';
         DOM.ploegenLegende.style.display = 'none';
         DOM.verlofLegende.style.display = 'none';
