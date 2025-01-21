@@ -27,7 +27,7 @@ export function makeModalFeestdagen(tab, setting) {
     voegFeestdagenToe(lijst, jaar);
     toggleModal(true, '50%');
 };
-const berekenPaasdatum = (year) => {
+export const berekenPaasdatum = (year) => {
     const a = year % 19, b = Math.floor(year / 100), c = year % 100;
     const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
     const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
@@ -37,21 +37,24 @@ const berekenPaasdatum = (year) => {
     const dag = ((h + l - 7 * m + 114) % 31) + 1;
     return new Date(year, maand - 1, dag);
 };
-const feestdagenLijst = {
-    1: (year) => new Date(year, 0, 1),
-    2: (year) => new Date(berekenPaasdatum(year).setDate(berekenPaasdatum(year).getDate() + 1)),
-    3: (year) => new Date(year, 4, 1),
-    4: (year) => new Date(berekenPaasdatum(year).setDate(berekenPaasdatum(year).getDate() + 39)),
-    5: (year) => new Date(berekenPaasdatum(year).setDate(berekenPaasdatum(year).getDate() + 50)),
-    6: (year) => new Date(year, 6, 21),
-    7: (year) => new Date(year, 7, 15),
-    8: (year) => new Date(year, 10, 1),
-    9: (year) => new Date(year, 10, 11),
-    10: (year) => new Date(year, 11, 25)
-};
-export const feestdagenLijstDatums = (year) => Object.values(feestdagenLijst).map(datums => datums(year));
 
-const formatter = new Intl.DateTimeFormat('nl-NL', {
+export const feestdagenLijstDatums = (year) => {
+    const paasdatum = berekenPaasdatum(year);
+    return [
+        new Date(year, 0, 1),
+        new Date(paasdatum.setDate(paasdatum.getDate() + 1)),
+        new Date(year, 4, 1),
+        new Date(paasdatum.setDate(paasdatum.getDate() + 39)),
+        new Date(paasdatum.setDate(paasdatum.getDate() + 50)),
+        new Date(year, 6, 21),
+        new Date(year, 7, 15),
+        new Date(year, 10, 1),
+        new Date(year, 10, 11),
+        new Date(year, 11, 25)
+    ]
+};
+
+export const formatter = new Intl.DateTimeFormat('nl-NL', {
     weekday: 'long', // Volledige dagnaam
     day: 'numeric',  // Dag van de maand
     month: 'long',   // Volledige maandnaam
@@ -66,17 +69,20 @@ const voegFeestdagToe = (lijst, naam, datum) => {
 };
 const voegFeestdagenToe = (lijst, year) => {
     const feestdagen = [
-        ['Nieuwjaarsdag', feestdagenLijst[1](year)],
-        ['Paasmaandag', feestdagenLijst[2](year)],
-        ['Feest van de Arbeid', feestdagenLijst[3](year)],
-        ['O.L.V. Hemelvaart', feestdagenLijst[4](year)],
-        ['Pinkstermaandag', feestdagenLijst[5](year)],
-        ['Nationale Feestdag', feestdagenLijst[6](year)],
-        ['O.L.V. Tenhemelopneming', feestdagenLijst[7](year)],
-        ['Allerheiligen', feestdagenLijst[8](year)],
-        ['Wapenstilstand', feestdagenLijst[9](year)],
-        ['Kerstmis', feestdagenLijst[10](year)]
+        'Nieuwjaarsdag',
+        'Paasmaandag',
+        'Feest van de Arbeid',
+        'O.L.V. Hemelvaart',
+        'Pinkstermaandag',
+        'Nationale Feestdag',
+        'O.L.V. Tenhemelopneming',
+        'Allerheiligen',
+        'Wapenstilstand',
+        'Kerstmis',
     ];
     lijst.innerHTML = ''; // Leegmaken voor updates
-    feestdagen.forEach(([naam, datum]) => voegFeestdagToe(lijst, naam, formatter.format(datum)));
+    feestdagen.forEach((naam,index) => {
+        const datum = feestdagenLijstDatums(year)[index];
+        voegFeestdagToe(lijst, naam, formatter.format(datum));
+    });
 };

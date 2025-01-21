@@ -188,11 +188,26 @@ section {
 .feestdag span {
     font-family: monospace  , sans-serif;
 }
-.feestdag .spanLinks {
+.feestdag .spanLinks,
+.vakantie .spanLinks {
     color: #00abb1;
-}
-.feestdag .spanRechts {
+} 
+.feestdag .spanRechts,
+.vakantie .spanRechts{
     color: rgb(184, 184, 184);
+}
+.vakantie {
+    text-align: left;
+}
+.vakanties {
+    margin-top: 50px;
+}
+.vakanties th {
+    height: 50px;
+    text-align: left;
+}
+.vakanties td {
+    width: 350px;
 }
 .buttons-container {
     display: flex;
@@ -414,13 +429,15 @@ input[type=checkbox] {
 }
 @media print {
     @page {
-        margin: 0;
-        size: landscape;
+        margin: 5mm;
+        size: auto;
     }
     body {
-        -webkit-print-color-adjust: exact; /* Voor WebKit-gebaseerde browsers zoals Chrome en Safari */
-        print-color-adjust: exact; /* Standaard eigenschap voor andere browsers */
+        /*-webkit-print-color-adjust: exact; /* Voor WebKit-gebaseerde browsers zoals Chrome en Safari */
+        /*print-color-adjust: exact; /* Standaard eigenschap voor andere browsers */
         background: none;
+        /*transform: scale(0.7); /* Schaal naar 70% */
+        /*transform-origin: top left; /* Zorg dat de inhoud niet wordt verplaatst */
     }
     .hoofd-container {
         width: 100%;
@@ -460,7 +477,7 @@ input[type=checkbox] {
         background: none;
         /*border: 1px solid rgb(207, 207, 207);*/
         position: absolute;
-        top: 140px;
+        top: 10px;
         right: 10px;
 
     }

@@ -2,6 +2,7 @@ import { DOM, beginrechtVerlof, berekenSaldo, defaultSettings, startDates, shift
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
+import { makeModalVakanties } from "./makeModalVakanties.js";
 
 export function verwijderVerlofDatum(ploeg, date) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
@@ -78,7 +79,8 @@ export function handleClickBtn(e) {
             makeModalFeestdagen(tabBlad, defaultSettings);
             break;
         case 'vakanties':
-            console.log('vakantieknop is aangeklikt');
+            makeModalVakanties(tabBlad, defaultSettings);
+            //console.log('vakantieknop is aangeklikt');
             break;
         case 'rapport':
             console.log('Rapportknop is aangeklikt');
@@ -107,18 +109,19 @@ function afdrukVoorbereiding() {
     }
     const lijst = document.createElement('ul');
     lijst.classList.add('print-header');
-    //lijst.style.listStyleType = 'none';
-    //lijst.style.position = 'absolute';
-    //lijst.style.top = '80px';
-    //lijst.style.display = 'flex';
-    //lijst.style.gap = '50px';
     
     const jaar = document.createElement('li');
     jaar.textContent = `Jaar: ${year}`;
     lijst.appendChild(jaar);
     const ploeg = document.createElement('li');
-    ploeg.textContent = tabBlad === 3 ? `Maand: ${monthStr}` : `Ploeg ${selectedPloeg}`;
+    ploeg.textContent = (tabBlad === 3 || tabBlad === 2) ? `Maand: ${monthStr}` : `Ploeg ${selectedPloeg}`;
     lijst.appendChild(ploeg);
+    if (tabBlad === 2) {
+        const ploeg = document.createElement('li');
+        ploeg.textContent = `Ploeg ${selectedPloeg}`;
+        lijst.appendChild(ploeg);
+    }
+    
     afdrukken.appendChild(lijst);
 }
 
