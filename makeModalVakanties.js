@@ -12,12 +12,15 @@ export function makeModalVakanties(tab, setting) {
             <button class="volgend"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
         </div>
         <table class="vakanties"></table>
+        <table class="andereInfo"></table>
     `;
-    const lijst = DOM.overlay.querySelector('.vakanties');
+    const lijst1 = DOM.overlay.querySelector('.vakanties');
+    const lijst2 = DOM.overlay.querySelector('.andereInfo');
     const updateVakanties = (newYear) => {
         jaar = newYear;
         document.getElementById('jaar').textContent = jaar;
-        voegVakantiedagenToe(lijst, jaar);
+        voegVakantiedagenToe(lijst1, jaar);
+        voegAndereInfoToe(lijst2, jaar);
     };
 
     // Navigatieknoppen
@@ -25,13 +28,14 @@ export function makeModalVakanties(tab, setting) {
     DOM.overlay.querySelector('.volgend').onclick = () => updateVakanties(jaar + 1);
 
     //test
-    const beginVakantieLijstDatums = (year) => beginVakantieLijst(year).map(datum => formatter.format(datum));
-    const eindeVakantieLijstDatums = (year) => eindeVakantieLijst(year).map(datum => formatter.format(datum));
-    console.log(beginVakantieLijstDatums(jaar));
-    console.log(eindeVakantieLijstDatums(jaar));
+    //const beginVakantieLijstDatums = (year) => beginVakantieLijst(year).map(datum => formatter.format(datum));
+    //const eindeVakantieLijstDatums = (year) => eindeVakantieLijst(year).map(datum => formatter.format(datum));
+    //console.log(beginVakantieLijstDatums(jaar));
+    //console.log(eindeVakantieLijstDatums(jaar));
 
     // Initiële lijst
-    voegVakantiedagenToe(lijst, jaar);
+    voegVakantiedagenToe(lijst1, jaar);
+    voegAndereInfoToe(lijst2, jaar);
     toggleModal(true, '50%');
 };
 
@@ -110,6 +114,7 @@ const voegVakantiedagenToe = (lijst, year) => {
         'Herfst',
         'Kerst'
     ];
+
     lijst.innerHTML = '';
     lijst.innerHTML = `
         <tr>
@@ -123,6 +128,96 @@ const voegVakantiedagenToe = (lijst, year) => {
     vakanties.forEach((naam,index) => {
         const startDatum = beginVakantieLijstDatums(year)[index];
         const eindDatum = eindeVakantieLijstDatums(year)[index];
+        voegVakantieToe(lijst, naam, startDatum, eindDatum);
+    });
+};
+
+const beginRamadan = (year) => {
+    const date0 = new Date(1900,0,1);
+    const offset = (year) => {
+        switch(true) {
+            case year < 1970:
+                return -366;
+            case year > 2030:
+                return 365;
+            default:
+                return 0;
+        } 
+    }
+    const aantalDagen = Math.trunc((year - 1900) * ((19 * 354 + 11 * 355) / 360) * 12 + 1421,44);
+    console.log('aantal dagen: ' + aantalDagen);
+    const ramadan = new Date(date0);
+    //console.log(ramadan);
+    ramadan.setDate(ramadan.getDate() + aantalDagen + offset(year) - 2);
+    //console.log(ramadan);
+    return ramadan;
+};
+/*const beginRamadan = (year) => {
+    // Basisdatum om te starten (1 januari 1900)
+    const baseDate = new Date(1900, 0, 1);
+
+    // Aantal dagen tussen 1900 en het jaar in de maankalender
+    const lunarDaysPerYear = 354.367; // Gemiddeld aantal dagen in een islamitisch jaar
+    const daysSinceBase = (year - 1900) * lunarDaysPerYear;
+
+    // Bereken de startdatum van Ramadan
+    const ramadanStart = new Date(baseDate.getTime());
+    ramadanStart.setDate(ramadanStart.getDate() + Math.round(daysSinceBase));
+    return ramadanStart;
+    // Formatter voor een leesbare datum
+    //const formatter = new Intl.DateTimeFormat("nl-NL", { year: 'numeric', month: 'long', day: 'numeric' });
+
+    //return formatter.format(ramadanStart);
+};*/
+
+
+const eindRamadan = (year) => {
+    const datum = new Date(beginRamadan(year));
+    return datum.setDate(datum.getDate() + 29);
+    //return formatter.format(datum);
+};
+
+const beginAndereLijst = (year) => {
+    return [
+        'Tussen 02:00 & 03:00',
+        'Tussen 02:00 & 03:00',
+        formatter.format(beginRamadan(year))
+    ];
+};
+
+const beginZomerTijd = (year) => {
+    const zomerTijd = new Date(year, 2, 31);
+    zomerTijd.setDate(zomerTijd.getDate() - zomerTijd.getDay());
+    return formatter.format(zomerTijd);
+};
+
+const beginWinterTijd = (year) => {
+    const winterTijd = new Date(year, 9, 31);
+    winterTijd.setDate(winterTijd.getDate() - winterTijd.getDay());
+    return formatter.format(winterTijd);
+};
+
+
+
+const eindeAndereLijst = (year) => {
+    return [
+        beginZomerTijd(year),
+        beginWinterTijd(year),
+        formatter.format(eindRamadan(year))
+    ];
+};
+
+const voegAndereInfoToe = (lijst, year) => {
+    const andere = [
+        'Begin zomertijd',
+        'Begin wintertijd',
+        'Ramadan'
+    ];
+
+    lijst.innerHTML = '';
+    andere.forEach((naam,index) => {
+        const startDatum = beginAndereLijst(year)[index];
+        const eindDatum = eindeAndereLijst(year)[index];
         voegVakantieToe(lijst, naam, startDatum, eindDatum);
     });
 };

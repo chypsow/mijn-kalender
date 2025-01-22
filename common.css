@@ -200,7 +200,7 @@ section {
     text-align: left;
 }
 .vakanties {
-    margin-top: 50px;
+    margin: 50px 0;
 }
 .vakanties th {
     height: 50px;
@@ -208,7 +208,12 @@ section {
 }
 .vakanties td {
     width: 350px;
-    padding: 8px 0;
+    padding: 6px 0;
+    border-bottom: 1px solid #424242;
+}
+.andereInfo td {
+    width: 350px;
+    padding: 6px 0;
     border-bottom: 1px solid #424242;
 }
 .buttons-container {
