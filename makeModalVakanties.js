@@ -24,6 +24,12 @@ export function makeModalVakanties(tab, setting) {
     DOM.overlay.querySelector('.vorig').onclick = () => updateVakanties(jaar - 1);
     DOM.overlay.querySelector('.volgend').onclick = () => updateVakanties(jaar + 1);
 
+    //test
+    const beginVakantieLijstDatums = (year) => beginVakantieLijst(year).map(datum => formatter.format(datum));
+    const eindeVakantieLijstDatums = (year) => eindeVakantieLijst(year).map(datum => formatter.format(datum));
+    console.log(beginVakantieLijstDatums(jaar));
+    console.log(eindeVakantieLijstDatums(jaar));
+
     // Initiële lijst
     voegVakantiedagenToe(lijst, jaar);
     toggleModal(true, '50%');
@@ -31,67 +37,59 @@ export function makeModalVakanties(tab, setting) {
 
 const berekenStartPaasvakantie = (year) => {
     const paasdatum = new Date(berekenPaasdatum(year));
-    //dagVoorPasen.setDate(dagVoorPasen.getDate() - 1);
-
-    if (paasdatum.getMonth() === 2) { // Maart (maanden tellen vanaf 0)
-        return new Date(paasdatum.getDate() + 1); // Als de dag in maart valt
-    } else if (paasdatum.getMonth() === 3) { // April
-        if (paasdatum.getDate() > 15) {
-            paasdatum.setDate(paasdatum.getDate() - 14); // Verminderen met 15 dagen
-        } else {
-            // Bepaal de eerste maandag in april
-            const eersteApril = new Date(year, 3, 1); // 1 april
-            const weekdag = eersteApril.getDay(); // Weekdag (0 = zondag, 1 = maandag, ...)
-            const offset = (weekdag === 0 ? 1 : 8 - weekdag); // Offset om de eerste maandag te vinden
-            paasdatum.setTime(eersteApril.getTime() + (offset * 24 * 60 * 60 * 1000)); // Voeg de offset toe
-        }
-    }
-
-    return paasdatum;
-};
-
-const berekenEindPaasvakantie = (year) => {
-    const paasdatum = new Date(berekenPaasdatum(year));
-
     if (paasdatum.getMonth() === 2) {
-        return new Date(paasdatum.getDate() + 14);
+        paasdatum.setDate(paasdatum.getDate() + 1);
+        return paasdatum;
     } else if (paasdatum.getMonth() === 3) {
         if (paasdatum.getDate() > 15) {
-            return new Date(paasdatum.getDate() + 14);
+            paasdatum.setDate(paasdatum.getDate() - 13);
         } else {
-            return new Date(paasdatum.getDate() + 15);
+            // Bepaal de eerste maandag in april
+            const eersteApril = new Date(year, 3, 1);
+            const weekdag = eersteApril.getDay(); // Weekdag (0 = zondag, 1 = maandag, ...)
+            const offset = (weekdag === 0 ? 1 : 8 - weekdag); // Offset om de eerste maandag te vinden
+            paasdatum.setDate(eersteApril.getDate() + offset);
         }
-    };
+    }
+    return paasdatum;
 };
 
 const beginVakantieLijst = (year) => {
     const paasdatum = berekenPaasdatum(year);
-    const kerstDag = new Date(year, 11, 25);
-    kerstDag.setDate(kerstDag.getDay() === 6 ? kerstDag.getDate() + 2 : kerstDag.getDate() + 2 - kerstDag.getDay() + 1);
+    const beginHerfst = new Date(year, 10, 1);
+    beginHerfst.setDate(beginHerfst.getDate() - beginHerfst.getDay() + 1);
+    const beginKerst = new Date(year, 11, 25);
+    beginKerst.setDate(beginKerst.getDay() === 6 ? beginKerst.getDate() + 2 : beginKerst.getDate() - beginKerst.getDay() + 1);
+
     return [
         new Date(paasdatum.setDate(paasdatum.getDate() - 48)),
         new Date(berekenStartPaasvakantie(year)),
-        new Date(paasdatum.setDate(paasdatum.getDate() + 39)),
+        new Date(paasdatum.setDate(paasdatum.getDate() + 87)),
         new Date(year, 6, 1),
-        new Date(year, 9, 31 - (new Date(year, 9, 31).getDay() || 7)),
-        kerstDag
-    ]
-    
+        beginHerfst,
+        beginKerst
+    ];
 };
+
 const eindeVakantieLijst = (year) => {
     const paasdatum = berekenPaasdatum(year);
-    const herfst = new Date(beginVakantieLijst(year)[4]);
-    herfst.setDate(herfst.getDate() + 6);
-    const kerst = new Date(beginVakantieLijst(year)[5]);
-    kerst.setDate(kerst.getDate() + 13);
+    const eindPaas = new Date(beginVakantieLijst(year)[1]);
+    eindPaas.setDate(eindPaas.getDate() + 13);
+    const eindHemel = new Date(beginVakantieLijst(year)[2]);
+    eindHemel.setDate(eindHemel.getDate() + 1);
+    const eindHerfst = new Date(beginVakantieLijst(year)[4]);
+    eindHerfst.setDate(eindHerfst.getDate() + 6);
+    const eindkerst = new Date(beginVakantieLijst(year)[5]);
+    eindkerst.setDate(eindkerst.getDate() + 13);
+
     return [
         new Date(paasdatum.setDate(paasdatum.getDate() - 42)),
-        new Date(berekenEindPaasvakantie(year)),
-        new Date(paasdatum.setDate(paasdatum.getDate() + 42)),
+        eindPaas,
+        eindHemel,
         new Date(year, 7, 31),
-        herfst,
-        kerst
-    ]
+        eindHerfst,
+        eindkerst
+    ];
 };
 
 const voegVakantieToe = (lijst, naam, startDatum, eindDatum) => {
@@ -102,6 +100,7 @@ const voegVakantieToe = (lijst, naam, startDatum, eindDatum) => {
             <td class="spanRechts">${eindDatum}</td>
         </tr>`;
 };
+
 const voegVakantiedagenToe = (lijst, year) => {
     const vakanties = [
         'Krokus',
@@ -111,7 +110,7 @@ const voegVakantiedagenToe = (lijst, year) => {
         'Herfst',
         'Kerst'
     ];
-    lijst.innerHTML = ''; // Leegmaken voor updates
+    lijst.innerHTML = '';
     lijst.innerHTML = `
         <tr>
             <th>Schoolvakanties:</th>
@@ -119,9 +118,11 @@ const voegVakantiedagenToe = (lijst, year) => {
             <th>Einde:</th>
         </tr>
     `;
+    const beginVakantieLijstDatums = (year) => beginVakantieLijst(year).map(datum => formatter.format(datum));
+    const eindeVakantieLijstDatums = (year) => eindeVakantieLijst(year).map(datum => formatter.format(datum));
     vakanties.forEach((naam,index) => {
-        const startDatum = beginVakantieLijst(year)[index];
-        const eindDatum = eindeVakantieLijst(year)[index];
-        voegVakantieToe(lijst, naam, formatter.format(startDatum), formatter.format(eindDatum));
+        const startDatum = beginVakantieLijstDatums(year)[index];
+        const eindDatum = eindeVakantieLijstDatums(year)[index];
+        voegVakantieToe(lijst, naam, startDatum, eindDatum);
     });
 };
