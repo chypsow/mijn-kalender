@@ -45,15 +45,19 @@
     gap: 5px;
 }
 .day-klein, .emptyCellKlein{
-    border: 3px solid transparent;
-    font-size: 0.8em;
+    /*border: 3px solid transparent;*/
+    font-size: 14px;
     padding: 2px;
     border-radius: 2px;
-    transition: all 0.2s ease-out;
+    /*transition: all 0.2s ease-out;*/
+    
 }
 .day-klein:hover {
     cursor: default;
-    border: 3px solid white;    
+    /*outline: 2px solid white;*/
+    outline-offset: -2px;
+    outline: 2px solid #ffffff;
+    
 }
 .emptyCellKlein {
     color: transparent;

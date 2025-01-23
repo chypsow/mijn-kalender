@@ -46,6 +46,8 @@ export const localStoragePloegen = {
     4: 'verlofdagenPloeg4',
     5: 'verlofdagenPloeg5'
 };
+
+//make new variables in local storage if they don't yet exist
 function savePloegenToLocalStorage() {
     Object.values(localStoragePloegen).forEach((ploeg, index) => {
         const ploegKey = ploeg;

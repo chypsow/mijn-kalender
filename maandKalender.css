@@ -37,7 +37,7 @@
 }
 
 .day-groot, .emptyCellGroot {
-    border: 3px solid transparent;
+    /*border: 3px solid transparent;*/
     font-size: 1.5em;
     padding: 10px;
     border-radius: 2px;
@@ -45,7 +45,9 @@
 }
 .day-groot:hover {
     cursor: default;
-    border: 3px solid white;    
+    /*border: 3px solid white;*/
+    outline-offset: -2px;
+    outline: 2px solid #ffffff;    
 }
 .emptyCellGroot {
     color: transparent;

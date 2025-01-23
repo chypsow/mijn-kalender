@@ -177,6 +177,7 @@ section {
     list-style: none;
     padding: 0;
     margin: 0;
+    margin-top: 50px;
     width: 100%;
 }
 .feestdag {
@@ -190,7 +191,7 @@ section {
 }
 .feestdag .spanLinks,
 .vakantie .spanLinks {
-    color: #00abb1;
+    color: #00dce4;
 } 
 .feestdag .spanRechts,
 .vakantie .spanRechts{
@@ -215,6 +216,13 @@ section {
     width: 350px;
     padding: 6px 0;
     border-bottom: 1px solid #424242;
+}
+.print-modal-button {
+    position: absolute;
+    top: 40px;
+    right: 60px;
+    max-width: 120px;
+    height: 50px;
 }
 .buttons-container {
     display: flex;
@@ -437,11 +445,11 @@ input[type=checkbox] {
 @media print {
     @page {
         margin: 5mm;
-        size: auto;
+        size: landscape;
     }
     body {
-        /*-webkit-print-color-adjust: exact; /* Voor WebKit-gebaseerde browsers zoals Chrome en Safari */
-        /*print-color-adjust: exact; /* Standaard eigenschap voor andere browsers */
+        -webkit-print-color-adjust: exact; /* Voor WebKit-gebaseerde browsers zoals Chrome en Safari*/
+        print-color-adjust: exact; /* Standaard eigenschap voor andere browsers */
         background: none;
         /*transform: scale(0.7); /* Schaal naar 70% */
         /*transform-origin: top left; /* Zorg dat de inhoud niet wordt verplaatst */
@@ -449,11 +457,12 @@ input[type=checkbox] {
     .hoofd-container {
         width: 100%;
     }
-    
-    .no-print {
-        display: none;
+    header h1 {
+        color: #012423;
     }
-    
+    .no-print {
+        display: none !important;
+    }
     .visible-on-print {
         display: block;
         font-size: 30px;
@@ -476,9 +485,13 @@ input[type=checkbox] {
         font-weight: bold;
     }
     #calendar .month {
-        border: 1px solid rgb(207, 207, 207);
+        /*border: 1px solid rgb(207, 207, 207);*/
+        background: rgb(243, 243, 243);
     }
-
+    #calendar .month-name {
+        font-size: 18px;
+        color: #012423;
+    }
     .ploegenLegende-container {
         color: rgb(0, 0, 0);
         background: none;
@@ -486,10 +499,27 @@ input[type=checkbox] {
         position: absolute;
         top: 10px;
         right: 10px;
-
     }
     .vandaag {
         outline: none !important;
+        box-shadow: none !important;
+    }
+    .modal {
+        background: none;
+        width: 60%;
+    }
+    .modal-overlay {
+        background: none;
+        opacity: 0;
+    }
+    .vakanties, .andereInfo {
+        color: black !important;
+    }
+    .vakantie .spanRechts {
+        color: black;
+    }
+    .vakantie .spanLinks {
+        color: rgb(63, 63, 63);
     }
 }
 
@@ -528,8 +558,11 @@ input[type=checkbox] {
 }
 
 .vandaag {
-    outline-offset: -5px;
-    outline: 4px solid #3b3b3b;
+    outline-offset: -2px;
+    outline: 2px solid #dbdbdb;
+    color: rgb(0, 0, 0, 0.8);
+    font-weight: bold;
+    box-shadow: inset 0 4px 10px rgb(0, 0, 0);
     /*background-color: black;
     color: white;*/
 }

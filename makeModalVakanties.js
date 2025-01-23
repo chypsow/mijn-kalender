@@ -6,14 +6,19 @@ export function makeModalVakanties(tab, setting) {
     DOM.overlay.innerHTML = '';
     let jaar = getSettingsFromLocalStorage(tab, setting).currentYear;
     DOM.overlay.innerHTML = `
-        <div class="calendar-nav">
+        <div class="calendar-nav no-print">
             <button class="vorig"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
             <span id="jaar" class="month-year">${jaar}</span>
             <button class="volgend"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
         </div>
+        <button class="print-modal-button">Afdrukken</button>
         <table class="vakanties"></table>
         <table class="andereInfo"></table>
     `;
+    const printButton = document.querySelector(".print-modal-button");
+    printButton.addEventListener("click", modalAfdrukken);
+    printButton.classList.add('no-print');
+
     const lijst1 = DOM.overlay.querySelector('.vakanties');
     const lijst2 = DOM.overlay.querySelector('.andereInfo');
     const updateVakanties = (newYear) => {
@@ -27,16 +32,44 @@ export function makeModalVakanties(tab, setting) {
     DOM.overlay.querySelector('.vorig').onclick = () => updateVakanties(jaar - 1);
     DOM.overlay.querySelector('.volgend').onclick = () => updateVakanties(jaar + 1);
 
-    //test
-    //const beginVakantieLijstDatums = (year) => beginVakantieLijst(year).map(datum => formatter.format(datum));
-    //const eindeVakantieLijstDatums = (year) => eindeVakantieLijst(year).map(datum => formatter.format(datum));
-    //console.log(beginVakantieLijstDatums(jaar));
-    //console.log(eindeVakantieLijstDatums(jaar));
-
-    // Initiële lijst
+    // Initiële lijsten
     voegVakantiedagenToe(lijst1, jaar);
     voegAndereInfoToe(lijst2, jaar);
     toggleModal(true, '50%');
+};
+
+/*function modalAfdrukken() {
+    const modalContent = DOM.modalOverlay.innerHTML; // Haal de inhoud van de modal op
+    const printWindow = window.open('', '_blank');   // Open een nieuw venster
+
+    printWindow.document.open();
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Afdrukken</title>
+            <style>
+                /* Voeg hier eventuele CSS toe die nodig is voor een nette afdruk 
+                body { font-family: Arial, sans-serif; margin: 20px; }
+            </style>
+        </head>
+        <body>
+            ${modalContent}
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print(); // Activeer de printfunctie in het nieuwe venster
+    printWindow.close(); // Sluit het venster na het afdrukken
+};*/
+
+function modalAfdrukken() {
+    const modal = DOM.modalOverlay;
+    const originalContent = document.body.innerHTML; // Bewaar de originele inhoud van de pagina
+
+    document.body.innerHTML = modal.outerHTML; // Vervang de inhoud van de pagina met alleen de modal
+    window.print(); // Start het printproces
+    document.body.innerHTML = originalContent; // Herstel de originele inhoud
+    window.location.reload(); // Optioneel: reload de pagina om de JavaScript-werking te herstellen
 };
 
 const berekenStartPaasvakantie = (year) => {
