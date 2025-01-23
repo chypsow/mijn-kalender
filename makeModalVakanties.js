@@ -132,56 +132,43 @@ const voegVakantiedagenToe = (lijst, year) => {
     });
 };
 
-const beginRamadan = (year) => {
-    const date0 = new Date(1900,0,1);
-    const offset = (year) => {
-        switch(true) {
-            case year < 1970:
-                return -366;
-            case year > 2030:
-                return 365;
-            default:
-                return 0;
-        } 
+const berekenRamadan = (year) => {
+    let offset = 0;
+    //if (year > 2030) offset = 365;
+    switch(true) {
+        case year < 1997:
+            offset = -366;
+            break;
+        case year > 2030:
+            offset = 365;
+            break;
+        default:
+            offset = 0;
     }
-    const aantalDagen = Math.trunc((year - 1900) * ((19 * 354 + 11 * 355) / 360) * 12 + 1421,44);
-    console.log('aantal dagen: ' + aantalDagen);
-    const ramadan = new Date(date0);
-    //console.log(ramadan);
-    ramadan.setDate(ramadan.getDate() + aantalDagen + offset(year) - 2);
-    //console.log(ramadan);
-    return ramadan;
-};
-/*const beginRamadan = (year) => {
-    // Basisdatum om te starten (1 januari 1900)
+    const lunarDaysPerYear = ((19 * 354 + 11 * 355) / 360) * 12;
+    const daysSinceBase = Math.round((year - 1900) * lunarDaysPerYear + 1421,44);
+    console.log('daysSinceBase: ' + daysSinceBase);
+
     const baseDate = new Date(1900, 0, 1);
+    const ramadan = new Date(baseDate);
+    ramadan.setDate(ramadan.getDate() + daysSinceBase + offset - 2);
+    const beginRamadan = new Date(ramadan);
+    const eindRamadan = new Date(beginRamadan);
+    eindRamadan.setDate(beginRamadan.getDate() + 29);
+    return [formatter.format(beginRamadan), formatter.format(eindRamadan)];
+};
 
-    // Aantal dagen tussen 1900 en het jaar in de maankalender
-    const lunarDaysPerYear = 354.367; // Gemiddeld aantal dagen in een islamitisch jaar
-    const daysSinceBase = (year - 1900) * lunarDaysPerYear;
-
-    // Bereken de startdatum van Ramadan
-    const ramadanStart = new Date(baseDate.getTime());
-    ramadanStart.setDate(ramadanStart.getDate() + Math.round(daysSinceBase));
-    return ramadanStart;
-    // Formatter voor een leesbare datum
-    //const formatter = new Intl.DateTimeFormat("nl-NL", { year: 'numeric', month: 'long', day: 'numeric' });
-
-    //return formatter.format(ramadanStart);
-};*/
-
-
-const eindRamadan = (year) => {
+/*const eindRamadan = (year) => {
     const datum = new Date(beginRamadan(year));
     return datum.setDate(datum.getDate() + 29);
     //return formatter.format(datum);
-};
+};*/
 
 const beginAndereLijst = (year) => {
     return [
         'Tussen 02:00 & 03:00',
         'Tussen 02:00 & 03:00',
-        formatter.format(beginRamadan(year))
+        berekenRamadan(year)[0]
     ];
 };
 
@@ -197,13 +184,11 @@ const beginWinterTijd = (year) => {
     return formatter.format(winterTijd);
 };
 
-
-
 const eindeAndereLijst = (year) => {
     return [
         beginZomerTijd(year),
         beginWinterTijd(year),
-        formatter.format(eindRamadan(year))
+        berekenRamadan(year)[1]
     ];
 };
 
