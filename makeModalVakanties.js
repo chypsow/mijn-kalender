@@ -180,7 +180,7 @@ const berekenRamadan = (year) => {
     }
     const lunarDaysPerYear = ((19 * 354 + 11 * 355) / 360) * 12;
     const daysSinceBase = Math.round((year - 1900) * lunarDaysPerYear + 1421,44);
-    console.log('daysSinceBase: ' + daysSinceBase);
+    //console.log('daysSinceBase: ' + daysSinceBase);
 
     const baseDate = new Date(1900, 0, 1);
     const ramadan = new Date(baseDate);

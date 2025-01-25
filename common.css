@@ -337,7 +337,7 @@ input[type=checkbox] {
 }
 .button-container {
     display: flex;
-    gap: 200px;
+    gap: 300px;
 }
 .overlay {
     display: flex;
@@ -347,12 +347,12 @@ input[type=checkbox] {
 }
 .overlay button {
     background-color: #444444;
-    color: #000000;
+    color: #c2c2c2;
     border-radius: 3px;
     width: 250px;
     display: inline;
     padding: 5px 10px;
-    font-size: 1em;
+    font-size: 0.9em;
     transition: all 0.20s ease-in-out;
 }
 .overlay button:hover {
@@ -397,7 +397,7 @@ input[type=checkbox] {
     position: fixed;
     /*top: 50%;*/
     left: 50%;
-    min-width: 700px;
+    min-width: 800px;
     /*min-height: 600px;*/
     padding: 40px;
     background-color: rgb(32, 32, 32);
