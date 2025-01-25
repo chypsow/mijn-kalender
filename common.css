@@ -471,6 +471,13 @@ input[type=checkbox] {
         font-family:monospace;
         color: rgb(77, 77, 77);   
     }
+    .month-year {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50px);
+        justify-self: center;
+        color: black;
+    }
     #calendar {
         width: 100%;
         justify-self: center;
@@ -497,7 +504,7 @@ input[type=checkbox] {
         background: none;
         /*border: 1px solid rgb(207, 207, 207);*/
         position: absolute;
-        top: 10px;
+        top: 140px;
         right: 10px;
     }
     .vandaag {
@@ -533,11 +540,11 @@ input[type=checkbox] {
     color: white;
 }
 .shift-vroege {
-   background: #f39251e1;
+   background: #ff8331d3;
    color: white;
 }
 .shift-vroege-12u {
-    background: #fc761cb0;
+    background: #bb4b00;
     color: white;
 }
 .shift-late {

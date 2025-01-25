@@ -6,10 +6,10 @@ export function makeModalVakanties(tab, setting) {
     DOM.overlay.innerHTML = '';
     let jaar = getSettingsFromLocalStorage(tab, setting).currentYear;
     DOM.overlay.innerHTML = `
-        <div class="calendar-nav no-print">
-            <button class="vorig"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+        <div class="calendar-nav">
+            <button class="vorig no-print"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
             <span id="jaar" class="month-year">${jaar}</span>
-            <button class="volgend"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+            <button class="volgend no-print"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
         </div>
         <button class="print-modal-button">Afdrukken</button>
         <table class="vakanties"></table>

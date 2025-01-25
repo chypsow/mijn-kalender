@@ -123,6 +123,7 @@
     /*box-shadow: 0 0 15px rgba(238, 238, 238, 0.9);*/
     background-color: rgb(20, 20, 20);
     color: #d6d6d6;
+    border: 1px solid rgb(255, 255, 255);
 }
  
 .totaal {
@@ -192,6 +193,7 @@
 }
 .hpButton:hover {
     box-shadow: 0 0 15px gray;
+    color: rgb(224, 224, 224);
 }
 .verlofCollection {
     color: black;

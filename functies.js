@@ -80,7 +80,6 @@ export function handleClickBtn(e) {
             break;
         case 'vakanties':
             makeModalVakanties(tabBlad, defaultSettings);
-            //console.log('vakantieknop is aangeklikt');
             break;
         case 'rapport':
             console.log('Rapportknop is aangeklikt');
@@ -225,7 +224,7 @@ export function resetDefaultSettings(obj, arr) {
 export function getSettingsFromLocalStorage(blad, setting) {
     let instellingen;
     try {
-        instellingen = JSON.parse(localStorage.getItem('standaardInstellingen')) || setting;
+        instellingen = JSON.parse(localStorage.getItem('standaardInstellingen')) || setting();
     } catch (error) {
         console.error("Failed to parse session storage settings:", error);
         instellingen = setting;
@@ -244,7 +243,7 @@ export function getSettingsFromLocalStorage(blad, setting) {
 };
 
 export function updateLocalStorage(settings, index, key, value, defaultSet) {
-    const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet;
+    const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet();
     instellingen[index][key] = value;
     saveToLocalStorage(settings, instellingen);
 };

@@ -1,4 +1,4 @@
-import { DOM, defaultSettings, shiftData } from "./main.js";
+import { DOM, defaultSettings, ploegenGegevens } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { 
     toggleModal, getSettingsFromLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe,
@@ -26,7 +26,7 @@ function makeModalHerplanning(selectedCell, selectedPloeg) {
     
     const container = document.createElement('div');
     container.classList.add('herplanning-container');
-    shiftData.forEach(obj => {
+    ploegenGegevens.forEach(obj => {
         const herplanning = document.createElement('div');
         herplanning.textContent = obj.symbool;
         herplanning.classList.add('hp');

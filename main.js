@@ -2,7 +2,7 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, saveToSessionStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, resetDefaultSettings, adjustLayout } from './functies.js';
+import { toggleModal, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, resetDefaultSettings, adjustLayout } from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 
 // default settings
@@ -19,19 +19,40 @@ const startDatums = {
     4: "2010-01-04", 
     5: "2010-01-11"
 };
-export const shiftData = [
+export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
+export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
+export const defaultSettings = () => {
+    const date = new Date();
+    const currentMonth = date.getMonth();
+    const currentYear = date.getFullYear();
+
+    return Array.from({ length: 4 }, (_, index) => ({
+        pagina: index,
+        ploeg: 1,
+        maand: currentMonth,
+        jaar: currentYear
+    }));
+};   
+export const ploegenGegevens = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
     {symbool:'N', naam:'nacht', kleur:'#4a91e2'},
-    {symbool:'V12', naam:'vroege-12u', kleur:'#fc761cb0'},
-    {symbool:'V', naam:'vroege', kleur:'#f39251e1'},
+    {symbool:'V12', naam:'vroege-12u', kleur:'#bb4b00'},
+    {symbool:'V', naam:'vroege', kleur:'#ff8331d3'},
     {symbool:'L', naam:'late', kleur:'#4c9182cb'},
-    {symbool:'x', naam:'thuis', kleur:'#cfcfcf'},
     {symbool:'D', naam:'dag', kleur:'#949494'},
+    {symbool:'x', naam:'thuis', kleur:'#cfcfcf'},
     {symbool:'OPL', naam:'opleiding', kleur:'red'}
 ];
-export const ploegenGegevens = JSON.parse(localStorage.getItem("ploegenGegevens")) || shiftData;
-
-//
+//export const shiftData = JSON.parse(localStorage.getItem("shiftData")) || shiftData;
+const defaultVacations = {
+    'BV': 0,
+    'CS': 0,
+    'ADV': 0,
+    'BF': 0,
+    'AV': 0,
+    'HP': 0
+};
+export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
 export const opgenomenVerlofPerPloeg = {
     verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
     verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
@@ -47,63 +68,13 @@ export const localStoragePloegen = {
     5: 'verlofdagenPloeg5'
 };
 
-//make new variables in local storage if they don't yet exist
+//make new variables in local storage if they don't exist yet
 function savePloegenToLocalStorage() {
     Object.values(localStoragePloegen).forEach((ploeg, index) => {
         const ploegKey = ploeg;
         saveToLocalStorage(`verlofdagenPloeg${index+1}`, opgenomenVerlofPerPloeg[ploegKey]);
     });
 };
-
-const defaultVacations = {
-    'BV': 0,
-    'CS': 0,
-    'ADV': 0,
-    'BF': 0,
-    'AV': 0,
-    'HP': 0
-};
-export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
-/*export const validateAndFixBeginrechtVerlof = () => {
-    let storedValue = JSON.parse(localStorage.getItem("beginrechtVerlof"));
-
-    // Check: Als de waarde null is, gebruik defaultVacations
-    if (!storedValue) {
-        console.warn("beginrechtVerlof ontbreekt in localStorage. Default wordt gebruikt.");
-        storedValue = defaultVacations;
-    }
-
-    // Check: Als het een array is, filter en converteer naar een object
-    if (Array.isArray(storedValue)) {
-        console.warn("beginrechtVerlof was een array. Null waarden negeren en converteren naar object...");
-
-        const converted = storedValue.reduce((acc, curr) => {
-            if (curr && typeof curr === "object") { // Alleen geldige objecten verwerken
-                Object.entries(curr).forEach(([key, value]) => {
-                    acc[key] = (acc[key] || 0) + value; // Optioneel: Waarden optellen over meerdere objecten
-                });
-            }
-            return acc;
-        }, {});
-
-        // Sla het aangepaste object op in localStorage
-        localStorage.setItem("beginrechtVerlof", JSON.stringify(converted));
-        return converted;
-    }
-
-    // Check: Als het geen object is, herstellen naar default
-    if (typeof storedValue !== "object" || storedValue === null) {
-        console.error("beginrechtVerlof is niet geldig. Herstellen naar default.");
-        localStorage.setItem("beginrechtVerlof", JSON.stringify(defaultVacations));
-        return defaultVacations;
-    }
-
-    // Als alles correct is
-    return storedValue;
-};*/
-
-//export const beginrechtVerlof = validateAndFixBeginrechtVerlof();
-//console.log("Gevalideerd beginrechtVerlof:", beginrechtVerlof);
 
 export const berekenSaldo = (ploeg, key = null) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
@@ -131,21 +102,6 @@ export const berekenSaldo = (ploeg, key = null) => {
     return saldo;
 };
 
-export const defaultSettings = () => {
-    const date = new Date();
-    const currentMonth = date.getMonth();
-    const currentYear = date.getFullYear();
-
-    return Array.from({ length: 4 }, (_, index) => ({
-        pagina: index,
-        ploeg: 1,
-        maand: currentMonth,
-        jaar: currentYear
-    }));
-};   
-
-export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
-export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
 export const DOM = {
     monthYear: document.getElementById('month-year'),
     monthSelect: document.getElementById("month-select"),
@@ -360,7 +316,7 @@ document.addEventListener("click", (event) => {
 //window.addEventListener('resize', adjustLayout);
 //window.addEventListener('load', adjustLayout);
 document.addEventListener('DOMContentLoaded', () => {
-    saveToLocalStorage('standaardInstellingen', defaultSettings());
+    if(localStorage.getItem('standaardInstellingen') === null) localStorage.setItem('standaardInstellingen', JSON.stringify(defaultSettings()));
     savePloegenToLocalStorage();
     maakSidebar();
     maakPloegDropdown();

@@ -61,8 +61,13 @@ export function maakKnoppen() {
 };
 
 export function maakPloegenLegende() {
-    const mijnData = [...ploegenGegevens];
+    let mijnData = [...ploegenGegevens];
+    //mijnData.splice(2, 1);
+    //console.log(mijnData);
     mijnData.pop();
+    //mijnData.shift();
+    //console.log(mijnData);
+
     mijnData.forEach(shift => {
     const legendeItem = document.createElement('div');
     legendeItem.classList.add('ploegenLegende-item');
@@ -73,8 +78,9 @@ export function maakPloegenLegende() {
     legendeItem.appendChild(kleurVak);
 
     const beschrijving = document.createElement('span');
-    beschrijving.textContent = `${shift.symbool} : ${shift.naam.charAt(0).toUpperCase()}${shift.naam.slice(1)}`;
+    beschrijving.textContent = `${shift.naam.charAt(0).toUpperCase()}${shift.naam.slice(1)}`;
     legendeItem.appendChild(beschrijving);
+
 
     DOM.ploegenLegende.appendChild(legendeItem);
     });
@@ -103,7 +109,7 @@ export function maakVerlofLegende() {
 
 export function maakDropdowns() {
     let currentMonth = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentMonth;
-    let currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
+    let currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear
     const months = [
         "januari", "februari", "maart", "april", "mei", "juni",
         "juli", "augustus", "september", "oktober", "november", "december"
@@ -178,7 +184,8 @@ export function maakVerlofContainer() {
     saldo.textContent = 'Saldo';
     container.appendChild(saldo);
 
-    const saldoArray = berekenSaldo(1);
+    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const saldoArray = berekenSaldo(selectedPloeg);
     Object.entries(saldoArray).forEach(([verlof,aantal]) => {
         const outputVak = document.createElement('div');
         outputVak.classList.add('outputVak');
