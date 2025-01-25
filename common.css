@@ -154,6 +154,7 @@ section {
 /*Legende*/
 .ploegenLegende-container {
     float: right;
+    margin-right: 20px;
     display: flex;
     flex-direction: column-reverse;
     gap: 8px;
@@ -501,6 +502,7 @@ input[type=checkbox] {
     }
     .ploegenLegende-container {
         color: rgb(0, 0, 0);
+        margin-right: 0;
         background: none;
         /*border: 1px solid rgb(207, 207, 207);*/
         position: absolute;
@@ -513,7 +515,7 @@ input[type=checkbox] {
     }
     .modal {
         background: none;
-        width: 60%;
+        width: 70%;
     }
     .modal-overlay {
         background: none;
@@ -553,7 +555,7 @@ input[type=checkbox] {
 }
 .shift-dag {
     background: #949494;
-    color: rgba(0, 0, 0, 0.63);
+    color: rgb(0, 0, 0);
 }
 .shift-thuis {
     background: #cfcfcf;
@@ -567,8 +569,8 @@ input[type=checkbox] {
 .vandaag {
     outline-offset: -2px;
     outline: 2px solid #dbdbdb;
-    color: rgb(0, 0, 0, 0.8);
-    font-weight: bold;
+    /*color: rgb(0, 0, 0, 0.8);*/
+    /*font-weight: bold;*/
     box-shadow: inset 0 4px 10px rgb(0, 0, 0);
     /*background-color: black;
     color: white;*/

@@ -2,7 +2,7 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, resetDefaultSettings, adjustLayout } from './functies.js';
+import { toggleModal, saveSettingsToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, saveToSessionStorage, resetDefaultSettings, adjustLayout } from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 
 // default settings
@@ -316,7 +316,7 @@ document.addEventListener("click", (event) => {
 //window.addEventListener('resize', adjustLayout);
 //window.addEventListener('load', adjustLayout);
 document.addEventListener('DOMContentLoaded', () => {
-    if(localStorage.getItem('standaardInstellingen') === null) localStorage.setItem('standaardInstellingen', JSON.stringify(defaultSettings()));
+    saveSettingsToLocalStorage('standaardInstellingen', defaultSettings());
     savePloegenToLocalStorage();
     maakSidebar();
     maakPloegDropdown();

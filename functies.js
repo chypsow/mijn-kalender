@@ -208,6 +208,22 @@ export function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
 };
 
+export function saveSettingsToLocalStorage(key, value) {
+    if(localStorage.getItem(key) === null) {
+        localStorage.setItem(key, JSON.stringify(value()));
+    } else {
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        let instellingen = JSON.parse(localStorage.getItem(key));
+        instellingen.forEach(instelling => {
+            instelling.maand = currentMonth;
+            instelling.jaar = currentYear;
+        });
+        localStorage.setItem(key, JSON.stringify(instellingen));
+    }
+};
+
 export function resetDefaultSettings(obj, arr) {
     let counter = 0;
     for(let i = 1; i <= 5; i++) {
