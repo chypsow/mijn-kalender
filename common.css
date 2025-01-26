@@ -484,8 +484,13 @@ input[type=checkbox] {
         justify-self: center;
         font-size: 14px;
     }
-    #calendar .month-name, #calendar .month-days {
+    #calendar .month-name, 
+    #calendar .month-days {
         color: black;
+    }
+    #calendar .header {
+        background: rgb(44, 44, 44);
+        color: rgb(255, 255, 255);
     }
     #calendar .day-klein {
         font-size: 14px;
@@ -542,11 +547,11 @@ input[type=checkbox] {
 }
 .shift-vroege {
    background: #ff8331d3;
-   color: rgb(0, 0, 0);
+   color: rgb(255, 255, 255);
 }
 .shift-vroege-12u {
     background: #bb4b00;
-    color: white;
+    color: rgb(255, 255, 255);
 }
 .shift-late {
     background: #4c9182cb;

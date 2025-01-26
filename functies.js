@@ -112,10 +112,13 @@ function afdrukVoorbereiding() {
     const jaar = document.createElement('li');
     jaar.textContent = `Jaar: ${year}`;
     lijst.appendChild(jaar);
-    const ploeg = document.createElement('li');
-    ploeg.textContent = (tabBlad === 3 || tabBlad === 2) ? `Maand: ${monthStr}` : `Ploeg ${selectedPloeg}`;
-    lijst.appendChild(ploeg);
-    if (tabBlad === 2) {
+    
+    if (tabBlad === 2 || tabBlad === 3) {
+        const maand = document.createElement('li');
+        maand.textContent = `Maand: ${monthStr}`;
+        lijst.appendChild(maand);
+    }
+    if (tabBlad !== 3) {
         const ploeg = document.createElement('li');
         ploeg.textContent = `Ploeg ${selectedPloeg}`;
         lijst.appendChild(ploeg);
