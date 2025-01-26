@@ -484,8 +484,7 @@ input[type=checkbox] {
         justify-self: center;
         font-size: 14px;
     }
-    #calendar .month-name, #calendar .month-days,
-    #calendar .day-klein {
+    #calendar .month-name, #calendar .month-days {
         color: black;
     }
     #calendar .day-klein {
@@ -543,7 +542,7 @@ input[type=checkbox] {
 }
 .shift-vroege {
    background: #ff8331d3;
-   color: white;
+   color: rgb(0, 0, 0);
 }
 .shift-vroege-12u {
     background: #bb4b00;
@@ -551,7 +550,7 @@ input[type=checkbox] {
 }
 .shift-late {
     background: #4c9182cb;
-    color: white;
+    color: rgb(255, 255, 255);
 }
 .shift-dag {
     background: #949494;
@@ -559,7 +558,7 @@ input[type=checkbox] {
 }
 .shift-thuis {
     background: #cfcfcf;
-    color: rgba(41, 41, 41, 0.63);
+    color: rgb(0, 0, 0);
 }
 .shift-deeltijds {
     background: #af0d0d;

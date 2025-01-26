@@ -208,9 +208,9 @@ export function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
 };
 
-export function saveSettingsToLocalStorage(key, value) {
+export function initializeSettingsToLocalStorage(key, defaultValue) {
     if(localStorage.getItem(key) === null) {
-        localStorage.setItem(key, JSON.stringify(value()));
+        localStorage.setItem(key, JSON.stringify(defaultValue()));
     } else {
         const today = new Date();
         const currentMonth = today.getMonth();
