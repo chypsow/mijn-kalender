@@ -43,7 +43,7 @@
 }
 .cell {
     cursor: default;
-    background-color: #ececec;
+    background-color: #efefef;
     color: #000;
     border: 2px solid #ffffff;
     /*border-radius: 4px;*/
@@ -249,7 +249,7 @@
     background-color: #F4A54E;
 }
 .x {
-    background: #cfcfcf;
+    background: #c9c9c9;
     color: rgba(41, 41, 41, 0.63);
 }
 .OPL {
