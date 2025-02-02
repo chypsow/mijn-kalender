@@ -2,7 +2,7 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, initializeSettingsToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, saveToSessionStorage, resetDefaultSettings, adjustLayout } from './functies.js';
+import { toggleModal, initializeSettingsToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, saveToSessionStorage, resetDefaultSettings, adjustLayout, opgenomenVerlofAanpassenVolgensImportedData } from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 
 // default settings
@@ -290,6 +290,7 @@ DOM.ploeg.addEventListener('change', (event) => {
 DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 document.addEventListener("click", (event) => {
+    console.log("click event is geladen!");
     /*if (!DOM.dropdowns.contains(event.target) && event.target !== DOM.monthYear && event.target !== DOM.instellingen) {
         DOM.monthYear.style.color = '';
         DOM.selectOverlay.style.display = 'none';
@@ -312,7 +313,17 @@ document.addEventListener("click", (event) => {
     event.target.classList.add('highlight');
     saveToSessionStorage("selectedCell", cellCoordinates);
 });
-
+document.addEventListener('keydown', (event) => {
+    //console.log("Toets ingedrukt:", event.key, "Ctrl:", event.ctrlKey, "Shift:", event.shiftKey);
+    //console.log("keydown event is geladen!");
+    if (event.ctrlKey && event.altKey && event.key === "1") {
+        event.preventDefault(); // Voorkomt standaard browsergedrag
+        const userResponse = confirm(`Wilt u zeker data importeren en opslaan in local storage ?`);
+        if (!userResponse) return;
+        const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+        opgenomenVerlofAanpassenVolgensImportedData(selectedPloeg);
+    }
+}); 
 //window.addEventListener('resize', adjustLayout);
 //window.addEventListener('load', adjustLayout);
 document.addEventListener('DOMContentLoaded', () => {

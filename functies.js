@@ -3,6 +3,19 @@ import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
+import { data } from "./temp.js";
+
+export function opgenomenVerlofAanpassenVolgensImportedData(ploeg) {
+    const ploegKey = `verlofdagenPloeg${ploeg}`;
+    if (data.length === 0) {
+        alert(`Er werd geen data gevonden!`);
+        return;
+    }
+    opgenomenVerlofPerPloeg[ploegKey].length = 0;
+    opgenomenVerlofPerPloeg[ploegKey] = [...data];
+    saveToLocalStorage(localStoragePloegen[ploeg], opgenomenVerlofPerPloeg[ploegKey]);
+    location.reload(true); // of location.href = location.href;
+};
 
 export function verwijderVerlofDatum(ploeg, date) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
