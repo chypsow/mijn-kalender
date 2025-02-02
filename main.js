@@ -290,8 +290,7 @@ DOM.ploeg.addEventListener('change', (event) => {
 DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 document.addEventListener("click", (event) => {
-    console.log("click event is geladen!");
-    /*if (!DOM.dropdowns.contains(event.target) && event.target !== DOM.monthYear && event.target !== DOM.instellingen) {
+   /*if (!DOM.dropdowns.contains(event.target) && event.target !== DOM.monthYear && event.target !== DOM.instellingen) {
         DOM.monthYear.style.color = '';
         DOM.selectOverlay.style.display = 'none';
         DOM.dropdowns.classList.remove("visible");
