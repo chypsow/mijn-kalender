@@ -11,7 +11,18 @@ export function opgenomenVerlofAanpassenVolgensImportedData(ploeg) {
         alert(`Er werd geen data gevonden!`);
         return;
     }
-    opgenomenVerlofPerPloeg[ploegKey].length = 0;
+    /*const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const myArray = opgenomenVerlofPerPloeg[ploegKey];
+    const filteredArray = myArray.filter(obj => {
+        const year = parseInt(obj.datum.split("/")[2]);
+        return year !== currentYear;
+    });
+    const filteredData = data.filter(obj => {
+        const year = parseInt(obj.datum.split("/")[2]);
+        return year === currentYear;
+    });
+    opgenomenVerlofPerPloeg[ploegKey] = [...filteredData, ...filteredArray];*/
     opgenomenVerlofPerPloeg[ploegKey] = [...data];
     saveToLocalStorage(localStoragePloegen[ploeg], opgenomenVerlofPerPloeg[ploegKey]);
     location.reload(true); // of location.href = location.href;

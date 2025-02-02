@@ -237,4 +237,4 @@ export function adjustLayout() {
       "datum": "22/4/2025",
       "soort": "BV"
     }
-];
+  ];
