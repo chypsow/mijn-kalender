@@ -38,7 +38,7 @@ export function updateYearCalendarGrid() {
         const shift = shiftPattern[shiftIndex];
         const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
         myDay.classList.add(shiftClass);
-        if(vandaag.toLocaleDateString() === currentDate.toLocaleDateString()) myDay.classList.add("vandaag");
+        if(vandaag.toLocaleDateString("nl-BE") === currentDate.toLocaleDateString("nl-BE")) myDay.classList.add("vandaag");
       }
     }
     const remainingCells = totalCells - (firstDay + 6) % 7 - daysInMonth;
@@ -108,7 +108,7 @@ export function generateYearCalendar(year) {
         const shift = shiftPattern[shiftIndex];
         const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
         dayCell.classList.add(shiftClass);
-        if(vandaag.toLocaleDateString() === currentDate.toLocaleDateString()) dayCell.classList.add("vandaag");
+        if(vandaag.toLocaleDateString("nl-BE") === currentDate.toLocaleDateString("nl-BE")) dayCell.classList.add("vandaag");
       }
       calendarGrid.appendChild(dayCell);
     }

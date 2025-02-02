@@ -39,7 +39,7 @@ export function updateMonthCalendar() {
           const shift = shiftPattern[shiftIndex];
           const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
           myDay.classList.add(shiftClass);
-          if(vandaag.toLocaleDateString() === currentDate.toLocaleDateString()) myDay.classList.add("vandaag");
+          if(vandaag.toLocaleDateString("nl-BE") === currentDate.toLocaleDateString("nl-BE")) myDay.classList.add("vandaag");
         }
     }
     const remainingCells = totalCells - firstDayMondayBased - daysInMonth;
@@ -96,7 +96,7 @@ export function generateMonthCalendar(month, year) {
             const shiftClass = `shift-${getNaamBijSymbool(ploegenGegevens, shift)}`;
             // Voeg de dag en shift toe aan de cel
             cell.classList.add(shiftClass); // Voeg de juiste kleur toe
-            if(vandaag.toLocaleDateString() === currentDate.toLocaleDateString()) cell.classList.add("vandaag");
+            if(vandaag.toLocaleDateString("nl-BE") === currentDate.toLocaleDateString("nl-BE")) cell.classList.add("vandaag");
         }
         calendar.appendChild(cell);
     }

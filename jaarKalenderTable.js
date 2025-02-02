@@ -8,7 +8,7 @@ export function updateYearCalendarTable() {
   const selectedPloeg = setting.selectedPloeg;
   const year = setting.currentYear;
   DOM.monthYear.textContent = year;
-  const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
+  const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;
   if(geselecteerd) selectActief = true;
@@ -27,7 +27,7 @@ export function updateYearCalendarTable() {
         if (currentDate.getMonth() === index-1) {
           shiftenInvullen(day, currentDate, holidays, selectedPloeg, cyclus);
           if(selectActief) {
-            if(currentDate.toLocaleDateString() === geselecteerd.datum && 
+            if(currentDate.toLocaleDateString("nl-BE") === geselecteerd.datum && 
               selectedPloeg === geselecteerd.team) {
               selectActief === false;
               day.classList.add('highlight');
@@ -46,7 +46,7 @@ export function generateYearCalendarTable(year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
   const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-  const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
+  const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;
   if(geselecteerd) selectActief = true;
@@ -88,7 +88,7 @@ export function generateYearCalendarTable(year) {
       if (currentDate.getMonth() === month) {
         shiftenInvullen(dayCell, currentDate, holidays, selectedPloeg, cyclus);
         if(selectActief) {
-          if(currentDate.toLocaleDateString() === geselecteerd.datum && 
+          if(currentDate.toLocaleDateString("nl-BE") === geselecteerd.datum && 
             selectedPloeg === geselecteerd.team) {
             selectActief === false;
             dayCell.classList.add('highlight');
@@ -108,7 +108,7 @@ function shiftenInvullen(elt, date, holidays, ploeg, cyclus) {
   const daysSinceStart = getDaysSinceStart(date, startDate);
   if (daysSinceStart < 0) return;
 
-  const myDate = date.toLocaleDateString();
+  const myDate = date.toLocaleDateString("nl-BE");
   const shiftIndex = daysSinceStart % cyclus;
   let shift = shiftPattern[shiftIndex];
   const isHoliday = holidays.includes(myDate);

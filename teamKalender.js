@@ -9,7 +9,7 @@ export function updateTeamCalendar() {
     const year = settings.currentYear;
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-    const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
+    const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
     const teamElementen = document.querySelectorAll('#calendar .team-row');
     const legeCellen = new Set();
     teamElementen.forEach((team, index) => {
@@ -23,7 +23,7 @@ export function updateTeamCalendar() {
                 if(currentDate.getMonth() === month) {
                     const daysSinceStart = getDaysSinceStart(currentDate, startDates[index]);
                     if(daysSinceStart >= 0) {
-                        const myDate = currentDate.toLocaleDateString();
+                        const myDate = currentDate.toLocaleDateString("nl-BE");
                         const shiftIndex = daysSinceStart % shiftPattern.length;
                         let shift = shiftPattern[shiftIndex];
                         if(shift === 'x') day.classList.add('shift-thuis');
@@ -53,7 +53,7 @@ export function generateTeamCalendar(month, year) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-    const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString());
+    const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
     // Header rij (1–31 voor de dagen van de maand)
     const headerRow = document.createElement("div");
     headerRow.classList.add("team-row");
@@ -94,7 +94,7 @@ export function generateTeamCalendar(month, year) {
                 // Bereken de ploeg
                 const daysSinceStart = getDaysSinceStart(currentDate, startDates[team]);
                 if(daysSinceStart >= 0) {
-                    const myDate = currentDate.toLocaleDateString();
+                    const myDate = currentDate.toLocaleDateString("nl-BE");
                     const shiftIndex = daysSinceStart % shiftPattern.length;
                     let shift = shiftPattern[shiftIndex];
                     if(shift === 'x') dayCell.classList.add('shift-thuis');

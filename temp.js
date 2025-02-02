@@ -26,15 +26,15 @@ export function adjustLayout() {
   
   export const data = [
       {
-        "datum": "06/06/2022",
+        "datum": "6/6/2022",
         "soort": "BF"
       },
       {
-        "datum": "15/08/2022",
+        "datum": "15/8/2022",
         "soort": "BF"
       },
       {
-        "datum": "01/01/2021",
+        "datum": "1/1/2021",
         "soort": "BF"
       },
       {
@@ -42,131 +42,131 @@ export function adjustLayout() {
         "soort": "BF"
       },
       {
-        "datum": "07/01/2025",
+        "datum": "7/1/2025",
         "soort": "ADV"
       },
       {
-        "datum": "14/01/2025",
+        "datum": "14/1/2025",
         "soort": "ADV"
       },
       {
-        "datum": "15/01/2025",
+        "datum": "15/1/2025",
         "soort": "OPL"
       },
       {
-        "datum": "24/01/2025",
+        "datum": "24/1/2025",
         "soort": "ADV"
       },
       {
-        "datum": "30/01/2025",
+        "datum": "3/1/2025",
         "soort": "x"
       },
       {
-        "datum": "31/01/2025",
+        "datum": "31/1/2025",
         "soort": "OPL"
       },
       {
-        "datum": "11/02/2025",
+        "datum": "11/2/2025",
         "soort": "OPL"
       },
       {
-        "datum": "28/02/2025",
+        "datum": "28/2/2025",
         "soort": "BV"
       },
       {
-        "datum": "29/03/2025",
+        "datum": "29/3/2025",
         "soort": "ADV"
       },
       {
-        "datum": "30/03/2025",
+        "datum": "30/3/2025",
         "soort": "ADV"
       },
       {
-        "datum": "26/03/2025",
+        "datum": "26/3/2025",
         "soort": "ADV"
       },
       {
-        "datum": "24/03/2025",
+        "datum": "24/3/2025",
         "soort": "BV"
       },
       {
-        "datum": "25/03/2025",
+        "datum": "25/3/2025",
         "soort": "BV"
       },
       {
-        "datum": "18/03/2025",
+        "datum": "18/3/2025",
         "soort": "BV"
       },
       {
-        "datum": "04/04/2025",
+        "datum": "4/4/2025",
         "soort": "BV"
       },
       {
-        "datum": "27/05/2025",
+        "datum": "27/5/2025",
         "soort": "BF"
       },
       {
-        "datum": "09/05/2025",
+        "datum": "9/5/2025",
         "soort": "BV"
       },
       {
-        "datum": "01/07/2025",
+        "datum": "1/7/2025",
         "soort": "BV"
       },
       {
-        "datum": "13/06/2025",
+        "datum": "13/6/2025",
         "soort": "BF"
       },
       {
-        "datum": "18/07/2025",
+        "datum": "18/7/2025",
         "soort": "ADV"
       },
       {
-        "datum": "05/08/2025",
+        "datum": "5/8/2025",
         "soort": "BV"
       },
       {
-        "datum": "11/08/2025",
+        "datum": "11/8/2025",
         "soort": "BV"
       },
       {
-        "datum": "12/08/2025",
+        "datum": "12/8/2025",
         "soort": "BV"
       },
       {
-        "datum": "13/08/2025",
+        "datum": "13/8/2025",
         "soort": "BV"
       },
       {
-        "datum": "16/08/2025",
+        "datum": "16/8/2025",
         "soort": "ADV"
       },
       {
-        "datum": "17/08/2025",
+        "datum": "17/8/2025",
         "soort": "ADV"
       },
       {
-        "datum": "22/08/2025",
+        "datum": "22/8/2025",
         "soort": "BF"
       },
       {
-        "datum": "21/08/2025",
+        "datum": "21/8/2025",
         "soort": "ADV"
       },
       {
-        "datum": "23/08/2025",
+        "datum": "23/8/2025",
         "soort": "ADV"
       },
       {
-        "datum": "24/08/2025",
+        "datum": "24/8/2025",
         "soort": "ADV"
       },
       {
-        "datum": "26/09/2025",
+        "datum": "26/9/2025",
         "soort": "ADV"
       },
       {
-        "datum": "09/09/2025",
+        "datum": "09/9/2025",
         "soort": "BV"
       },
       {
@@ -186,11 +186,11 @@ export function adjustLayout() {
         "soort": "BV"
       },
       {
-        "datum": "04/12/2025",
+        "datum": "4/12/2025",
         "soort": "BF"
       },
       {
-        "datum": "05/12/2025",
+        "datum": "5/12/2025",
         "soort": "BF"
       },
       {
@@ -206,31 +206,31 @@ export function adjustLayout() {
         "soort": "ADV"
       },
       {
-        "datum": "03/01/2025",
+        "datum": "3/1/2025",
         "soort": "ADV"
       },
       {
-        "datum": "21/01/2025",
+        "datum": "21/1/2025",
         "soort": "L"
       },
       {
-        "datum": "01/05/2029",
+        "datum": "1/5/2029",
         "soort": "BF"
       },
       {
-        "datum": "01/01/2030",
+        "datum": "1/1/2030",
         "soort": "BF"
       },
       {
-        "datum": "22/04/2025",
+        "datum": "22/4/2025",
         "soort": "OPL"
       },
       {
-        "datum": "21/07/2026",
+        "datum": "21/7/2026",
         "soort": "BF"
       },
       {
-        "datum": "17/02/2025",
+        "datum": "17/2/2025",
         "soort": "BV"
       }
     ]
