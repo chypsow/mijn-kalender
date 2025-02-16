@@ -3,7 +3,7 @@ import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
-import { data } from "./temp.js";
+import { data } from "./mijnVerlofdagen.js";
 
 export function opgenomenVerlofAanpassenVolgensImportedData(ploeg) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
@@ -11,18 +11,6 @@ export function opgenomenVerlofAanpassenVolgensImportedData(ploeg) {
         alert(`Er werd geen data gevonden!`);
         return;
     }
-    /*const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const myArray = opgenomenVerlofPerPloeg[ploegKey];
-    const filteredArray = myArray.filter(obj => {
-        const year = parseInt(obj.datum.split("/")[2]);
-        return year !== currentYear;
-    });
-    const filteredData = data.filter(obj => {
-        const year = parseInt(obj.datum.split("/")[2]);
-        return year === currentYear;
-    });
-    opgenomenVerlofPerPloeg[ploegKey] = [...filteredData, ...filteredArray];*/
     opgenomenVerlofPerPloeg[ploegKey] = [...data];
     saveToLocalStorage(localStoragePloegen[ploeg], opgenomenVerlofPerPloeg[ploegKey]);
     location.reload(true); // of location.href = location.href;
