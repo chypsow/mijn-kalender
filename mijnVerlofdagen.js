@@ -32,10 +32,6 @@ export const data = [
         "soort": "ADV"
     },
     {
-        "datum": "3/1/2025",
-        "soort": "ADV"
-    },
-    {
         "datum": "31/1/2025",
         "soort": "OPL"
     },
@@ -48,36 +44,16 @@ export const data = [
         "soort": "x"
     },
     {
-        "datum": "29/3/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "30/3/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "26/3/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "24/3/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "25/3/2025",
-        "soort": "BV"
-    },
-    {
         "datum": "18/3/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "27/5/2025",
         "soort": "BF"
     },
     {
+        "datum": "27/5/2025",
+        "soort": "OPL"
+    },
+    {
         "datum": "9/5/2025",
-        "soort": "BV"
+        "soort": "BF"
     },
     {
         "datum": "1/7/2025",
@@ -85,11 +61,11 @@ export const data = [
     },
     {
         "datum": "13/6/2025",
-        "soort": "BF"
+        "soort": "BV"
     },
     {
         "datum": "18/7/2025",
-        "soort": "BV"
+        "soort": "ADV"
     },
     {
         "datum": "5/8/2025",
@@ -117,7 +93,7 @@ export const data = [
     },
     {
         "datum": "22/8/2025",
-        "soort": "ADV"
+        "soort": "BF"
     },
     {
         "datum": "21/8/2025",
@@ -172,10 +148,6 @@ export const data = [
         "soort": "ADV"
     },
     {
-        "datum": "3/1/2025",
-        "soort": "ADV"
-    },
-    {
         "datum": "21/1/2025",
         "soort": "L"
     },
@@ -188,10 +160,6 @@ export const data = [
         "soort": "BF"
     },
     {
-        "datum": "21/7/2026",
-        "soort": "BF"
-    },
-    {
         "datum": "24/2/2025",
         "soort": "L"
     },
@@ -201,14 +169,50 @@ export const data = [
     },
     {
         "datum": "29/12/2025",
-        "soort": "BF"
+        "soort": "BV"
     },
     {
         "datum": "22/4/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "9/9/2025",
         "soort": "BV"
+    },
+    {
+        "datum": "21/7/2026",
+        "soort": "BF"
     },
     {
         "datum": "3/4/2025",
         "soort": "D"
+    },
+    {
+        "datum": "5/3/2025",
+        "soort": "V"
+    },
+    {
+        "datum": "6/3/2025",
+        "soort": "V"
+    },
+    {
+        "datum": "7/3/2025",
+        "soort": "V"
+    },
+    {
+        "datum": "1/3/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "30/10/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "30/4/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "3/1/2025",
+        "soort": "ADV"
     }
 ];
