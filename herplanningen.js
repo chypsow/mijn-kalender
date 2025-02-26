@@ -101,12 +101,12 @@ export function cancelAlleAanvragen() {
         return Array.from(cel.classList).some(className => verlofDagen.includes(className));
     });
     if (!bestaandeVerlof) return;
-
+    
     const userResponse = confirm(`Bent u zeker om alle dagen terug te stellen?
 
 Als u op OK drukt zullen alle verlofdagen en herplanningen verwijderd worden.`);
     if (!userResponse) return;
-
+   
     cellen.forEach(cel => {
         Array.from(cel.classList).forEach(className => {
             if (verlofDagen.includes(className)) {

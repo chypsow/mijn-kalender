@@ -50,8 +50,8 @@ export function maakKnoppen() {
         btn.id = knop[0];
         btn.classList.add('btnGreen');
         const icoon = document.createElement('i');
-        icoon.classList.add('fa');
-        icoon.classList.add(knop[1]);
+        icoon.classList.add('fa', knop[1]);
+        //icoon.classList.add(knop[1]);
         icoon.setAttribute('aria-hidden', 'true');
         icoon.textContent = ` ${knop[2]}`;
         btn.appendChild(icoon);

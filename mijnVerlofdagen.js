@@ -1,21 +1,5 @@
 export const data = [
     {
-        "datum": "6/6/2022",
-        "soort": "BF"
-    },
-    {
-        "datum": "15/8/2022",
-        "soort": "BF"
-    },
-    {
-        "datum": "1/1/2021",
-        "soort": "BF"
-    },
-    {
-        "datum": "11/11/2021",
-        "soort": "BF"
-    },
-    {
         "datum": "7/1/2025",
         "soort": "ADV"
     },
@@ -152,14 +136,6 @@ export const data = [
         "soort": "L"
     },
     {
-        "datum": "1/5/2029",
-        "soort": "BF"
-    },
-    {
-        "datum": "1/1/2030",
-        "soort": "BF"
-    },
-    {
         "datum": "24/2/2025",
         "soort": "L"
     },
@@ -178,10 +154,6 @@ export const data = [
     {
         "datum": "9/9/2025",
         "soort": "BV"
-    },
-    {
-        "datum": "21/7/2026",
-        "soort": "BF"
     },
     {
         "datum": "3/4/2025",

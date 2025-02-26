@@ -4,8 +4,13 @@ import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { data } from "./mijnVerlofdagen.js";
+import { dataBeginRecht, dataShift } from "./beginRechtEnDataShift.js";
 
 export function opgenomenVerlofAanpassenVolgensImportedData(ploeg) {
+    if(tabBlad !== 0) {
+        alert('Niet van toepassing!');
+        return;
+    }
     const ploegKey = `verlofdagenPloeg${ploeg}`;
     if (data.length === 0) {
         alert(`Er werd geen data gevonden!`);
@@ -13,6 +18,8 @@ export function opgenomenVerlofAanpassenVolgensImportedData(ploeg) {
     }
     opgenomenVerlofPerPloeg[ploegKey] = [...data];
     saveToLocalStorage(localStoragePloegen[ploeg], opgenomenVerlofPerPloeg[ploegKey]);
+    saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
+    saveToLocalStorage('shiftPattern', dataShift);
     location.reload(true); // of location.href = location.href;
 };
 
