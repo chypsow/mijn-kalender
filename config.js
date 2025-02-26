@@ -1,4 +1,51 @@
-export const data = [
+export const dataBeginRecht = {
+    "BV": 16,
+    "CS": 0,
+    "ADV": 17,
+    "BF": 6,
+    "AV": 1,
+    "HP": 0
+};
+
+export const dataShift = [
+    "N",
+    "N",
+    "N",
+    "x",
+    "x",
+    "V",
+    "V12",
+    "x",
+    "x",
+    "x",
+    "N",
+    "N",
+    "N",
+    "N12",
+    "x",
+    "x",
+    "L",
+    "L",
+    "L",
+    "L",
+    "x",
+    "V",
+    "V",
+    "V",
+    "V",
+    "V",
+    "x",
+    "x",
+    "x",
+    "D",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x"
+];
+
+export const dataVerlofdagen = [
     {
         "datum": "7/1/2025",
         "soort": "ADV"
