@@ -5,7 +5,7 @@ import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
 
-export function opgenomenVerlofAanpassenVolgensImportedData(ploeg) {
+export function opgenomenVerlofAanpassenVolgensConfigJS(ploeg) {
     saveToLocalStorage(localStoragePloegen[ploeg], dataVerlofdagen);
     saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
     saveToLocalStorage('shiftPattern', dataShift);

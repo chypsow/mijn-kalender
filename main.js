@@ -2,7 +2,7 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, initializeSettingsToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, saveToSessionStorage, resetDefaultSettings, adjustLayout, opgenomenVerlofAanpassenVolgensImportedData } from './functies.js';
+import { toggleModal, initializeSettingsToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, saveToSessionStorage, resetDefaultSettings, adjustLayout, opgenomenVerlofAanpassenVolgensConfigJS } from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 
 // default settings
@@ -312,15 +312,17 @@ document.addEventListener("click", (event) => {
     event.target.classList.add('highlight');
     saveToSessionStorage("selectedCell", cellCoordinates);
 });
+
+//local storage aanpassen volgens het bestand config.js
 document.addEventListener('keydown', (event) => {
     //console.log("Toets ingedrukt:", event.key, "Ctrl:", event.ctrlKey, "Shift:", event.shiftKey);
     //console.log("keydown event is geladen!");
     if (event.ctrlKey && event.altKey && event.key === "1") {
         event.preventDefault(); // Voorkomt standaard browsergedrag
-        const userResponse = confirm(`Wilt u zeker data importeren en opslaan in local storage ?`);
+        const userResponse = confirm(`Local storage wordt nu aangepast volgens config`);
         if (!userResponse) return;
         const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-        opgenomenVerlofAanpassenVolgensImportedData(selectedPloeg);
+        opgenomenVerlofAanpassenVolgensConfigJS(selectedPloeg);
     }
 }); 
 //window.addEventListener('resize', adjustLayout);
