@@ -6,17 +6,7 @@ import { makeModalVakanties } from "./makeModalVakanties.js";
 import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
 
 export function opgenomenVerlofAanpassenVolgensImportedData(ploeg) {
-    if(tabBlad !== 0) {
-        alert('Niet van toepassing!');
-        return;
-    }
-    const ploegKey = `verlofdagenPloeg${ploeg}`;
-    if (dataVerlofdagen.length === 0) {
-        alert(`Er werd geen data gevonden!`);
-        return;
-    }
-    opgenomenVerlofPerPloeg[ploegKey] = [...dataVerlofdagen];
-    saveToLocalStorage(localStoragePloegen[ploeg], opgenomenVerlofPerPloeg[ploegKey]);
+    saveToLocalStorage(localStoragePloegen[ploeg], dataVerlofdagen);
     saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
     saveToLocalStorage('shiftPattern', dataShift);
     location.reload(true); // of location.href = location.href;
