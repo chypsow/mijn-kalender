@@ -76,7 +76,7 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "18/3/2025",
-        "soort": "BF"
+        "soort": "OPL"
     },
     {
         "datum": "27/5/2025",
@@ -92,7 +92,7 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "13/6/2025",
-        "soort": "BV"
+        "soort": "ADV"
     },
     {
         "datum": "18/7/2025",
@@ -196,7 +196,7 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "22/4/2025",
-        "soort": "ADV"
+        "soort": "BF"
     },
     {
         "datum": "9/9/2025",

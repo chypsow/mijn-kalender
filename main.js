@@ -297,6 +297,10 @@ document.addEventListener("click", (event) => {
         DOM.monthSelect.classList.remove("visible");
         DOM.yearSelect.classList.remove("visible");
     }*/
+    if(DOM.modalOverlay.contains(event.target) && !DOM.modal.contains(event.target)) {
+        toggleModal(false);
+    }
+    
     if (tabBlad !== 0) return;
     const selected = event.target.dataset.shift;
     if(!selected) return;
