@@ -2,7 +2,7 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, initializeSettingsToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, saveToSessionStorage, resetDefaultSettings, adjustLayout, opgenomenVerlofAanpassenVolgensConfigJS } from './functies.js';
+import { toggleModal, initializeSettingsToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, saveToSessionStorage, resetDefaultSettings, adjustLayout, localStorageAanpassenVolgensConfigJS } from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 
 // default settings
@@ -323,12 +323,11 @@ document.addEventListener('keydown', (event) => {
     //console.log("keydown event is geladen!");
     if (event.ctrlKey && event.altKey && event.key === "1") {
         event.preventDefault(); // Voorkomt standaard browsergedrag
-        const userResponse = confirm(`Local storage wordt nu aangepast volgens config`);
+        const userResponse = confirm(`Local storage van ploeg 1 wordt nu aangepast volgens config`);
         if (!userResponse) return;
-        const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-        opgenomenVerlofAanpassenVolgensConfigJS(selectedPloeg);
+        localStorageAanpassenVolgensConfigJS(true, true, true);
     }
-}); 
+});
 //window.addEventListener('resize', adjustLayout);
 //window.addEventListener('load', adjustLayout);
 document.addEventListener('DOMContentLoaded', () => {

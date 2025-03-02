@@ -5,10 +5,10 @@ import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
 
-export function opgenomenVerlofAanpassenVolgensConfigJS(ploeg) {
-    saveToLocalStorage(localStoragePloegen[ploeg], dataVerlofdagen);
-    saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
-    saveToLocalStorage('shiftPattern', dataShift);
+export function localStorageAanpassenVolgensConfigJS(cond1, cond2, cond3) {
+    if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
+    if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
+    if(cond3) saveToLocalStorage('shiftPattern', dataShift);
     location.reload(true); // of location.href = location.href;
 };
 
