@@ -76,7 +76,7 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "18/3/2025",
-        "soort": "OPL"
+        "soort": "ADV"
     },
     {
         "datum": "27/5/2025",
@@ -124,7 +124,7 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "22/8/2025",
-        "soort": "BF"
+        "soort": "ADV"
     },
     {
         "datum": "21/8/2025",
@@ -140,7 +140,7 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "26/9/2025",
-        "soort": "ADV"
+        "soort": "BF"
     },
     {
         "datum": "14/10/2025",
@@ -167,14 +167,6 @@ export const dataVerlofdagen = [
         "soort": "BV"
     },
     {
-        "datum": "30/12/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "31/12/2025",
-        "soort": "ADV"
-    },
-    {
         "datum": "21/1/2025",
         "soort": "L"
     },
@@ -185,10 +177,6 @@ export const dataVerlofdagen = [
     {
         "datum": "30/1/2025",
         "soort": "x"
-    },
-    {
-        "datum": "29/12/2025",
-        "soort": "BV"
     },
     {
         "datum": "22/4/2025",
@@ -220,10 +208,6 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "30/10/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "30/4/2025",
         "soort": "ADV"
     },
     {
@@ -421,5 +405,61 @@ export const dataVerlofdagen = [
     {
         "datum": "21/7/2026",
         "soort": "BF"
+    },
+    {
+        "datum": "4/4/2025",
+        "soort": "L"
+    },
+    {
+        "datum": "5/4/2025",
+        "soort": "L"
+    },
+    {
+        "datum": "14/3/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "25/9/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "3/3/2026",
+        "soort": "BV"
+    },
+    {
+        "datum": "18/2/2026",
+        "soort": "ADV"
+    },
+    {
+        "datum": "19/2/2026",
+        "soort": "ADV"
+    },
+    {
+        "datum": "20/2/2026",
+        "soort": "ADV"
+    },
+    {
+        "datum": "21/2/2026",
+        "soort": "ADV"
+    },
+    {
+        "datum": "23/2/2026",
+        "soort": "BV"
+    },
+    {
+        "datum": "24/2/2026",
+        "soort": "BV"
+    },
+    {
+        "datum": "25/2/2026",
+        "soort": "BV"
+    },
+    {
+        "datum": "26/2/2026",
+        "soort": "BV"
+    },
+    {
+        "datum": "27/2/2026",
+        "soort": "BV"
     }
 ];
