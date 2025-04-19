@@ -40,12 +40,15 @@ export const berekenPaasdatum = (year) => {
 
 export const feestdagenLijstDatums = (year) => {
     const paasdatum = berekenPaasdatum(year);
+    const paasMaandag = new Date(paasdatum.setDate(paasdatum.getDate() + 1));
+    const hemelvaart = new Date(paasdatum.setDate(paasdatum.getDate() + 39));
+    const pinksterMaandag = new Date(paasdatum.setDate(paasdatum.getDate() + 10));
     return [
         new Date(year, 0, 1),
-        new Date(paasdatum.setDate(paasdatum.getDate() + 1)),
+        paasMaandag,
         new Date(year, 4, 1),
-        new Date(paasdatum.setDate(paasdatum.getDate() + 39)),
-        new Date(paasdatum.setDate(paasdatum.getDate() + 50)),
+        hemelvaart,
+        pinksterMaandag,
         new Date(year, 6, 21),
         new Date(year, 7, 15),
         new Date(year, 10, 1),

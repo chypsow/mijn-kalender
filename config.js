@@ -84,19 +84,11 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "9/5/2025",
-        "soort": "BF"
+        "soort": "BV"
     },
     {
         "datum": "1/7/2025",
         "soort": "BV"
-    },
-    {
-        "datum": "13/6/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "18/7/2025",
-        "soort": "ADV"
     },
     {
         "datum": "5/8/2025",
@@ -140,7 +132,7 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "26/9/2025",
-        "soort": "BF"
+        "soort": "ADV"
     },
     {
         "datum": "14/10/2025",
@@ -420,7 +412,7 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "25/9/2025",
-        "soort": "ADV"
+        "soort": "BF"
     },
     {
         "datum": "3/3/2026",
@@ -461,5 +453,21 @@ export const dataVerlofdagen = [
     {
         "datum": "27/2/2026",
         "soort": "BV"
+    },
+    {
+        "datum": "8/5/2025",
+        "soort": "BF"
+    },
+    {
+        "datum": "18/4/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "18/7/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "13/6/2025",
+        "soort": "ADV"
     }
 ];
