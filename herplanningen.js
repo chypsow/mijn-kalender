@@ -94,6 +94,7 @@ export function cancelAanvraag() {
 
 export function cancelAlleAanvragen() {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
     const verlofDagen = ['BV','CS','ADV','BF','AV','HP','Z','hp'];
     const cellen = DOM.calendar.querySelectorAll('.cell');
 
@@ -102,9 +103,9 @@ export function cancelAlleAanvragen() {
     });
     if (!bestaandeVerlof) return;
     
-    const userResponse = confirm(`Bent u zeker om alle dagen terug te stellen?
-
-Als u op OK drukt zullen alle verlofdagen en herplanningen verwijderd worden.`);
+    const userResponse = confirm(`
+Als u op OK drukt zullen alle verlofdagen alsook herplanningen van het jaar ${currentYear} verwijderd worden.
+    `);
     if (!userResponse) return;
    
     cellen.forEach(cel => {
