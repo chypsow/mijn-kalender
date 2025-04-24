@@ -180,7 +180,7 @@ const calendarGenerators = {
         DOM.verlofLegende.style.display = 'none';
         DOM.titel.textContent = 'Maandkalender';
         DOM.container.className = 'month-container';
-        DOM.calendar.className = 'calendar';
+        DOM.calendar.className = 'month-calendar';
         generateMonthCalendar(month, year);
     },
     3: (month, year) => {
@@ -330,6 +330,17 @@ document.addEventListener('keydown', (event) => {
 });
 //window.addEventListener('resize', adjustLayout);
 //window.addEventListener('load', adjustLayout);
+document.getElementById('bars').addEventListener('click', () => {
+    const isToe = document.querySelector('.side-bar').classList.contains('close');
+    if (isToe) {
+        document.querySelector('.side-bar').classList.remove('close');
+        document.querySelector('.hoofd-container').classList.remove('volleScherm');
+    } else {
+        document.querySelector('.side-bar').classList.add('close');
+        document.querySelector('.hoofd-container').classList.add('volleScherm');
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     initializeSettingsToLocalStorage('standaardInstellingen', defaultSettings);
     savePloegenToLocalStorage();

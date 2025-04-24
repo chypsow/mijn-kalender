@@ -9,12 +9,34 @@ body {
     background-attachment:fixed;
     
 }
+.bars {
+    position: absolute;
+    top: 10px;
+    left: 30px;
+    font-size: 30px;
+    color: #bbbbbb;
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+}
+.fa-bars:hover {
+    cursor: pointer;
+    color: #dddddd;
+}
 .side-bar {
     width: 15%;
     height: 100vh;
     background-color: #242424;
     color: rgb(194, 194, 194);
     box-sizing: border-box;
+    white-space: nowrap;
+    transition: width 0.3s ease-in-out;
+    overflow: hidden;
+    
+}
+.side-bar.close {
+    width: 0;
+    overflow: hidden;
+    /*transition: width 0.3s;*/
 }
 .side-bar a {
     display: block;
@@ -34,6 +56,10 @@ body {
     padding: 20px;
     box-sizing: border-box;
     position: relative;
+    transition: width 0.3s ease-in-out;
+}
+.hoofd-container.volleScherm {
+    width: 100%;
 }
 .top {
     position: relative;
@@ -235,6 +261,7 @@ section {
     font-size: 22px;
     padding: 10px;
     outline: none;
+    white-space: nowrap;
     /*background: linear-gradient(360deg,#022124 10%,#efefef 360%);*/
     color: #aaaaaa;
     /*transition: all 0.20s ease-in-out;*/
