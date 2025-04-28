@@ -9,21 +9,22 @@ body {
     background-attachment:fixed;
     
 }
-.bars {
+
+.chevron {
     position: absolute;
-    top: 10px;
+    top: 20px;
     left: 30px;
     font-size: 30px;
     color: #bbbbbb;
     transition: all 0.3s ease-in-out;
     z-index: 1000;
 }
-.fa-bars:hover {
+.chevron:hover {
     cursor: pointer;
     color: #dddddd;
 }
 .side-bar {
-    width: 15%;
+    width: 13%;
     height: 100vh;
     background-color: #242424;
     color: rgb(194, 194, 194);
@@ -52,7 +53,8 @@ body {
   background-color: #066470;
 }
 .hoofd-container {
-    width: 85%;
+    width: 87%;
+    margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
     position: relative;

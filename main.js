@@ -330,14 +330,18 @@ document.addEventListener('keydown', (event) => {
 });
 //window.addEventListener('resize', adjustLayout);
 //window.addEventListener('load', adjustLayout);
-document.getElementById('bars').addEventListener('click', () => {
+document.getElementById('chevron').addEventListener('click', () => {
     const isToe = document.querySelector('.side-bar').classList.contains('close');
     if (isToe) {
         document.querySelector('.side-bar').classList.remove('close');
-        document.querySelector('.hoofd-container').classList.remove('volleScherm');
+        document.getElementById('chevron').classList.remove('fa-chevron-right');
+        document.getElementById('chevron').classList.add('fa-chevron-left');
+        //document.querySelector('.hoofd-container').classList.remove('volleScherm');
     } else {
         document.querySelector('.side-bar').classList.add('close');
-        document.querySelector('.hoofd-container').classList.add('volleScherm');
+        document.getElementById('chevron').classList.remove('fa-chevron-left');
+        document.getElementById('chevron').classList.add('fa-chevron-right');
+        //document.querySelector('.hoofd-container').classList.add('volleScherm');
     }
 });
 
