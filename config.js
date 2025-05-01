@@ -469,5 +469,9 @@ export const dataVerlofdagen = [
     {
         "datum": "13/6/2025",
         "soort": "ADV"
+    },
+    {
+        "datum": "30/4/2025",
+        "soort": "BV"
     }
 ];
