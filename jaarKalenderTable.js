@@ -13,6 +13,8 @@ export function updateYearCalendarTable() {
   let selectActief = false;
   if(geselecteerd) selectActief = true;
   const cyclus = shiftPattern.length;
+  const vandaag = new Date();
+  const today = vandaag.toLocaleDateString("nl-BE");
   const monthElementen = document.querySelectorAll('#calendar .row');
   monthElementen.forEach((month, index) => {
     const dayElementen = month.querySelectorAll('.cell');
@@ -33,6 +35,9 @@ export function updateYearCalendarTable() {
               day.classList.add('highlight');
             }
           }
+          if (today === currentDate.toLocaleDateString("nl-BE")) {
+            day.classList.add("today");
+          }
         } else {
           day.classList.add('emptyDay');
         }
@@ -51,6 +56,8 @@ export function generateYearCalendarTable(year) {
   let selectActief = false;
   if(geselecteerd) selectActief = true;
   const cyclus = shiftPattern.length;
+  const vandaag = new Date();
+  const today = vandaag.toLocaleDateString("nl-BE");
   // Header rij (1–31 voor de dagen van de maand)
   const headerRow = document.createElement("div");
   headerRow.classList.add("row");
@@ -93,6 +100,9 @@ export function generateYearCalendarTable(year) {
             selectActief === false;
             dayCell.classList.add('highlight');
           }
+        }
+        if (today === currentDate.toLocaleDateString("nl-BE")) {
+          dayCell.classList.add("today");
         }
       } else {
         dayCell.classList.add("emptyDay");
