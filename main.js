@@ -335,16 +335,16 @@ document.addEventListener('keydown', (event) => {
 });
 //window.addEventListener('resize', adjustLayout);
 //window.addEventListener('load', adjustLayout);
-document.getElementById('chevron').addEventListener('click', () => {
-    const isToe = document.querySelector('.side-bar').classList.contains('close');
-    if (isToe) {
+document.getElementById('bars').addEventListener('click', () => {
+    const isClosed = document.querySelector('.side-bar').classList.contains('close');
+    if (isClosed) {
         document.querySelector('.side-bar').classList.remove('close');
-        document.getElementById('chevron').classList.remove('fa-chevron-right');
-        document.getElementById('chevron').classList.add('fa-chevron-left');
+        //document.getElementById('chevron').classList.remove('fa-chevron-right');
+        //document.getElementById('chevron').classList.add('fa-chevron-left');
     } else {
         document.querySelector('.side-bar').classList.add('close');
-        document.getElementById('chevron').classList.remove('fa-chevron-left');
-        document.getElementById('chevron').classList.add('fa-chevron-right');
+        //document.getElementById('chevron').classList.remove('fa-chevron-left');
+        //document.getElementById('chevron').classList.add('fa-chevron-right');
     }
 });
 
