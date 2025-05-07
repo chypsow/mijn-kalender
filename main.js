@@ -254,23 +254,14 @@ function triggerNext() {
 };
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
 
-/*DOM.monthYear.addEventListener("click", () => {
-    DOM.monthYear.style.color = 'transparent';
-    //const rect = DOM.monthYear.getBoundingClientRect();
-    //DOM.dropdowns.style.top = `${rect.top + window.scrollY - 10}px`;
-    //DOM.dropdowns.style.left = `${rect.left + window.scrollX + Math.round(rect.width/2 - DOM.dropdowns.style.width/2)}px`;
-    //DOM.dropdowns.style.top = DOM.monthYear.style.top;
-    //DOM.dropdowns.style.left = DOM.monthYear.style.left;
-    DOM.selectOverlay.style.display = 'block';
-    maakDropdowns();
-    DOM.dropdowns.classList.toggle("visible");
-    if(tabBlad === 2 || tabBlad === 3) {
-        DOM.monthSelect.classList.toggle("visible");
-        //DOM.monthSelect.click();
-    }
-    DOM.yearSelect.classList.toggle('visible');
-    //DOM.yearSelect.click();
-});*/
+DOM.ploeg.addEventListener('change', (event) => {
+    const selectedPloeg = Number(event.target.value); 
+    //startDate = startDates[selectedPloeg];
+    updateLocalStorage('standaardInstellingen', tabBlad,'ploeg', selectedPloeg, defaultSettings);
+    updateCalendar();
+});
+DOM.prev.addEventListener("click", triggerPrev);
+DOM.next.addEventListener("click", triggerNext);
 DOM.monthSelect.addEventListener("change", (event) => {
     const currentMonth = parseInt(event.target.value, 10);
     updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, defaultSettings);
@@ -280,23 +271,37 @@ DOM.yearSelect.addEventListener("change", (event) => {
     const currentYear = parseInt(event.target.value, 10);
     updateLocalStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
     updateCalendar();
+    /*DOM.monthYear.style.color = '';
+    DOM.selectOverlay.style.display = 'none';
+    DOM.dropdowns.classList.remove("visible");
+    DOM.monthSelect.classList.remove("visible");
+    DOM.yearSelect.classList.remove("visible");*/
 });
-DOM.ploeg.addEventListener('change', (event) => {
-    const selectedPloeg = Number(event.target.value); 
-    //startDate = startDates[selectedPloeg];
-    updateLocalStorage('standaardInstellingen', tabBlad,'ploeg', selectedPloeg, defaultSettings);
-    updateCalendar();
+DOM.monthYear.addEventListener("click", () => {
+    DOM.monthYear.style.color = 'transparent';
+    const rect = DOM.monthYear.getBoundingClientRect();
+    DOM.dropdowns.style.top = `${rect.top + window.scrollY - 10}px`;
+    DOM.dropdowns.style.left = `${rect.left + window.scrollX + Math.round(rect.width/2 - DOM.dropdowns.style.width/2)}px`;
+    //DOM.dropdowns.style.top = DOM.monthYear.style.top;
+    //DOM.dropdowns.style.left = DOM.monthYear.style.left;
+    DOM.selectOverlay.style.display = 'block';
+    maakDropdowns();
+    DOM.dropdowns.classList.toggle("visible");
+    if(tabBlad === 2 || tabBlad === 3) {
+        DOM.monthSelect.classList.toggle("visible");
+    }
+    DOM.yearSelect.classList.toggle('visible');
 });
-DOM.prev.addEventListener("click", triggerPrev);
-DOM.next.addEventListener("click", triggerNext);
+
 document.addEventListener("click", (event) => {
-   /*if (!DOM.dropdowns.contains(event.target) && event.target !== DOM.monthYear && event.target !== DOM.instellingen) {
+    //console.log("Klik gedetecteerd:", event.target);
+   if (DOM.selectOverlay.contains(event.target) && event.target !== DOM.yearSelect && event.target !== DOM.monthSelect) {
         DOM.monthYear.style.color = '';
         DOM.selectOverlay.style.display = 'none';
         DOM.dropdowns.classList.remove("visible");
         DOM.monthSelect.classList.remove("visible");
         DOM.yearSelect.classList.remove("visible");
-    }*/
+    }
     if(DOM.modalOverlay.contains(event.target) && !DOM.modal.contains(event.target)) {
         toggleModal(false);
     }

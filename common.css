@@ -15,7 +15,7 @@ body {
     font-size: 30px;
     color: #bbbbbb;
     transition: all 0.3s ease-in-out;
-    z-index: 1000;
+    z-index: 2;
 }
 .chevron:hover {
     cursor: pointer;
@@ -109,6 +109,17 @@ section {
 }
 .fa {
     padding: 0 10px;
+}
+.select-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 3;
+    /*transition: opacity 0.3s ease-in-out;*/
 }
 .month-year {
     min-width: 280px;
@@ -386,17 +397,6 @@ input[type=checkbox] {
 #overlay label {
     display: block;
 }
-.select-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 1;
-    /*transition: opacity 0.3s ease-in-out;*/
-}
 .modal-overlay {
     display: none;
     position: fixed;
@@ -494,6 +494,10 @@ input[type=checkbox] {
         justify-self: center;
         font-family:monospace;
         color: rgb(77, 77, 77);   
+    }
+    .year-container-grid,
+    .month-container {
+        margin: 0 auto;
     }
     .month-year {
         position: absolute;

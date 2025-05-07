@@ -125,7 +125,16 @@ export function maakDropdowns() {
         DOM.monthSelect.appendChild(option);
     });
     DOM.yearSelect.innerHTML = "";
-    for (let year = 2010; year <= 2040; year++) {
+    //const currentDate = new Date();
+    const huidigJaar = new Date().getFullYear();
+    const opt = document.createElement("option");
+    opt.value = huidigJaar; 
+    opt.textContent = huidigJaar; //"dit jaar : " +
+    opt.style.color = '#999';
+    opt.style.fontWeight = 'bold';
+    //opt.selected = true;
+    DOM.yearSelect.appendChild(opt);
+    for (let year = currentYear - 15; year <= currentYear + 15; year++) {
         const option = document.createElement("option");
         option.value = year;
         option.textContent = year;
