@@ -407,7 +407,7 @@ input[type=checkbox] {
     height: 100%;
     background: rgba(0,0,0,0.5);
     opacity: 0;
-    z-index: 1;
+    z-index: 3;
     transition: opacity 0.3s ease-in-out;
 }
 .modal-overlay.open {
@@ -429,7 +429,7 @@ input[type=checkbox] {
     box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
     border-radius: 7px;
     border: 4px solid #353535;
-    z-index: 2;
+    z-index: 4;
     transform: translate(-50%, -50%) scale(0); /* Start klein, gecentreerd */
     animation: zoom 0.3s forwards; /* Gebruik forwards om animatie op het einde te bewaren */
 }
@@ -501,10 +501,10 @@ input[type=checkbox] {
         margin: 0 auto;
     }
     .month-year {
-        position: absolute;
+        /*position: absolute;
         left: 50%;
-        transform: translateX(-50px);
-        justify-self: center;
+        transform: translateX(-50px);*/
+        /*justify-self: center;*/
         color: black;
     }
     #calendar {
