@@ -112,12 +112,13 @@ export const DOM = {
     dropdowns: document.getElementById("dropdowns"),
     topNav: document.getElementById("top-nav"),
     container: document.getElementById('container'),
-    verlofContainer: document.getElementById('verlof-container'),
+    middenSectie1: document.getElementById('midden-sectie1'),
+    middenSectie2: document.getElementById('midden-sectie2'),
     ploeg: document.getElementById('ploeg'),
     titel: document.getElementById('titel'),
     buttonContainer: document.getElementById('buttonContainer'),
-    ploegenLegende: document.getElementById('ploegenLegende'),
-    verlofLegende: document.getElementById('verlofLegende'),
+    //ploegenLegende: document.getElementById('ploegenLegende'),
+    //verlofLegende: document.getElementById('verlofLegende'),
     calendar: document.getElementById('calendar'),
     modalOverlay: document.getElementById("modal-overlay"),
     modal: document.getElementById("modal"),
@@ -152,10 +153,10 @@ export function generateCalendar() {
 const calendarGenerators = {
     0: (year) => {
         DOM.ploeg.hidden = false;
-        //DOM.buttonContainer.children[4].style.display = '';
-        DOM.verlofContainer.style.display = '';
-        DOM.ploegenLegende.style.display = 'none';
-        DOM.verlofLegende.style.display = '';
+        DOM.middenSectie1.innerHTML = '';
+        DOM.middenSectie2.innerHTML = '';
+        maakVerlofContainer();
+        maakVerlofLegende();
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-table';
         DOM.calendar.className = 'year-calendar-table';
@@ -163,10 +164,9 @@ const calendarGenerators = {
     },
     1: (year) => {
         DOM.ploeg.hidden = false;
-        //DOM.buttonContainer.children[4].style.display = 'none';
-        DOM.verlofContainer.style.display = 'none';
-        DOM.ploegenLegende.style.display = '';
-        DOM.verlofLegende.style.display = 'none';
+        DOM.middenSectie1.innerHTML = '';
+        DOM.middenSectie2.innerHTML = '';
+        maakPloegenLegende();
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-grid';
         DOM.calendar.className = 'year-calendar-grid';
@@ -174,10 +174,9 @@ const calendarGenerators = {
     },
     2: (month, year) => {
         DOM.ploeg.hidden = false;
-        //DOM.buttonContainer.children[4].style.display = 'none';
-        DOM.verlofContainer.style.display = 'none';
-        DOM.ploegenLegende.style.display = '';
-        DOM.verlofLegende.style.display = 'none';
+        DOM.middenSectie1.innerHTML = '';
+        DOM.middenSectie2.innerHTML = '';
+        maakPloegenLegende();
         DOM.titel.textContent = 'Maandkalender';
         DOM.container.className = 'month-container';
         DOM.calendar.className = 'month-calendar';
@@ -185,10 +184,8 @@ const calendarGenerators = {
     },
     3: (month, year) => {
         DOM.ploeg.hidden = true;
-        //DOM.buttonContainer.children[4].style.display = 'none';
-        DOM.verlofContainer.style.display = 'none';
-        DOM.ploegenLegende.style.display = 'none';
-        DOM.verlofLegende.style.display = 'none';
+        DOM.middenSectie1.innerHTML = '';
+        DOM.middenSectie2.innerHTML = '';
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';
@@ -354,9 +351,9 @@ document.addEventListener('DOMContentLoaded', () => {
     maakSidebar();
     maakPloegDropdown();
     maakKnoppen();
-    maakPloegenLegende();
-    maakVerlofLegende();
-    maakVerlofContainer();
+    //maakPloegenLegende();
+    //maakVerlofContainer();
+    //maakVerlofLegende();
     generateCalendar();
 });
 

@@ -110,9 +110,9 @@ function afdrukVoorbereiding() {
     const afdrukken = document.getElementById("printPreview");
     afdrukken.innerHTML='';
     if(tabBlad === 1 || tabBlad === 2) {
-        DOM.ploegenLegende.classList.remove('no-print');
+        DOM.middenSectie2.classList.remove('no-print');
     } else {
-        DOM.ploegenLegende.classList.add('no-print');
+        DOM.middenSectie2.classList.add('no-print');
     }
     const lijst = document.createElement('ul');
     lijst.classList.add('print-header');

@@ -61,6 +61,9 @@ export function maakKnoppen() {
 };
 
 export function maakPloegenLegende() {
+    const ploegenLegende = document.createElement('div');
+    ploegenLegende.classList.add('ploegenLegende-container');
+    ploegenLegende.classList.add('hidden-on-small');
     let mijnData = [...ploegenGegevens];
     //mijnData.splice(2, 1);
     //console.log(mijnData);
@@ -82,70 +85,16 @@ export function maakPloegenLegende() {
     legendeItem.appendChild(beschrijving);
 
 
-    DOM.ploegenLegende.appendChild(legendeItem);
+    ploegenLegende.appendChild(legendeItem);
     });
-};
-
-export function maakVerlofLegende() {
-    const verlofBeschrijving = {'BV': 'Betaald verlof', 'CS':'Compensatieshift', 'ADV':'Arbeidsduurvermindering',
-        'BF':'Betaalde feestdag', 'AV':'Ancieniteitsverlof','HP':'Recup-herplanning', 'Z':'Ziek', 'OPL':'Opleiding/herplanning'};
-    Object.entries(verlofBeschrijving).forEach(([kort, lang]) => {
-    const legendeItem = document.createElement('div');
-    legendeItem.classList.add('verlofLegende-item');
-    
-    const kleurVak = document.createElement('span');
-    kleurVak.classList.add('verlofLegende-vak');
-    kleurVak.textContent = kort;
-    kleurVak.classList.add(kort);
-    legendeItem.appendChild(kleurVak);
-
-    const beschrijving = document.createElement('span');
-    beschrijving.textContent = lang;
-    legendeItem.appendChild(beschrijving);
-
-    DOM.verlofLegende.appendChild(legendeItem);
-    });
-};
-
-export function maakDropdowns() {
-    let currentMonth = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentMonth;
-    let currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear
-    const months = [
-        "januari", "februari", "maart", "april", "mei", "juni",
-        "juli", "augustus", "september", "oktober", "november", "december"
-    ];
-
-    DOM.monthSelect.innerHTML = "";
-    months.forEach((month, index) => {
-        const option = document.createElement("option");
-        option.value = index;
-        option.textContent = month;
-        option.style.color = 'black';
-        if (index === currentMonth) option.selected = true;
-        DOM.monthSelect.appendChild(option);
-    });
-    DOM.yearSelect.innerHTML = "";
-    //const currentDate = new Date();
-    const huidigJaar = new Date().getFullYear();
-    const opt = document.createElement("option");
-    opt.value = huidigJaar; 
-    opt.textContent = huidigJaar; //"dit jaar : " +
-    opt.style.color = '#999';
-    opt.style.fontWeight = 'bold';
-    //opt.selected = true;
-    DOM.yearSelect.appendChild(opt);
-    for (let year = currentYear - 15; year <= currentYear + 15; year++) {
-        const option = document.createElement("option");
-        option.value = year;
-        option.textContent = year;
-        option.style.color = 'black';
-        if (year === currentYear) option.selected = true;
-        DOM.yearSelect.appendChild(option);
-    }
+    DOM.middenSectie2.appendChild(ploegenLegende);
 };
 
 export function maakVerlofContainer() {
-    
+    const verlofContainer = document.createElement('div');
+    verlofContainer.classList.add('verlof-container');
+    verlofContainer.classList.add('hidden-on-small');
+
     const container = document.createElement('div');
     container.classList.add('verlof-inhoud');
     const legeCel1 = document.createElement('div');
@@ -214,7 +163,7 @@ export function maakVerlofContainer() {
     totaal2.appendChild(span2);
     container.appendChild(totaal2);
 
-    DOM.verlofContainer.appendChild(container);
+    verlofContainer.appendChild(container);
 
     const btnContainer = document.createElement('div');
     btnContainer.classList.add('btn-container');
@@ -237,5 +186,70 @@ export function maakVerlofContainer() {
     restoreAll.classList.add('restore');
     btnContainer.appendChild(restoreAll);
 
-    DOM.verlofContainer.appendChild(btnContainer);
+    verlofContainer.appendChild(btnContainer);
+    DOM.middenSectie1.appendChild(verlofContainer);
 };
+
+export function maakVerlofLegende() {
+    const legende = document.createElement('div');
+    legende.classList.add('verlofLegende-container');
+    legende.classList.add('hidden-on-small');
+
+    const verlofBeschrijving = {'BV': 'Betaald verlof', 'CS':'Compensatieshift', 'ADV':'Arbeidsduurvermindering',
+        'BF':'Betaalde feestdag', 'AV':'Ancieniteitsverlof','HP':'Recup-herplanning', 'Z':'Ziek', 'OPL':'Opleiding/herplanning'};
+    Object.entries(verlofBeschrijving).forEach(([kort, lang]) => {
+    const legendeItem = document.createElement('div');
+    legendeItem.classList.add('verlofLegende-item');
+    
+    const kleurVak = document.createElement('span');
+    kleurVak.classList.add('verlofLegende-vak');
+    kleurVak.textContent = kort;
+    kleurVak.classList.add(kort);
+    legendeItem.appendChild(kleurVak);
+
+    const beschrijving = document.createElement('span');
+    beschrijving.textContent = lang;
+    legendeItem.appendChild(beschrijving);
+
+    legende.appendChild(legendeItem);
+    });
+    DOM.middenSectie2.appendChild(legende);
+};
+
+export function maakDropdowns() {
+    let currentMonth = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentMonth;
+    let currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear
+    const months = [
+        "januari", "februari", "maart", "april", "mei", "juni",
+        "juli", "augustus", "september", "oktober", "november", "december"
+    ];
+
+    DOM.monthSelect.innerHTML = "";
+    months.forEach((month, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = month;
+        option.style.color = 'black';
+        if (index === currentMonth) option.selected = true;
+        DOM.monthSelect.appendChild(option);
+    });
+    DOM.yearSelect.innerHTML = "";
+    //const currentDate = new Date();
+    const huidigJaar = new Date().getFullYear();
+    const opt = document.createElement("option");
+    opt.value = huidigJaar; 
+    opt.textContent = huidigJaar; //"dit jaar : " +
+    opt.style.color = '#999';
+    opt.style.fontWeight = 'bold';
+    //opt.selected = true;
+    DOM.yearSelect.appendChild(opt);
+    for (let year = currentYear - 15; year <= currentYear + 15; year++) {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        option.style.color = 'black';
+        if (year === currentYear) option.selected = true;
+        DOM.yearSelect.appendChild(option);
+    }
+};
+
