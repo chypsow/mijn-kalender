@@ -1,12 +1,8 @@
-import { DOM, shiftPattern, startDates, defaultSettings, opgenomenVerlofPerPloeg } from "./main.js";
-import { getDaysSinceStart, getSettingsFromLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe, behandelenNaAllesTerugstellen } from "./functies.js";
+import { DOM, shiftPattern, startDates, opgenomenVerlofPerPloeg } from "./main.js";
+import { getDaysSinceStart, verwijderVerlofDatum, voegVerlofDatumToe, behandelenNaAllesTerugstellen } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
-import { tabBlad } from "./componentenMaken.js";
 
-export function updateYearCalendarTable() {
-  const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-  const selectedPloeg = setting.selectedPloeg;
-  const year = setting.currentYear;
+export function updateYearCalendarTable(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
@@ -47,10 +43,9 @@ export function updateYearCalendarTable() {
   behandelenNaAllesTerugstellen(selectedPloeg);
 };
 
-export function generateYearCalendarTable(year) {
+export function generateYearCalendarTable(selectedPloeg, year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
-  const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;

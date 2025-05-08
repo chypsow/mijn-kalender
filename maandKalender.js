@@ -1,14 +1,13 @@
-import { DOM, shiftPattern, ploegenGegevens, startDates, defaultSettings } from "./main.js";
-import { getDaysSinceStart, getNaamBijSymbool, getSettingsFromLocalStorage } from "./functies.js";
-import { tabBlad } from "./componentenMaken.js";
+import { DOM, shiftPattern, ploegenGegevens, startDates } from "./main.js";
+import { getDaysSinceStart, getNaamBijSymbool } from "./functies.js";
 
-export function updateMonthCalendar() {
-    const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-    const month = settings.currentMonth;
-    const year = settings.currentYear;
+export function updateMonthCalendar(selectedPloeg, year, month) {
+    //const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    //const month = settings.currentMonth;
+    //const year = settings.currentYear;
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-    const selectedPloeg = settings.selectedPloeg;
+    //const selectedPloeg = settings.selectedPloeg;
     const startDate = startDates[selectedPloeg];
     const totalCells = 42;
     const firstDay = new Date(year, month, 1).getDay();
@@ -53,11 +52,11 @@ export function updateMonthCalendar() {
 }
 
 
-export function generateMonthCalendar(month, year) {
+export function generateMonthCalendar(selectedPloeg, year, month) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    //const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const startDate = startDates[selectedPloeg];
     // Eerste dag van de maand en aantal dagen in de maand
     const firstDay = new Date(year, month, 1).getDay();

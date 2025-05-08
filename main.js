@@ -112,13 +112,11 @@ export const DOM = {
     dropdowns: document.getElementById("dropdowns"),
     topNav: document.getElementById("top-nav"),
     container: document.getElementById('container'),
-    middenSectie1: document.getElementById('midden-sectie1'),
+    buttonContainer: document.getElementById('midden-sectie1'),
     middenSectie2: document.getElementById('midden-sectie2'),
+    middenSectie3: document.getElementById('midden-sectie3'),
     ploeg: document.getElementById('ploeg'),
     titel: document.getElementById('titel'),
-    buttonContainer: document.getElementById('buttonContainer'),
-    //ploegenLegende: document.getElementById('ploegenLegende'),
-    //verlofLegende: document.getElementById('verlofLegende'),
     calendar: document.getElementById('calendar'),
     modalOverlay: document.getElementById("modal-overlay"),
     modal: document.getElementById("modal"),
@@ -144,53 +142,59 @@ export function generateCalendar() {
         let currentYear = settings.currentYear;
         let selectedPloeg = settings.selectedPloeg;
         DOM.ploeg.value = selectedPloeg;
-        (tabBlad === 2 || tabBlad === 3) ? calendarGenerators[tabBlad](currentMonth, currentYear) : calendarGenerators[tabBlad](currentYear);
+        if(tabBlad === 0 || tabBlad === 1) calendarGenerators[tabBlad](selectedPloeg, currentYear);
+        if(tabBlad === 2) calendarGenerators[tabBlad](selectedPloeg, currentYear, currentMonth);
+        if(tabBlad ===  3) calendarGenerators[tabBlad](currentYear, currentMonth);
         refreshCalendar();
     } else {
         console.error(`Geen kalendergenerator gevonden voor blad: ${tabBlad}`);
     }
 };
 const calendarGenerators = {
-    0: (year) => {
+    0: (team, year) => {
+        emptyMiddenSectie();
         DOM.ploeg.hidden = false;
-        DOM.middenSectie1.innerHTML = '';
-        DOM.middenSectie2.innerHTML = '';
         maakVerlofContainer();
         maakVerlofLegende();
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-table';
         DOM.calendar.className = 'year-calendar-table';
-        generateYearCalendarTable(year);
+        generateYearCalendarTable(team, year);
     },
-    1: (year) => {
+    1: (team, year) => {
+        emptyMiddenSectie();
         DOM.ploeg.hidden = false;
-        DOM.middenSectie1.innerHTML = '';
-        DOM.middenSectie2.innerHTML = '';
         maakPloegenLegende();
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-grid';
         DOM.calendar.className = 'year-calendar-grid';
-        generateYearCalendar(year);
+        generateYearCalendar(team, year);
     },
-    2: (month, year) => {
+    2: (team, year, month) => {
+        emptyMiddenSectie();
         DOM.ploeg.hidden = false;
-        DOM.middenSectie1.innerHTML = '';
-        DOM.middenSectie2.innerHTML = '';
         maakPloegenLegende();
         DOM.titel.textContent = 'Maandkalender';
         DOM.container.className = 'month-container';
         DOM.calendar.className = 'month-calendar';
-        generateMonthCalendar(month, year);
+        generateMonthCalendar(team, year, month);
     },
-    3: (month, year) => {
-        DOM.ploeg.hidden = true;
-        DOM.middenSectie1.innerHTML = '';
-        DOM.middenSectie2.innerHTML = '';
+    3: (year, month) => {
+        emptyMiddenSectie();
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';
-        generateTeamCalendar(month, year);
+        generateTeamCalendar(year, month);
     }
+};
+
+function emptyMiddenSectie() {
+    DOM.middenSectie2.innerHTML = '';
+    DOM.middenSectie3.innerHTML = '';
+    DOM.titel.textContent = '';
+    DOM.container.className = '';
+    DOM.calendar.className = '';
+    DOM.ploeg.hidden = true;
 };
 function refreshCalendar() {
     // Reset de animatie door de klasse te verwijderen en opnieuw toe te voegen
@@ -199,18 +203,22 @@ function refreshCalendar() {
     DOM.calendar.classList.add("fade-animation");
 };
 const updateCalendar = () => {
+    const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const team = setting.selectedPloeg;
+    const year = setting.currentYear;
+    const month = setting.currentMonth;
     switch (tabBlad) {
         case 0:
-            updateYearCalendarTable();
+            updateYearCalendarTable(team, year);
             break;
         case 1:
-            updateYearCalendarGrid();
+            updateYearCalendarGrid(team, year);
             break;
         case 2:
-            updateMonthCalendar();
+            updateMonthCalendar(team, year,month);
             break;
         case 3:
-            updateTeamCalendar();
+            updateTeamCalendar(year, month);
     }
 };
 function triggerPrev() {
@@ -351,9 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
     maakSidebar();
     maakPloegDropdown();
     maakKnoppen();
-    //maakPloegenLegende();
-    //maakVerlofContainer();
-    //maakVerlofLegende();
     generateCalendar();
 });
 

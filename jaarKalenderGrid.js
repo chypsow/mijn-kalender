@@ -1,11 +1,7 @@
-import { DOM, shiftPattern, ploegenGegevens, startDates, defaultSettings } from "./main.js";
-import { getDaysSinceStart, getNaamBijSymbool, getSettingsFromLocalStorage } from "./functies.js";
-import { tabBlad } from "./componentenMaken.js";
+import { DOM, shiftPattern, ploegenGegevens, startDates } from "./main.js";
+import { getDaysSinceStart, getNaamBijSymbool } from "./functies.js";
 
-export function updateYearCalendarGrid() {
-  const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-  const selectedPloeg = setting.selectedPloeg;
-  const year = setting.currentYear;
+export function updateYearCalendarGrid(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
   const startDate = startDates[selectedPloeg];
   const totalCells = 42;
@@ -52,10 +48,9 @@ export function updateYearCalendarGrid() {
   });
 };
 
-export function generateYearCalendar(year) {
+export function generateYearCalendar(selectedPloeg, year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
-  const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
   const startDate = startDates[selectedPloeg];
   const vandaag = new Date();
   for (let month = 0; month < 12; month++) {

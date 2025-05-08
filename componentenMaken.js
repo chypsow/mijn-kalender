@@ -87,7 +87,7 @@ export function maakPloegenLegende() {
 
     ploegenLegende.appendChild(legendeItem);
     });
-    DOM.middenSectie2.appendChild(ploegenLegende);
+    DOM.middenSectie3.appendChild(ploegenLegende);
 };
 
 export function maakVerlofContainer() {
@@ -187,7 +187,7 @@ export function maakVerlofContainer() {
     btnContainer.appendChild(restoreAll);
 
     verlofContainer.appendChild(btnContainer);
-    DOM.middenSectie1.appendChild(verlofContainer);
+    DOM.middenSectie2.appendChild(verlofContainer);
 };
 
 export function maakVerlofLegende() {
@@ -213,7 +213,7 @@ export function maakVerlofLegende() {
 
     legende.appendChild(legendeItem);
     });
-    DOM.middenSectie2.appendChild(legende);
+    DOM.middenSectie3.appendChild(legende);
 };
 
 export function maakDropdowns() {

@@ -1,12 +1,8 @@
-import { DOM, shiftPattern, startDates, defaultSettings } from "./main.js";
-import { getDaysSinceStart, getSettingsFromLocalStorage } from "./functies.js";
+import { DOM, shiftPattern, startDates } from "./main.js";
+import { getDaysSinceStart } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
-import { tabBlad } from "./componentenMaken.js";
 
-export function updateTeamCalendar() {
-    const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-    const month = settings.currentMonth;
-    const year = settings.currentYear;
+export function updateTeamCalendar(year, month) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
@@ -49,7 +45,7 @@ export function updateTeamCalendar() {
     }
 }
 
-export function generateTeamCalendar(month, year) {
+export function generateTeamCalendar(year, month) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
