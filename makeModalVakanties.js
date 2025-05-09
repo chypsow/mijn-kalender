@@ -38,38 +38,17 @@ export function makeModalVakanties(tab, setting) {
     toggleModal(true, '50%');
 };
 
-/*function modalAfdrukken() {
-    const modalContent = DOM.modalOverlay.innerHTML; // Haal de inhoud van de modal op
-    const printWindow = window.open('', '_blank');   // Open een nieuw venster
-
-    printWindow.document.open();
-    printWindow.document.write(`
-        <html>
-        <head>
-            <title>Afdrukken</title>
-            <style>
-                /* Voeg hier eventuele CSS toe die nodig is voor een nette afdruk 
-                body { font-family: Arial, sans-serif; margin: 20px; }
-            </style>
-        </head>
-        <body>
-            ${modalContent}
-        </body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.print(); // Activeer de printfunctie in het nieuwe venster
-    printWindow.close(); // Sluit het venster na het afdrukken
-};*/
-
 function modalAfdrukken() {
-    const modal = DOM.modalOverlay;
-    const originalContent = document.body.innerHTML; // Bewaar de originele inhoud van de pagina
-
-    document.body.innerHTML = modal.outerHTML; // Vervang de inhoud van de pagina met alleen de modal
-    window.print(); // Start het printproces
-    document.body.innerHTML = originalContent; // Herstel de originele inhoud
-    window.location.reload(); // Optioneel: reload de pagina om de JavaScript-werking te herstellen
+    document.getElementById("printPreview").classList.add("no-print");
+    document.querySelector(".top-sectie").classList.add("no-print");
+    DOM.container.classList.add("no-print");
+    window.print();
+    // Reset na printen
+    setTimeout(() => {
+    document.getElementById("printPreview").classList.remove("no-print");
+    document.querySelector(".top-sectie").classList.remove("no-print");
+    DOM.container.classList.remove("no-print");
+    }, 1000); // wacht even tot printdialoog klaar is
 };
 
 const berekenStartPaasvakantie = (year) => {
