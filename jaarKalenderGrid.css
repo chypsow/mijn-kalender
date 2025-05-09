@@ -43,7 +43,7 @@
 }
 .day-klein, .emptyCellKlein{
     /*border: 3px solid transparent;*/
-    font-size: 15px;
+    font-size: 1em;
     padding: 1px 0 4px;
     justify-items: center;
     border-radius: 2px;

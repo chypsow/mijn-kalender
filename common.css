@@ -12,7 +12,7 @@ body {
     position: absolute;
     top: 20px;
     left: 30px;
-    font-size: 30px;
+    font-size: 2em;
     color: #bbbbbb;
     transition: all 0.3s ease-in-out;
     z-index: 2;
@@ -22,7 +22,7 @@ body {
     color: #dddddd;
 }
 .side-bar {
-    width: 13%;
+    width: max(150px, 13%);
     height: 100vh;
     background-color: #242424;
     color: rgb(194, 194, 194);
@@ -40,7 +40,7 @@ body {
     display: block;
     padding: 15px 20px;
     color: white;
-    font-size: 20px;
+    font-size: 1.1em;
     text-decoration: none;
 }
 .side-bar a:hover {
@@ -266,7 +266,7 @@ section {
 }
 .btnGreen {
     text-align: left;
-    font-size: 22px;
+    font-size: 1.2em;
     padding: 10px;
     outline: none;
     white-space: nowrap;
@@ -415,7 +415,7 @@ input[type=checkbox] {
     opacity: 1;
 }
 .modal {
-    font-size: 20px;
+    font-size: 1.2em;
     font-family: monospace;
     display: none; /* Verborgen standaard */
     position: fixed;

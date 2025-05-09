@@ -146,6 +146,7 @@ export function generateCalendar() {
         if(tabBlad === 2) calendarGenerators[tabBlad](selectedPloeg, currentYear, currentMonth);
         if(tabBlad ===  3) calendarGenerators[tabBlad](currentYear, currentMonth);
         refreshCalendar();
+        adjustLayout();
     } else {
         console.error(`Geen kalendergenerator gevonden voor blad: ${tabBlad}`);
     }
@@ -338,8 +339,8 @@ document.addEventListener('keydown', (event) => {
         localStorageAanpassenVolgensConfigJS(true, true, true);
     }
 });
-//window.addEventListener('resize', adjustLayout);
-//window.addEventListener('load', adjustLayout);
+window.addEventListener('resize', adjustLayout);
+window.addEventListener('load', adjustLayout);
 document.getElementById('bars').addEventListener('click', () => {
     const isClosed = document.querySelector('.side-bar').classList.contains('close');
     if (isClosed) {
