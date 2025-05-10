@@ -1,7 +1,8 @@
 .year-container-table {
     /*margin: 0 auto;*/
+    position: relative;
     text-align: center;
-    margin-top: -20px;
+    top: -20px;
 }
 
 /* Container voor de jaarkalender */

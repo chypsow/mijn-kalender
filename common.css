@@ -504,6 +504,7 @@ input[type=checkbox] {
         font-family:monospace;
         color: rgb(77, 77, 77);   
     }
+    .year-container-table,
     .year-container-grid,
     .month-container {
         top: 0;
