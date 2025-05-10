@@ -8,6 +8,9 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-attachment:fixed;
 }
+header {
+    margin-bottom: 2em;
+}
 .fa-bars {
     position: absolute;
     top: 20px;
@@ -223,10 +226,12 @@ section {
 }
 .feestdag span {
     font-family: monospace  , sans-serif;
+    width: 350px;
 }
 .feestdag .spanLinks,
 .vakantie .spanLinks {
     color: #00dce4;
+
 } 
 .feestdag .spanRechts,
 .vakantie .spanRechts{
@@ -421,7 +426,7 @@ input[type=checkbox] {
     position: fixed;
     /*top: 50%;*/
     left: 50%;
-    min-width: 800px;
+    /*width: 40em;*/
     /*min-height: 600px;*/
     padding: 40px;
     background-color: rgb(32, 32, 32);

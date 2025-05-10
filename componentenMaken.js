@@ -61,40 +61,10 @@ export function maakKnoppen() {
     });
 };
 
-export function maakPloegenLegende() {
-    const ploegenLegende = document.createElement('div');
-    ploegenLegende.classList.add('ploegenLegende-container');
-    ploegenLegende.classList.add('hidden-on-small');
-    let mijnData = [...ploegenGegevens];
-    //mijnData.splice(2, 1);
-    //console.log(mijnData);
-    mijnData.pop();
-    //mijnData.shift();
-    //console.log(mijnData);
-
-    mijnData.forEach(shift => {
-    const legendeItem = document.createElement('div');
-    legendeItem.classList.add('ploegenLegende-item');
-    
-    const kleurVak = document.createElement('span');
-    kleurVak.classList.add('ploegenLegende-vak');
-    kleurVak.style.backgroundColor = shift.kleur;
-    legendeItem.appendChild(kleurVak);
-
-    const beschrijving = document.createElement('span');
-    beschrijving.textContent = `${shift.naam.charAt(0).toUpperCase()}${shift.naam.slice(1)}`;
-    legendeItem.appendChild(beschrijving);
-
-
-    ploegenLegende.appendChild(legendeItem);
-    });
-    DOM.middenSectie3.appendChild(ploegenLegende);
-};
-
 export function maakVerlofContainer() {
-    const verlofContainer = document.createElement('div');
+    /*const verlofContainer = document.createElement('div');
     verlofContainer.classList.add('verlof-container');
-    verlofContainer.classList.add('hidden-on-small');
+    verlofContainer.classList.add('hidden-on-small');*/
 
     const container = document.createElement('div');
     container.classList.add('verlof-inhoud');
@@ -164,7 +134,7 @@ export function maakVerlofContainer() {
     totaal2.appendChild(span2);
     container.appendChild(totaal2);
 
-    verlofContainer.appendChild(container);
+    DOM.middenSectie2.appendChild(container);
 
     const btnContainer = document.createElement('div');
     btnContainer.classList.add('btn-container');
@@ -187,14 +157,14 @@ export function maakVerlofContainer() {
     restoreAll.classList.add('restore');
     btnContainer.appendChild(restoreAll);
 
-    verlofContainer.appendChild(btnContainer);
-    DOM.middenSectie2.appendChild(verlofContainer);
+    DOM.middenSectie2.appendChild(btnContainer);
+    //DOM.middenSectie2.appendChild(verlofContainer);
 };
 
 export function maakVerlofLegende() {
-    const legende = document.createElement('div');
-    legende.classList.add('verlofLegende-container');
-    legende.classList.add('hidden-on-small');
+    //const legende = document.createElement('div');
+    //legende.classList.add('verlofLegende-container');
+    //legende.classList.add('hidden-on-small');
 
     const verlofBeschrijving = {'BV': 'Betaald verlof', 'CS':'Compensatieshift', 'ADV':'Arbeidsduurvermindering',
         'BF':'Betaalde feestdag', 'AV':'Ancieniteitsverlof','HP':'Recup-herplanning', 'Z':'Ziek', 'OPL':'Opleiding/herplanning'};
@@ -212,9 +182,41 @@ export function maakVerlofLegende() {
     beschrijving.textContent = lang;
     legendeItem.appendChild(beschrijving);
 
-    legende.appendChild(legendeItem);
+    DOM.middenSectie3.appendChild(legendeItem);
     });
-    DOM.middenSectie3.appendChild(legende);
+    DOM.middenSectie3.classList.add('verlofLegende-container');
+    DOM.middenSectie3.classList.add('hidden-on-small');
+};
+
+export function maakPloegenLegende() {
+    //const ploegenLegende = document.createElement('div');
+    //ploegenLegende.classList.add('ploegenLegende-container');
+    //ploegenLegende.classList.add('hidden-on-small');
+    let mijnData = [...ploegenGegevens];
+    //mijnData.splice(2, 1);
+    //console.log(mijnData);
+    mijnData.pop();
+    //mijnData.shift();
+    //console.log(mijnData);
+
+    mijnData.forEach(shift => {
+    const legendeItem = document.createElement('div');
+    legendeItem.classList.add('ploegenLegende-item');
+    
+    const kleurVak = document.createElement('span');
+    kleurVak.classList.add('ploegenLegende-vak');
+    kleurVak.style.backgroundColor = shift.kleur;
+    legendeItem.appendChild(kleurVak);
+
+    const beschrijving = document.createElement('span');
+    beschrijving.textContent = `${shift.naam.charAt(0).toUpperCase()}${shift.naam.slice(1)}`;
+    legendeItem.appendChild(beschrijving);
+
+
+    DOM.middenSectie3.appendChild(legendeItem);
+    });
+    DOM.middenSectie3.classList.add('ploegenLegende-container');
+    DOM.middenSectie3.classList.add('hidden-on-small');
 };
 
 export function maakDropdowns() {

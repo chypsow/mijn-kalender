@@ -1,6 +1,7 @@
 .year-container-table {
     /*margin: 0 auto;*/
     text-align: center;
+    margin-top: -20px;
 }
 
 /* Container voor de jaarkalender */
@@ -76,11 +77,12 @@
     border: 2px solid #ffffff;
 }
 .verlofLegende-container {
-    width: 250px;
-    float: right;
+    /*width: 250px;
+    float: right;*/
+    margin-top: -80px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     padding: 10px;
     background: linear-gradient(360deg,#022124 10%,#efefef 360%);
     color: rgba(255, 255, 255, 0.829);
@@ -100,7 +102,7 @@
     border-radius: 4px;
 }
 .verlof-container {
-    margin: 7em auto 0;
+    /*margin: 7em auto 0;*/
     display: flex;
     justify-content: center;
     height: 2em;

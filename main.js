@@ -191,7 +191,9 @@ const calendarGenerators = {
 
 function emptyMiddenSectie() {
     DOM.middenSectie2.innerHTML = '';
+    //DOM.middenSectie2.className = '';
     DOM.middenSectie3.innerHTML = '';
+    DOM.middenSectie3.className = '';
     DOM.titel.textContent = '';
     DOM.container.className = '';
     DOM.calendar.className = '';
