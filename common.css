@@ -25,7 +25,8 @@ header {
     color: #dddddd;
 }
 .side-bar {
-    width: max(150px, 13%);
+    width: 13%;
+    
     height: 100vh;
     background-color: #242424;
     color: rgb(194, 194, 194);
@@ -36,6 +37,7 @@ header {
 }
 .side-bar.close {
     width: 0;
+    
     overflow: hidden;
     /*transition: width 0.3s;*/
 }
@@ -504,7 +506,7 @@ input[type=checkbox] {
     }
     .year-container-grid,
     .month-container {
-        margin: 0 auto;
+        top: 0;
     }
     .month-year {
         /*position: absolute;

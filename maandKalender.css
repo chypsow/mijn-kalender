@@ -1,6 +1,7 @@
 .month-container {
     position: relative;
-    margin: -5% auto 0;
+    top: -100px;
+    margin-inline: auto;
     max-width: 40%;
     text-align: center;
     display: flex;

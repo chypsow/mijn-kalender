@@ -5,7 +5,8 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin: -9% auto 0;
+    margin-inline: auto;
+    top: -130px;
 }
 .year-calendar-grid {
     display: grid;
@@ -43,7 +44,7 @@
 }
 .day-klein, .emptyCellKlein{
     /*border: 3px solid transparent;*/
-    font-size: 1em;
+    font-size: 0.9em;
     padding: 1px 0 4px;
     justify-items: center;
     border-radius: 2px;

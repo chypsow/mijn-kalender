@@ -43,20 +43,14 @@ export function adjustLayout() {
     document.querySelectorAll('.hidden-on-small').forEach(element => {
         element.style.display = 'none'; // Verberg elementen met inline style
     });
-    /*document.querySelectorAll('.cell').forEach(element => {
-        element.style.padding = 0;
-        
-    });*/
+    DOM.topNav.classList.add('close');
         //console.log(`schermgrootte is minder dan ${schermGrootte}px geweest : ${window.innerWidth}px`);
     } else {
     document.body.style.fontSize = ''; // Reset de fontgrootte
     document.querySelectorAll('.hidden-on-small').forEach(element => {
         element.style.display = ''; // Zet display terug naar 'flex'
     });
-    /*document.querySelectorAll('.cell').forEach(element => {
-        element.style.padding = '';
-        
-    });*/
+    
     //console.log(`schermgrootte: ${window.innerWidth}px`);
     }
 };
