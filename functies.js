@@ -105,9 +105,9 @@ function afdrukVoorbereiding() {
     const afdrukken = document.getElementById("printPreview");
     afdrukken.innerHTML='';
     if(tabBlad === 1 || tabBlad === 2) {
-        DOM.middenSectie3.classList.remove('no-print');
+        DOM.topSectie3.classList.remove('no-print');
     } else {
-        DOM.middenSectie3.classList.add('no-print');
+        DOM.topSectie3.classList.add('no-print');
     }
     const lijst = document.createElement('ul');
     lijst.classList.add('print-header');

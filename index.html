@@ -15,24 +15,20 @@
 <body>
     <div id="top-nav" class="side-bar no-print"></div>
     <div class="hoofd-container">
-        <i class="fa fa-bars no-print" id="bars"></i>
+        
         <div class="top-sectie">
-            <header>
-                <h1 id="titel"></h1>
-                <select id="ploeg" class="no-print"></select>
-            </header>
-            <section>
-                <div id="midden-sectie1" class="buttons-container no-print"></div>
-                <div id="midden-sectie2" class="verlof-container hidden-on-small no-print"></div>
-                <div id="midden-sectie3"></div>
-            </section>
-        </div>
-
-        <div id="modal-overlay" class="modal-overlay">
-            <div id="modal" class="modal">
-                <i class="fa fa-close no-print" id="sluiten"></i>
-                <div id="overlay" class="overlay"></div>
+            <div id="top-sectie1" class="top-sectie1 no-print">
+                <i class="fa fa-bars" id="bars"></i>
+                <div id="buttons-container" class="buttons-container"></div>
             </div>
+            <div id="top-sectie2" class="no-print">
+                <div class="header">
+                    <h1 id="titel"></h1>
+                    <select id="ploeg"></select>
+                </div>
+                <div id="midden-sectie2" class="verlof-container hidden-on-small"></div>
+            </div>
+            <div id="top-sectie3" class="no-print"></div>
         </div>
 
         <div id="printPreview" class="hidden visible-on-print"></div>
@@ -51,6 +47,15 @@
             </div>
             <div id="calendar"></div>
         </div>
+
+        <div id="modal-overlay" class="modal-overlay">
+            <div id="modal" class="modal">
+                <i class="fa fa-close no-print" id="sluiten"></i>
+                <div id="overlay" class="overlay"></div>
+            </div>
+        </div>
+
+        
     </div>
 <script type="module" src="main.js"></script>
 </body>

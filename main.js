@@ -112,9 +112,9 @@ export const DOM = {
     dropdowns: document.getElementById("dropdowns"),
     topNav: document.getElementById("top-nav"),
     container: document.getElementById('container'),
-    buttonContainer: document.getElementById('midden-sectie1'),
+    buttonContainer: document.getElementById('buttons-container'),
     middenSectie2: document.getElementById('midden-sectie2'),
-    middenSectie3: document.getElementById('midden-sectie3'),
+    topSectie3: document.getElementById('top-sectie3'),
     ploeg: document.getElementById('ploeg'),
     titel: document.getElementById('titel'),
     calendar: document.getElementById('calendar'),
@@ -153,7 +153,7 @@ export function generateCalendar() {
 };
 const calendarGenerators = {
     0: (team, year) => {
-        emptyMiddenSectie();
+        emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakVerlofContainer();
         maakVerlofLegende();
@@ -163,7 +163,7 @@ const calendarGenerators = {
         generateYearCalendarTable(team, year);
     },
     1: (team, year) => {
-        emptyMiddenSectie();
+        emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakPloegenLegende();
         DOM.titel.textContent = 'Jaarkalender';
@@ -172,7 +172,7 @@ const calendarGenerators = {
         generateYearCalendar(team, year);
     },
     2: (team, year, month) => {
-        emptyMiddenSectie();
+        emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakPloegenLegende();
         DOM.titel.textContent = 'Maandkalender';
@@ -181,7 +181,7 @@ const calendarGenerators = {
         generateMonthCalendar(team, year, month);
     },
     3: (year, month) => {
-        emptyMiddenSectie();
+        emptyMiddenSecties();
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';
@@ -189,11 +189,11 @@ const calendarGenerators = {
     }
 };
 
-function emptyMiddenSectie() {
+function emptyMiddenSecties() {
     DOM.middenSectie2.innerHTML = '';
     //DOM.middenSectie2.className = '';
-    DOM.middenSectie3.innerHTML = '';
-    DOM.middenSectie3.className = '';
+    DOM.topSectie3.innerHTML = '';
+    DOM.topSectie3.className = '';
     DOM.titel.textContent = '';
     DOM.container.className = '';
     DOM.calendar.className = '';

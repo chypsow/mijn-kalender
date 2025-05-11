@@ -182,10 +182,10 @@ export function maakVerlofLegende() {
     beschrijving.textContent = lang;
     legendeItem.appendChild(beschrijving);
 
-    DOM.middenSectie3.appendChild(legendeItem);
+    DOM.topSectie3.appendChild(legendeItem);
     });
-    DOM.middenSectie3.classList.add('verlofLegende-container');
-    DOM.middenSectie3.classList.add('hidden-on-small');
+    DOM.topSectie3.classList.add('verlofLegende-container');
+    //DOM.topSectie3.classList.add('hidden-on-small');
 };
 
 export function maakPloegenLegende() {
@@ -213,10 +213,10 @@ export function maakPloegenLegende() {
     legendeItem.appendChild(beschrijving);
 
 
-    DOM.middenSectie3.appendChild(legendeItem);
+    DOM.topSectie3.appendChild(legendeItem);
     });
-    DOM.middenSectie3.classList.add('ploegenLegende-container');
-    DOM.middenSectie3.classList.add('hidden-on-small');
+    DOM.topSectie3.classList.add('ploegenLegende-container');
+    //DOM.topSectie3.classList.add('hidden-on-small');
 };
 
 export function maakDropdowns() {
