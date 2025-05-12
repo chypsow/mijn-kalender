@@ -8,9 +8,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-attachment:fixed;
 }
-header {
-    /*margin-bottom: 2em;*/
-}
+
 .fa-bars {
     /*position: absolute;
     top: 20px;
@@ -74,6 +72,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
     /*justify-content: space-between;*/
     /*align-items: center;*/
 }
@@ -279,7 +278,7 @@ section {
 .buttons-container {
     display: flex;
     flex-direction: column;
-    width: 190px;
+    width: 12em;
 }
 .btnGreen {
     text-align: left;

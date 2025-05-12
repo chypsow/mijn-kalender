@@ -44,13 +44,14 @@ export function adjustLayout() {
         element.style.display = 'none'; // Verberg elementen met inline style
     });
     DOM.topNav.classList.add('close');
+    document.querySelector('.hoofd-container').style.width = '100%';
         //console.log(`schermgrootte is minder dan ${schermGrootte}px geweest : ${window.innerWidth}px`);
     } else {
     document.body.style.fontSize = ''; // Reset de fontgrootte
     document.querySelectorAll('.hidden-on-small').forEach(element => {
         element.style.display = ''; // Zet display terug naar 'flex'
     });
-    
+    document.querySelector('.hoofd-container').style.width = '87%';
     //console.log(`schermgrootte: ${window.innerWidth}px`);
     }
 };
