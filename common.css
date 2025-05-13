@@ -234,10 +234,11 @@ section {
     justify-content: space-between; /* Verspreid de items over de volledige breedte */
     padding: 8px 0;
     border-bottom: 1px solid #424242;
+    gap: 200px;
 }
 .feestdag span {
     font-family: monospace  , sans-serif;
-    width: 350px;
+    /*width: 350px;*/
 }
 .feestdag .spanLinks,
 .vakantie .spanLinks {
@@ -269,11 +270,12 @@ section {
     border-bottom: 1px solid #424242;
 }
 .print-modal-button {
-    position: absolute;
-    top: 40px;
-    right: 60px;
-    max-width: 120px;
-    height: 50px;
+    
+    /*top: 40px;*/
+    margin-top: 20px;
+    float: right;
+    /*max-width: 120px;*/
+    /*height: 50px;*/
 }
 .buttons-container {
     display: flex;
@@ -355,7 +357,7 @@ section {
     padding: 5px;
     margin-right: 10px;
     text-align: center;
-    font-size: 0.9em;
+    font-size: 1em;
     background-color: #bebebe;
     color: #000000;
     border-radius: 4px;
@@ -369,7 +371,7 @@ section {
     
 }
 .date-input {
-    font-size: 0.9em;
+    font-size: 1em;
     padding: 3px 5px;
     border-radius: 4px;
     background-color: #bebebe;
@@ -388,7 +390,7 @@ input[type=checkbox] {
 }
 .button-container {
     display: flex;
-    gap: 300px;
+    gap: 200px;
 }
 .overlay {
     display: flex;
@@ -398,11 +400,11 @@ input[type=checkbox] {
 }
 .overlay button {
     background-color: #444444;
-    color: #c2c2c2;
+    color: #000000;
     border-radius: 3px;
-    width: 250px;
+    /*width: 250px;*/
     display: inline;
-    padding: 5px 10px;
+    padding: 15px 20px;
     font-size: 0.9em;
     transition: all 0.20s ease-in-out;
 }

@@ -50,6 +50,9 @@ export function makeModalInstellingen(obj, arr) {
             input.id = `day-${i+1}${j+1}`;
             input.className = 'shift-input';
             input.value = arr[count] || '';
+            input.addEventListener('focus', function() {
+                this.select();
+            });
             count++;
             label.appendChild(input);
         });

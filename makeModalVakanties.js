@@ -11,9 +11,10 @@ export function makeModalVakanties(tab, setting) {
             <span id="jaar" class="month-year">${jaar}</span>
             <button class="volgend no-print"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
         </div>
-        <button class="print-modal-button">Afdrukken</button>
+        
         <table class="vakanties"></table>
         <table class="andereInfo"></table>
+        <button class="print-modal-button">Afdrukken</button>
     `;
     const printButton = document.querySelector(".print-modal-button");
     printButton.addEventListener("click", modalAfdrukken);

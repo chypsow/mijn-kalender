@@ -41,7 +41,7 @@ export function adjustLayout() {
     if (window.innerWidth < schermGrootte) {
     document.body.style.fontSize = '10px'; // Pas de fontgrootte aan naar wens
     document.querySelectorAll('.hidden-on-small').forEach(element => {
-        element.style.display = 'none'; // Verberg elementen met inline style
+        element.style.visibility = 'hidden'; // Verberg elementen met inline style
     });
     DOM.topNav.classList.add('close');
     document.querySelector('.hoofd-container').style.width = '100%';
@@ -49,7 +49,7 @@ export function adjustLayout() {
     } else {
     document.body.style.fontSize = ''; // Reset de fontgrootte
     document.querySelectorAll('.hidden-on-small').forEach(element => {
-        element.style.display = ''; // Zet display terug naar 'flex'
+        element.style.visibility = ''; // Zet display terug naar 'flex'
     });
     document.querySelector('.hoofd-container').style.width = '87%';
     //console.log(`schermgrootte: ${window.innerWidth}px`);

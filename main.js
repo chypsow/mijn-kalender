@@ -111,7 +111,7 @@ export const DOM = {
     selectOverlay: document.getElementById('select-overlay'),
     dropdowns: document.getElementById("dropdowns"),
     topNav: document.getElementById("top-nav"),
-    container: document.getElementById('container'),
+    container: document.getElementById('calendar-container'),
     buttonContainer: document.getElementById('buttons-container'),
     middenSectie2: document.getElementById('midden-sectie2'),
     topSectie3: document.getElementById('top-sectie3'),
@@ -194,6 +194,7 @@ function emptyMiddenSecties() {
     //DOM.middenSectie2.className = '';
     DOM.topSectie3.innerHTML = '';
     DOM.topSectie3.className = '';
+    DOM.topSectie3.classList.add('hidden-on-small');
     DOM.titel.textContent = '';
     DOM.container.className = '';
     DOM.calendar.className = '';

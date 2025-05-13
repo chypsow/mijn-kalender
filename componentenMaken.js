@@ -92,7 +92,9 @@ export function maakVerlofContainer() {
         inputVak.id = verlof;
         inputVak.value = aantal;
         inputVak.addEventListener('blur', handleBlur);
-        //inputVak.addEventListener('input', handleInput);
+        inputVak.addEventListener('focus', function () {
+            this.select();
+        });
         container.appendChild(inputVak);
     });
     
