@@ -1,4 +1,4 @@
-import { DOM, beginrechtVerlof, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen } from "./main.js";
+import { DOM, beginrechtVerlof, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
@@ -40,17 +40,17 @@ export function adjustLayout() {
     const schermGrootte = 1900;
     if (window.innerWidth < schermGrootte) {
     document.body.style.fontSize = '10px'; // Pas de fontgrootte aan naar wens
-    document.querySelectorAll('.hidden-on-small').forEach(element => {
+    /*document.querySelectorAll('.hidden-on-small').forEach(element => {
         element.style.visibility = 'hidden'; // Verberg elementen met inline style
-    });
+    });*/
     DOM.topNav.classList.add('close');
     document.querySelector('.hoofd-container').style.width = '100%';
         //console.log(`schermgrootte is minder dan ${schermGrootte}px geweest : ${window.innerWidth}px`);
     } else {
     document.body.style.fontSize = ''; // Reset de fontgrootte
-    document.querySelectorAll('.hidden-on-small').forEach(element => {
+    /*document.querySelectorAll('.hidden-on-small').forEach(element => {
         element.style.visibility = ''; // Zet display terug naar 'flex'
-    });
+    });*/
     document.querySelector('.hoofd-container').style.width = '87%';
     //console.log(`schermgrootte: ${window.innerWidth}px`);
     }
@@ -91,6 +91,7 @@ export function handleClickBtn(e) {
         case 'afdrukken':
             afdrukVoorbereiding();
             window.print();
+            updateCalendar();
             break;
         default:
             console.warn('Onbekende knop-id:', btn);
@@ -127,7 +128,13 @@ function afdrukVoorbereiding() {
         ploeg.textContent = `Ploeg ${selectedPloeg}`;
         lijst.appendChild(ploeg);
     }
-    
+    if(tabBlad === 0) {
+        document.querySelectorAll('.cell').forEach(cel => {
+            if(cel.classList.contains('today')) {
+                cel.classList.remove('today');
+            }
+        });
+    }
     afdrukken.appendChild(lijst);
 }
 

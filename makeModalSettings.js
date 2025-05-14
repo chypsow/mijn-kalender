@@ -20,11 +20,11 @@ export function makeModalInstellingen(obj, arr) {
     handleidingMsg.classList.add('handleiding-msg');
     handleidingMsg.innerHTML = `
     <ul style='list-style-type: none;'>
-        <li><h4 style="color:#00abb1; margin-bottom:5px">Volledige cyclus (5 weken):</h4>
+        <li><h4 style="text-decoration:underline; margin-bottom:5px"><b>Volledige cyclus (5 weken):</b></h4> 
             Een volledige cyclus bestaat uit 5 weken. 
             Elke ploeg werkt en rust in een specifiek patroon dat zich herhaalt na 5 weken.
         </li>
-        <li><h4 style="color:#00abb1; margin-bottom:5px">Startdatum:</h4>
+        <li><h4 style="text-decoration:underline; margin-bottom:5px"><b>Startdatum:</b></h4>
             Welke ploeg in welke week actief is, hangt af van een startdatum.
             Bijvoorbeeld: als we 1 februari 2010 als startdatum 1 kiezen, 
             begint Ploeg 1 op die datum met week 1 (in ons geval de week van 3 nachten). Als we 25 januari 2010 (7 dagen eerder) 
@@ -56,13 +56,25 @@ export function makeModalInstellingen(obj, arr) {
             count++;
             label.appendChild(input);
         });
+        const span2 = document.createElement('span');
+        span2.textContent = ` Startdatum ${i+1}: `;
+        label.appendChild(span2);
+        const input2 = document.createElement('input');
+        input2.type = 'date';
+        input2.id = `date${i+1}`;
+        input2.className = 'date-input';
+        input2.value = obj[i+1] || '';
+        label.appendChild(input2);
+        //label.appendChild(document.createElement('br'));
+        //label.appendChild(document.createElement('br'));
+        //label.appendChild(document.createElement('br'));
         DOM.overlay.appendChild(label);
     });
 
     DOM.overlay.appendChild(document.createElement('br'));
-    //DOM.overlay.appendChild(document.createElement('br'));
+    DOM.overlay.appendChild(document.createElement('br'));
 
-    Object.keys(obj).forEach(i => {
+    /*Object.keys(obj).forEach(i => {
         const label = document.createElement('label');
         const span = document.createElement('span');
         span.textContent = `Startdatum ${i}: `;
@@ -74,10 +86,10 @@ export function makeModalInstellingen(obj, arr) {
         input.value = obj[i] || '';
         label.appendChild(input);
         DOM.overlay.appendChild(label);
-    });
+    });*/
 
-    DOM.overlay.appendChild(document.createElement('br'));
-    DOM.overlay.appendChild(document.createElement('br'));
+    //DOM.overlay.appendChild(document.createElement('br'));
+    //DOM.overlay.appendChild(document.createElement('br'));
 
     const div = document.createElement('div');
     div.classList.add('button-container');

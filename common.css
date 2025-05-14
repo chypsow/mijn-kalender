@@ -273,7 +273,7 @@ section {
     
     /*top: 40px;*/
     margin-top: 20px;
-    float: right;
+    /*float: right;*/
     /*max-width: 120px;*/
     /*height: 50px;*/
 }
@@ -325,8 +325,8 @@ section {
     min-width: 600px;
     font-size: 0.8em;
     visibility: hidden;
-    background-color: #000000;
-    color: rgb(197, 197, 197);
+    background-color: #dadada;
+    color: rgb(0, 0, 0);
     text-align: left;
     padding: 15px 10px;  
     border-radius: 5px;
@@ -346,18 +346,18 @@ section {
     transform: translateX(-50%);
     border-width: 15px;
     border-style: solid;
-    border-color: transparent transparent #000000 transparent;
+    border-color: transparent transparent #dadada transparent;
 }
 .handleiding-container:hover .handleiding-msg {
     visibility: visible;
     opacity: 1;
 }
 .shift-input {
-    width: 50px;
+    width: 2em;
     padding: 5px;
-    margin-right: 10px;
+    /*margin-right: 10px;*/
     text-align: center;
-    font-size: 1em;
+    font-size: 16px;
     background-color: #bebebe;
     color: #000000;
     border-radius: 4px;
@@ -371,7 +371,7 @@ section {
     
 }
 .date-input {
-    font-size: 1em;
+    font-size: 16px;
     padding: 3px 5px;
     border-radius: 4px;
     background-color: #bebebe;
@@ -390,21 +390,22 @@ input[type=checkbox] {
 }
 .button-container {
     display: flex;
-    gap: 200px;
+    justify-content: space-between;
 }
 .overlay {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    /*align-items: flex-start;*/
     gap: 10px;
 }
 .overlay button {
-    background-color: #444444;
+    /*font-size: 1em;*/
+    background-color: #c7c7c78c;
     color: #000000;
     border-radius: 3px;
     /*width: 250px;*/
     display: inline;
-    padding: 15px 20px;
+    padding: 10px 20px;
     font-size: 0.9em;
     transition: all 0.20s ease-in-out;
 }
@@ -433,20 +434,22 @@ input[type=checkbox] {
     opacity: 1;
 }
 .modal {
-    font-size: 1.2em;
+    font-size: 20px;
     font-family: monospace;
     display: none; /* Verborgen standaard */
     position: fixed;
     /*top: 50%;*/
     left: 50%;
-    /*width: 40em;*/
-    /*min-height: 600px;*/
+    min-width: 800px;
+    /*min-height: 400px;*/
     padding: 40px;
     background-color: rgb(32, 32, 32);
     color: rgba(212, 212, 212, 0.884);
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-    border-radius: 7px;
-    border: 4px solid #353535;
+    /*background-color: rgb(247, 247, 247);
+    color: rgba(0, 0, 0, 0.884);*/
+    box-shadow: 0px 0px 10px rgba(230, 230, 230, 0.651);
+    /*border-radius: 7px;*/
+    /*border: 4px solid #353535;*/
     z-index: 4;
     transform: translate(-50%, -50%) scale(0); /* Start klein, gecentreerd */
     animation: zoom 0.3s forwards; /* Gebruik forwards om animatie op het einde te bewaren */
@@ -515,10 +518,9 @@ input[type=checkbox] {
         font-family:monospace;
         color: rgb(77, 77, 77);   
     }
-    .year-container-table,
-    .year-container-grid,
-    .month-container {
-        top: 0;
+    
+    .year-container-grid {
+        margin-top: 0;
     }
     .month-year {
         /*position: absolute;
@@ -565,6 +567,7 @@ input[type=checkbox] {
         outline: none !important;
         box-shadow: none !important;
     }
+    
     .modal {
         background: none;
         width: 70%;
@@ -628,4 +631,9 @@ input[type=checkbox] {
     padding-inline: 2px;
     /*background-color: black;
     color: white;*/
+}
+
+.today {
+    color: #ffffff;
+    background-color: #444444;
 }

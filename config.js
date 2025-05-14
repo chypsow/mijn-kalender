@@ -1,9 +1,9 @@
 export const dataBeginRecht = {
     "BV": 16,
     "CS": 0,
-    "ADV": 17,
+    "ADV": 16,
     "BF": 6,
-    "AV": 1,
+    "AV": 0,
     "HP": 0
 };
 
@@ -135,16 +135,8 @@ export const dataVerlofdagen = [
         "soort": "ADV"
     },
     {
-        "datum": "14/10/2025",
-        "soort": "BV"
-    },
-    {
         "datum": "31/10/2025",
         "soort": "ADV"
-    },
-    {
-        "datum": "18/11/2025",
-        "soort": "BV"
     },
     {
         "datum": "4/12/2025",
@@ -153,10 +145,6 @@ export const dataVerlofdagen = [
     {
         "datum": "5/12/2025",
         "soort": "BF"
-    },
-    {
-        "datum": "23/12/2025",
-        "soort": "BV"
     },
     {
         "datum": "21/1/2025",
@@ -173,10 +161,6 @@ export const dataVerlofdagen = [
     {
         "datum": "22/4/2025",
         "soort": "BF"
-    },
-    {
-        "datum": "9/9/2025",
-        "soort": "BV"
     },
     {
         "datum": "3/4/2025",
@@ -463,15 +447,15 @@ export const dataVerlofdagen = [
         "soort": "BV"
     },
     {
-        "datum": "18/7/2025",
-        "soort": "ADV"
-    },
-    {
         "datum": "13/6/2025",
-        "soort": "ADV"
+        "soort": "BV"
     },
     {
         "datum": "30/4/2025",
         "soort": "BV"
+    },
+    {
+        "datum": "12/6/2025",
+        "soort": "ADV"
     }
 ];

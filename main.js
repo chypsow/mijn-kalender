@@ -206,7 +206,7 @@ function refreshCalendar() {
     void DOM.calendar.offsetWidth; // Forceer een reflow (truc om animatie te resetten)
     DOM.calendar.classList.add("fade-animation");
 };
-const updateCalendar = () => {
+export const updateCalendar = () => {
     const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
     const team = setting.selectedPloeg;
     const year = setting.currentYear;
