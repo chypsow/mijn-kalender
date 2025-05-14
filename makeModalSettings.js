@@ -20,11 +20,11 @@ export function makeModalInstellingen(obj, arr) {
     handleidingMsg.classList.add('handleiding-msg');
     handleidingMsg.innerHTML = `
     <ul style='list-style-type: none;'>
-        <li><h4 style="text-decoration:underline; margin-bottom:5px"><b>Volledige cyclus (5 weken):</b></h4> 
+        <li><h4>Volledige cyclus (5 weken):</h4> 
             Een volledige cyclus bestaat uit 5 weken. 
             Elke ploeg werkt en rust in een specifiek patroon dat zich herhaalt na 5 weken.
         </li>
-        <li><h4 style="text-decoration:underline; margin-bottom:5px"><b>Startdatum:</b></h4>
+        <li><h4>Startdatum:</h4>
             Welke ploeg in welke week actief is, hangt af van een startdatum.
             Bijvoorbeeld: als we 1 februari 2010 als startdatum 1 kiezen, 
             begint Ploeg 1 op die datum met week 1 (in ons geval de week van 3 nachten). Als we 25 januari 2010 (7 dagen eerder) 
@@ -40,10 +40,13 @@ export function makeModalInstellingen(obj, arr) {
 
     let count = 0;
     Array.from({ length: 5}).forEach((_, i) => {
-        const label = document.createElement('label');
+        const labelsContainer = document.createElement('div');
+        labelsContainer.classList.add('labels-container');
+        const label1 = document.createElement('label');
+        label1.classList.add('label-week');
         const span = document.createElement('span');
         span.textContent = `Week ${i+1}: `;
-        label.appendChild(span);
+        label1.appendChild(span);
         Array.from({ length: 7 }).forEach((_, j) => {
             const input = document.createElement('input');
             input.type = 'text';
@@ -54,10 +57,14 @@ export function makeModalInstellingen(obj, arr) {
                 this.select();
             });
             count++;
-            label.appendChild(input);
+            label1.appendChild(input);
         });
+        labelsContainer.appendChild(label1);
+
+        const label = document.createElement('label');
+        label.classList.add('label-date');
         const span2 = document.createElement('span');
-        span2.textContent = ` Startdatum ${i+1}: `;
+        span2.textContent = `Startdatum ${i+1}: `;
         label.appendChild(span2);
         const input2 = document.createElement('input');
         input2.type = 'date';
@@ -68,7 +75,10 @@ export function makeModalInstellingen(obj, arr) {
         //label.appendChild(document.createElement('br'));
         //label.appendChild(document.createElement('br'));
         //label.appendChild(document.createElement('br'));
-        DOM.overlay.appendChild(label);
+        labelsContainer.appendChild(label);
+        DOM.overlay.appendChild(labelsContainer);
+        const br = document.createElement('br');
+        DOM.overlay.appendChild(br);
     });
 
     DOM.overlay.appendChild(document.createElement('br'));

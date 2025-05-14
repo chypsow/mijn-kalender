@@ -321,12 +321,17 @@ section {
     display: inline-block;
     cursor: pointer;
 }
+.handleiding-msg h4 {
+    font-weight: bold;
+    color: rgb(1, 88, 70);
+    margin-bottom: 5px;
+}
 .handleiding-msg {
     min-width: 600px;
     font-size: 0.8em;
     visibility: hidden;
-    background-color: #dadada;
-    color: rgb(0, 0, 0);
+    background-color: #5b8b2e;
+    color: rgb(157, 231, 19);
     text-align: left;
     padding: 15px 10px;  
     border-radius: 5px;
@@ -343,14 +348,25 @@ section {
     position: absolute;
     bottom: 100%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, 5%);
     border-width: 15px;
     border-style: solid;
-    border-color: transparent transparent #dadada transparent;
+    border-color: transparent transparent #5b8b2e transparent;
 }
 .handleiding-container:hover .handleiding-msg {
     visibility: visible;
     opacity: 1;
+}
+.labels-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+    /*margin-top: 20px;*/
+}
+.label-week,
+.label-date {
+    display: inline-block;
 }
 .shift-input {
     width: 2em;
@@ -393,10 +409,10 @@ input[type=checkbox] {
     justify-content: space-between;
 }
 .overlay {
-    display: flex;
-    flex-direction: column;
+    display: block;
+    /*flex-direction: column;*/
     /*align-items: flex-start;*/
-    gap: 10px;
+    /*gap: 10px;*/
 }
 .overlay button {
     /*font-size: 1em;*/
@@ -414,9 +430,7 @@ input[type=checkbox] {
     background-color: #adadad;;
     color: #070707;
 }
-#overlay label {
-    display: block;
-}
+
 .modal-overlay {
     display: none;
     position: fixed;
