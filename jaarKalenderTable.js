@@ -8,7 +8,7 @@ export function updateYearCalendarTable(selectedPloeg, year) {
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;
   if(geselecteerd) selectActief = true;
-  const cyclus = shiftPattern.length;
+  const cyclusLengte = shiftPattern.length;
   const vandaag = new Date();
   const today = vandaag.toLocaleDateString("nl-BE");
   const monthElementen = document.querySelectorAll('#calendar .row');
@@ -23,7 +23,7 @@ export function updateYearCalendarTable(selectedPloeg, year) {
         day.classList.add('cell');
         const currentDate = new Date(year, index-1, i);
         if (currentDate.getMonth() === index-1) {
-          shiftenInvullen(day, currentDate, holidays, selectedPloeg, cyclus);
+          shiftenInvullen(day, currentDate, holidays, selectedPloeg, cyclusLengte);
           if(selectActief) {
             if(currentDate.toLocaleDateString("nl-BE") === geselecteerd.datum && 
               selectedPloeg === geselecteerd.team) {
@@ -50,7 +50,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
   let selectActief = false;
   if(geselecteerd) selectActief = true;
-  const cyclus = shiftPattern.length;
+  const cyclusLengte = shiftPattern.length;
   const vandaag = new Date();
   const today = vandaag.toLocaleDateString("nl-BE");
   // Header rij (1–31 voor de dagen van de maand)
@@ -88,7 +88,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
       const currentDate = new Date(year, month, day);
       // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
       if (currentDate.getMonth() === month) {
-        shiftenInvullen(dayCell, currentDate, holidays, selectedPloeg, cyclus);
+        shiftenInvullen(dayCell, currentDate, holidays, selectedPloeg, cyclusLengte);
         if(selectActief) {
           if(currentDate.toLocaleDateString("nl-BE") === geselecteerd.datum && 
             selectedPloeg === geselecteerd.team) {
@@ -124,7 +124,7 @@ function shiftenInvullen(elt, date, holidays, ploeg, cyclus) {
   };
 
   if (isHoliday) {
-    if (shift === 'x' && !isReedsOpgenomen()) {
+    if (shift === 'x') {
         setShiftProperties(elt, 'x- fd', myDate, true);
         verwijderVerlofDatum(ploeg, myDate);
         return;
@@ -167,8 +167,7 @@ function voegVerlofdagToeVolgensLocalStorage(ploeg, cell, isHoliday) {
       cell.textContent = isHoliday ? `${obj.soort}- fd` : obj.soort;
       const txt = cell.textContent;
       const len = txt.length;
-      herplanningen.includes(txt) || herplanningen.includes(txt.slice(0, len - 4)) ? 
-      cell.classList.add('hp') : cell.classList.add(obj.soort);
+      herplanningen.includes(txt) || herplanningen.includes(txt.slice(0, len - 4)) ? cell.classList.add('hp') : cell.classList.add(obj.soort);
     }
   });
 };

@@ -45,15 +45,31 @@ export function adjustLayout() {
     });*/
     DOM.topNav.classList.add('close');
     document.querySelector('.hoofd-container').style.width = '100%';
+    document.getElementById('bars').classList.remove('hidden');
         //console.log(`schermgrootte is minder dan ${schermGrootte}px geweest : ${window.innerWidth}px`);
     } else {
     document.body.style.fontSize = ''; // Reset de fontgrootte
     /*document.querySelectorAll('.hidden-on-small').forEach(element => {
         element.style.visibility = ''; // Zet display terug naar 'flex'
     });*/
+    DOM.topNav.classList.remove('close');
     document.querySelector('.hoofd-container').style.width = '87%';
     //console.log(`schermgrootte: ${window.innerWidth}px`);
+    document.getElementById('bars').classList.add('hidden');
     }
+};
+
+export function modalAfdrukken() {
+    document.getElementById("printPreview").classList.add("no-print");
+    document.querySelector(".top-sectie").classList.add("no-print");
+    DOM.container.classList.add("no-print");
+    window.print();
+    // Reset na printen
+    setTimeout(() => {
+    document.getElementById("printPreview").classList.remove("no-print");
+    document.querySelector(".top-sectie").classList.remove("no-print");
+    DOM.container.classList.remove("no-print");
+    }, 1000); // wacht even tot printdialoog klaar is
 };
 
 export function toggleModal(show, positie) {

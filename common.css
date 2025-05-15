@@ -8,7 +8,10 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-attachment:fixed;
 }
-
+body::selection {
+    background-color: rgb(247, 247, 247);
+    color: #000000;
+}
 .fa-bars {
     /*position: absolute;
     top: 20px;
@@ -273,7 +276,7 @@ section {
     
     /*top: 40px;*/
     margin-top: 20px;
-    /*float: right;*/
+    float: right;
     /*max-width: 120px;*/
     /*height: 50px;*/
 }
@@ -312,9 +315,19 @@ section {
 .fa-close:hover {
     color: #db1c1c;
 }
+
+.line {
+    
+    border: 1px solid #838383;
+    margin: 10px 0;
+}
+.line:last-of-type {
+    display: none;
+}
 .heading-modal {
     display: inline-block;
     margin-top: 0;
+    margin-bottom: 80px;
 }
 .handleiding-container {
     position: relative;
@@ -327,11 +340,12 @@ section {
     margin-bottom: 5px;
 }
 .handleiding-msg {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     min-width: 600px;
     font-size: 0.8em;
     visibility: hidden;
-    background-color: #5b8b2e;
-    color: rgb(157, 231, 19);
+    background-color: #608f89;
+    color: rgb(14, 75, 44);
     text-align: left;
     padding: 15px 10px;  
     border-radius: 5px;
@@ -343,7 +357,7 @@ section {
     opacity: 0;
     transition: opacity 0.3s;
 }
-.handleiding-msg::after {
+.handleiding-msg::before {
     content: '';
     position: absolute;
     bottom: 100%;
@@ -351,9 +365,10 @@ section {
     transform: translate(-50%, 5%);
     border-width: 15px;
     border-style: solid;
-    border-color: transparent transparent #5b8b2e transparent;
+    border-color: transparent transparent #608f89 transparent;
 }
 .handleiding-container:hover .handleiding-msg {
+    
     visibility: visible;
     opacity: 1;
 }
@@ -361,7 +376,9 @@ section {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 10px;
+    align-items: center;
+    /*border-top: 2px solid #424242;*/
+    /*border-bottom: 1px solid #424242;*/
     /*margin-top: 20px;*/
 }
 .label-week,
@@ -461,7 +478,7 @@ input[type=checkbox] {
     color: rgba(212, 212, 212, 0.884);
     /*background-color: rgb(247, 247, 247);
     color: rgba(0, 0, 0, 0.884);*/
-    box-shadow: 0px 0px 10px rgba(230, 230, 230, 0.651);
+    box-shadow: 0px 0px 10px rgb(26, 26, 26);
     /*border-radius: 7px;*/
     /*border: 4px solid #353535;*/
     z-index: 4;
@@ -599,6 +616,13 @@ input[type=checkbox] {
     .vakantie .spanLinks {
         color: rgb(63, 63, 63);
     }
+    .feestdag .spanRechts {
+        color: black;
+    }
+    .feestdag .spanLinks {
+        color: rgb(63, 63, 63);
+    }
+
 }
 
 /*kleuren voor de shiften*/

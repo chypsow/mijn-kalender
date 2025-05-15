@@ -77,8 +77,9 @@ export function makeModalInstellingen(obj, arr) {
         //label.appendChild(document.createElement('br'));
         labelsContainer.appendChild(label);
         DOM.overlay.appendChild(labelsContainer);
-        const br = document.createElement('br');
-        DOM.overlay.appendChild(br);
+        //const hr = document.createElement('hr');
+        //hr.classList.add('line');
+        //DOM.overlay.appendChild(hr);
     });
 
     DOM.overlay.appendChild(document.createElement('br'));

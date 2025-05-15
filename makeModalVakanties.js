@@ -1,5 +1,5 @@
 import { DOM } from "./main.js";
-import { toggleModal, getSettingsFromLocalStorage } from "./functies.js";
+import { toggleModal, getSettingsFromLocalStorage, modalAfdrukken } from "./functies.js";
 import { berekenPaasdatum, formatter } from "./makeModalHolidays.js";
 
 export function makeModalVakanties(tab, setting) {
@@ -37,19 +37,6 @@ export function makeModalVakanties(tab, setting) {
     voegVakantiedagenToe(lijst1, jaar);
     voegAndereInfoToe(lijst2, jaar);
     toggleModal(true, '50%');
-};
-
-function modalAfdrukken() {
-    document.getElementById("printPreview").classList.add("no-print");
-    document.querySelector(".top-sectie").classList.add("no-print");
-    DOM.container.classList.add("no-print");
-    window.print();
-    // Reset na printen
-    setTimeout(() => {
-    document.getElementById("printPreview").classList.remove("no-print");
-    document.querySelector(".top-sectie").classList.remove("no-print");
-    DOM.container.classList.remove("no-print");
-    }, 1000); // wacht even tot printdialoog klaar is
 };
 
 const berekenStartPaasvakantie = (year) => {
