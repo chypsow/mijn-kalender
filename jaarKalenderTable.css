@@ -103,12 +103,9 @@
     border-radius: 4px;
 }
 .verlof-container {
-    /*margin: 7em auto 0;*/
-    margin-top: 3.2em;
     display: flex;
-    justify-content: center;
-    height: 2em;
-    gap: 100px;
+    flex-direction: row;
+    gap: 50px;
 }
 .verlof-inhoud {
     max-width: 550px;

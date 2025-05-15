@@ -127,7 +127,7 @@ export function maakVerlofContainer() {
 
     const totaal2 = document.createElement('div');
     totaal2.classList.add('totaal');
-    totaal2.textContent = 'Resterend:';
+    totaal2.textContent = 'Rest:';
 
     const saldoTotaal = calculateTotals(saldoArray);
     const span2 = document.createElement('span');

@@ -33,7 +33,7 @@ body::selection {
     color: rgb(194, 194, 194);
     box-sizing: border-box;
     white-space: nowrap;
-    transition: width 0.3s ease-in-out;
+    transition: width 0.2s ease-in-out;
     overflow: hidden;
 }
 .side-bar.close {
@@ -78,6 +78,12 @@ body::selection {
     gap: 10px;
     /*justify-content: space-between;*/
     /*align-items: center;*/
+}
+.top-sectie2 {
+    display: flex;
+    flex-direction: column;
+    /*align-items: flex-end;*/
+    gap: 60px;
 }
 .header h1{
     display: inline-block;
@@ -465,7 +471,7 @@ input[type=checkbox] {
     opacity: 1;
 }
 .modal {
-    font-size: 20px;
+    font-size: 18px;
     font-family: monospace;
     display: none; /* Verborgen standaard */
     position: fixed;
@@ -591,7 +597,7 @@ input[type=checkbox] {
         background: none;
         /*border: 1px solid rgb(207, 207, 207);*/
         position: absolute;
-        top: 120px;
+        top: 125px;
         right: 10px;
     }
     .vandaag {
