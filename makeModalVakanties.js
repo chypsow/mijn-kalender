@@ -1,5 +1,5 @@
 import { DOM } from "./main.js";
-import { toggleModal, getSettingsFromLocalStorage, modalAfdrukken } from "./functies.js";
+import { getSettingsFromLocalStorage, modalAfdrukken } from "./functies.js";
 import { berekenPaasdatum, formatter } from "./makeModalHolidays.js";
 
 export function makeModalVakanties(tab, setting) {
@@ -36,7 +36,7 @@ export function makeModalVakanties(tab, setting) {
     // Initiële lijsten
     voegVakantiedagenToe(lijst1, jaar);
     voegAndereInfoToe(lijst2, jaar);
-    toggleModal(true, '50%');
+    
 };
 
 const berekenStartPaasvakantie = (year) => {

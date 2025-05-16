@@ -42,8 +42,8 @@ export function maakKnoppen() {
         ['instellingen', 'fa-cog', 'Instellingen'],
         ['feestdagen', 'fa-calendar', 'Feestdagen'],
         ['vakanties', 'fa-plane', 'School vakanties'],
-        ['afdrukken', 'fa-print', 'Afdrukken']
-        //['rapport', 'fa-calendar-check-o', 'Genereer rapport']
+        ['afdrukken', 'fa-print', 'Afdrukken'],
+        ['rapport', 'fa-calendar-check-o', 'Genereer rapport']
     ];
     
     knoppen.forEach(knop => {

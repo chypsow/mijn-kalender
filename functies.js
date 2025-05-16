@@ -43,8 +43,8 @@ export function adjustLayout() {
     /*document.querySelectorAll('.hidden-on-small').forEach(element => {
         element.style.visibility = 'hidden'; // Verberg elementen met inline style
     });*/
-    DOM.topNav.classList.add('close');
-    document.querySelector('.hoofd-container').style.width = '100%';
+    //DOM.topNav.classList.add('close');
+    //document.querySelector('.hoofd-container').style.width = '100%';
     document.getElementById('bars').classList.remove('hidden');
         //console.log(`schermgrootte is minder dan ${schermGrootte}px geweest : ${window.innerWidth}px`);
     } else {
@@ -53,7 +53,7 @@ export function adjustLayout() {
         element.style.visibility = ''; // Zet display terug naar 'flex'
     });*/
     DOM.topNav.classList.remove('close');
-    document.querySelector('.hoofd-container').style.width = '87%';
+    //document.querySelector('.hoofd-container').style.width = '87%';
     //console.log(`schermgrootte: ${window.innerWidth}px`);
     document.getElementById('bars').classList.add('hidden');
     }
@@ -94,15 +94,20 @@ export function handleClickBtn(e) {
     switch(btn) {
         case 'instellingen':
             makeModalInstellingen(startDates, shiftPattern);
+            toggleModal(true, '50%');
             break;
         case 'feestdagen':
             makeModalFeestdagen(tabBlad, defaultSettings);
+            toggleModal(true, '50%');
             break;
         case 'vakanties':
             makeModalVakanties(tabBlad, defaultSettings);
+            toggleModal(true, '50%');
             break;
         case 'rapport':
-            console.log('Rapportknop is aangeklikt');
+            genereerRapport();
+            //console.log('Rapportknop is aangeklikt');
+            toggleModal(true, '25%');
             break;
         case 'afdrukken':
             afdrukVoorbereiding();
@@ -113,6 +118,53 @@ export function handleClickBtn(e) {
             console.warn('Onbekende knop-id:', btn);
     }
 };
+function genereerRapport() {
+    /*const monthElementen = document.querySelectorAll('#calendar .row');
+    monthElementen.forEach((month, index) => {
+        const dayElementen = month.querySelectorAll('.cell');
+        dayElementen.forEach((day, i) => {
+        if(i > 0) {
+        }
+        });
+    });*/
+    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const ploegKey = `verlofdagenPloeg${selectedPloeg}`;
+    const ploegData = opgenomenVerlofPerPloeg[ploegKey];
+    const ploegDataFiltered = ploegData.filter(obj => obj.datum !== '0');
+    const ploegDataSorted = ploegDataFiltered.sort((a, b) => new Date(a.datum) - new Date(b.datum));
+    const ploegDataGrouped = ploegDataSorted.reduce((acc, obj) => {
+        const datum = new Date(obj.datum);
+        const datumKey = `${datum.getDate()}-${datum.getMonth() + 1}-${datum.getFullYear()}`;
+        if (!acc[datumKey]) {
+            acc[datumKey] = [];
+
+        }
+        acc[datumKey].push(obj);
+        return acc;
+    }, {});
+    const rapport = document.createElement('div');
+    rapport.classList.add('rapport');
+    const rapportHeader = document.createElement('h2');
+    rapportHeader.textContent = `Rapport voor ploeg ${selectedPloeg}`;
+    rapport.appendChild(rapportHeader);
+    const rapportList = document.createElement('ul');
+    Object.entries(ploegDataGrouped).forEach(([datum, items]) => {
+        const datumItem = document.createElement('li');
+        datumItem.textContent = `Datum: ${datum}`;
+        const itemsList = document.createElement('ul');
+        items.forEach(item => {
+            const itemLi = document.createElement('li');
+            itemLi.textContent = `Soort: ${item.soort}`;
+            itemsList.appendChild(itemLi);
+        });
+        datumItem.appendChild(itemsList);
+        rapportList.appendChild(datumItem);
+    });
+    rapport.appendChild(rapportList);
+    DOM.overlay.innerHTML = '';
+    DOM.overlay.appendChild(rapport);
+};
+
 
 function afdrukVoorbereiding() {
     const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);

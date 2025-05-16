@@ -116,7 +116,7 @@ export function makeModalInstellingen(obj, arr) {
     div.appendChild(reset);
     DOM.overlay.appendChild(div);
 
-    toggleModal(true, '50%');
+    
 };
 
 function ploegSysteemOpslaan() {
