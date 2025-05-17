@@ -157,6 +157,7 @@ const calendarGenerators = {
         DOM.ploeg.hidden = false;
         maakVerlofContainer();
         maakVerlofLegende();
+        document.getElementById('rapport').hidden = false;
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-table';
         DOM.calendar.className = 'year-calendar-table';
@@ -166,6 +167,7 @@ const calendarGenerators = {
         emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakPloegenLegende();
+        document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-grid';
         DOM.calendar.className = 'year-calendar-grid';
@@ -175,6 +177,7 @@ const calendarGenerators = {
         emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakPloegenLegende();
+        document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Maandkalender';
         DOM.container.className = 'month-container';
         DOM.calendar.className = 'month-calendar';
@@ -182,6 +185,7 @@ const calendarGenerators = {
     },
     3: (year, month) => {
         emptyMiddenSecties();
+        document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';

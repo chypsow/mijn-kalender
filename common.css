@@ -434,9 +434,23 @@ input[type=checkbox] {
 .rapport {
     display: flex;
     flex-direction: row;
-    gap: 40px;
+    gap: 80px;
     margin-top: 20px;
 }
+.rapport li {
+    width: 100%;
+}
+.rapport span {
+    font-family: monospace;
+    /*font-size: 1.2em;*/
+    color: #dbdbdb;
+    float: right;
+    color: aquamarine;
+}
+.totaal-rapport {
+    float: right;
+}
+
 .overlay {
     display: block;
     /*flex-direction: column;*/
@@ -639,10 +653,8 @@ input[type=checkbox] {
     .rapport-header {
         color: black !important
     }
-    .rapport .kolom1,
-    .rapport .kolom2{
-        width: 400px;
-       
+    .rapport span {
+        color: black !important;
     }
     .rapport hr {
         display: none;

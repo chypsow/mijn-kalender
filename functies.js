@@ -128,29 +128,30 @@ function genereerRapport() {
     DOM.overlay.appendChild(rapportHeader);
     const rapport = document.createElement('div');
     rapport.classList.add('rapport');
+
     const kolom1 = document.createElement('div');
     kolom1.classList.add('kolom1');
     const rapportHeader1 = document.createElement('h3');
-    rapportHeader1.textContent = 'Aantal prestaties';
+    rapportHeader1.textContent = `# Prestaties`;	
     kolom1.appendChild(rapportHeader1);
-    
-    const rapportList1 = document.createElement('ul');
 
+    const rapportList1 = document.createElement('ul');
     const dayElementen = document.querySelectorAll('.cell');
     const filteredDayElementen = Array.from(dayElementen).filter(day => day.dataset.datum !== '0');
-    const prestaties = ['V','V12','V- fd','V12- fd', 'L', 'N','N12','N- fd', 'N12- fd', 'D', 'OPL'];
+    const prestaties = ['N', 'N12', 'N- fd', 'N12- fd', 'V', 'V12', 'V- fd', 'V12- fd', 'L', 'L- fd', 'D', 'OPL'];
     prestaties.forEach(prestatie => {
         const filteredSoort = filteredDayElementen.filter(day => day.textContent === prestatie);
         if(filteredSoort.length === 0) return;
         const listItem = document.createElement('li');
-        listItem.textContent = `Aantal ${prestatie}: ${filteredSoort.length}`;
+        listItem.textContent = `${prestatie}:`;
         rapportList1.appendChild(listItem);
+        const listItemAantal = document.createElement('span');
+        listItemAantal.classList.add('aantal-rapport');
+        listItemAantal.textContent = `${filteredSoort.length}`;
+        listItem.appendChild(listItemAantal);
     });
     kolom1.appendChild(rapportList1);
     const line1 = document.createElement('hr');
-    /*line1.style.width = '100%';
-    line1.style.border = '1px solid #000';
-    line1.style.margin = '10px 0';*/
     kolom1.appendChild(line1);
     const totaal = document.createElement('div');
     totaal.style.marginLeft = '20px';
@@ -158,30 +159,30 @@ function genereerRapport() {
         const filteredSoort = filteredDayElementen.filter(day => day.textContent === prestatie);
         return acc + filteredSoort.length;
     }, 0);
-    totaal.textContent = `Totaal : ${totaalAantal}`;
+    totaal.innerHTML = `Totaal: <span class="totaal-rapport">${totaalAantal}</span>`;
     kolom1.appendChild(totaal);
-    
     rapport.appendChild(kolom1);
 
     const kolom2 = document.createElement('div');
     kolom2.classList.add('kolom2');
     const rapportHeader2 = document.createElement('h3');
-    rapportHeader2.textContent = 'Aantal afwezigheden';
+    rapportHeader2.textContent = '# Afwezigheden';
     kolom2.appendChild(rapportHeader2);
     const rapportList2 = document.createElement('ul');
-    const afwezigheden = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'x', 'x- fd'];
+    const afwezigheden = ['BV','BV- fd', 'CS','CS- fd', 'ADV','ADV- fd', 'BF','BF- fd', 'AV','AV- fd', 'HP','HP- fd', 'x', 'x- fd', 'Z','Z- fd'];
     afwezigheden.forEach(afwezigheid => {
         const filteredSoort = filteredDayElementen.filter(day => day.textContent === afwezigheid);
         if(filteredSoort.length === 0) return;
         const listItem = document.createElement('li');
-        listItem.textContent = `Aantal ${afwezigheid}: ${filteredSoort.length}`;
+        listItem.textContent = `${afwezigheid}:`;
         rapportList2.appendChild(listItem);
+        const listItemAantal = document.createElement('span');
+        listItemAantal.classList.add('aantal-rapport');
+        listItemAantal.textContent = `${filteredSoort.length}`;
+        listItem.appendChild(listItemAantal);
     });
     kolom2.appendChild(rapportList2);
     const line2 = document.createElement('hr');
-    /*line2.style.width = '100%';
-    line2.style.border = '1px solid #000';
-    line2.style.margin = '10px 0';*/
     kolom2.appendChild(line2);
     const totaalAfwezig = document.createElement('div');
     totaalAfwezig.style.marginLeft = '20px';
@@ -189,7 +190,7 @@ function genereerRapport() {
         const filteredSoort = filteredDayElementen.filter(day => day.textContent === afwezig);
         return acc + filteredSoort.length;
     }, 0);
-    totaalAfwezig.textContent = `Totaal : ${totaalAfwezigAantal}`;
+    totaalAfwezig.innerHTML = `Totaal: <span class="totaal-rapport">${totaalAfwezigAantal}</span>`;
     kolom2.appendChild(totaalAfwezig);
     rapport.appendChild(kolom2);
     DOM.overlay.appendChild(rapport);
