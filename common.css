@@ -9,8 +9,8 @@ body {
     background-attachment:fixed;
 }
 body::selection {
-    background-color: rgb(247, 247, 247);
-    color: #000000;
+    background-color: rgb(0, 0, 0);
+    color: #d1d1d1;
 }
 .fa-bars {
     /*position: absolute;
@@ -431,6 +431,12 @@ input[type=checkbox] {
     display: flex;
     justify-content: space-between;
 }
+.rapport {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    margin-top: 20px;
+}
 .overlay {
     display: block;
     /*flex-direction: column;*/
@@ -627,6 +633,19 @@ input[type=checkbox] {
     }
     .feestdag .spanLinks {
         color: rgb(63, 63, 63);
+    }
+    
+    .rapport,
+    .rapport-header {
+        color: black !important
+    }
+    .rapport .kolom1,
+    .rapport .kolom2{
+        width: 400px;
+       
+    }
+    .rapport hr {
+        display: none;
     }
 
 }

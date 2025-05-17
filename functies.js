@@ -72,7 +72,7 @@ export function modalAfdrukken() {
     }, 1000); // wacht even tot printdialoog klaar is
 };
 
-export function toggleModal(show, positie) {
+export function toggleModal(show, positie = '50%') {
     if(!show)  {
         DOM.modalOverlay.classList.remove('open');
         setTimeout(() => {
@@ -94,20 +94,20 @@ export function handleClickBtn(e) {
     switch(btn) {
         case 'instellingen':
             makeModalInstellingen(startDates, shiftPattern);
-            toggleModal(true, '50%');
+            toggleModal(true);
             break;
         case 'feestdagen':
             makeModalFeestdagen(tabBlad, defaultSettings);
-            toggleModal(true, '50%');
+            toggleModal(true);
             break;
         case 'vakanties':
             makeModalVakanties(tabBlad, defaultSettings);
-            toggleModal(true, '50%');
+            toggleModal(true);
             break;
         case 'rapport':
             genereerRapport();
             //console.log('Rapportknop is aangeklikt');
-            toggleModal(true, '25%');
+            toggleModal(true);
             break;
         case 'afdrukken':
             afdrukVoorbereiding();
@@ -119,50 +119,86 @@ export function handleClickBtn(e) {
     }
 };
 function genereerRapport() {
-    /*const monthElementen = document.querySelectorAll('#calendar .row');
-    monthElementen.forEach((month, index) => {
-        const dayElementen = month.querySelectorAll('.cell');
-        dayElementen.forEach((day, i) => {
-        if(i > 0) {
-        }
-        });
-    });*/
+    DOM.overlay.innerHTML = '';
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-    const ploegKey = `verlofdagenPloeg${selectedPloeg}`;
-    const ploegData = opgenomenVerlofPerPloeg[ploegKey];
-    const ploegDataFiltered = ploegData.filter(obj => obj.datum !== '0');
-    const ploegDataSorted = ploegDataFiltered.sort((a, b) => new Date(a.datum) - new Date(b.datum));
-    const ploegDataGrouped = ploegDataSorted.reduce((acc, obj) => {
-        const datum = new Date(obj.datum);
-        const datumKey = `${datum.getDate()}-${datum.getMonth() + 1}-${datum.getFullYear()}`;
-        if (!acc[datumKey]) {
-            acc[datumKey] = [];
-
-        }
-        acc[datumKey].push(obj);
-        return acc;
-    }, {});
+    const rapportHeader = document.createElement('h2');
+    rapportHeader.classList.add('rapport-header');
+    /*rapportHeader.style.textAlign = 'center';*/
+    rapportHeader.textContent = `Rapport voor ploeg ${selectedPloeg}`;
+    DOM.overlay.appendChild(rapportHeader);
     const rapport = document.createElement('div');
     rapport.classList.add('rapport');
-    const rapportHeader = document.createElement('h2');
-    rapportHeader.textContent = `Rapport voor ploeg ${selectedPloeg}`;
-    rapport.appendChild(rapportHeader);
-    const rapportList = document.createElement('ul');
-    Object.entries(ploegDataGrouped).forEach(([datum, items]) => {
-        const datumItem = document.createElement('li');
-        datumItem.textContent = `Datum: ${datum}`;
-        const itemsList = document.createElement('ul');
-        items.forEach(item => {
-            const itemLi = document.createElement('li');
-            itemLi.textContent = `Soort: ${item.soort}`;
-            itemsList.appendChild(itemLi);
-        });
-        datumItem.appendChild(itemsList);
-        rapportList.appendChild(datumItem);
+    const kolom1 = document.createElement('div');
+    kolom1.classList.add('kolom1');
+    const rapportHeader1 = document.createElement('h3');
+    rapportHeader1.textContent = 'Aantal prestaties';
+    kolom1.appendChild(rapportHeader1);
+    
+    const rapportList1 = document.createElement('ul');
+
+    const dayElementen = document.querySelectorAll('.cell');
+    const filteredDayElementen = Array.from(dayElementen).filter(day => day.dataset.datum !== '0');
+    const prestaties = ['V','V12','V- fd','V12- fd', 'L', 'N','N12','N- fd', 'N12- fd', 'D', 'OPL'];
+    prestaties.forEach(prestatie => {
+        const filteredSoort = filteredDayElementen.filter(day => day.textContent === prestatie);
+        if(filteredSoort.length === 0) return;
+        const listItem = document.createElement('li');
+        listItem.textContent = `Aantal ${prestatie}: ${filteredSoort.length}`;
+        rapportList1.appendChild(listItem);
     });
-    rapport.appendChild(rapportList);
-    DOM.overlay.innerHTML = '';
+    kolom1.appendChild(rapportList1);
+    const line1 = document.createElement('hr');
+    /*line1.style.width = '100%';
+    line1.style.border = '1px solid #000';
+    line1.style.margin = '10px 0';*/
+    kolom1.appendChild(line1);
+    const totaal = document.createElement('div');
+    totaal.style.marginLeft = '20px';
+    const totaalAantal = prestaties.reduce((acc, prestatie) => {
+        const filteredSoort = filteredDayElementen.filter(day => day.textContent === prestatie);
+        return acc + filteredSoort.length;
+    }, 0);
+    totaal.textContent = `Totaal : ${totaalAantal}`;
+    kolom1.appendChild(totaal);
+    
+    rapport.appendChild(kolom1);
+
+    const kolom2 = document.createElement('div');
+    kolom2.classList.add('kolom2');
+    const rapportHeader2 = document.createElement('h3');
+    rapportHeader2.textContent = 'Aantal afwezigheden';
+    kolom2.appendChild(rapportHeader2);
+    const rapportList2 = document.createElement('ul');
+    const afwezigheden = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'x', 'x- fd'];
+    afwezigheden.forEach(afwezigheid => {
+        const filteredSoort = filteredDayElementen.filter(day => day.textContent === afwezigheid);
+        if(filteredSoort.length === 0) return;
+        const listItem = document.createElement('li');
+        listItem.textContent = `Aantal ${afwezigheid}: ${filteredSoort.length}`;
+        rapportList2.appendChild(listItem);
+    });
+    kolom2.appendChild(rapportList2);
+    const line2 = document.createElement('hr');
+    /*line2.style.width = '100%';
+    line2.style.border = '1px solid #000';
+    line2.style.margin = '10px 0';*/
+    kolom2.appendChild(line2);
+    const totaalAfwezig = document.createElement('div');
+    totaalAfwezig.style.marginLeft = '20px';
+    const totaalAfwezigAantal = afwezigheden.reduce((acc, afwezig) => {
+        const filteredSoort = filteredDayElementen.filter(day => day.textContent === afwezig);
+        return acc + filteredSoort.length;
+    }, 0);
+    totaalAfwezig.textContent = `Totaal : ${totaalAfwezigAantal}`;
+    kolom2.appendChild(totaalAfwezig);
+    rapport.appendChild(kolom2);
     DOM.overlay.appendChild(rapport);
+    DOM.overlay.innerHTML += `
+        <button class="print-modal-button">Afdrukken</button>
+    `;
+    const printButton = document.querySelector(".print-modal-button");
+    printButton.addEventListener("click", modalAfdrukken);
+    printButton.classList.add('no-print');
 };
 
 
