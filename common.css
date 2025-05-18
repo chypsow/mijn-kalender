@@ -432,14 +432,14 @@ input[type=checkbox] {
 }
 .rapport-grid {
   display: flex;
-  gap: 16rem;
-  justify-content: space-between;
+  gap: 4rem;
+  /*justify-content: space-between;*/
 }
 .kolom-rapport {
-  flex: 1;
+  flex: 1 1 1 1;
 }
 .rapport-tabel {
-  width: 100%;
+  width: 200px;
   border-collapse: collapse;
 }
 .rapport-tabel td {
@@ -451,9 +451,9 @@ input[type=checkbox] {
   font-weight: bold;
   background-color: #eaeaea;
 }
-/*.kolom-rapport table {
-  margin-bottom: auto; /* duwt de totaal naar onder 
-}*/
+.kolom-rapport table {
+  margin-bottom: auto; /* duwt de totaal naar onder */
+}
 .kolom-rapport td:first-child {
   text-align: left;
 }
