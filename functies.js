@@ -121,10 +121,11 @@ export function handleClickBtn(e) {
 function genereerRapport() {
     DOM.overlay.innerHTML = '';
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
     const rapportHeader = document.createElement('h2');
     rapportHeader.classList.add('rapport-header');
     /*rapportHeader.style.textAlign = 'center';*/
-    rapportHeader.textContent = `Rapport voor ploeg ${selectedPloeg}`;
+    rapportHeader.textContent = `Rapport voor ploeg ${selectedPloeg} in ${currentYear}`;
     DOM.overlay.appendChild(rapportHeader);
     const hearderLine = document.createElement('hr');
     hearderLine.classList.add('line');

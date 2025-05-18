@@ -314,10 +314,10 @@ section {
 .fa-close {
     cursor: pointer;
     position: absolute;
-    top: 10px;
+    top: 15px;
     right: 10px;
-    color: #979797;
-    font-size: 20px;
+    color: #303030;
+    font-size: 25px;
     font-weight: normal;
     transition: 0.2s;
 }
@@ -556,7 +556,7 @@ input[type=checkbox] {
 @media print {
     @page {
         margin: 5mm;
-        size: landscape;
+        size: auto;
     }
     body {
         -webkit-print-color-adjust: exact; /* Voor WebKit-gebaseerde browsers zoals Chrome en Safari*/
@@ -634,7 +634,9 @@ input[type=checkbox] {
     }
     
     .modal {
+        top: 20% !important;
         background: none;
+        box-shadow: none;
         width: 70%;
     }
     .modal-overlay {
