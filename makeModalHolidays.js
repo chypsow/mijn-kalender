@@ -7,7 +7,7 @@ export function makeModalFeestdagen(tab, setting) {
     DOM.overlay.innerHTML = `
         <div class="calendar-nav">
             <button class="vorig no-print"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
-            <span id="jaar" class="month-year">${jaar}</span>
+            <span id="jaar" class="month-year year-holiday">${jaar}</span>
             <button class="volgend no-print"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
         </div>
         <ul class="feestdagen"></ul>

@@ -157,6 +157,7 @@ const calendarGenerators = {
         DOM.ploeg.hidden = false;
         maakVerlofContainer();
         maakVerlofLegende();
+        //DOM.topSectie3.classList.add('hidden-on-small')
         document.getElementById('rapport').hidden = false;
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-table';

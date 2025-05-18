@@ -10,7 +10,7 @@ body {
 }
 body::selection {
     background-color: rgb(0, 0, 0);
-    color: #d1d1d1;
+    color: #ffffff;
 }
 .fa-bars {
     /*position: absolute;
@@ -251,12 +251,15 @@ section {
 }
 .feestdag .spanLinks,
 .vakantie .spanLinks {
-    color: #00dce4;
+    color: #003e41;
 
 } 
 .feestdag .spanRechts,
 .vakantie .spanRechts{
-    color: rgb(184, 184, 184);
+    color: rgb(0, 0, 0);
+}
+.year-holiday {
+    color: #000000;
 }
 .vakantie {
     text-align: left;
@@ -322,14 +325,6 @@ section {
     color: #db1c1c;
 }
 
-.line {
-    
-    border: 1px solid #838383;
-    margin: 10px 0;
-}
-.line:last-of-type {
-    display: none;
-}
 .heading-modal {
     display: inline-block;
     margin-top: 0;
@@ -437,6 +432,9 @@ input[type=checkbox] {
     gap: 80px;
     margin-top: 20px;
 }
+.rapport-header {
+    margin: 0;
+}
 .rapport li {
     width: 100%;
 }
@@ -445,8 +443,14 @@ input[type=checkbox] {
     /*font-size: 1.2em;*/
     color: #dbdbdb;
     float: right;
-    color: aquamarine;
+    color: #0221248a;
+    font-weight: bold;
 }
+.line {
+    border:1px solid #333333;
+    margin: 10px 0;
+}
+
 .totaal-rapport {
     float: right;
 }
@@ -459,9 +463,10 @@ input[type=checkbox] {
 }
 .overlay button {
     /*font-size: 1em;*/
-    background-color: #c7c7c78c;
+    background-color: #7a7a7a8c;
     color: #000000;
     border-radius: 3px;
+    border: none;
     /*width: 250px;*/
     display: inline;
     padding: 10px 20px;
@@ -470,8 +475,11 @@ input[type=checkbox] {
 }
 .overlay button:hover {
     cursor: pointer;
-    background-color: #adadad;;
-    color: #070707;
+    box-shadow: 0 0 15px rgba(113, 136, 139, 0.9);
+    background: #0221248a;
+
+    /*background-color: #acacac;;
+    color: #070707;*/
 }
 
 .modal-overlay {
@@ -500,12 +508,12 @@ input[type=checkbox] {
     min-width: 800px;
     /*min-height: 400px;*/
     padding: 40px;
-    background-color: rgb(32, 32, 32);
-    color: rgba(212, 212, 212, 0.884);
+    background-color: rgb(196, 196, 196);
+    color: rgba(43, 43, 43, 0.884);
     /*background-color: rgb(247, 247, 247);
     color: rgba(0, 0, 0, 0.884);*/
     box-shadow: 0px 0px 10px rgb(26, 26, 26);
-    /*border-radius: 7px;*/
+    border-radius: 7px;
     /*border: 4px solid #353535;*/
     z-index: 4;
     transform: translate(-50%, -50%) scale(0); /* Start klein, gecentreerd */
@@ -650,15 +658,14 @@ input[type=checkbox] {
     }
     
     .rapport,
-    .rapport-header {
+    .rapport-header,
+    .rapport span {
         color: black !important
     }
-    .rapport span {
-        color: black !important;
-    }
-    .rapport hr {
+     
+    /*.rapport hr {
         display: none;
-    }
+    }*/
 
 }
 

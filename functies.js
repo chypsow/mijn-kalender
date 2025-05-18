@@ -40,18 +40,18 @@ export function adjustLayout() {
     const schermGrootte = 1900;
     if (window.innerWidth < schermGrootte) {
     document.body.style.fontSize = '10px'; // Pas de fontgrootte aan naar wens
-    /*document.querySelectorAll('.hidden-on-small').forEach(element => {
+    document.querySelectorAll('.hidden-on-small').forEach(element => {
         element.style.visibility = 'hidden'; // Verberg elementen met inline style
-    });*/
+    });
     //DOM.topNav.classList.add('close');
     //document.querySelector('.hoofd-container').style.width = '100%';
     document.getElementById('bars').classList.remove('hidden');
         //console.log(`schermgrootte is minder dan ${schermGrootte}px geweest : ${window.innerWidth}px`);
     } else {
     document.body.style.fontSize = ''; // Reset de fontgrootte
-    /*document.querySelectorAll('.hidden-on-small').forEach(element => {
+    document.querySelectorAll('.hidden-on-small').forEach(element => {
         element.style.visibility = ''; // Zet display terug naar 'flex'
-    });*/
+    });
     DOM.topNav.classList.remove('close');
     //document.querySelector('.hoofd-container').style.width = '87%';
     //console.log(`schermgrootte: ${window.innerWidth}px`);
@@ -126,6 +126,9 @@ function genereerRapport() {
     /*rapportHeader.style.textAlign = 'center';*/
     rapportHeader.textContent = `Rapport voor ploeg ${selectedPloeg}`;
     DOM.overlay.appendChild(rapportHeader);
+    const hearderLine = document.createElement('hr');
+    hearderLine.classList.add('line');
+    DOM.overlay.appendChild(hearderLine);
     const rapport = document.createElement('div');
     rapport.classList.add('rapport');
 
@@ -152,6 +155,7 @@ function genereerRapport() {
     });
     kolom1.appendChild(rapportList1);
     const line1 = document.createElement('hr');
+    line1.classList.add('line');
     kolom1.appendChild(line1);
     const totaal = document.createElement('div');
     totaal.style.marginLeft = '20px';
@@ -169,7 +173,7 @@ function genereerRapport() {
     rapportHeader2.textContent = '# Afwezigheden';
     kolom2.appendChild(rapportHeader2);
     const rapportList2 = document.createElement('ul');
-    const afwezigheden = ['BV','BV- fd', 'CS','CS- fd', 'ADV','ADV- fd', 'BF','BF- fd', 'AV','AV- fd', 'HP','HP- fd', 'x', 'x- fd', 'Z','Z- fd'];
+    const afwezigheden = ['BV', 'BV- fd', 'CS', 'CS- fd', 'ADV','ADV- fd', 'BF','BF- fd', 'AV', 'AV- fd', 'HP', 'HP- fd', 'x', 'x- fd', 'Z', 'Z- fd'];
     afwezigheden.forEach(afwezigheid => {
         const filteredSoort = filteredDayElementen.filter(day => day.textContent === afwezigheid);
         if(filteredSoort.length === 0) return;
@@ -183,6 +187,7 @@ function genereerRapport() {
     });
     kolom2.appendChild(rapportList2);
     const line2 = document.createElement('hr');
+    line2.classList.add('line');
     kolom2.appendChild(line2);
     const totaalAfwezig = document.createElement('div');
     totaalAfwezig.style.marginLeft = '20px';
