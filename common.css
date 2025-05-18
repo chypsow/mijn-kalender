@@ -426,53 +426,51 @@ input[type=checkbox] {
     display: flex;
     justify-content: space-between;
 }
+
 .rapport {
-    color: #0221248a;
-    display: flex;
-    flex-direction: row;
-    gap: 80px;
-    margin-top: 20px;
+    color: #022124de;
 }
-.rapport-header {
-    color: #0221248a;
-    margin: 0;
-}
-.rapport li {
-    width: 100%;
-    border-bottom: 1px solid rgb(159, 159, 192);
-}
-.rapport span {
-    font-family: monospace;
-    /*font-size: 1.2em;*/
-    color: #022124d0;
-    float: right;
-    font-size: 0.9em;
-    font-weight: bold;
+.rapport-grid {
+  display: flex;
+  gap: 16rem;
+  justify-content: space-between;
 }
 .kolom-rapport {
-    width: 180px;
-    /*align-items: center;*/
-    /*gap: 20px;*/
-    /*border-bottom: 1px solid rgb(159, 159, 192);*/
+  flex: 1;
 }
-.line {
-    /*border:1px solid blue;*/
-    margin: 10px 0;
+.rapport-tabel {
+  width: 100%;
+  border-collapse: collapse;
+}
+.rapport-tabel td {
+  padding: 4px 8px;
+  vertical-align: top;
+}
+.totaal-rij td {
+  border-top: 1px solid #999;
+  font-weight: bold;
+  background-color: #eaeaea;
+}
+/*.kolom-rapport table {
+  margin-bottom: auto; /* duwt de totaal naar onder 
+}*/
+.kolom-rapport td:first-child {
+  text-align: left;
+}
+
+.kolom-rapport td:last-child {
+  text-align: right;
+  font-weight: bold;
 }
 .totaal-kolom-rapport {
-    margin-left: 20px;
-    padding: 5px 10px;
-    background: linear-gradient(360deg,#0221248a 10%,#efefef 360%);
+    margin-top: 10px;
+    background: #445f66;
+    color: white;
+    padding: 6px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 4px;
     color: #dbdbdb;
-    
-}
-.totaal-kolom-rapport span {
-    color: #dbdbdb;
-    /*font-size: 1.2em;*/
-    font-weight: normal;
-}
-.totaal-rapport {
-    float: right;
 }
 
 .overlay {
@@ -497,7 +495,7 @@ input[type=checkbox] {
     cursor: pointer;
     box-shadow: 0 0 15px rgba(113, 136, 139, 0.9);
     background: #0221248a;
-
+    color: #d1d1d1;
     /*background-color: #acacac;;
     color: #070707;*/
 }

@@ -119,97 +119,76 @@ export function handleClickBtn(e) {
     }
 };
 function genereerRapport() {
-    DOM.overlay.innerHTML = '';
-    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-    const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
-    const rapportHeader = document.createElement('h2');
-    rapportHeader.classList.add('rapport-header');
-    /*rapportHeader.style.textAlign = 'center';*/
-    rapportHeader.textContent = `Rapport voor ploeg ${selectedPloeg} in ${currentYear}`;
-    DOM.overlay.appendChild(rapportHeader);
-    const hearderLine = document.createElement('hr');
-    hearderLine.classList.add('line');
-    DOM.overlay.appendChild(hearderLine);
-    const rapport = document.createElement('div');
-    rapport.classList.add('rapport');
+  const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+  const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
 
-    const kolom1 = document.createElement('div');
-    kolom1.classList.add('kolom-rapport');
+  const dayElementen = document.querySelectorAll('.cell');
+  const filteredDayElementen = Array.from(dayElementen).filter(day => day.dataset.datum !== '0');
 
-    const rapportHeader1 = document.createElement('h3');
-    rapportHeader1.textContent = `# Prestaties`;	
-    kolom1.appendChild(rapportHeader1);
+  const prestaties = ['N', 'N12', 'N- fd', 'N12- fd', 'V', 'V12', 'V- fd', 'V12- fd', 'L', 'L- fd', 'D', 'OPL'];
+  const afwezigheden = ['BV', 'BV- fd', 'CS', 'CS- fd', 'ADV','ADV- fd', 'BF','BF- fd', 'AV', 'AV- fd', 'HP', 'HP- fd', 'x', 'x- fd', 'Z', 'Z- fd'];
 
-    const rapportList1 = document.createElement('ul');
-    const dayElementen = document.querySelectorAll('.cell');
-    const filteredDayElementen = Array.from(dayElementen).filter(day => day.dataset.datum !== '0');
-    const prestaties = ['N', 'N12', 'N- fd', 'N12- fd', 'V', 'V12', 'V- fd', 'V12- fd', 'L', 'L- fd', 'D', 'OPL'];
-    prestaties.forEach(prestatie => {
-        const filteredSoort = filteredDayElementen.filter(day => day.textContent === prestatie);
-        if(filteredSoort.length === 0) return;
-        const listItem = document.createElement('li');
-        listItem.textContent = `${prestatie}:`;
-        rapportList1.appendChild(listItem);
-        const listItemAantal = document.createElement('span');
-        listItemAantal.classList.add('aantal-rapport');
-        listItemAantal.textContent = `${filteredSoort.length}`;
-        listItem.appendChild(listItemAantal);
-    });
-    kolom1.appendChild(rapportList1);
-    /*const line1 = document.createElement('hr');
-    line1.classList.add('line');
-    kolom1.appendChild(line1);*/
-    const totaal = document.createElement('div');
-    totaal.classList.add('totaal-kolom-rapport');
-    //totaal.style.marginLeft = '20px';
-    const totaalAantal = prestaties.reduce((acc, prestatie) => {
-        const filteredSoort = filteredDayElementen.filter(day => day.textContent === prestatie);
-        return acc + filteredSoort.length;
-    }, 0);
-    totaal.innerHTML = `Totaal: <span class="totaal-rapport">${totaalAantal}</span>`;
-    kolom1.appendChild(totaal);
-    rapport.appendChild(kolom1);
+  let html = `
+    <div class="rapport">
+      <h2 class="header-rapport">Rapport voor ploeg ${selectedPloeg} in ${currentYear}</h2>
+      <hr>
+      <div class="rapport-grid">
+        <div class="kolom-rapport">
+          <h3># Prestaties</h3>
+          <table class="rapport-tabel">
+  `;
 
-    const kolom2 = document.createElement('div');
-    kolom2.classList.add('kolom-rapport');
-    const rapportHeader2 = document.createElement('h3');
-    rapportHeader2.textContent = '# Afwezigheden';
-    kolom2.appendChild(rapportHeader2);
-    const rapportList2 = document.createElement('ul');
-    const afwezigheden = ['BV', 'BV- fd', 'CS', 'CS- fd', 'ADV','ADV- fd', 'BF','BF- fd', 'AV', 'AV- fd', 'HP', 'HP- fd', 'x', 'x- fd', 'Z', 'Z- fd'];
-    afwezigheden.forEach(afwezigheid => {
-        const filteredSoort = filteredDayElementen.filter(day => day.textContent === afwezigheid);
-        if(filteredSoort.length === 0) return;
-        const listItem = document.createElement('li');
-        listItem.textContent = `${afwezigheid}:`;
-        rapportList2.appendChild(listItem);
-        const listItemAantal = document.createElement('span');
-        listItemAantal.classList.add('aantal-rapport');
-        listItemAantal.textContent = `${filteredSoort.length}`;
-        listItem.appendChild(listItemAantal);
-    });
-    kolom2.appendChild(rapportList2);
-    /*const line2 = document.createElement('hr');
-    line2.classList.add('line');
-    kolom2.appendChild(line2);*/
-    const totaalAfwezig = document.createElement('div');
-    totaalAfwezig.classList.add('totaal-kolom-rapport');
-    //totaalAfwezig.style.marginLeft = '20px';
-    const totaalAfwezigAantal = afwezigheden.reduce((acc, afwezig) => {
-        const filteredSoort = filteredDayElementen.filter(day => day.textContent === afwezig);
-        return acc + filteredSoort.length;
-    }, 0);
-    totaalAfwezig.innerHTML = `Totaal: <span class="totaal-rapport">${totaalAfwezigAantal}</span>`;
-    kolom2.appendChild(totaalAfwezig);
-    rapport.appendChild(kolom2);
-    DOM.overlay.appendChild(rapport);
-    DOM.overlay.innerHTML += `
-        <button class="print-modal-button">Afdrukken</button>
-    `;
+  let totaalPrestaties = 0;
+
+  prestaties.forEach(prestatie => {
+    const aantal = filteredDayElementen.filter(day => day.textContent === prestatie).length;
+    if (aantal > 0) {
+      html += `<tr><td>${prestatie}:</td><td>${aantal}</td></tr>`;
+      totaalPrestaties += aantal;
+    }
+  });
+
+  html += `<tr class="totaal-rij"><td><strong>Totaal:</strong></td><td><strong>${totaalPrestaties}</strong></td></tr>`;
+
+  html += `
+          </table>
+        </div>
+        <div class="kolom-rapport">
+          <h3># Afwezigheden</h3>
+          <table class="rapport-tabel">
+  `;
+
+  let totaalAfwezigheden = 0;
+
+  afwezigheden.forEach(afw => {
+    const aantal = filteredDayElementen.filter(day => day.textContent === afw).length;
+    if (aantal > 0) {
+      html += `<tr><td>${afw}:</td><td>${aantal}</td></tr>`;
+      totaalAfwezigheden += aantal;
+    }
+  });
+
+  html += `<tr class="totaal-rij"><td><strong>Totaal:</strong></td><td><strong>${totaalAfwezigheden}</strong></td></tr>`;
+
+  html += `
+          </table>
+        </div>
+      </div>
+      <button class="print-modal-button no-print">Afdrukken</button>
+    </div>
+  `;
+
+  DOM.overlay.innerHTML = html;
+
+  setTimeout(() => {
     const printButton = document.querySelector(".print-modal-button");
-    printButton.addEventListener("click", modalAfdrukken);
-    printButton.classList.add('no-print');
+    if (printButton) {
+      printButton.addEventListener("click", modalAfdrukken);
+    }
+  }, 0);
 };
+
+
 
 
 function afdrukVoorbereiding() {
