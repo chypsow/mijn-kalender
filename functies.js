@@ -134,7 +134,8 @@ function genereerRapport() {
     rapport.classList.add('rapport');
 
     const kolom1 = document.createElement('div');
-    kolom1.classList.add('kolom1');
+    kolom1.classList.add('kolom-rapport');
+
     const rapportHeader1 = document.createElement('h3');
     rapportHeader1.textContent = `# Prestaties`;	
     kolom1.appendChild(rapportHeader1);
@@ -155,11 +156,12 @@ function genereerRapport() {
         listItem.appendChild(listItemAantal);
     });
     kolom1.appendChild(rapportList1);
-    const line1 = document.createElement('hr');
+    /*const line1 = document.createElement('hr');
     line1.classList.add('line');
-    kolom1.appendChild(line1);
+    kolom1.appendChild(line1);*/
     const totaal = document.createElement('div');
-    totaal.style.marginLeft = '20px';
+    totaal.classList.add('totaal-kolom-rapport');
+    //totaal.style.marginLeft = '20px';
     const totaalAantal = prestaties.reduce((acc, prestatie) => {
         const filteredSoort = filteredDayElementen.filter(day => day.textContent === prestatie);
         return acc + filteredSoort.length;
@@ -169,7 +171,7 @@ function genereerRapport() {
     rapport.appendChild(kolom1);
 
     const kolom2 = document.createElement('div');
-    kolom2.classList.add('kolom2');
+    kolom2.classList.add('kolom-rapport');
     const rapportHeader2 = document.createElement('h3');
     rapportHeader2.textContent = '# Afwezigheden';
     kolom2.appendChild(rapportHeader2);
@@ -187,11 +189,12 @@ function genereerRapport() {
         listItem.appendChild(listItemAantal);
     });
     kolom2.appendChild(rapportList2);
-    const line2 = document.createElement('hr');
+    /*const line2 = document.createElement('hr');
     line2.classList.add('line');
-    kolom2.appendChild(line2);
+    kolom2.appendChild(line2);*/
     const totaalAfwezig = document.createElement('div');
-    totaalAfwezig.style.marginLeft = '20px';
+    totaalAfwezig.classList.add('totaal-kolom-rapport');
+    //totaalAfwezig.style.marginLeft = '20px';
     const totaalAfwezigAantal = afwezigheden.reduce((acc, afwezig) => {
         const filteredSoort = filteredDayElementen.filter(day => day.textContent === afwezig);
         return acc + filteredSoort.length;

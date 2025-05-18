@@ -427,30 +427,50 @@ input[type=checkbox] {
     justify-content: space-between;
 }
 .rapport {
+    color: #0221248a;
     display: flex;
     flex-direction: row;
     gap: 80px;
     margin-top: 20px;
 }
 .rapport-header {
+    color: #0221248a;
     margin: 0;
 }
 .rapport li {
     width: 100%;
+    border-bottom: 1px solid rgb(159, 159, 192);
 }
 .rapport span {
     font-family: monospace;
     /*font-size: 1.2em;*/
-    color: #dbdbdb;
+    color: #022124d0;
     float: right;
-    color: #0221248a;
+    font-size: 0.9em;
     font-weight: bold;
 }
+.kolom-rapport {
+    width: 180px;
+    /*align-items: center;*/
+    /*gap: 20px;*/
+    /*border-bottom: 1px solid rgb(159, 159, 192);*/
+}
 .line {
-    border:1px solid #333333;
+    /*border:1px solid blue;*/
     margin: 10px 0;
 }
-
+.totaal-kolom-rapport {
+    margin-left: 20px;
+    padding: 5px 10px;
+    background: linear-gradient(360deg,#0221248a 10%,#efefef 360%);
+    color: #dbdbdb;
+    
+}
+.totaal-kolom-rapport span {
+    color: #dbdbdb;
+    /*font-size: 1.2em;*/
+    font-weight: normal;
+}
 .totaal-rapport {
     float: right;
 }
