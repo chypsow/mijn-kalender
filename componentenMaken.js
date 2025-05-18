@@ -53,9 +53,11 @@ export function maakKnoppen() {
         const icoon = document.createElement('i');
         icoon.classList.add('fa', knop[1]);
         //icoon.classList.add(knop[1]);
-        icoon.setAttribute('aria-hidden', 'true');
-        icoon.textContent = ` ${knop[2]}`;
         btn.appendChild(icoon);
+        const tekst = document.createElement('span');
+        tekst.classList.add('knopTekst');
+        tekst.textContent = ` ${knop[2]}`;
+        btn.appendChild(tekst);
         btn.addEventListener('click', handleClickBtn);
         DOM.buttonContainer.appendChild(btn);
     });

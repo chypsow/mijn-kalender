@@ -292,11 +292,11 @@ section {
 .buttons-container {
     display: flex;
     flex-direction: column;
-    width: 12em;
+    width: 14em;
 }
 .btnGreen {
     text-align: left;
-    font-size: 1.2em;
+    font-size: 1.1em;
     padding: 10px;
     outline: none;
     white-space: nowrap;
