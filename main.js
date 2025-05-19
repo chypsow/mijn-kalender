@@ -321,20 +321,67 @@ document.addEventListener("click", (event) => {
     }
     
     if (tabBlad !== 0) return;
+    // Check if event.target is an Element and has dataset
+    /*if (!(event.target instanceof Element) || !event.target.dataset) return;*/
     const selected = event.target.dataset.shift;
-    if(!selected) return;
+    if (!selected) return;
 
     const cellArray = DOM.calendar.querySelectorAll('.cell');
-    let cellCoordinates = JSON.parse(sessionStorage.getItem("selectedCell")) || {};
+    let selectedCell = JSON.parse(sessionStorage.getItem("selectedCell")) || {};
     const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings;
-    cellCoordinates.datum = event.target.dataset.datum;
-    cellCoordinates.team = settings[tabBlad].ploeg;
-    
-    const highlightedCell = Array.from(cellArray).find(cel => cel.classList.contains('highlight'));
-    if (highlightedCell) highlightedCell.classList.remove('highlight');
-    event.target.classList.add('highlight');
-    saveToSessionStorage("selectedCell", cellCoordinates);
+    const datum = event.target.dataset.datum;
+    const team = settings[tabBlad].ploeg;
+
+    // Find if this cell is already selected
+    const alreadySelected = (selectedCell && selectedCell.datum === datum && selectedCell.team === team);
+
+    if (alreadySelected) {
+        // Deselect cell
+        selectedCell = {};
+        event.target.classList.remove('highlight');
+    } else {
+        // Select cell
+        /*selectedCells.push({ datum, team });*/
+        const highlightedCell = Array.from(cellArray).find(cel => cel.classList.contains('highlight'));
+        if (highlightedCell) highlightedCell.classList.remove('highlight');
+        selectedCell = {datum, team}; 
+        event.target.classList.add('highlight');
+    }
+
+    // Optionally, update all cell highlights (in case of rerender)
+    /*cellArray.forEach(cell => {
+        const isSelected = selectedCells.some(
+            c => c.datum === cell.dataset.datum && c.team === team
+        );
+        cell.classList.toggle('highlight', isSelected);
+    });*/
+
+    saveToSessionStorage("selectedCell", selectedCell);
 });
+/*document.addEventListener("click", (event) => {
+    // Only run if on tabBlad 0 (year calendar)
+    if (tabBlad !== 0) return;
+
+    // If click is inside the calendar, do nothing
+    if (DOM.calendar.contains(event.target)) return;
+
+    // If click is on a dropdown, modal, or overlay, do nothing
+    if (
+        DOM.selectOverlay.contains(event.target) ||
+        DOM.dropdowns.contains(event.target) ||
+        DOM.monthSelect.contains(event.target) ||
+        DOM.yearSelect.contains(event.target) ||
+        DOM.modalOverlay.contains(event.target) ||
+        DOM.modal.contains(event.target)
+    ) return;
+
+    // Deselect all highlighted cells
+    const cellArray = DOM.calendar.querySelectorAll('.cell.highlight');
+    cellArray.forEach(cell => cell.classList.remove('highlight'));
+
+    // Clear selectedCells in sessionStorage
+    saveToSessionStorage("selectedCells", []);
+});*/
 
 //local storage aanpassen volgens het bestand config.js
 document.addEventListener('keydown', (event) => {

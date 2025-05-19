@@ -119,73 +119,91 @@ export function handleClickBtn(e) {
     }
 };
 function genereerRapport() {
-  const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-  const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
+    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
 
-  const dayElementen = document.querySelectorAll('.cell');
-  const filteredDayElementen = Array.from(dayElementen).filter(day => day.dataset.datum !== '0');
+    const dayElementen = document.querySelectorAll('.cell');
+    const filteredDayElementen = Array.from(dayElementen).filter(day => day.dataset.datum !== '0');
 
-  const prestaties = ['N', 'N12', 'N- fd', 'N12- fd', 'V', 'V12', 'V- fd', 'V12- fd', 'L', 'L- fd', 'D', 'OPL'];
-  const afwezigheden = ['BV', 'BV- fd', 'CS', 'CS- fd', 'ADV','ADV- fd', 'BF','BF- fd', 'AV', 'AV- fd', 'HP', 'HP- fd', 'x', 'x- fd', 'Z', 'Z- fd'];
+    const prestaties = ['N', 'N12', 'N- fd', 'N12- fd', 'V', 'V12', 'V- fd', 'V12- fd', 'L', 'L- fd', 'D', 'OPL'];
+    const afwezigheden = ['BV', 'BV- fd', 'CS', 'CS- fd', 'ADV','ADV- fd', 'BF','BF- fd', 'AV', 'AV- fd', 'HP', 'HP- fd', 'x', 'x- fd', 'Z', 'Z- fd'];
 
-  let html = `
-    <div class="rapport">
-      <h2 class="header-rapport">Rapport voor ploeg ${selectedPloeg} in ${currentYear}</h2>
-      <hr>
-      <div class="rapport-grid">
-        <div class="kolom-rapport">
-          <h3># Prestaties</h3>
-          <table class="rapport-tabel">
-  `;
+    let html = `
+        <div class="rapport">
+        <h2 class="header-rapport">Rapport-${currentYear} voor ploeg ${selectedPloeg}</h2>
+        <hr>
+        <div class="rapport-grid">
+            <div class="kolom-rapport">
+            <h3># Prestaties</h3>
+            <table class="rapport-tabel">
+    `;
 
-  let totaalPrestaties = 0;
+    let totaalPrestaties = 0;
 
-  prestaties.forEach(prestatie => {
-    const aantal = filteredDayElementen.filter(day => day.textContent === prestatie).length;
-    if (aantal > 0) {
-      html += `<tr><td>${prestatie}:</td><td>${aantal}</td></tr>`;
-      totaalPrestaties += aantal;
-    }
-  });
+    prestaties.forEach(prestatie => {
+        const aantal = filteredDayElementen.filter(day => day.textContent === prestatie).length;
+        if (aantal > 0) {
+        html += `<tr><td>${prestatie}:</td><td>${aantal}</td></tr>`;
+        totaalPrestaties += aantal;
+        }
+    });
 
-  html += `<tr class="totaal-rij"><td><strong>Totaal:</strong></td><td><strong>${totaalPrestaties}</strong></td></tr>`;
+    html += `<tr class="totaal-rij"><td><strong>Totaal:</strong></td><td><strong>${totaalPrestaties}</strong></td></tr>`;
 
-  html += `
-          </table>
+    html += `
+            </table>
+            </div>
+            <div class="kolom-rapport">
+            <h3># Afwezigheden</h3>
+            <table class="rapport-tabel">
+    `;
+
+    let totaalAfwezigheden = 0;
+
+    afwezigheden.forEach(afw => {
+        const aantal = filteredDayElementen.filter(day => day.textContent === afw).length;
+        if (aantal > 0) {
+        html += `<tr><td>${afw}:</td><td>${aantal}</td></tr>`;
+        totaalAfwezigheden += aantal;
+        }
+    });
+
+    html += `<tr class="totaal-rij"><td><strong>Totaal:</strong></td><td><strong>${totaalAfwezigheden}</strong></td></tr>
+        </table>
         </div>
-        <div class="kolom-rapport">
-          <h3># Afwezigheden</h3>
-          <table class="rapport-tabel">
-  `;
+    `;
 
-  let totaalAfwezigheden = 0;
-
-  afwezigheden.forEach(afw => {
-    const aantal = filteredDayElementen.filter(day => day.textContent === afw).length;
-    if (aantal > 0) {
-      html += `<tr><td>${afw}:</td><td>${aantal}</td></tr>`;
-      totaalAfwezigheden += aantal;
+    let ratioPrestaties = 0;
+    if (totaalPrestaties > 0 && totaalAfwezigheden > 0) {
+        ratioPrestaties = Math.round((totaalPrestaties / (totaalPrestaties + totaalAfwezigheden)) * 100);
+    } else if (totaalPrestaties > 0) {
+        ratioPrestaties = 100;
+    } else if (totaalAfwezigheden > 0) {
+        ratioPrestaties = 0;
     }
-  });
 
-  html += `<tr class="totaal-rij"><td><strong>Totaal:</strong></td><td><strong>${totaalAfwezigheden}</strong></td></tr>`;
-
-  html += `
-          </table>
-        </div>
-      </div>
-      <button class="print-modal-button no-print">Afdrukken</button>
-    </div>
-  `;
-
-  DOM.overlay.innerHTML = html;
-
-  setTimeout(() => {
-    const printButton = document.querySelector(".print-modal-button");
-    if (printButton) {
-      printButton.addEventListener("click", modalAfdrukken);
-    }
-  }, 0);
+    html += `
+                <div class="kolom-rapport">
+                    <h3>Ratio-Prestatie:</h3>
+                    <p>${totaalPrestaties} / ${totaalAfwezigheden + totaalPrestaties} = <strong>${Math.round((totaalPrestaties/(totaalAfwezigheden + totaalPrestaties))*100)}%</strong></p>
+                    <br>
+                    <h3>Ratio-Afwezigheid:</h3>
+                    <p>${totaalAfwezigheden} / ${totaalAfwezigheden + totaalPrestaties} = <strong>${Math.round((totaalAfwezigheden/(totaalAfwezigheden + totaalPrestaties))*100)}%</strong></p>
+                </div>
+            </div>
+            <div class="rapport-footer">
+                <p><em>Dit rapport is gegenereerd op ${new Date().toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}.</em></p>
+            </div>
+             
+        <button class="print-modal-button no-print">Afdrukken</button>
+    `;
+    DOM.overlay.innerHTML = html;
+    setTimeout(() => {
+        const printButton = document.querySelector(".print-modal-button");
+        if (printButton) {
+        printButton.addEventListener("click", modalAfdrukken);
+        }
+    }, 0);
 };
 
 

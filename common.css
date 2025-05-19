@@ -435,9 +435,9 @@ input[type=checkbox] {
   gap: 4rem;
   /*justify-content: space-between;*/
 }
-.kolom-rapport {
+/*.kolom-rapport {
   flex: 1 1 1 1;
-}
+}*/
 .rapport-tabel {
   width: 200px;
   border-collapse: collapse;
