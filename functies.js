@@ -184,11 +184,14 @@ function genereerRapport() {
 
     html += `
                 <div class="kolom-rapport">
-                    <h3>Ratio-Prestatie:</h3>
-                    <p>${totaalPrestaties} / ${totaalAfwezigheden + totaalPrestaties} = <strong>${Math.round((totaalPrestaties/(totaalAfwezigheden + totaalPrestaties))*100)}%</strong></p>
-                    <br>
-                    <h3>Ratio-Afwezigheid:</h3>
-                    <p>${totaalAfwezigheden} / ${totaalAfwezigheden + totaalPrestaties} = <strong>${Math.round((totaalAfwezigheden/(totaalAfwezigheden + totaalPrestaties))*100)}%</strong></p>
+                    <div class="ratio-rapport">
+                        <h3>Prestatie-ratio:</h3>
+                        <p>${totaalPrestaties} / ${totaalAfwezigheden + totaalPrestaties} = <strong>${Math.round((totaalPrestaties/(totaalAfwezigheden + totaalPrestaties))*100)}%</strong></p>
+                    </div>
+                    <div class="ratio-rapport">    
+                        <h3>Afwezigheid-ratio:</h3>
+                        <p>${totaalAfwezigheden} / ${totaalAfwezigheden + totaalPrestaties} = <strong>${Math.round((totaalAfwezigheden/(totaalAfwezigheden + totaalPrestaties))*100)}%</strong></p>
+                    </div>
                 </div>
             </div>
             <div class="rapport-footer">

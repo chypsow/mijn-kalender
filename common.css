@@ -392,7 +392,7 @@ section {
     /*margin-right: 10px;*/
     text-align: center;
     font-size: 16px;
-    background-color: #bebebe;
+    background-color: #f3f3f3;
     color: #000000;
     border-radius: 4px;
     outline: none;
@@ -408,7 +408,7 @@ section {
     font-size: 16px;
     padding: 3px 5px;
     border-radius: 4px;
-    background-color: #bebebe;
+    background-color: #f3f3f3;
     color: #000000;
     outline: none;
     transition: all 0.10s ease-in-out;
@@ -435,9 +435,11 @@ input[type=checkbox] {
   gap: 4rem;
   /*justify-content: space-between;*/
 }
-/*.kolom-rapport {
-  flex: 1 1 1 1;
-}*/
+.kolom-rapport {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
 .rapport-tabel {
   width: 200px;
   border-collapse: collapse;
@@ -472,7 +474,15 @@ input[type=checkbox] {
     border-radius: 4px;
     color: #dbdbdb;
 }
-
+.ratio-rapport {
+    margin-top: 20px;
+    text-align: center;
+    padding: 0 15px;
+    background-color: #eaeaea;
+    border: 1px solid #a5a5a5;
+    border-radius: 4px;
+   
+}
 .overlay {
     display: block;
     /*flex-direction: column;*/
