@@ -1,5 +1,5 @@
-import { ploegenGegevens, DOM, generateCalendar, defaultSettings, beginrechtVerlof, berekenSaldo } from './main.js';
-import { calculateTotals, getSettingsFromLocalStorage, handleBlur, handleClickBtn } from './functies.js';
+import { ploegenGegevens, DOM, generateCalendar, defaultSettings, defaultVacations, berekenSaldo } from './main.js';
+import { calculateTotals, getBeginRechtFromLocalStorage, getSettingsFromLocalStorage, handleBlur, handleClickBtn } from './functies.js';
 import { handelVerlofAanvraag, cancelAanvraag, cancelAlleAanvragen, handelHerplanning } from './herplanningen.js';
 
 export let tabBlad = 0;
@@ -88,11 +88,15 @@ export function maakVerlofContainer() {
     beginRecht.textContent = 'Beginrecht';
     container.appendChild(beginRecht);
 
-    Object.entries(beginrechtVerlof).forEach(([verlof,aantal]) => {
+    const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const currentYear =  instellingen.currentYear;
+    const selectedPloeg = instellingen.selectedPloeg;
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear, defaultVacations);
+    Object.keys(beginrechtVerlof).forEach(verlof => {
         const inputVak = document.createElement('input');
         inputVak.classList.add('inputVak');
         inputVak.id = verlof;
-        inputVak.value = aantal;
+        //inputVak.value = aantal;
         inputVak.addEventListener('blur', handleBlur);
         inputVak.addEventListener('focus', function () {
             this.select();
@@ -117,7 +121,7 @@ export function maakVerlofContainer() {
     saldo.textContent = 'Saldo';
     container.appendChild(saldo);
 
-    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    //const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const saldoArray = berekenSaldo(selectedPloeg);
     Object.entries(saldoArray).forEach(([verlof,aantal]) => {
         const outputVak = document.createElement('div');

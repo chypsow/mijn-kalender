@@ -1,5 +1,5 @@
 import { DOM, shiftPattern, startDates, opgenomenVerlofPerPloeg } from "./main.js";
-import { getDaysSinceStart, verwijderVerlofDatum, voegVerlofDatumToe, behandelenNaAllesTerugstellen } from "./functies.js";
+import { getDaysSinceStart, verwijderVerlofDatum, voegVerlofDatumToe, beginSaldoEnRestSaldoInvullen } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 
 export function updateYearCalendarTable(selectedPloeg, year) {
@@ -40,7 +40,7 @@ export function updateYearCalendarTable(selectedPloeg, year) {
       }
     });
   });
-  behandelenNaAllesTerugstellen(selectedPloeg);
+  beginSaldoEnRestSaldoInvullen(year, selectedPloeg);
 };
 
 export function generateYearCalendarTable(selectedPloeg, year) {
@@ -106,6 +106,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
     }
     calendar.appendChild(monthRow);
   }
+  beginSaldoEnRestSaldoInvullen(year, selectedPloeg);
 };
 
 function shiftenInvullen(elt, date, holidays, ploeg, cyclus) {

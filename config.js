@@ -1,11 +1,68 @@
-export const dataBeginRecht = {
+export const dataBeginRecht = [
+  {
+    "year": 2025,
     "BV": 16,
     "CS": 0,
     "ADV": 16,
     "BF": 6,
     "AV": 0,
     "HP": 0
-};
+  },
+  {
+    "year": 2026,
+    "BV": 16,
+    "CS": 0,
+    "ADV": 15,
+    "BF": 6,
+    "AV": 1,
+    "HP": 0
+  },
+  {
+    "year": 2027,
+    "BV": 16,
+    "CS": 0,
+    "ADV": 15,
+    "BF": 6,
+    "AV": 2,
+    "HP": 0
+  },
+  {
+    "year": 2028,
+    "BV": 20,
+    "CS": 10,
+    "ADV": 18,
+    "BF": 10,
+    "AV": 0,
+    "HP": 0
+  },
+  {
+    "year": 2024,
+    "BV": 16,
+    "CS": 0,
+    "ADV": 16,
+    "BF": 6,
+    "AV": 0,
+    "HP": 2
+  },
+  {
+    "year": 2023,
+    "BV": 0,
+    "CS": 0,
+    "ADV": 0,
+    "BF": 0,
+    "AV": 0,
+    "HP": 0
+  },
+  {
+    "year": 2029,
+    "BV": 0,
+    "CS": 0,
+    "ADV": 0,
+    "BF": 0,
+    "AV": 0,
+    "HP": 0
+  }
+];
 
 export const dataShift = [
     "N",
@@ -457,5 +514,9 @@ export const dataVerlofdagen = [
     {
         "datum": "12/6/2025",
         "soort": "ADV"
+    },
+    {
+        "datum": "19/5/2025",
+        "soort": "BV"
     }
 ];

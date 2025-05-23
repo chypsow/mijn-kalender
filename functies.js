@@ -1,11 +1,11 @@
-import { DOM, beginrechtVerlof, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar } from "./main.js";
+import { DOM, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, defaultVacations } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
 
-export function localStorageAanpassenVolgensConfigJS(cond1, cond2, cond3) {
+export function localStorageAanpassenVolgensConfigJS(cond1=true, cond2=true, cond3=true) {
     if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
     if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
     if(cond3) saveToLocalStorage('shiftPattern', dataShift);
@@ -173,14 +173,14 @@ function genereerRapport() {
         </div>
     `;
 
-    let ratioPrestaties = 0;
+    /*let ratioPrestaties = 0;
     if (totaalPrestaties > 0 && totaalAfwezigheden > 0) {
         ratioPrestaties = Math.round((totaalPrestaties / (totaalPrestaties + totaalAfwezigheden)) * 100);
     } else if (totaalPrestaties > 0) {
         ratioPrestaties = 100;
     } else if (totaalAfwezigheden > 0) {
         ratioPrestaties = 0;
-    }
+    }*/
 
     html += `
                 <div class="kolom-rapport">
@@ -208,9 +208,6 @@ function genereerRapport() {
         }
     }, 0);
 };
-
-
-
 
 function afdrukVoorbereiding() {
     const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
@@ -260,14 +257,26 @@ export function handleBlur(e) {
 
 function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     //if(verlof === "Z") return;
-    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const currentYear =  instellingen.currentYear;
+    const selectedPloeg = instellingen.selectedPloeg;
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear, defaultVacations);
+    
     const totaal1 = document.getElementById('totaalBeginrecht');
     const totaal2 = document.getElementById('totaalSaldo');
     const mySaldoElt = document.getElementById(`saldo-${verlof}`);
     const saldoOud = parseInt(mySaldoElt.textContent.trim());
     
     beginrechtVerlof[verlof] = aantal;
-    saveToLocalStorage('beginrechtVerlof', beginrechtVerlof);
+    //saveToLocalStorage('beginrechtVerlof', beginrechtVerlof);
+    const beginrechtArray = JSON.parse(localStorage.getItem('beginrechtVerlof'));
+    const index = beginrechtArray.findIndex(item => item.year === currentYear);
+    /*if (index !== -1) {
+        beginrechtVerlof[index][verlof] = aantal;
+    } else {
+        beginrechtVerlof.push({ year: currentYear, [verlof]: aantal });
+    }*/
+    updateLocalStorage('beginrechtVerlof', index, verlof, aantal, defaultVacations);
     const saldoNieuw = berekenSaldo(selectedPloeg, verlof);
 
     totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
@@ -304,7 +313,8 @@ export function behandelenSaldoVerlofdagen(verlof, oud) {
     }
 
     //console.log(`opgenomen: ${verlof}, oude saldo: ${saldoOud}, nieuwe saldo: ${saldoElt1.textContent}`);
-}
+};
+
 export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP'];
     if(!verlofdagen.includes(verlof)) return;
@@ -313,16 +323,32 @@ export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
     saldoElt.textContent = parseInt(saldoElt.textContent) + 1;
     const totaalSaldo = parseInt(totaal2.textContent.trim());
     totaal2.textContent = ` ${totaalSaldo + 1}`;
-}
-export function behandelenNaAllesTerugstellen(ploeg) {
+};
+
+export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(year, defaultVacations);
     const saldoArray = berekenSaldo(ploeg);
+    Object.entries(beginrechtVerlof).forEach(([verlof,aantal]) => {
+        const elt = document.getElementById(verlof);
+        if(elt) {
+            elt.value = aantal;
+            //elt.textContent = aantal;
+        }
+    });
+    const beginrechtTotaal = calculateTotals(beginrechtVerlof);
+    const beginrechtElt = document.getElementById('totaalBeginrecht');
+    beginrechtElt.textContent = ` ${beginrechtTotaal}`;
+    //beginrechtElt.style.color = beginrechtTotaal > 0 ? 'green' : 'red';
+    //beginrechtElt.style.fontWeight = beginrechtTotaal > 0 ? 'bold' : 'normal';
     Object.entries(saldoArray).forEach(([verlof,aantal]) => {
         const elt = document.getElementById(`saldo-${verlof}`);
         elt.textContent = aantal;
     });
     const saldoTotaal = calculateTotals(saldoArray);
     document.getElementById('totaalSaldo').textContent = ` ${saldoTotaal}`;
-}
+    //document.getElementById('totaalSaldo').style.color = saldoTotaal > 0 ? 'green' : 'red';
+    //document.getElementById('totaalSaldo').style.fontWeight = saldoTotaal > 0 ? 'bold' : 'normal';
+};
 
 export function calculateTotals(obj) {
     return Object.values(obj).reduce((acc, x) => acc + x);
@@ -350,6 +376,25 @@ export function initializeSettingsToLocalStorage(key, defaultValue) {
         });
         localStorage.setItem(key, JSON.stringify(instellingen));
     }
+};
+export function initializeBeginrechtToLocalStorage(key, defaultValue) {
+    if(localStorage.getItem(key) === null) {
+        localStorage.setItem(key, JSON.stringify(defaultValue()));
+    }
+    /*else {
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        let beginrechten = JSON.parse(localStorage.getItem(key));
+        beginrechten.forEach(beginrecht => {
+            beginrecht.BV = 0;
+            beginrecht.CS = 0;
+            beginrecht.ADV = 0;
+            beginrecht.BF = 0;
+            beginrecht.AV = 0;
+            beginrecht.HP = 0;
+        });
+        localStorage.setItem(key, JSON.stringify(beginrechten));
+    }*/
 };
 
 export function resetDefaultSettings(obj, arr) {
@@ -386,9 +431,37 @@ export function getSettingsFromLocalStorage(blad, setting) {
     }; 
 };
 
-export function updateLocalStorage(settings, index, key, value, defaultSet) {
+export function getBeginRechtFromLocalStorage(jaar, beginrechtArray) {
+    let beginrechten;
+    try {
+        beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof')) || beginrechtArray();
+    } catch (error) {
+        console.error("Failed to parse session storage settings:", error);
+        beginrechten = beginrechtArray;
+    }
+    let beginrecht = beginrechten.find(item => item.year === jaar);
+    if (!beginrecht) {
+        //console.warn("No matching beginrecht found for year:", year);
+        beginrechten.push({ year: jaar, BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0 });
+        beginrecht = beginrechten.find(item => item.year === jaar);
+        saveToLocalStorage('beginrechtVerlof', beginrechten);
+    }
+    return {
+        BV: beginrecht.BV,
+        CS: beginrecht.CS,
+        ADV: beginrecht.ADV,
+        BF: beginrecht.BF,
+        AV: beginrecht.AV,
+        HP: beginrecht.HP,
+    };
+}
+
+export function updateLocalStorage(settings, index, key1, value1, key2 = null, value2 = null, defaultSet) {
     const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet();
-    instellingen[index][key] = value;
+    instellingen[index][key1] = value1;
+    if (key2 && value2) {
+        instellingen[index][key2] = value2;
+    }
     saveToLocalStorage(settings, instellingen);
 };
 

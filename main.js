@@ -2,7 +2,9 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, initializeSettingsToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, saveToSessionStorage, resetDefaultSettings, adjustLayout, localStorageAanpassenVolgensConfigJS } from './functies.js';
+import { toggleModal, initializeSettingsToLocalStorage, initializeBeginrechtToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, 
+    saveToSessionStorage, resetDefaultSettings, adjustLayout, localStorageAanpassenVolgensConfigJS, 
+    getBeginRechtFromLocalStorage} from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 
 // default settings
@@ -21,18 +23,6 @@ const startDatums = {
 };
 export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
 export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
-export const defaultSettings = () => {
-    const date = new Date();
-    const currentMonth = date.getMonth();
-    const currentYear = date.getFullYear();
-
-    return Array.from({ length: 4 }, (_, index) => ({
-        pagina: index,
-        ploeg: 1,
-        maand: currentMonth,
-        jaar: currentYear
-    }));
-};   
 export const ploegenGegevens = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
     {symbool:'N', naam:'nacht', kleur:'#4a91e2'},
@@ -44,15 +34,35 @@ export const ploegenGegevens = [
     {symbool:'OPL', naam:'opleiding', kleur:'red'}
 ];
 //export const shiftData = JSON.parse(localStorage.getItem("shiftData")) || shiftData;
-const defaultVacations = {
-    'BV': 0,
-    'CS': 0,
-    'ADV': 0,
-    'BF': 0,
-    'AV': 0,
-    'HP': 0
+export const defaultSettings = () => {
+    const date = new Date();
+    const currentMonth = date.getMonth();
+    const currentYear = date.getFullYear();
+
+    return Array.from({ length: 4 }, (_, index) => ({
+        pagina: index,
+        ploeg: 1,
+        maand: currentMonth,
+        jaar: currentYear
+    }));
 };
-export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations;
+//console.log("defaultSettings", defaultSettings());   
+export const defaultVacations = () => {
+    const date = new Date();
+    const currentYear = date.getFullYear();
+
+    return Array.from({ length: 4 }, (_, index) => ({
+        year: currentYear + index,
+        BV: 20,
+        CS: 10,
+        ADV: 18,
+        BF: 10,
+        AV: 0,
+        HP: 0
+    }));
+};
+//console.log("defaultVacations", defaultVacations());
+//export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations();
 export const opgenomenVerlofPerPloeg = {
     verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
     verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
@@ -78,18 +88,19 @@ function savePloegenToLocalStorage() {
 
 export const berekenSaldo = (ploeg, key = null) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const array = opgenomenVerlofPerPloeg[ploegKey];
+    const vacations = opgenomenVerlofPerPloeg[ploegKey];
     const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
-    const newArray = array.filter(obj => {
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear, defaultVacations);
+    const vacationsCurrentYear = vacations.filter(obj => {
         const year = parseInt(obj.datum.split('/')[2]);
         return year === currentYear;
     });
-    if (newArray.length === 0) {
+    if (vacationsCurrentYear.length === 0) {
         return key ? beginrechtVerlof[key] : beginrechtVerlof;
     }
     // Functie om het saldo te berekenen
     const calculateSaldo = (verlofKey) => {
-        const opgenomen = newArray.filter(obj => obj.soort === verlofKey).length;
+        const opgenomen = vacationsCurrentYear.filter(obj => obj.soort === verlofKey).length;
         return beginrechtVerlof[verlofKey] - opgenomen;
     };
     if (key) {
@@ -244,8 +255,8 @@ function triggerPrev() {
     } else {
         currentYear -= 1;
     }
-    updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, defaultSettings);
-    updateLocalStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
+    updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, 'jaar', currentYear, defaultSettings);
+    
     updateCalendar();
 };
 function triggerNext() {
@@ -262,8 +273,8 @@ function triggerNext() {
     } else {
         currentYear += 1;
     }
-    updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, defaultSettings);
-    updateLocalStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
+    updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, 'jaar', currentYear, defaultSettings);
+    //updateLocalStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
     updateCalendar();
 };
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
@@ -391,7 +402,7 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault(); // Voorkomt standaard browsergedrag
         const userResponse = confirm(`Local storage van ploeg 1 wordt nu aangepast volgens config`);
         if (!userResponse) return;
-        localStorageAanpassenVolgensConfigJS(true, true, true);
+        localStorageAanpassenVolgensConfigJS();
     }
 });
 window.addEventListener('resize', adjustLayout);
@@ -411,6 +422,7 @@ document.getElementById('bars').addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeSettingsToLocalStorage('standaardInstellingen', defaultSettings);
+    initializeBeginrechtToLocalStorage('beginrechtVerlof', defaultVacations);
     savePloegenToLocalStorage();
     maakSidebar();
     maakPloegDropdown();
