@@ -5,7 +5,7 @@ import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 export function updateYearCalendarTable(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
+  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells'));
   let selectActief = false;
   if(geselecteerd) selectActief = true;
   const cyclusLengte = shiftPattern.length;
@@ -15,31 +15,33 @@ export function updateYearCalendarTable(selectedPloeg, year) {
   monthElementen.forEach((month, index) => {
     const dayElementen = month.querySelectorAll('.cell');
     dayElementen.forEach((day, i) => {
-      if(i > 0) {
         day.textContent = '';
         day.dataset.shift = '';
         day.dataset.datum = '';
         day.className = '';
         day.classList.add('cell');
-        const currentDate = new Date(year, index-1, i);
+        const currentDate = new Date(year, index-1, i+1);
         if (currentDate.getMonth() === index-1) {
           shiftenInvullen(day, currentDate, holidays, selectedPloeg, cyclusLengte);
-          if(selectActief) {
-            if(currentDate.toLocaleDateString("nl-BE") === geselecteerd.datum && 
-              selectedPloeg === geselecteerd.team) {
-              selectActief === false;
-              day.classList.add('highlight');
-            }
-          }
           if (today === currentDate.toLocaleDateString("nl-BE")) {
             day.classList.add("today");
           }
         } else {
           day.classList.add('emptyDay');
         }
-      }
     });
   });
+  if(selectActief) {
+    const activeTeam = geselecteerd[0].team;
+    if(activeTeam !== selectedPloeg) return;
+    geselecteerd.forEach(selectedCell => {
+      const dayElement = document.querySelector(`.cell[data-datum="${selectedCell.datum}"]`);
+      if(dayElement) {
+        dayElement.classList.add('highlight');
+      }
+    }
+    );
+  }
   beginSaldoEnRestSaldoInvullen(year, selectedPloeg);
 };
 
@@ -47,7 +49,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCell'));
+  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells'));
   let selectActief = false;
   if(geselecteerd) selectActief = true;
   const cyclusLengte = shiftPattern.length;
@@ -76,7 +78,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
 
     // Eerste cel: maandnaam
     const monthCell = document.createElement("div");
-    monthCell.classList.add("cell", "month-cell");
+    monthCell.classList.add("month-cell");
     monthCell.textContent = new Date(year, month).toLocaleString("nl", { month: "long" });
     monthRow.appendChild(monthCell);
 
@@ -89,13 +91,6 @@ export function generateYearCalendarTable(selectedPloeg, year) {
       // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
       if (currentDate.getMonth() === month) {
         shiftenInvullen(dayCell, currentDate, holidays, selectedPloeg, cyclusLengte);
-        if(selectActief) {
-          if(currentDate.toLocaleDateString("nl-BE") === geselecteerd.datum && 
-            selectedPloeg === geselecteerd.team) {
-            selectActief === false;
-            dayCell.classList.add('highlight');
-          }
-        }
         if (today === currentDate.toLocaleDateString("nl-BE")) {
           dayCell.classList.add("today");
         }
@@ -105,6 +100,17 @@ export function generateYearCalendarTable(selectedPloeg, year) {
       monthRow.appendChild(dayCell);
     }
     calendar.appendChild(monthRow);
+  }
+  if(selectActief) {
+    const activeTeam = geselecteerd[0].team;
+    if(activeTeam !== selectedPloeg) return;
+    geselecteerd.forEach(selectedCell => {
+      const dayElement = document.querySelector(`.cell[data-datum="${selectedCell.datum}"]`);
+      if(dayElement) {
+        dayElement.classList.add('highlight');
+      }
+    }
+    );
   }
   beginSaldoEnRestSaldoInvullen(year, selectedPloeg);
 };

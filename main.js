@@ -304,6 +304,88 @@ DOM.monthYear.addEventListener("click", () => {
     DOM.yearSelect.classList.toggle('visible');
 });
 
+// Event listeners voor het selecteren van cellen
+let isSelecting = false;
+let selectionStart = null;
+let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
+
+document.addEventListener("mousedown", (event) => {
+    if (tabBlad !== 0) return;
+    if (!event.target.classList.contains("cell")) return;
+    const datum = event.target.dataset.datum;
+    if (!datum) return;
+
+    const cell = event.target;
+    const team = getCurrentTeam();
+
+    /*if (cell.classList.contains("highlight")) {
+        // Verwijder highlight en verwijder uit selectedCells
+        cell.classList.remove("highlight");
+        selectedCells = selectedCells.filter(c => c.datum !== datum || c.team !== team);
+        sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
+        return;
+    }*/
+    // Start selectie
+    isSelecting = true;
+    selectionStart = datum;
+    if (!event.ctrlKey) {
+        clearAllHighlights(); // Alleen als je gewone klik doet
+        selectedCells = [{ datum, team }];
+        cell.classList.add("highlight");
+    }
+    /*clearAllHighlights();
+    selectedCells = [{ datum, team }];
+    cell.classList.add("highlight");*/
+});
+
+document.addEventListener("mouseover", (event) => {
+    if (!isSelecting) return;
+    if (!event.target.classList.contains("cell")) return;
+    const datum = event.target.dataset.datum;
+    if (!datum) return;
+
+    const team = getCurrentTeam();
+    const cellArray = Array.from(DOM.calendar.querySelectorAll(".cell[data-datum]"));
+
+    const startIndex = cellArray.findIndex(c => c.dataset.datum === selectionStart);
+    const endIndex = cellArray.findIndex(c => c.dataset.datum === datum);
+
+    if (startIndex === -1 || endIndex === -1) return;
+
+    if(!event.ctrlKey) {
+        // Als je niet met Ctrl klikt, reset de selectie
+        clearAllHighlights();
+        selectedCells = [];
+    }
+    //clearAllHighlights();
+    //selectedCells = [];
+
+    const [from, to] = [startIndex, endIndex].sort((a, b) => a - b);
+    for (let i = from; i <= to; i++) {
+        const cel = cellArray[i];
+        cel.classList.add("highlight");
+        selectedCells.push({ datum: cel.dataset.datum, team });
+    }
+});
+
+document.addEventListener("mouseup", () => {
+    isSelecting = false;
+    sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
+    if (selectedCells.length > 0) {
+        sessionStorage.setItem("lastSelectedCell", JSON.stringify(selectedCells[selectedCells.length - 1]));
+    }
+});
+
+function clearAllHighlights() {
+    const allCells = DOM.calendar.querySelectorAll(".cell");
+    allCells.forEach(cell => cell.classList.remove("highlight"));
+}
+
+function getCurrentTeam() {
+    const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings;
+    return settings[tabBlad].ploeg;
+}
+
 document.addEventListener("click", (event) => {
     //console.log("Klik gedetecteerd:", event.target);
    if (DOM.selectOverlay.contains(event.target) && event.target !== DOM.yearSelect && event.target !== DOM.monthSelect) {
@@ -316,69 +398,35 @@ document.addEventListener("click", (event) => {
     if(DOM.modalOverlay.contains(event.target) && !DOM.modal.contains(event.target)) {
         toggleModal(false);
     }
-    
-    if (tabBlad !== 0) return;
-    // Check if event.target is an Element and has dataset
-    /*if (!(event.target instanceof Element) || !event.target.dataset) return;*/
-    const selected = event.target.dataset.shift;
-    if (!selected) return;
 
-    const cellArray = DOM.calendar.querySelectorAll('.cell');
-    let selectedCell = JSON.parse(sessionStorage.getItem("selectedCell")) || {};
-    const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings;
-    const datum = event.target.dataset.datum;
-    const team = settings[tabBlad].ploeg;
+    if (event.ctrlKey) {
+        if (tabBlad !== 0) return;
+        if (!event.target.classList.contains("cell")) return;
+        //if (isSelecting) return; // voorkom conflict tijdens drag-selectie
 
-    // Find if this cell is already selected
-    const alreadySelected = (selectedCell && selectedCell.datum === datum && selectedCell.team === team);
+        const datum = event.target.dataset.datum;
+        if (!datum) return;
+        const team = getCurrentTeam();
+        //let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
 
-    if (alreadySelected) {
-        // Deselect cell
-        selectedCell = {};
-        event.target.classList.remove('highlight');
-    } else {
-        // Select cell
-        /*selectedCells.push({ datum, team });*/
-        const highlightedCell = Array.from(cellArray).find(cel => cel.classList.contains('highlight'));
-        if (highlightedCell) highlightedCell.classList.remove('highlight');
-        selectedCell = {datum, team}; 
-        event.target.classList.add('highlight');
+        //const isSelected = event.target.classList.contains("highlight");
+        //const index = selectedCells.findIndex(cell => cell.datum === datum && cell.team === team);
+
+        /*if (isSelected && index > -1) {
+            selectedCells.splice(index, 1);
+            event.target.classList.remove("highlight");
+            //sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
+            //return;
+        } else {*/
+            //console.log("Datum toegevoegd:", datum, "Team:", team);   
+            selectedCells.push({ datum, team });
+            event.target.classList.add('highlight');
+        //}
+        sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
+        //sessionStorage.setItem("lastSelectedCell", JSON.stringify({ datum, team }));
     }
-
-    // Optionally, update all cell highlights (in case of rerender)
-    /*cellArray.forEach(cell => {
-        const isSelected = selectedCells.some(
-            c => c.datum === cell.dataset.datum && c.team === team
-        );
-        cell.classList.toggle('highlight', isSelected);
-    });*/
-
-    saveToSessionStorage("selectedCell", selectedCell);
 });
-/*document.addEventListener("click", (event) => {
-    // Only run if on tabBlad 0 (year calendar)
-    if (tabBlad !== 0) return;
 
-    // If click is inside the calendar, do nothing
-    if (DOM.calendar.contains(event.target)) return;
-
-    // If click is on a dropdown, modal, or overlay, do nothing
-    if (
-        DOM.selectOverlay.contains(event.target) ||
-        DOM.dropdowns.contains(event.target) ||
-        DOM.monthSelect.contains(event.target) ||
-        DOM.yearSelect.contains(event.target) ||
-        DOM.modalOverlay.contains(event.target) ||
-        DOM.modal.contains(event.target)
-    ) return;
-
-    // Deselect all highlighted cells
-    const cellArray = DOM.calendar.querySelectorAll('.cell.highlight');
-    cellArray.forEach(cell => cell.classList.remove('highlight'));
-
-    // Clear selectedCells in sessionStorage
-    saveToSessionStorage("selectedCells", []);
-});*/
 
 //local storage aanpassen volgens het bestand config.js
 document.addEventListener('keydown', (event) => {
