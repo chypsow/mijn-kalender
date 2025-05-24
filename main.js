@@ -34,6 +34,7 @@ export const ploegenGegevens = [
     {symbool:'OPL', naam:'opleiding', kleur:'red'}
 ];
 //export const shiftData = JSON.parse(localStorage.getItem("shiftData")) || shiftData;
+
 export const defaultSettings = () => {
     const date = new Date();
     const currentMonth = date.getMonth();
@@ -47,22 +48,7 @@ export const defaultSettings = () => {
     }));
 };
 //console.log("defaultSettings", defaultSettings());   
-/*export const defaultVacations = () => {
-    const date = new Date();
-    const currentYear = date.getFullYear();
 
-    return Array.from({ length: 4 }, (_, index) => ({
-        year: currentYear + index,
-        BV: 20,
-        CS: 10,
-        ADV: 18,
-        BF: 10,
-        AV: 0,
-        HP: 0
-    }));
-};*/
-//console.log("defaultVacations", defaultVacations());
-//export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations();
 export const opgenomenVerlofPerPloeg = {
     verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
     verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],

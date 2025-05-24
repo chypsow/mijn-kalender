@@ -35,18 +35,9 @@ export function initializeBeginrechtToLocalStorage(key) {
         beginrechtVerlof = [];
         localStorage.setItem(key, JSON.stringify(beginrechtVerlof));
     }
-    /*if(localStorage.getItem(key) === null) {
-        localStorage.setItem(key, JSON.stringify(defaultValue()));
-    } else {
-        const obj = JSON.parse(localStorage.getItem(key));
-        if(!Array.isArray(obj)) {
-            console.warn(`De waarde van ${key} is geen array, wordt opnieuw ingesteld.`);
-            localStorage.setItem(key, JSON.stringify(defaultValue()));
-        }
-    }*/
 };
 
-export function localStorageAanpassenVolgensConfigJS(cond1=true, cond2=true, cond3=true) {
+export function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 = true) {
     if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
     if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
     if(cond3) saveToLocalStorage('shiftPattern', dataShift);
@@ -55,16 +46,12 @@ export function localStorageAanpassenVolgensConfigJS(cond1=true, cond2=true, con
 
 export function verwijderVerlofDatum(ploeg, date) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
-    /*const index = opgenomenVerlofPerPloeg[ploegKey].findIndex(obj => obj.datum === datum);
-    if (index !== -1) {
-        opgenomenVerlofPerPloeg[ploegKey].splice(index, 1);
-        saveToLocalStorage(localStoragePloegen[ploeg], opgenomenVerlofPerPloeg[ploegKey]);
-    }*/
     const array = opgenomenVerlofPerPloeg[ploegKey];
     const filteredArray = array.filter(obj => !(obj.datum === date));
     opgenomenVerlofPerPloeg[ploegKey] = filteredArray;
     saveToLocalStorage(localStoragePloegen[ploeg], filteredArray);
 };
+
 export function voegVerlofDatumToe(ploeg, datum, soort) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
     const array = opgenomenVerlofPerPloeg[ploegKey];
@@ -214,15 +201,6 @@ function genereerRapport() {
         </div>
     `;
 
-    /*let ratioPrestaties = 0;
-    if (totaalPrestaties > 0 && totaalAfwezigheden > 0) {
-        ratioPrestaties = Math.round((totaalPrestaties / (totaalPrestaties + totaalAfwezigheden)) * 100);
-    } else if (totaalPrestaties > 0) {
-        ratioPrestaties = 100;
-    } else if (totaalAfwezigheden > 0) {
-        ratioPrestaties = 0;
-    }*/
-
     html += `
                 <div class="kolom-rapport">
                     <div class="ratio-rapport">
@@ -329,6 +307,7 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     //console.log(`beginrecht verlofdagen: ${JSON.stringify(beginrechtVerlof, null, 2)}`);
     //console.log(`Totaal beginrecht: ${calculateTotals(beginrechtVerlof)}`);
 };
+
 export function behandelenSaldoVerlofdagen(verlof, oud) {
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP'];
     const totaal2 = document.getElementById('totaalSaldo');
@@ -452,7 +431,6 @@ export function getBeginRechtFromLocalStorage(jaar) {
     let beginrecht = beginrechten.find(item => item.year === jaar);
 
     if (!beginrecht) {
-        //console.warn("Geen beginrecht gevonden voor jaar:", jaar);
         beginrecht = { year: jaar, BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0 };
         beginrechten.push(beginrecht);
         saveToLocalStorage('beginrechtVerlof', beginrechten);
