@@ -5,6 +5,34 @@ import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
 
+export function initializeSettingsToLocalStorage(key, defaultValue) {
+    if(localStorage.getItem(key) === null) {
+        localStorage.setItem(key, JSON.stringify(defaultValue()));
+    } else {
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        let instellingen = JSON.parse(localStorage.getItem(key));
+        instellingen.forEach(instelling => {
+            instelling.maand = currentMonth;
+            instelling.jaar = currentYear;
+        });
+        localStorage.setItem(key, JSON.stringify(instellingen));
+    }
+};
+
+export function initializeBeginrechtToLocalStorage(key, defaultValue) {
+    if(localStorage.getItem(key) === null) {
+        localStorage.setItem(key, JSON.stringify(defaultValue()));
+    } else {
+        const obj = JSON.parse(localStorage.getItem(key));
+        if(!Array.isArray(obj)) {
+            console.warn(`De waarde van ${key} is geen array, wordt opnieuw ingesteld.`);
+            localStorage.setItem(key, JSON.stringify(defaultValue()));
+        }
+    }
+};
+
 export function localStorageAanpassenVolgensConfigJS(cond1=true, cond2=true, cond3=true) {
     if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
     if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
@@ -360,41 +388,6 @@ export function saveToSessionStorage(key, value) {
 
 export function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
-};
-
-export function initializeSettingsToLocalStorage(key, defaultValue) {
-    if(localStorage.getItem(key) === null) {
-        localStorage.setItem(key, JSON.stringify(defaultValue()));
-    } else {
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        const currentYear = today.getFullYear();
-        let instellingen = JSON.parse(localStorage.getItem(key));
-        instellingen.forEach(instelling => {
-            instelling.maand = currentMonth;
-            instelling.jaar = currentYear;
-        });
-        localStorage.setItem(key, JSON.stringify(instellingen));
-    }
-};
-export function initializeBeginrechtToLocalStorage(key, defaultValue) {
-    if(localStorage.getItem(key) === null) {
-        localStorage.setItem(key, JSON.stringify(defaultValue()));
-    }
-    /*else {
-        const today = new Date();
-        const currentYear = today.getFullYear();
-        let beginrechten = JSON.parse(localStorage.getItem(key));
-        beginrechten.forEach(beginrecht => {
-            beginrecht.BV = 0;
-            beginrecht.CS = 0;
-            beginrecht.ADV = 0;
-            beginrecht.BF = 0;
-            beginrecht.AV = 0;
-            beginrecht.HP = 0;
-        });
-        localStorage.setItem(key, JSON.stringify(beginrechten));
-    }*/
 };
 
 export function resetDefaultSettings(obj, arr) {
