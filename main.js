@@ -47,7 +47,7 @@ export const defaultSettings = () => {
     }));
 };
 //console.log("defaultSettings", defaultSettings());   
-export const defaultVacations = () => {
+/*export const defaultVacations = () => {
     const date = new Date();
     const currentYear = date.getFullYear();
 
@@ -60,7 +60,7 @@ export const defaultVacations = () => {
         AV: 0,
         HP: 0
     }));
-};
+};*/
 //console.log("defaultVacations", defaultVacations());
 //export const beginrechtVerlof = JSON.parse(localStorage.getItem("beginrechtVerlof")) || defaultVacations();
 export const opgenomenVerlofPerPloeg = {
@@ -90,7 +90,7 @@ export const berekenSaldo = (ploeg, key = null) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
     const vacations = opgenomenVerlofPerPloeg[ploegKey];
     const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
-    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear, defaultVacations);
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
     const vacationsCurrentYear = vacations.filter(obj => {
         const year = parseInt(obj.datum.split('/')[2]);
         return year === currentYear;
@@ -422,7 +422,7 @@ document.getElementById('bars').addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeSettingsToLocalStorage('standaardInstellingen', defaultSettings);
-    initializeBeginrechtToLocalStorage('beginrechtVerlof', defaultVacations);
+    initializeBeginrechtToLocalStorage('beginrechtVerlof');
     savePloegenToLocalStorage();
     maakSidebar();
     maakPloegDropdown();

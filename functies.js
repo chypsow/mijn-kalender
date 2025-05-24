@@ -1,4 +1,4 @@
-import { DOM, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, defaultVacations } from "./main.js";
+import { DOM, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
@@ -21,8 +21,21 @@ export function initializeSettingsToLocalStorage(key, defaultValue) {
     }
 };
 
-export function initializeBeginrechtToLocalStorage(key, defaultValue) {
-    if(localStorage.getItem(key) === null) {
+export function initializeBeginrechtToLocalStorage(key) {
+    let beginrechtVerlof;
+    try {
+        beginrechtVerlof = JSON.parse(localStorage.getItem(key));
+        if(!Array.isArray(beginrechtVerlof)) {
+            console.warn(`De waarde van ${key} is geen array, wordt opnieuw ingesteld.`);
+            beginrechtVerlof = [];
+            localStorage.setItem(key, JSON.stringify(beginrechtVerlof));
+        }   
+    } catch (error) {
+        console.error("Fout bij het ophalen van beginrechtVerlof uit localStorage:", error);
+        beginrechtVerlof = [];
+        localStorage.setItem(key, JSON.stringify(beginrechtVerlof));
+    }
+    /*if(localStorage.getItem(key) === null) {
         localStorage.setItem(key, JSON.stringify(defaultValue()));
     } else {
         const obj = JSON.parse(localStorage.getItem(key));
@@ -30,7 +43,7 @@ export function initializeBeginrechtToLocalStorage(key, defaultValue) {
             console.warn(`De waarde van ${key} is geen array, wordt opnieuw ingesteld.`);
             localStorage.setItem(key, JSON.stringify(defaultValue()));
         }
-    }
+    }*/
 };
 
 export function localStorageAanpassenVolgensConfigJS(cond1=true, cond2=true, cond3=true) {
@@ -288,7 +301,7 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
     const currentYear =  instellingen.currentYear;
     const selectedPloeg = instellingen.selectedPloeg;
-    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear, defaultVacations);
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
     
     const totaal1 = document.getElementById('totaalBeginrecht');
     const totaal2 = document.getElementById('totaalSaldo');
@@ -304,7 +317,7 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     } else {
         beginrechtVerlof.push({ year: currentYear, [verlof]: aantal });
     }*/
-    updateLocalStorage('beginrechtVerlof', index, verlof, aantal, defaultVacations);
+    updateLocalStorage('beginrechtVerlof', index, verlof, aantal);
     const saldoNieuw = berekenSaldo(selectedPloeg, verlof);
 
     totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
@@ -354,7 +367,7 @@ export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
 };
 
 export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
-    const beginrechtVerlof = getBeginRechtFromLocalStorage(year, defaultVacations);
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(year);
     const saldoArray = berekenSaldo(ploeg);
     Object.entries(beginrechtVerlof).forEach(([verlof,aantal]) => {
         const elt = document.getElementById(verlof);
@@ -409,7 +422,7 @@ export function getSettingsFromLocalStorage(blad, setting) {
         instellingen = JSON.parse(localStorage.getItem('standaardInstellingen')) || setting();
     } catch (error) {
         console.error("Failed to parse session storage settings:", error);
-        instellingen = setting;
+        instellingen = setting();
     }
 
     let instelling = instellingen.find(item => item.pagina === blad);
@@ -424,21 +437,27 @@ export function getSettingsFromLocalStorage(blad, setting) {
     }; 
 };
 
-export function getBeginRechtFromLocalStorage(jaar, beginrechtArray) {
+export function getBeginRechtFromLocalStorage(jaar) {
     let beginrechten;
     try {
-        beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof')) || beginrechtArray();
+        beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof'));
+        if (!Array.isArray(beginrechten)) {
+            beginrechten = [];
+        }
     } catch (error) {
-        console.error("Failed to parse session storage settings:", error);
-        beginrechten = beginrechtArray;
+        console.error("Failed to parse localStorage settings:", error);
+        beginrechten = [];
     }
+
     let beginrecht = beginrechten.find(item => item.year === jaar);
+
     if (!beginrecht) {
-        //console.warn("No matching beginrecht found for year:", year);
-        beginrechten.push({ year: jaar, BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0 });
-        beginrecht = beginrechten.find(item => item.year === jaar);
+        //console.warn("Geen beginrecht gevonden voor jaar:", jaar);
+        beginrecht = { year: jaar, BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0 };
+        beginrechten.push(beginrecht);
         saveToLocalStorage('beginrechtVerlof', beginrechten);
     }
+
     return {
         BV: beginrecht.BV,
         CS: beginrecht.CS,
@@ -447,9 +466,9 @@ export function getBeginRechtFromLocalStorage(jaar, beginrechtArray) {
         AV: beginrecht.AV,
         HP: beginrecht.HP,
     };
-}
+};
 
-export function updateLocalStorage(settings, index, key1, value1, key2 = null, value2 = null, defaultSet) {
+export function updateLocalStorage(settings, index, key1, value1, key2 = null, value2 = null, defaultSet = null) {
     const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet();
     instellingen[index][key1] = value1;
     if (key2 && value2) {
