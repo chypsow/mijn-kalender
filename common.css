@@ -328,12 +328,15 @@ section {
 .heading-modal {
     display: inline-block;
     margin-top: 0;
-    margin-bottom: 80px;
+    /*margin-bottom: 80px;*/
 }
 .handleiding-container {
     position: relative;
     display: inline-block;
     cursor: pointer;
+}
+.top-header {
+    margin-bottom: 80px;
 }
 .handleiding-msg h4 {
     font-weight: bold;
@@ -345,7 +348,7 @@ section {
     min-width: 600px;
     font-size: 0.8em;
     visibility: hidden;
-    background-color: #608f89;
+    background-color: #9ab4b1;
     color: rgb(14, 75, 44);
     text-align: left;
     padding: 15px 10px;  
@@ -366,7 +369,7 @@ section {
     transform: translate(-50%, 5%);
     border-width: 15px;
     border-style: solid;
-    border-color: transparent transparent #608f89 transparent;
+    border-color: transparent transparent #9ab4b1 transparent;
 }
 .handleiding-container:hover .handleiding-msg {
     
@@ -392,30 +395,35 @@ section {
     /*margin-right: 10px;*/
     text-align: center;
     font-size: 16px;
-    background-color: #f3f3f3;
+    background-color: #e2e2e2;
     color: #000000;
     border-radius: 4px;
     outline: none;
     transition: all 0.10s ease-in-out;
 }
+.shift-input::selection {
+    background-color: transparent;
+    color: #57c9c9;
+    /*scale: 1.2;
+    font-weight: bold;
+    font-size: 20px;*/
+}
 
-.shift-input:focus {
-    box-shadow: 0 0 15px rgba(238, 238, 238, 0.9);
-    background-color: rgb(219, 219, 219);
+.shift-input:focus,
+.date-input:focus
+ {
+    box-shadow: 0 0 15px rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
     
 }
 .date-input {
     font-size: 16px;
     padding: 3px 5px;
     border-radius: 4px;
-    background-color: #f3f3f3;
+    background-color: #e2e2e2;
     color: #000000;
     outline: none;
     transition: all 0.10s ease-in-out;
-}
-.date-input:focus {
-    box-shadow: 0 0 15px rgba(238, 238, 238, 0.9);
-    background-color: rgb(219, 219, 219);
 }
 
 input[type=checkbox] {
@@ -503,13 +511,24 @@ input[type=checkbox] {
 }
 .overlay button:hover {
     cursor: pointer;
-    box-shadow: 0 0 15px rgba(113, 136, 139, 0.9);
-    background: #0221248a;
-    color: #d1d1d1;
+    box-shadow: 0 0 15px rgba(94, 94, 94, 0.9);
+    background: #dddddd;
+    /*color: #d1d1d1;*/
     /*background-color: #acacac;;
     color: #070707;*/
 }
-
+#btnOverlay[disabled] {
+    background-color: #b0b0b0;
+    color: #7a7a7a;
+    cursor: default;
+    box-shadow: none;
+}
+#reset[disabled] {
+    background-color: #b0b0b0;
+    color: #7a7a7a;
+    cursor: default;
+    box-shadow: none;
+}
 .modal-overlay {
     display: none;
     position: fixed;

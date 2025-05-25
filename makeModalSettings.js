@@ -1,9 +1,10 @@
-import { DOM, ploegenGegevens, gegevensOpslaan, standaardTerugstellen } from "./main.js";
+import { DOM, ploegenGegevens, gegevensOpslaan, startDatums, ploegSchema } from "./main.js";
 import { toggleModal } from "./functies.js";
 
 export function makeModalInstellingen(obj, arr) {
     DOM.overlay.innerHTML = '';
     const topHeader = document.createElement('div');
+    topHeader.classList.add('top-header');
     const heading = document.createElement('h2');
     heading.classList.add('heading-modal');
     heading.textContent = 'Ploegschema personnalizeren:';
@@ -35,7 +36,9 @@ export function makeModalInstellingen(obj, arr) {
     `;
     handleidingContainer.appendChild(handleidingMsg);
     topHeader.appendChild(handleidingContainer);
-    
+    const hr = document.createElement('hr');
+    hr.classList.add('line');
+    topHeader.appendChild(hr);
     DOM.overlay.appendChild(topHeader);
 
     let count = 0;
@@ -55,6 +58,8 @@ export function makeModalInstellingen(obj, arr) {
             input.value = arr[count] || '';
             input.addEventListener('focus', function() {
                 this.select();
+                document.getElementById('btnOverlay').disabled = false;
+                document.getElementById('reset').disabled = false;
             });
             count++;
             label1.appendChild(input);
@@ -77,47 +82,50 @@ export function makeModalInstellingen(obj, arr) {
         //label.appendChild(document.createElement('br'));
         labelsContainer.appendChild(label);
         DOM.overlay.appendChild(labelsContainer);
-        //const hr = document.createElement('hr');
-        //hr.classList.add('line');
-        //DOM.overlay.appendChild(hr);
+        
     });
 
     DOM.overlay.appendChild(document.createElement('br'));
     DOM.overlay.appendChild(document.createElement('br'));
 
-    /*Object.keys(obj).forEach(i => {
-        const label = document.createElement('label');
-        const span = document.createElement('span');
-        span.textContent = `Startdatum ${i}: `;
-        label.appendChild(span);
-        const input = document.createElement('input');
-        input.type = 'date';
-        input.id = `date${i}`;
-        input.className = 'date-input';
-        input.value = obj[i] || '';
-        label.appendChild(input);
-        DOM.overlay.appendChild(label);
-    });*/
-
-    //DOM.overlay.appendChild(document.createElement('br'));
-    //DOM.overlay.appendChild(document.createElement('br'));
-
     const div = document.createElement('div');
     div.classList.add('button-container');
     const button = document.createElement('button');
-    button.className = "btnOverlay";
+    button.id = "btnOverlay";
     button.textContent = "Opslaan";
     button.addEventListener('click', ploegSysteemOpslaan);
     div.appendChild(button);
     const reset = document.createElement('button');
-    reset.className = "reset";
+    reset.id = "reset";
     reset.textContent = "Standaardinstellingen terugzetten";
-    reset.addEventListener('click', standaardTerugstellen);
+    reset.addEventListener('click', () => {
+        resetDefaultSettings(startDatums, ploegSchema);
+    });
     div.appendChild(reset);
     DOM.overlay.appendChild(div);
-
-    
 };
+
+function resetDefaultSettings(obj, arr) {
+    // Reset the input fields to default values
+    const userResponse = confirm(`Weet je zeker dat je de standaardinstellingen wilt terugzetten? Dit kan niet ongedaan worden gemaakt!`);
+    // If the user cancels, exit the function
+    if (!userResponse) return;
+    let counter = 0;
+    for(let i = 1; i <= 5; i++) {
+        const datum = document.getElementById(`date${i}`);
+        datum.value = obj[i];
+        for(let j = 1; j <= 7; j++) {
+            const dayElement = document.getElementById(`day-${i}${j}`);
+            dayElement.value = arr[counter];
+            counter++;
+        }
+    }
+    gegevensOpslaan(arr, obj, false);
+    document.getElementById('btnOverlay').disabled = true;
+    document.getElementById('reset').disabled = true;
+    //toggleModal(false);
+};
+
 
 function ploegSysteemOpslaan() {
     let cyclus = [];
@@ -133,7 +141,7 @@ function ploegSysteemOpslaan() {
     const isValid = checkIngevoerdeWaarden(cyclus);
     if (isValid) {
         gegevensOpslaan(cyclus, datums);
-        toggleModal(false);
+        //toggleModal(false);
     } else {
         alert('Sommige velden zijn niet correct ingevuld !');
     }

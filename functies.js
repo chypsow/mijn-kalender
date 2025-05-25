@@ -374,25 +374,19 @@ export function calculateTotals(obj) {
     return Object.values(obj).reduce((acc, x) => acc + x);
 };
 
-export function saveToSessionStorage(key, value) {
-    sessionStorage.setItem(key, JSON.stringify(value));
+export function saveArrayToSessionStorage(key, arr) {
+    if (!Array.isArray(arr)) return;
+
+    // Verwijder duplicaten op basis van combinatie van datum en team
+    const unique = Array.from(
+        new Map(arr.map(item => [`${item.datum}-${item.team}`, item])).values()
+    );
+
+    sessionStorage.setItem(key, JSON.stringify(unique));
 };
 
 export function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
-};
-
-export function resetDefaultSettings(obj, arr) {
-    let counter = 0;
-    for(let i = 1; i <= 5; i++) {
-        const datum = document.getElementById(`date${i}`);
-        datum.value = obj[i];
-        for(let j = 1; j <= 7; j++) {
-            const dayElement = document.getElementById(`day-${i}${j}`);
-            dayElement.value = arr[counter];
-            counter++;
-        }
-    }
 };
 
 export function getSettingsFromLocalStorage(blad, setting) {

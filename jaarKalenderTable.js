@@ -5,9 +5,9 @@ import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 export function updateYearCalendarTable(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells'));
-  let selectActief = false;
-  if(geselecteerd) selectActief = true;
+  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells') || 'null');
+  const selectActief = Array.isArray(geselecteerd) && geselecteerd.length > 0;
+
   const cyclusLengte = shiftPattern.length;
   const vandaag = new Date();
   const today = vandaag.toLocaleDateString("nl-BE");
@@ -49,9 +49,9 @@ export function generateYearCalendarTable(selectedPloeg, year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells'));
-  let selectActief = false;
-  if(geselecteerd) selectActief = true;
+  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells') || 'null');
+  const selectActief = Array.isArray(geselecteerd) && geselecteerd.length > 0;
+
   const cyclusLengte = shiftPattern.length;
   const vandaag = new Date();
   const today = vandaag.toLocaleDateString("nl-BE");

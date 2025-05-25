@@ -2,9 +2,8 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, initializeSettingsToLocalStorage, initializeBeginrechtToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage, 
-    saveToSessionStorage, resetDefaultSettings, adjustLayout, localStorageAanpassenVolgensConfigJS, 
-    getBeginRechtFromLocalStorage} from './functies.js';
+import { toggleModal, initializeSettingsToLocalStorage, initializeBeginrechtToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage,
+    saveArrayToSessionStorage, adjustLayout, localStorageAanpassenVolgensConfigJS, getBeginRechtFromLocalStorage} from './functies.js';
 import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 
 // default settings
@@ -13,8 +12,8 @@ const week2 = ['L', 'L', 'x', 'N', 'N', 'N', 'N12'];
 const week3 = ['x', 'x', 'L', 'L', 'L', 'L', 'x'];
 const week4 = ['V', 'V', 'V', 'V', 'V', 'x', 'x'];
 const week5 = ['D', 'D', 'D', 'D', 'D', 'x', 'x'];
-const ploegSchema = [...week1, ...week2, ...week3, ...week4, ...week5];
-const startDatums = {
+export const ploegSchema = [...week1, ...week2, ...week3, ...week4, ...week5];
+export const startDatums = {
     1: "2010-02-01", 
     2: "2010-01-18", 
     3: "2010-01-25", 
@@ -62,6 +61,19 @@ export const localStoragePloegen = {
     3: 'verlofdagenPloeg3',
     4: 'verlofdagenPloeg4',
     5: 'verlofdagenPloeg5'
+};
+
+
+/*export const standaardTerugstellen = () => {
+    resetDefaultSettings(startDatums, ploegSchema);
+};*/
+export const gegevensOpslaan = (cyclus, datums, bevestiging = true) => {
+    shiftPattern = cyclus;
+    startDates = datums;
+    saveToLocalStorage('shiftPattern', cyclus);
+    saveToLocalStorage('startDates', datums);
+    if(bevestiging) alert("Wijzigingen succesvol opgeslagen!");
+    updateCalendar();
 };
 
 //make new variables in local storage if they don't exist yet
@@ -121,17 +133,6 @@ export const DOM = {
     sluiten: document.getElementById('sluiten')
 };
 
-export const standaardTerugstellen = () => {
-    resetDefaultSettings(startDatums, ploegSchema);
-};
-export const gegevensOpslaan = (cyclus, datums) => {
-    shiftPattern = cyclus;
-    startDates = datums;
-    saveToLocalStorage('shiftPattern', cyclus);
-    saveToLocalStorage('startDates', datums);
-    alert("Wijzigingen succesvol opgeslagen!");
-    updateCalendar();
-};
 export function generateCalendar() {
     if (calendarGenerators[tabBlad]) {
         const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
@@ -260,7 +261,6 @@ function triggerNext() {
         currentYear += 1;
     }
     updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, 'jaar', currentYear, defaultSettings);
-    //updateLocalStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
     updateCalendar();
 };
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
@@ -282,19 +282,12 @@ DOM.yearSelect.addEventListener("change", (event) => {
     const currentYear = parseInt(event.target.value, 10);
     updateLocalStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
     updateCalendar();
-    /*DOM.monthYear.style.color = '';
-    DOM.selectOverlay.style.display = 'none';
-    DOM.dropdowns.classList.remove("visible");
-    DOM.monthSelect.classList.remove("visible");
-    DOM.yearSelect.classList.remove("visible");*/
 });
 DOM.monthYear.addEventListener("click", () => {
     DOM.monthYear.style.color = 'transparent';
     const rect = DOM.monthYear.getBoundingClientRect();
     DOM.dropdowns.style.top = `${rect.top + window.scrollY - 10}px`;
     DOM.dropdowns.style.left = `${rect.left + window.scrollX + Math.round(rect.width/2 - DOM.dropdowns.style.width/2)}px`;
-    //DOM.dropdowns.style.top = DOM.monthYear.style.top;
-    //DOM.dropdowns.style.left = DOM.monthYear.style.left;
     DOM.selectOverlay.style.display = 'block';
     maakDropdowns();
     DOM.dropdowns.classList.toggle("visible");
@@ -318,24 +311,17 @@ document.addEventListener("mousedown", (event) => {
     const cell = event.target;
     const team = getCurrentTeam();
 
-    /*if (cell.classList.contains("highlight")) {
-        // Verwijder highlight en verwijder uit selectedCells
-        cell.classList.remove("highlight");
-        selectedCells = selectedCells.filter(c => c.datum !== datum || c.team !== team);
-        sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
-        return;
-    }*/
-    // Start selectie
     isSelecting = true;
     selectionStart = datum;
+
     if (!event.ctrlKey) {
-        clearAllHighlights(); // Alleen als je gewone klik doet
+        clearAllHighlights();
         selectedCells = [{ datum, team }];
         cell.classList.add("highlight");
+    } else {
+        selectedCells.push({ datum, team });
+        event.target.classList.add('highlight');
     }
-    /*clearAllHighlights();
-    selectedCells = [{ datum, team }];
-    cell.classList.add("highlight");*/
 });
 
 document.addEventListener("mouseover", (event) => {
@@ -353,13 +339,10 @@ document.addEventListener("mouseover", (event) => {
     if (startIndex === -1 || endIndex === -1) return;
 
     if(!event.ctrlKey) {
-        // Als je niet met Ctrl klikt, reset de selectie
         clearAllHighlights();
         selectedCells = [];
     }
-    //clearAllHighlights();
-    //selectedCells = [];
-
+    
     const [from, to] = [startIndex, endIndex].sort((a, b) => a - b);
     for (let i = from; i <= to; i++) {
         const cel = cellArray[i];
@@ -370,7 +353,7 @@ document.addEventListener("mouseover", (event) => {
 
 document.addEventListener("mouseup", () => {
     isSelecting = false;
-    sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
+    saveArrayToSessionStorage("selectedCells", selectedCells);
     if (selectedCells.length > 0) {
         sessionStorage.setItem("lastSelectedCell", JSON.stringify(selectedCells[selectedCells.length - 1]));
     }
@@ -398,33 +381,6 @@ document.addEventListener("click", (event) => {
     if(DOM.modalOverlay.contains(event.target) && !DOM.modal.contains(event.target)) {
         toggleModal(false);
     }
-
-    if (event.ctrlKey) {
-        if (tabBlad !== 0) return;
-        if (!event.target.classList.contains("cell")) return;
-        //if (isSelecting) return; // voorkom conflict tijdens drag-selectie
-
-        const datum = event.target.dataset.datum;
-        if (!datum) return;
-        const team = getCurrentTeam();
-        //let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
-
-        //const isSelected = event.target.classList.contains("highlight");
-        //const index = selectedCells.findIndex(cell => cell.datum === datum && cell.team === team);
-
-        /*if (isSelected && index > -1) {
-            selectedCells.splice(index, 1);
-            event.target.classList.remove("highlight");
-            //sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
-            //return;
-        } else {*/
-            //console.log("Datum toegevoegd:", datum, "Team:", team);   
-            selectedCells.push({ datum, team });
-            event.target.classList.add('highlight');
-        //}
-        sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
-        //sessionStorage.setItem("lastSelectedCell", JSON.stringify({ datum, team }));
-    }
 });
 
 
@@ -434,7 +390,7 @@ document.addEventListener('keydown', (event) => {
     //console.log("keydown event is geladen!");
     if (event.ctrlKey && event.altKey && event.key === "1") {
         event.preventDefault(); // Voorkomt standaard browsergedrag
-        const userResponse = confirm(`Local storage van ploeg 1 wordt nu aangepast volgens config`);
+        const userResponse = confirm(`Local storage van ploeg 1 wordt nu aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`);
         if (!userResponse) return;
         localStorageAanpassenVolgensConfigJS();
     }
