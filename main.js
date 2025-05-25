@@ -331,8 +331,7 @@ document.addEventListener("mouseover", (event) => {
     if (!datum) return;
 
     const team = getCurrentTeam();
-    const cellArray = Array.from(DOM.calendar.querySelectorAll(".cell[data-datum]"));
-
+    const cellArray = Array.from(DOM.calendar.querySelectorAll(".cell[data-datum]")).filter(cell => cell.dataset.datum);
     const startIndex = cellArray.findIndex(c => c.dataset.datum === selectionStart);
     const endIndex = cellArray.findIndex(c => c.dataset.datum === datum);
 
