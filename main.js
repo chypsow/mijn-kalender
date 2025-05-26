@@ -299,7 +299,7 @@ DOM.monthYear.addEventListener("click", () => {
 
 // Event listeners voor het selecteren van cellen
 let isSelecting = false;
-let selectionStart = null;
+let selectionStart = null; // ActiveCell in excel
 let previousSelectedCells = [];
 let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
 
@@ -314,17 +314,30 @@ document.addEventListener("mousedown", (event) => {
 
     isSelecting = true;
     selectionStart = datum;
+    previousSelectedCells = [...selectedCells]; // Bewaar de laatst geselecteerde cel
 
     if (!event.ctrlKey) {
         clearAllHighlights();
-        previousSelectedCells = [...selectedCells]; // Bewaar de laatst geselecteerde cel
         selectedCells = [{datum, team}];
         cell.classList.add("highlight");
         //console.log("mousedown- selectedCells length: ", selectedCells.length);
         //console.log("mousedown- selectedCells : ", selectedCells[0].datum);
     } else {
-        selectedCells.push({ datum, team });
-        event.target.classList.add('highlight');
+        const existingCell = previousSelectedCells.find(c => c.datum === datum && c.team === team);
+        if (existingCell) {
+            // Als de cel al geselecteerd is, deselecteer deze
+            selectedCells = selectedCells.filter(c => !(c.datum === datum && c.team === team));
+            cell.classList.remove("highlight");
+            //console.log("mousedown+ctrl- deselected cell: ", datum);
+        } else {
+            // Als de cel nog niet geselecteerd is, selecteer deze
+            if (!cell.classList.contains("highlight")) {
+                cell.classList.add("highlight");
+            }
+            selectedCells.push({ datum, team });
+        }
+        
+        //event.target.classList.add('highlight');
         //console.log("mousedown+ctrl- selectedCells length: ", selectedCells.length);
     }
     

@@ -679,7 +679,9 @@ input[type=checkbox] {
         outline: none !important;
         box-shadow: none !important;
     }
-    
+    .highlight {
+        outline: none;
+    }
     .modal {
         top: 20% !important;
         background: none;
