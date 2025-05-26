@@ -39,23 +39,14 @@ export const defaultSettings = () => {
     const currentMonth = date.getMonth();
     const currentYear = date.getFullYear();
 
-
     return [
         {pagina: 0, ploeg: 1, jaar: currentYear},
         {pagina: 1, ploeg: 1, jaar: currentYear},
         {pagina: 2, ploeg: 1, maand: currentMonth, jaar: currentYear},
         {pagina: 3, ploeg: 1, maand: currentMonth, jaar: currentYear}
     ];
-
-    /*return Array.from({ length: 4 }, (_, index) => ({
-        pagina: index,
-        ploeg: 1,
-        maand: currentMonth,
-        jaar: currentYear
-    }));*/
 };
-//console.log("defaultSettings", defaultSettings());   
-
+  
 export const opgenomenVerlofPerPloeg = {
     verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
     verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
@@ -71,10 +62,6 @@ export const localStoragePloegen = {
     5: 'verlofdagenPloeg5'
 };
 
-
-/*export const standaardTerugstellen = () => {
-    resetDefaultSettings(startDatums, ploegSchema);
-};*/
 export const gegevensOpslaan = (cyclus, datums, bevestiging = true) => {
     shiftPattern = cyclus;
     startDates = datums;
@@ -84,7 +71,6 @@ export const gegevensOpslaan = (cyclus, datums, bevestiging = true) => {
     updateCalendar();
 };
 
-//make new variables in local storage if they don't exist yet
 function savePloegenToLocalStorage() {
     Object.values(localStoragePloegen).forEach((ploeg, index) => {
         const ploegKey = ploeg;
@@ -104,7 +90,7 @@ export const berekenSaldo = (ploeg, key = null) => {
     if (vacationsCurrentYear.length === 0) {
         return key ? beginrechtVerlof[key] : beginrechtVerlof;
     }
-    // Functie om het saldo te berekenen
+
     const calculateSaldo = (verlofKey) => {
         const opgenomen = vacationsCurrentYear.filter(obj => obj.soort === verlofKey).length;
         return beginrechtVerlof[verlofKey] - opgenomen;
@@ -163,7 +149,6 @@ const calendarGenerators = {
         DOM.ploeg.hidden = false;
         maakVerlofContainer();
         maakVerlofLegende();
-        //DOM.topSectie3.classList.add('hidden-on-small')
         document.getElementById('rapport').hidden = false;
         DOM.titel.textContent = 'Jaarkalender';
         DOM.container.className = 'year-container-table';
@@ -202,7 +187,6 @@ const calendarGenerators = {
 
 function emptyMiddenSecties() {
     DOM.middenSectie2.innerHTML = '';
-    //DOM.middenSectie2.className = '';
     DOM.topSectie3.innerHTML = '';
     DOM.topSectie3.className = '';
     DOM.topSectie3.classList.add('hidden-on-small');
@@ -282,10 +266,10 @@ DOM.sluiten.addEventListener('click', () => toggleModal(false));
 
 DOM.ploeg.addEventListener('change', (event) => {
     const selectedPloeg = Number(event.target.value); 
-    //startDate = startDates[selectedPloeg];
     updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {ploeg:selectedPloeg});
     updateCalendar();
 });
+
 DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 DOM.monthSelect.addEventListener("change", (event) => {
@@ -314,7 +298,7 @@ DOM.monthYear.addEventListener("click", () => {
 
 // Event listeners voor het selecteren van cellen
 let isSelecting = false;
-let selectionStart = null; // ActiveCell in excel
+let selectionStart = null; // zoals ActiveCell in excel
 let previousSelectedCells = [];
 let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
 

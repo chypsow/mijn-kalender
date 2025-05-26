@@ -301,7 +301,7 @@ function afdrukVoorbereiding() {
     const selectedPloeg = setting.selectedPloeg;
     const year = setting.currentYear;
     const month = setting.currentMonth;
-    const monthStr = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
+    const monthStr = month ? new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month)): null;
     const afdrukken = document.getElementById("printPreview");
     afdrukken.innerHTML='';
     if(tabBlad === 1 || tabBlad === 2) {
