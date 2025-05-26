@@ -2,9 +2,9 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, initializeSettingsToLocalStorage, initializeBeginrechtToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, saveToLocalStorage,
-    saveArrayToSessionStorage, adjustLayout, localStorageAanpassenVolgensConfigJS, getBeginRechtFromLocalStorage} from './functies.js';
-import { tabBlad, maakSidebar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
+import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, saveArrayToSessionStorage, adjustLayout, getBeginRechtFromLocalStorage} from './functies.js';
+import { tabBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
+import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
 
 // default settings
 const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V12'];
@@ -32,19 +32,27 @@ export const ploegenGegevens = [
     {symbool:'x', naam:'thuis', kleur:'#cfcfcf'},
     {symbool:'OPL', naam:'opleiding', kleur:'red'}
 ];
-//export const shiftData = JSON.parse(localStorage.getItem("shiftData")) || shiftData;
+//export const shiftData = JSON.parse(localStorage.getItem("shiftData")) || shiftData; 
 
 export const defaultSettings = () => {
     const date = new Date();
     const currentMonth = date.getMonth();
     const currentYear = date.getFullYear();
 
-    return Array.from({ length: 4 }, (_, index) => ({
+
+    return [
+        {pagina: 0, ploeg: 1, jaar: currentYear},
+        {pagina: 1, ploeg: 1, jaar: currentYear},
+        {pagina: 2, ploeg: 1, maand: currentMonth, jaar: currentYear},
+        {pagina: 3, ploeg: 1, maand: currentMonth, jaar: currentYear}
+    ];
+
+    /*return Array.from({ length: 4 }, (_, index) => ({
         pagina: index,
         ploeg: 1,
         maand: currentMonth,
         jaar: currentYear
-    }));
+    }));*/
 };
 //console.log("defaultSettings", defaultSettings());   
 
@@ -136,9 +144,9 @@ export const DOM = {
 export function generateCalendar() {
     if (calendarGenerators[tabBlad]) {
         const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-        let currentMonth = settings.currentMonth;
-        let currentYear = settings.currentYear;
-        let selectedPloeg = settings.selectedPloeg;
+        const currentMonth = settings.currentMonth ? settings.currentMonth : null;
+        const currentYear = settings.currentYear;
+        const selectedPloeg = settings.selectedPloeg;
         DOM.ploeg.value = selectedPloeg;
         if(tabBlad === 0 || tabBlad === 1) calendarGenerators[tabBlad](selectedPloeg, currentYear);
         if(tabBlad === 2) calendarGenerators[tabBlad](selectedPloeg, currentYear, currentMonth);
@@ -228,6 +236,14 @@ export const updateCalendar = () => {
             updateTeamCalendar(year, month);
     }
 };
+
+function updateLocalStorage(settings, defaultSet = null, index, updates = {}) {
+    const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet();
+    Object.entries(updates).forEach(([key, value]) => {
+        instellingen[index][key] = value;
+    });
+    saveToLocalStorage(settings, instellingen);
+}
 function triggerPrev() {
     let currentMonth = 0;
     let currentYear = 0;
@@ -242,8 +258,7 @@ function triggerPrev() {
     } else {
         currentYear -= 1;
     }
-    updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, 'jaar', currentYear, defaultSettings);
-    
+    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {maand:currentMonth, jaar:currentYear});
     updateCalendar();
 };
 function triggerNext() {
@@ -260,7 +275,7 @@ function triggerNext() {
     } else {
         currentYear += 1;
     }
-    updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, 'jaar', currentYear, defaultSettings);
+    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {maand:currentMonth, jaar:currentYear});
     updateCalendar();
 };
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
@@ -268,19 +283,19 @@ DOM.sluiten.addEventListener('click', () => toggleModal(false));
 DOM.ploeg.addEventListener('change', (event) => {
     const selectedPloeg = Number(event.target.value); 
     //startDate = startDates[selectedPloeg];
-    updateLocalStorage('standaardInstellingen', tabBlad,'ploeg', selectedPloeg, defaultSettings);
+    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {ploeg:selectedPloeg});
     updateCalendar();
 });
 DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 DOM.monthSelect.addEventListener("change", (event) => {
     const currentMonth = parseInt(event.target.value, 10);
-    updateLocalStorage('standaardInstellingen', tabBlad, 'maand', currentMonth, defaultSettings);
+    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {maand:currentMonth});
     updateCalendar();
 });
 DOM.yearSelect.addEventListener("change", (event) => {
     const currentYear = parseInt(event.target.value, 10);
-    updateLocalStorage('standaardInstellingen', tabBlad, 'jaar', currentYear, defaultSettings);
+    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {jaar:currentYear});
     updateCalendar();
 });
 DOM.monthYear.addEventListener("click", () => {
@@ -443,7 +458,7 @@ function clearAllHighlights() {
 }
 
 function getCurrentTeam() {
-    const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings;
+    const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings();
     return settings[tabBlad].ploeg;
 }
 
@@ -461,7 +476,12 @@ document.addEventListener("click", (event) => {
     }
 });
 
-
+function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 = true) {
+    if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
+    if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
+    if(cond3) saveToLocalStorage('shiftPattern', dataShift);
+    location.reload(true); // of location.href = location.href;
+};
 //local storage aanpassen volgens het bestand config.js
 document.addEventListener('keydown', (event) => {
     //console.log("Toets ingedrukt:", event.key, "Ctrl:", event.ctrlKey, "Shift:", event.shiftKey);
@@ -473,6 +493,7 @@ document.addEventListener('keydown', (event) => {
         localStorageAanpassenVolgensConfigJS();
     }
 });
+
 window.addEventListener('resize', adjustLayout);
 window.addEventListener('load', adjustLayout);
 document.getElementById('bars').addEventListener('click', () => {
@@ -489,12 +510,10 @@ document.getElementById('bars').addEventListener('click', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    initializeSettingsToLocalStorage('standaardInstellingen', defaultSettings);
-    initializeBeginrechtToLocalStorage('beginrechtVerlof');
     savePloegenToLocalStorage();
-    maakSidebar();
-    maakPloegDropdown();
-    maakKnoppen();
+    buildSideBar();
+    buildTeamDropdown();
+    buildButtons();
     generateCalendar();
 });
 

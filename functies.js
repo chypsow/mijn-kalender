@@ -3,9 +3,10 @@ import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
-import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
 
-export function initializeSettingsToLocalStorage(key, defaultValue) {
+
+
+/*export function initializeSettingsToLocalStorage(key, defaultValue) {
     if(localStorage.getItem(key) === null) {
         localStorage.setItem(key, JSON.stringify(defaultValue()));
     } else {
@@ -19,9 +20,9 @@ export function initializeSettingsToLocalStorage(key, defaultValue) {
         });
         localStorage.setItem(key, JSON.stringify(instellingen));
     }
-};
+};*/
 
-export function initializeBeginrechtToLocalStorage(key) {
+/*export function initializeBeginrechtToLocalStorage(key) {
     let beginrechtVerlof;
     try {
         beginrechtVerlof = JSON.parse(localStorage.getItem(key));
@@ -35,13 +36,80 @@ export function initializeBeginrechtToLocalStorage(key) {
         beginrechtVerlof = [];
         localStorage.setItem(key, JSON.stringify(beginrechtVerlof));
     }
+};*/
+export function getSettingsFromLocalStorage(blad, setting) {
+    let instellingen;
+    try {
+        instellingen = JSON.parse(localStorage.getItem('standaardInstellingen'));
+        if (!Array.isArray(instellingen)) {
+            instellingen = setting();
+            saveToLocalStorage('standaardInstellingen', instellingen);
+        }
+    } catch (error) {
+        console.error("Failed to parse local storage settings:", error);
+        instellingen = setting();
+        saveToLocalStorage('standaardInstellingen', instellingen);
+    }
+
+    let instelling = instellingen.find(item => item.pagina === blad);
+    if (!instelling) {
+        console.warn("No matching instellingen found for tabBlad:", blad);
+        return null;
+    }
+    return {
+        selectedPloeg: instelling.ploeg,
+        currentMonth: instelling.maand,
+        currentYear: instelling.jaar,
+    }; 
 };
 
-export function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 = true) {
-    if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
-    if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
-    if(cond3) saveToLocalStorage('shiftPattern', dataShift);
-    location.reload(true); // of location.href = location.href;
+export function getBeginRechtFromLocalStorage(jaar) {
+    let beginrechten;
+    try {
+        beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof'));
+        if (!Array.isArray(beginrechten)) {
+            beginrechten = [];
+        }
+    } catch (error) {
+        console.error("Failed to parse localStorage settings:", error);
+        beginrechten = [];
+    }
+
+    let beginrecht = beginrechten.find(item => item.year === jaar);
+
+    if (!beginrecht) {
+        beginrecht = { year: jaar, BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0 };
+        beginrechten.push(beginrecht);
+        saveToLocalStorage('beginrechtVerlof', beginrechten);
+    }
+
+    return {
+        BV: beginrecht.BV,
+        CS: beginrecht.CS,
+        ADV: beginrecht.ADV,
+        BF: beginrecht.BF,
+        AV: beginrecht.AV,
+        HP: beginrecht.HP,
+    };
+};
+
+export function calculateTotals(obj) {
+    return Object.values(obj).reduce((acc, x) => acc + x);
+};
+
+export function saveArrayToSessionStorage(key, arr) {
+    if (!Array.isArray(arr)) return;
+
+    // Verwijder duplicaten op basis van combinatie van datum en team
+    const unique = Array.from(
+        new Map(arr.map(item => [`${item.datum}-${item.team}`, item])).values()
+    );
+
+    sessionStorage.setItem(key, JSON.stringify(unique));
+};
+
+export function saveToLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
 };
 
 export function verwijderVerlofDatum(ploeg, date) {
@@ -290,14 +358,9 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     //saveToLocalStorage('beginrechtVerlof', beginrechtVerlof);
     const beginrechtArray = JSON.parse(localStorage.getItem('beginrechtVerlof'));
     const index = beginrechtArray.findIndex(item => item.year === currentYear);
-    /*if (index !== -1) {
-        beginrechtVerlof[index][verlof] = aantal;
-    } else {
-        beginrechtVerlof.push({ year: currentYear, [verlof]: aantal });
-    }*/
-    updateLocalStorage('beginrechtVerlof', index, verlof, aantal);
-    const saldoNieuw = berekenSaldo(selectedPloeg, verlof);
+    updateLocalStorage('beginrechtVerlof', null, index, {verlof: aantal});
 
+    const saldoNieuw = berekenSaldo(selectedPloeg, verlof);
     totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
     mySaldoElt.textContent = saldoNieuw;
     totaal2.textContent = ` ${parseInt(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
@@ -368,85 +431,6 @@ export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
     document.getElementById('totaalSaldo').textContent = ` ${saldoTotaal}`;
     //document.getElementById('totaalSaldo').style.color = saldoTotaal > 0 ? 'green' : 'red';
     //document.getElementById('totaalSaldo').style.fontWeight = saldoTotaal > 0 ? 'bold' : 'normal';
-};
-
-export function calculateTotals(obj) {
-    return Object.values(obj).reduce((acc, x) => acc + x);
-};
-
-export function saveArrayToSessionStorage(key, arr) {
-    if (!Array.isArray(arr)) return;
-
-    // Verwijder duplicaten op basis van combinatie van datum en team
-    const unique = Array.from(
-        new Map(arr.map(item => [`${item.datum}-${item.team}`, item])).values()
-    );
-
-    sessionStorage.setItem(key, JSON.stringify(unique));
-};
-
-export function saveToLocalStorage(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-};
-
-export function getSettingsFromLocalStorage(blad, setting) {
-    let instellingen;
-    try {
-        instellingen = JSON.parse(localStorage.getItem('standaardInstellingen')) || setting();
-    } catch (error) {
-        console.error("Failed to parse session storage settings:", error);
-        instellingen = setting();
-    }
-
-    let instelling = instellingen.find(item => item.pagina === blad);
-    if (!instelling) {
-        console.warn("No matching instellingen found for tabBlad:", blad);
-        return null;
-    }
-    return {
-        selectedPloeg: instelling.ploeg,
-        currentMonth: instelling.maand,
-        currentYear: instelling.jaar,
-    }; 
-};
-
-export function getBeginRechtFromLocalStorage(jaar) {
-    let beginrechten;
-    try {
-        beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof'));
-        if (!Array.isArray(beginrechten)) {
-            beginrechten = [];
-        }
-    } catch (error) {
-        console.error("Failed to parse localStorage settings:", error);
-        beginrechten = [];
-    }
-
-    let beginrecht = beginrechten.find(item => item.year === jaar);
-
-    if (!beginrecht) {
-        beginrecht = { year: jaar, BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0 };
-        beginrechten.push(beginrecht);
-        saveToLocalStorage('beginrechtVerlof', beginrechten);
-    }
-
-    return {
-        BV: beginrecht.BV,
-        CS: beginrecht.CS,
-        ADV: beginrecht.ADV,
-        BF: beginrecht.BF,
-        AV: beginrecht.AV,
-        HP: beginrecht.HP,
-    };
-};
-
-export function updateLocalStorage(settings, index, key1, value1, key2 = null, value2 = null, defaultSet = null) {
-    const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet();
-    instellingen[index][key1] = value1;
-    if (key2 && value2) {
-        instellingen[index][key2] = value2;
-    }
-    saveToLocalStorage(settings, instellingen);
 };
 
 export function getNaamBijSymbool(obj, mark) {

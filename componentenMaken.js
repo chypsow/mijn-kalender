@@ -4,7 +4,7 @@ import { handelVerlofAanvraag, cancelAanvraag, cancelAlleAanvragen, handelHerpla
 
 export let tabBlad = 0;
 
-export function maakSidebar() {
+export function buildSideBar() {
     const tabArray = ['Jaarkalender : Tabel', 'Jaarkalender : Raster', 'Maandkalender', 'TeamKalender'];
     DOM.topNav.setAttribute('role', 'tablist');
     tabArray.forEach((tab, index) => {
@@ -27,7 +27,7 @@ export function maakSidebar() {
     });
 }
 
-export function maakPloegDropdown(numberOfTeams = 5) {
+export function buildTeamDropdown(numberOfTeams = 5) {
     Array.from({ length: numberOfTeams }).forEach((_, i) => {
         const option = document.createElement('option');
         option.value = i + 1;
@@ -37,7 +37,7 @@ export function maakPloegDropdown(numberOfTeams = 5) {
     }); 
 };
 
-export function maakKnoppen() {
+export function buildButtons() {
     const knoppen = [
         ['instellingen', 'fa-cog', 'Instellingen'],
         ['feestdagen', 'fa-calendar', 'Feestdagen'],
