@@ -300,6 +300,7 @@ DOM.monthYear.addEventListener("click", () => {
 // Event listeners voor het selecteren van cellen
 let isSelecting = false;
 let selectionStart = null;
+let previousSelectedCells = [];
 let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
 
 document.addEventListener("mousedown", (event) => {
@@ -316,50 +317,115 @@ document.addEventListener("mousedown", (event) => {
 
     if (!event.ctrlKey) {
         clearAllHighlights();
-        selectedCells = [{ datum, team }];
+        previousSelectedCells = [...selectedCells]; // Bewaar de laatst geselecteerde cel
+        selectedCells = [{datum, team}];
         cell.classList.add("highlight");
+        //console.log("mousedown- selectedCells length: ", selectedCells.length);
+        //console.log("mousedown- selectedCells : ", selectedCells[0].datum);
     } else {
         selectedCells.push({ datum, team });
         event.target.classList.add('highlight');
+        //console.log("mousedown+ctrl- selectedCells length: ", selectedCells.length);
     }
+    
 });
 
 document.addEventListener("mouseover", (event) => {
     if (!isSelecting) return;
     if (!event.target.classList.contains("cell")) return;
-    const datum = event.target.dataset.datum;
-    if (!datum) return;
 
+    const endCell = event.target;
+    const datum = endCell.dataset.datum;
     const team = getCurrentTeam();
-    const cellArray = Array.from(DOM.calendar.querySelectorAll(".cell[data-datum]")).filter(cell => cell.dataset.datum);
-    const startIndex = cellArray.findIndex(c => c.dataset.datum === selectionStart);
-    const endIndex = cellArray.findIndex(c => c.dataset.datum === datum);
 
-    if (startIndex === -1 || endIndex === -1) return;
+    const endRij = parseInt(endCell.dataset.rij);
+    const endKolom = parseInt(endCell.dataset.kolom);
 
-    if(!event.ctrlKey) {
+    const startCell = document.querySelector(`.cell[data-datum='${selectionStart}']`);
+    if (!startCell) return;
+
+    const startRij = parseInt(startCell.dataset.rij);
+    const startKolom = parseInt(startCell.dataset.kolom);
+
+    const [minRij, maxRij] = [startRij, endRij].sort((a, b) => a - b);
+    const [minKolom, maxKolom] = [startKolom, endKolom].sort((a, b) => a - b);
+    const allCells = getAllValidCells();
+
+    if(event.shiftKey) {
+        //console.log("Shift ingedrukt, selectie uitbreiden");
+        const startIndex = allCells.findIndex(c => c.dataset.datum === selectionStart);
+        const endIndex = allCells.findIndex(c => c.dataset.datum === datum);
+        if (startIndex === -1 || endIndex === -1) return;
+        const [from, to] = [startIndex, endIndex].sort((a, b) => a - b);
+
+        clearAllHighlights();
+        selectedCells = [];
+
+        for (let i = from; i <= to; i++) {
+            const cel = allCells[i];
+            if (!cel.classList.contains("highlight")) {
+                cel.classList.add("highlight");
+            }
+
+            if (!selectedCells.some(c => c.datum === cel.dataset.datum && c.team === team)) {
+                selectedCells.push({ datum: cel.dataset.datum, team });
+            }
+        }
+        return;
+    }
+
+    if (!event.ctrlKey) {
         clearAllHighlights();
         selectedCells = [];
     }
-    
-    const [from, to] = [startIndex, endIndex].sort((a, b) => a - b);
-    for (let i = from; i <= to; i++) {
-        const cel = cellArray[i];
-        cel.classList.add("highlight");
-        selectedCells.push({ datum: cel.dataset.datum, team });
+
+    for (const cell of allCells) {
+        const rij = parseInt(cell.dataset.rij);
+        const kolom = parseInt(cell.dataset.kolom);
+
+        if (rij >= minRij && rij <= maxRij && kolom >= minKolom && kolom <= maxKolom) {
+            const datum = cell.dataset.datum;
+
+            cell.classList.add("highlight");
+
+            if (!selectedCells.some(c => c.datum === datum && c.team === team)) {
+                selectedCells.push({ datum, team });
+            }
+        }
     }
 });
 
-document.addEventListener("mouseup", () => {
+document.addEventListener("mouseup", (event) => {
     isSelecting = false;
+
+    const target = event.target;
+    
+    if (previousSelectedCells.length === 1 && target.classList.contains("highlight")) {
+        const clickedDatum = target.dataset.datum;
+        const clickedTeam = getCurrentTeam();
+
+        const selected = previousSelectedCells[0];
+        if (selected.datum === clickedDatum && selected.team === clickedTeam) {
+            //console.log("same Selectedcell mouseup: ", previousSelectedCells[0].datum);
+            selectedCells.length = 0; // Leegmaken
+            target.classList.remove("highlight");
+        }
+    }
+   
     saveArrayToSessionStorage("selectedCells", selectedCells);
+
     if (selectedCells.length > 0) {
         sessionStorage.setItem("lastSelectedCell", JSON.stringify(selectedCells[selectedCells.length - 1]));
     }
 });
 
+function getAllValidCells() {
+    return Array.from(DOM.calendar.querySelectorAll(".cell[data-datum]"))
+        .filter(cell => cell.dataset.datum);
+}
+
 function clearAllHighlights() {
-    const allCells = DOM.calendar.querySelectorAll(".cell");
+    const allCells = getAllValidCells();
     allCells.forEach(cell => cell.classList.remove("highlight"));
 }
 

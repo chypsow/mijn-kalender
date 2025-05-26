@@ -86,7 +86,8 @@ export function generateYearCalendarTable(selectedPloeg, year) {
     for (let day = 1; day <= 31; day++) {
       const dayCell = document.createElement("div");
       dayCell.classList.add("cell");
-      
+      dayCell.dataset.rij = month
+      dayCell.dataset.kolom = day-1;
       const currentDate = new Date(year, month, day);
       // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
       if (currentDate.getMonth() === month) {
