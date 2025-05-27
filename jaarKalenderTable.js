@@ -5,13 +5,11 @@ import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 export function updateYearCalendarTable(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells') || 'null');
-  const selectActief = Array.isArray(geselecteerd) && geselecteerd.length > 0;
-
   const cyclusLengte = shiftPattern.length;
   const vandaag = new Date();
   const today = vandaag.toLocaleDateString("nl-BE");
   const monthElementen = document.querySelectorAll('#calendar .row');
+
   monthElementen.forEach((month, index) => {
     const dayElementen = month.querySelectorAll('.cell');
     dayElementen.forEach((day, i) => {
@@ -31,6 +29,9 @@ export function updateYearCalendarTable(selectedPloeg, year) {
         }
     });
   });
+
+  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells') || 'null');
+  const selectActief = Array.isArray(geselecteerd) && geselecteerd.length > 0;
   if(selectActief) {
     const activeTeam = geselecteerd[0].team;
     if(activeTeam !== selectedPloeg) return;
@@ -49,9 +50,6 @@ export function generateYearCalendarTable(selectedPloeg, year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells') || 'null');
-  const selectActief = Array.isArray(geselecteerd) && geselecteerd.length > 0;
-
   const cyclusLengte = shiftPattern.length;
   const vandaag = new Date();
   const today = vandaag.toLocaleDateString("nl-BE");
@@ -102,6 +100,9 @@ export function generateYearCalendarTable(selectedPloeg, year) {
     }
     calendar.appendChild(monthRow);
   }
+
+  const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells') || 'null');
+  const selectActief = Array.isArray(geselecteerd) && geselecteerd.length > 0;
   if(selectActief) {
     const activeTeam = geselecteerd[0].team;
     if(activeTeam !== selectedPloeg) return;

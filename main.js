@@ -431,7 +431,7 @@ document.addEventListener("mouseup", (event) => {
     }
 });
 
-function getAllValidCells() {
+export function getAllValidCells() {
     return Array.from(DOM.calendar.querySelectorAll(".cell[data-datum]"))
         .filter(cell => cell.dataset.datum);
 }

@@ -141,7 +141,7 @@ function ploegSysteemOpslaan() {
     const isValid = checkIngevoerdeWaarden(cyclus);
     if (isValid) {
         gegevensOpslaan(cyclus, datums);
-        //toggleModal(false);
+        toggleModal(false);
     } else {
         alert('Sommige velden zijn niet correct ingevuld !');
     }
