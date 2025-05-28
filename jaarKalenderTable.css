@@ -71,7 +71,8 @@
 }
 .cell:hover {
     outline-offset: -4px;
-    outline: 3px solid #888888;
+    outline: 3px solid #aacc93a6;
+    cursor: cell;
 }
 
 .year-calendar-table .emptyDay {
@@ -168,20 +169,21 @@
     font-weight: bold;
     /*height: 48px;*/
     /*background: linear-gradient(360deg,#022124 10%,#efefef 360%);*/
-    background-color: #686868;
-    color: rgb(0, 0, 0);
-    transition: all 0.20s ease-in-out;
+    background-color: rgba(207, 207, 207, 0.315);
+    color: rgb(189, 189, 189);
+    /*transition: all 0.20s ease-in-out;*/
     cursor: pointer;
     align-content: center;
     text-align: center;
     padding: 9px 15px;
-    border: 2px solid rgb(75, 75, 75);
+    /*border: 2px solid rgb(75, 75, 75);*/
     /*border-radius: 5px;*/
 }
 .restore:hover {
-    /*border: 2px solid rgba(228, 228, 228, 0.575);*/
-    background-color: rgb(207, 207, 207);
-    /*box-shadow: 0 0 15px gray;*/
+    border: 2px solid rgba(228, 228, 228, 0.575);
+    color: rgb(224, 224, 224);
+    /*background-color: rgba(99, 99, 99, 0.993);*/
+    /*box-shadow: 0 0 5px rgb(165, 165, 165);*/
 }
 .hpButton {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -189,8 +191,8 @@
     font-weight: bold;
     /*height: 48px;*/
     background-color: #a10b0b;
-    color: rgb(0, 0, 0);
-    transition: all 0.20s ease-in-out;
+    color: rgba(235, 235, 235, 0.815);
+    /*transition: all 0.20s ease-in-out;*/
     cursor: pointer;
     align-content: center;
     text-align: center;
@@ -199,8 +201,9 @@
     /*border-radius: 5px;*/
 }
 .hpButton:hover {
-    box-shadow: 0 0 15px gray;
+    /*box-shadow: 0 0 15px gray;*/
     color: rgb(224, 224, 224);
+    border: 2px solid rgba(228, 228, 228, 0.575);
 }
 .verlofCollection {
     color: black;
