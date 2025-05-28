@@ -1,4 +1,4 @@
-import { DOM, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar } from "./main.js";
+import { DOM, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, updateLocalStorage } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
@@ -347,18 +347,19 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
     const currentYear =  instellingen.currentYear;
     const selectedPloeg = instellingen.selectedPloeg;
-    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
     
     const totaal1 = document.getElementById('totaalBeginrecht');
     const totaal2 = document.getElementById('totaalSaldo');
     const mySaldoElt = document.getElementById(`saldo-${verlof}`);
     const saldoOud = parseInt(mySaldoElt.textContent.trim());
     
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
     beginrechtVerlof[verlof] = aantal;
-    //saveToLocalStorage('beginrechtVerlof', beginrechtVerlof);
     const beginrechtArray = JSON.parse(localStorage.getItem('beginrechtVerlof'));
     const index = beginrechtArray.findIndex(item => item.year === currentYear);
-    updateLocalStorage('beginrechtVerlof', null, index, {verlof: aantal});
+    const update = {};
+    update[verlof] = aantal;
+    updateLocalStorage('beginrechtVerlof', null, index, update);
 
     const saldoNieuw = berekenSaldo(selectedPloeg, verlof);
     totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;

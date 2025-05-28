@@ -221,7 +221,7 @@ export const updateCalendar = () => {
     }
 };
 
-function updateLocalStorage(settings, defaultSet = null, index, updates = {}) {
+export function updateLocalStorage(settings, defaultSet = null, index, updates = {}) {
     const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet();
     Object.entries(updates).forEach(([key, value]) => {
         instellingen[index][key] = value;

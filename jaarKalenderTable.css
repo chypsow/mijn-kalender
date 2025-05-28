@@ -67,11 +67,10 @@
     /*border-radius: 4px;*/
     text-align: left;
     /*transition: all 0.1s ease-out;*/
-    
 }
 .cell:hover {
     outline-offset: -4px;
-    outline: 3px solid #aacc93a6;
+    outline: 3px solid #949494;
     cursor: cell;
 }
 
