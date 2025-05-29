@@ -452,13 +452,30 @@ function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 
 };
 //local storage aanpassen volgens het bestand config.js
 document.addEventListener('keydown', (event) => {
-    //console.log("Toets ingedrukt:", event.key, "Ctrl:", event.ctrlKey, "Shift:", event.shiftKey);
-    //console.log("keydown event is geladen!");
-    if (event.ctrlKey && event.altKey && event.key === "1") {
-        event.preventDefault(); // Voorkomt standaard browsergedrag
-        const userResponse = confirm(`Local storage van ploeg 1 wordt nu aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`);
+    if (event.ctrlKey && event.altKey) {
+        let cond1 = false, cond2 = false, cond3 = false;
+        let message = "";
+
+        if (event.key === "1") {
+            cond1 = true;
+            message = "Alleen verlofdagen van ploeg 1 worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
+        } else if (event.key === "2") {
+            cond2 = true;
+            message = "Alleen beginrecht verlof wordt aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
+        } else if (event.key === "3") {
+            cond3 = true;
+            message = "Alleen shiftPattern wordt aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
+        } else if (event.key === "0") {
+            cond1 = cond2 = cond3 = true;
+            message = "Alle instellingen worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
+        } else {
+            return;
+        }
+
+        event.preventDefault();
+        const userResponse = confirm(message);
         if (!userResponse) return;
-        localStorageAanpassenVolgensConfigJS();
+        localStorageAanpassenVolgensConfigJS(cond1, cond2, cond3);
     }
 });
 
