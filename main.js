@@ -299,12 +299,11 @@ DOM.monthYear.addEventListener("click", () => {
 // Event listeners voor het selecteren van cellen
 let isSelecting = false;
 let selectionStart = null; // zoals ActiveCell in excel
-let previousSelectedCells = [];
+let lastSelectedCells = [];
 let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
 
 document.addEventListener("mousedown", (event) => {
-    if (tabBlad !== 0) return;
-    if (!event.target.classList.contains("cell")) return;
+    if (tabBlad !== 0 || !event.target.classList.contains("cell")) return;
     const datum = event.target.dataset.datum;
     if (!datum) return;
 
@@ -313,33 +312,31 @@ document.addEventListener("mousedown", (event) => {
 
     isSelecting = true;
     selectionStart = datum;
-    previousSelectedCells = [...selectedCells]; // Bewaar de laatst geselecteerde cel
-
-    if (!event.ctrlKey) {
-        clearAllHighlights();
-        selectedCells = [{datum, team}];
-        cell.classList.add("highlight");
-        //console.log("mousedown- selectedCells length: ", selectedCells.length);
-        //console.log("mousedown- selectedCells : ", selectedCells[0].datum);
-    } else {
-        const existingCell = previousSelectedCells.find(c => c.datum === datum && c.team === team);
-        if (existingCell) {
-            // Als de cel al geselecteerd is, deselecteer deze
-            selectedCells = selectedCells.filter(c => !(c.datum === datum && c.team === team));
-            cell.classList.remove("highlight");
-            //console.log("mousedown+ctrl- deselected cell: ", datum);
-        } else {
-            // Als de cel nog niet geselecteerd is, selecteer deze
-            if (!cell.classList.contains("highlight")) {
+    lastSelectedCells = [...selectedCells]; // Bewaar de laatst geselecteerde cel
+    if (selectedCells.length > 0) {
+        if (event.ctrlKey) {
+            const existingCell = selectedCells.find(c => c.datum === datum && c.team === team);
+            if (existingCell) {
+                // Deselect cell
+                selectedCells = selectedCells.filter(c => !(c.datum === datum && c.team === team));
+                cell.classList.remove("highlight");
+            } else if (selectedCells[0].team !== team || selectedCells[0].datum.split('/')[2] !== datum.split('/')[2]) {
+                clearAllHighlights();
+                selectedCells = [{ datum, team }];
                 cell.classList.add("highlight");
+            } else {
+                if (!cell.classList.contains("highlight")) cell.classList.add("highlight");
+                selectedCells.push({ datum, team });
             }
-            selectedCells.push({ datum, team });
+        } else {
+            clearAllHighlights();
+            selectedCells = [{ datum, team }];
+            cell.classList.add("highlight");
         }
-        
-        //event.target.classList.add('highlight');
-        //console.log("mousedown+ctrl- selectedCells length: ", selectedCells.length);
+    } else {
+        selectedCells = [{ datum, team }];
+        cell.classList.add("highlight");
     }
-    
 });
 
 document.addEventListener("mouseover", (event) => {
@@ -375,13 +372,8 @@ document.addEventListener("mouseover", (event) => {
 
         for (let i = from; i <= to; i++) {
             const cel = allCells[i];
-            if (!cel.classList.contains("highlight")) {
-                cel.classList.add("highlight");
-            }
-
-            if (!selectedCells.some(c => c.datum === cel.dataset.datum && c.team === team)) {
-                selectedCells.push({ datum: cel.dataset.datum, team });
-            }
+            if (!cel.classList.contains("highlight")) cel.classList.add("highlight");
+            if (!selectedCells.some(c => c.datum === cel.dataset.datum && c.team === team)) selectedCells.push({ datum: cel.dataset.datum, team });
         }
         return;
     }
@@ -394,15 +386,10 @@ document.addEventListener("mouseover", (event) => {
     for (const cell of allCells) {
         const rij = parseInt(cell.dataset.rij);
         const kolom = parseInt(cell.dataset.kolom);
-
         if (rij >= minRij && rij <= maxRij && kolom >= minKolom && kolom <= maxKolom) {
             const datum = cell.dataset.datum;
-
             cell.classList.add("highlight");
-
-            if (!selectedCells.some(c => c.datum === datum && c.team === team)) {
-                selectedCells.push({ datum, team });
-            }
+            if (!selectedCells.some(c => c.datum === datum && c.team === team)) selectedCells.push({ datum, team });
         }
     }
 });
@@ -412,11 +399,11 @@ document.addEventListener("mouseup", (event) => {
 
     const target = event.target;
     
-    if (previousSelectedCells.length === 1 && target.classList.contains("highlight")) {
+    if (lastSelectedCells.length === 1 && target.classList.contains("highlight")) {
         const clickedDatum = target.dataset.datum;
         const clickedTeam = getCurrentTeam();
 
-        const selected = previousSelectedCells[0];
+        const selected = lastSelectedCells[0];
         if (selected.datum === clickedDatum && selected.team === clickedTeam) {
             //console.log("same Selectedcell mouseup: ", previousSelectedCells[0].datum);
             selectedCells.length = 0; // Leegmaken
@@ -424,11 +411,8 @@ document.addEventListener("mouseup", (event) => {
         }
     }
    
-    saveArrayToSessionStorage("selectedCells", selectedCells);
-
-    if (selectedCells.length > 0) {
-        sessionStorage.setItem("lastSelectedCell", JSON.stringify(selectedCells[selectedCells.length - 1]));
-    }
+    sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
+    sessionStorage.setItem("lastSelectedCells", JSON.stringify(lastSelectedCells));
 });
 
 export function getAllValidCells() {

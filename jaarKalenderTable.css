@@ -71,7 +71,7 @@
 .cell:hover {
     outline-offset: -4px;
     outline: 3px solid #949494;
-    cursor: cell;
+    /*cursor: cell;*/
 }
 
 .year-calendar-table .emptyDay {
@@ -185,10 +185,12 @@
     /*border-radius: 5px;*/
 }
 .restore:hover {
-    border: 2px solid rgba(228, 228, 228, 0.575);
-    color: rgb(224, 224, 224);
+    /*border: 2px solid rgba(228, 228, 228, 0.575);*/
+    color: rgb(255, 255, 255);
     /*background-color: rgba(99, 99, 99, 0.993);*/
     /*box-shadow: 0 0 5px rgb(165, 165, 165);*/
+    outline: auto 2px rgba(128, 128, 128, 0.671);
+    
 }
 .hpButton {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -208,7 +210,8 @@
 .hpButton:hover {
     /*box-shadow: 0 0 15px gray;*/
     color: rgb(224, 224, 224);
-    border: 2px solid rgba(228, 228, 228, 0.575);
+    /*border: 2px solid rgba(228, 228, 228, 0.575);*/
+    outline: auto 2px rgba(128, 128, 128, 0.671);
 }
 .verlofCollection {
     color: black;

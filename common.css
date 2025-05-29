@@ -27,6 +27,7 @@ body::selection {
     color: #dddddd;
 }
 .side-bar {
+    
     width: 13%;
     height: 100vh;
     background-color: #242424;
@@ -46,7 +47,8 @@ body::selection {
     display: block;
     padding: 15px 20px;
     color: white;
-    font-size: 1.1em;
+    font-family: monospace;
+    font-size: 18px;
     text-decoration: none;
 }
 .side-bar a:hover {
@@ -295,6 +297,7 @@ section {
     width: 14em;
 }
 .btnGreen {
+    font-family: cursive, sans-serif;
     text-align: left;
     font-size: 1.1em;
     padding: 10px;
@@ -484,13 +487,17 @@ input[type=checkbox] {
     color: #dbdbdb;
 }
 .ratio-rapport {
-    margin-top: 20px;
+    margin: 20px 0;
     text-align: center;
     padding: 0 15px;
     background-color: #eaeaea;
     border: 1px solid #a5a5a5;
     border-radius: 4px;
-   
+}
+.rapport-footer {
+    display: block;
+    font-size: 14px;
+    margin-bottom: auto;
 }
 .overlay {
     display: block;
