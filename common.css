@@ -12,23 +12,9 @@ body::selection {
     background-color: rgb(0, 0, 0);
     color: #ffffff;
 }
-.fa-bars {
-    /*position: absolute;
-    top: 20px;
-    left: 30px;*/
-    margin-left: 0.4em;
-    font-size: 2em;
-    color: #bbbbbb;
-    transition: all 0.3s ease-in-out;
-    /*z-index: 2;*/
-}
-.fa-bars:hover {
-    cursor: pointer;
-    color: #dddddd;
-}
+
 .side-bar {
     font-family: monospace;
-    
     width: 13%;
     height: 100vh;
     background-color: #242424;
@@ -63,6 +49,21 @@ body::selection {
     box-sizing: border-box;
     position: relative;
     transition: width 0.3s ease-in-out;
+}
+
+.fa-bars {
+    /*position: absolute;
+    top: 20px;
+    left: 30px;*/
+    margin-left: 0.4em;
+    font-size: 2em;
+    color: #bbbbbb;
+    transition: all 0.3s ease-in-out;
+    /*z-index: 2;*/
+}
+.fa-bars:hover {
+    cursor: pointer;
+    color: #dddddd;
 }
 .top-sectie {
     display: flex;
@@ -606,6 +607,104 @@ input[type=checkbox] {
     list-style-type: none;
     display: flex;
     gap: 50px;
+}
+@media screen and (max-width: 1900px) {
+    .side-bar {
+        display: flex;
+        flex-direction: row;
+        /*justify-content: center;*/
+        width: 100%;
+        height: auto;
+        text-align: center;
+    }
+    .side-bar a {
+        display: inline;
+        font-size: 1.2em;
+        padding: 10px 15px;
+    }
+    body {
+        font-size: 10px;
+        flex-direction: column;
+        align-items: center;
+    }
+    .hoofd-container {
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+        transition: width 0.3s ease-in-out;
+    } 
+    .verlofCollection {
+        font-size: 0.8em;
+        padding: 5px 3px 0px 3px;
+        width: 25px;
+        height: 25px;
+        outline-offset: -2px;
+    }
+    .inputVak,
+    .outputVak {
+        width: 25px;
+        padding: 5px;
+        font-size: 0.8em;
+    }
+    .modal {
+        font-size: 10px;
+        width: 90%;
+        min-width: 300px;
+        padding: 20px;
+    }
+    .shift-input {
+       margin-right: 3px;
+        padding: 3px;
+        font-size: 0.8em;
+    }
+    .date-input {
+        font-size: 0.8em;
+        padding: 2px 3px;
+    }
+    .handleiding-msg {
+        min-width: 300px;
+        font-size: 0.8em;
+    }
+    .handleiding-msg ul {
+        padding-left: 0px;
+    }
+    .top-sectie2 {
+        gap: 30px;
+    }
+    .verlof-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    .year-container-table {
+        margin-top: 20px;
+        /*width: 100%;*/
+        font-size: 12px;
+    }
+    .year-container-grid {
+        margin-top: -70px;
+        max-width: 100%;
+    }
+    .month-container {
+        max-width: 100%;
+        /*display: flex;
+        flex-direction: column;
+        align-items: center;*/
+    }
+    .year-calendar-table .cell, .header-cell {
+        font-size: 0.8em;
+        padding: 5px;
+        min-width: 20px;
+        height: 20px;
+    }
+    .team-calendar-table .table-cell, .team-header-cell {
+        font-size: 0.8em;
+        padding: 5px;
+        max-width: 10px;
+        height: 20px;
+    }
+    .team-calendar-table .team-cell{
+        max-width: 15px;
+    }
 }
 @media print {
     @page {

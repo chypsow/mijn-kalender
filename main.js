@@ -2,7 +2,7 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, saveArrayToSessionStorage, adjustLayout, getBeginRechtFromLocalStorage} from './functies.js';
+import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, adjustLayout, getBeginRechtFromLocalStorage} from './functies.js';
 import { tabBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
 
@@ -138,7 +138,7 @@ export function generateCalendar() {
         if(tabBlad === 2) calendarGenerators[tabBlad](selectedPloeg, currentYear, currentMonth);
         if(tabBlad ===  3) calendarGenerators[tabBlad](currentYear, currentMonth);
         refreshCalendar();
-        adjustLayout();
+        //adjustLayout();
     } else {
         console.error(`Geen kalendergenerator gevonden voor blad: ${tabBlad}`);
     }
@@ -177,6 +177,7 @@ const calendarGenerators = {
     },
     3: (year, month) => {
         emptyMiddenSecties();
+        DOM.ploeg.hidden = true;
         document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Teamkalender';
         DOM.container.className = 'team-container';
@@ -189,11 +190,11 @@ function emptyMiddenSecties() {
     DOM.middenSectie2.innerHTML = '';
     DOM.topSectie3.innerHTML = '';
     DOM.topSectie3.className = '';
-    DOM.topSectie3.classList.add('hidden-on-small');
+    //DOM.topSectie3.classList.add('hidden-on-small');
     DOM.titel.textContent = '';
     DOM.container.className = '';
     DOM.calendar.className = '';
-    DOM.ploeg.hidden = true;
+    //DOM.ploeg.hidden = true;
 };
 function refreshCalendar() {
     // Reset de animatie door de klasse te verwijderen en opnieuw toe te voegen
@@ -479,8 +480,8 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-window.addEventListener('resize', adjustLayout);
-window.addEventListener('load', adjustLayout);
+//window.addEventListener('resize', adjustLayout);
+//window.addEventListener('load', adjustLayout);
 document.getElementById('bars').addEventListener('click', () => {
     const isClosed = document.querySelector('.side-bar').classList.contains('close');
     if (isClosed) {

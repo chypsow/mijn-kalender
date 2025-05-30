@@ -193,7 +193,7 @@ export function maakVerlofLegende() {
     DOM.topSectie3.appendChild(legendeItem);
     });
     DOM.topSectie3.classList.add('verlofLegende-container');
-    DOM.topSectie3.classList.add('hidden-on-small');
+    //DOM.topSectie3.classList.add('hidden-on-small');
 };
 
 export function maakPloegenLegende() {
