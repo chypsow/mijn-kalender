@@ -15,7 +15,7 @@ export function buildSideBar() {
         hyperlink.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
         if(index === 0) hyperlink.classList.add('active');
         hyperlink.addEventListener('click', () => {
-            if (index === tabBlad) return; // Prevent reloading the same tab
+            if (hyperlink.classList.contains("active")) return; // Prevent reloading the same tab
             const activeLink = DOM.topNav.querySelector('.active');
             activeLink.classList.remove("active");
             activeLink.setAttribute('aria-selected', 'false');
