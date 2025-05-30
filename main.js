@@ -151,7 +151,7 @@ const calendarGenerators = {
         maakVerlofLegende();
         document.getElementById('rapport').hidden = false;
         DOM.titel.textContent = 'Jaarkalender';
-        DOM.container.className = 'year-container-table';
+        //DOM.container.className = 'year-container-table';
         DOM.calendar.className = 'year-calendar-table';
         generateYearCalendarTable(team, year);
     },
@@ -161,7 +161,7 @@ const calendarGenerators = {
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Jaarkalender';
-        DOM.container.className = 'year-container-grid';
+        //DOM.container.className = 'year-container-grid';
         DOM.calendar.className = 'year-calendar-grid';
         generateYearCalendar(team, year);
     },
@@ -171,16 +171,18 @@ const calendarGenerators = {
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Maandkalender';
-        DOM.container.className = 'month-container';
+        //DOM.container.className = 'month-container';
         DOM.calendar.className = 'month-calendar';
         generateMonthCalendar(team, year, month);
     },
     3: (year, month) => {
         emptyMiddenSecties();
         DOM.ploeg.hidden = true;
+        maakPloegenLegende();
+        DOM.topSectie3.className = 'verborgen-sectie';
         document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Teamkalender';
-        DOM.container.className = 'team-container';
+        //DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';
         generateTeamCalendar(year, month);
     }
@@ -192,7 +194,7 @@ function emptyMiddenSecties() {
     DOM.topSectie3.className = '';
     //DOM.topSectie3.classList.add('hidden-on-small');
     DOM.titel.textContent = '';
-    DOM.container.className = '';
+    //DOM.container.className = '';
     DOM.calendar.className = '';
     //DOM.ploeg.hidden = true;
 };

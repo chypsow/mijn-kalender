@@ -1,14 +1,7 @@
-.year-container-grid {
-    /*position: relative;
-    margin-top: -130px;*/
+.year-calendar-grid {
     max-width: 70%;
     margin-inline: auto;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-.year-calendar-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 maanden per rij */
     gap: 20px;

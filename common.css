@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background: linear-gradient(150deg, #04555f 10% ,#022930 30%, #012423 80%);
-    color: #999999;
+    color: #dfdfdf;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-attachment:fixed;
 }
@@ -213,7 +213,7 @@ section {
 /*Legende*/
 .ploegenLegende-container {
     /*float: right;*/
-    width: 13em;
+    width: 14em;
     /*margin-right: 20px;*/
     display: flex;
     flex-direction: column-reverse;
@@ -295,7 +295,7 @@ section {
 .buttons-container {
     display: flex;
     flex-direction: column;
-    width: 14em;
+    width: 15em;
 }
 .btnGreen {
     font-family: cursive, sans-serif;
@@ -305,7 +305,7 @@ section {
     outline: none;
     white-space: nowrap;
     /*background: linear-gradient(360deg,#022124 10%,#efefef 360%);*/
-    color: #aaaaaa;
+    color: #ffffff;
     /*transition: all 0.20s ease-in-out;*/
 }
 .btnGreen:hover {
@@ -627,7 +627,7 @@ input[type=checkbox] {
         padding: 10px 15px;
     }
     body {
-        font-size: 10px;
+        font-size: 12px;
         flex-direction: column;
         align-items: center;
     }
@@ -638,7 +638,7 @@ input[type=checkbox] {
         transition: width 0.3s ease-in-out;
     } 
     .verlofCollection {
-        font-size: 0.8em;
+        font-size: 1em;
         padding: 5px 3px 0px 3px;
         width: 25px;
         height: 25px;
@@ -648,10 +648,10 @@ input[type=checkbox] {
     .outputVak {
         width: 25px;
         padding: 5px;
-        font-size: 0.8em;
+        font-size: 1em;
     }
     .modal {
-        font-size: 10px;
+        font-size: 12px;
         width: 60%;
         min-width: 300px;
         padding: 20px;
@@ -659,15 +659,15 @@ input[type=checkbox] {
     .shift-input {
        margin-right: 3px;
         padding: 3px;
-        font-size: 0.8em;
+        font-size: 1em;
     }
     .date-input {
-        font-size: 0.8em;
+        font-size: 1em;
         padding: 2px 3px;
     }
     .handleiding-msg {
         min-width: 300px;
-        font-size: 0.8em;
+        font-size: 0.9em;
     }
     .handleiding-msg ul {
         padding-left: 0px;
@@ -680,6 +680,10 @@ input[type=checkbox] {
         flex-direction: column;
         gap: 30px;
     }
+    .verlof-inhoud {
+        max-width: 500px;
+        gap: 5px;
+    }
     .year-container-table {
         margin-top: 20px;
         /*width: 100%;*/
@@ -687,6 +691,7 @@ input[type=checkbox] {
     }
     .year-container-grid {
         /*margin-top: -70px;*/
+        font-size: 15px;
         max-width: 80%;
     }
     .month-container {
@@ -696,13 +701,13 @@ input[type=checkbox] {
         align-items: center;*/
     }
     .year-calendar-table .cell, .header-cell {
-        font-size: 0.8em;
+        font-size: 1em;
         padding: 5px;
         min-width: 20px;
         height: 20px;
     }
     .team-calendar-table .table-cell, .team-header-cell {
-        font-size: 0.8em;
+        font-size: 1em;
         padding: 5px;
         max-width: 10px;
         height: 20px;
@@ -710,12 +715,22 @@ input[type=checkbox] {
     .team-calendar-table .team-cell{
         max-width: 15px;
     }
+    .cell:hover {
+    outline-offset: -3px;
+    outline: 2px solid #949494;
+    /*cursor: cell;*/
+    }
+    .highlight,
+    .highlight:hover {
+        outline-offset: -3px;
+        outline: 2px solid #000000;
+    }
 }
 @media screen and (max-width: 1080px) {
-    .year-container-grid {
+    .year-calendar-grid {
         max-width: 100%;
     }
-    .month-container {
+    .month-calendar {
         max-width: 100%;
         /*display: flex;
         flex-direction: column;

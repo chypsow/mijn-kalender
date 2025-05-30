@@ -1,12 +1,13 @@
-.month-container {
-    /*position: relative;
-    top: -100px;*/
+.month-calendar {
     margin-inline: auto;
     max-width: 40%;
+    margin-top: 20px;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 7px;
+    /*transition: transform 0.2s ease; Animatie bij het verschuiven */
+    /*position: relative;*/
 }
 .month-calendar-nav {
     display: flex;
@@ -28,14 +29,7 @@
     transform: translateX(0); /* Reset naar de standaardpositie */
 }
 
-.month-calendar {
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 7px;
-    /*transition: transform 0.2s ease; Animatie bij het verschuiven */
-    /*position: relative;*/
-}
+
 
 .day-groot, .emptyCellGroot {
     /*border: 3px solid transparent;*/
@@ -64,6 +58,10 @@
     border: 1px solid #636363;
     border-radius: 4px;
     color: #ccc;
+}
+.verborgen-sectie {
+    width: 15em;
+    visibility: hidden;
 }
 
 

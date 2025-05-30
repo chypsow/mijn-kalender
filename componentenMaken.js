@@ -82,7 +82,10 @@ export function maakVerlofContainer() {
         verlofDag.addEventListener('click', handelVerlofAanvraag);
         container.appendChild(verlofDag);
     });
-    
+    const legeCel2 = document.createElement('div');
+    legeCel2.classList.add('legeCel');
+    container.appendChild(legeCel2);
+
     const beginRecht = document.createElement('div');
     beginRecht.classList.add('titel');
     beginRecht.textContent = 'Beginrecht';
@@ -92,17 +95,23 @@ export function maakVerlofContainer() {
     const currentYear =  instellingen.currentYear;
     const selectedPloeg = instellingen.selectedPloeg;
     const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
+    //beginrechtVerlof['z'] = 0; // Adding 'z' for ziek, default to 0
     Object.keys(beginrechtVerlof).forEach(verlof => {
         const inputVak = document.createElement('input');
         inputVak.classList.add('inputVak');
         inputVak.id = verlof;
         //inputVak.value = aantal;
+        /*inputVak.type = 'number';*/
         inputVak.addEventListener('blur', handleBlur);
         inputVak.addEventListener('focus', function () {
             this.select();
         });
         container.appendChild(inputVak);
     });
+    const legeCel3 = document.createElement('div');
+    legeCel3.classList.add('inputvak');
+    legeCel3.id = 'legeCel3';
+    container.appendChild(legeCel3);
     
     const totaal1 = document.createElement('div');
     totaal1.classList.add('totaal');
@@ -130,6 +139,11 @@ export function maakVerlofContainer() {
         outputVak.textContent = aantal;
         container.appendChild(outputVak);
     });
+
+    const legeCel4 = document.createElement('div');
+    legeCel4.classList.add('outputvak');
+    legeCel4.id = 'legeCel4';
+    container.appendChild(legeCel4);
 
     const totaal2 = document.createElement('div');
     totaal2.classList.add('totaal');
