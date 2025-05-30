@@ -169,6 +169,8 @@
     gap: 10px;*/
 }
 .restore {
+    width: 220px;
+    margin: 0 auto;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 0.9em;
     font-weight: bold;
@@ -193,6 +195,8 @@
     
 }
 .hpButton {
+    width: 220px;
+    margin: 0 auto;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 0.9em;
     font-weight: bold;
