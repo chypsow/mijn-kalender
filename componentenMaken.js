@@ -5,7 +5,7 @@ import { handelVerlofAanvraag, cancelAanvraag, cancelAlleAanvragen, handelHerpla
 export let tabBlad = 0;
 
 export function buildSideBar() {
-    const tabArray = ['Jaarkalender : Tabel', 'Jaarkalender : Raster', 'Maandkalender', 'TeamKalender'];
+    const tabArray = ['Jaarkalender-Tabel', 'Jaarkalender-Raster', 'Maandkalender', 'TeamKalender'];
     DOM.topNav.setAttribute('role', 'tablist');
     tabArray.forEach((tab, index) => {
         const hyperlink = document.createElement('a');
