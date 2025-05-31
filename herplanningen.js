@@ -53,7 +53,7 @@ function handelAanvraag(e, selectedCells, selectedPloeg) {
         calendarCells.some(cel => {
             if (cel.dataset.datum !== selectedCell.datum) return false;
 
-            const inhoud = cel.textContent;
+            const inhoud = cel.textContent.replace(/- fd$/, '');
 
             if (vrijeDagen.includes(aanvraag) && cel.dataset.shift.includes('x')) return true;
 
@@ -102,7 +102,8 @@ export function cancelAanvraag() {
             // Verwijder oude verlofklassen
             vrijeDagen.forEach(className => cel.classList.remove(className));
 
-            const className = cel.textContent;
+            //const vrijedagText = cel.textContent;
+            const className = cel.textContent.replace(/- fd$/, '');
 
             // Zet shift terug
             cel.textContent = cel.dataset.shift;

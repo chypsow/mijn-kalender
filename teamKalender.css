@@ -51,6 +51,7 @@
     border: 1px solid #6d6d6da1;
     color: #ffffffc7;
     vertical-align: middle;
+    overflow: hidden;
 }
 .team-calendar-table .emptyDay {
     background-color: #cacaca00;

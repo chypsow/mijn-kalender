@@ -78,10 +78,10 @@ function savePloegenToLocalStorage() {
     });
 };
 
-export const berekenSaldo = (ploeg, key = null) => {
+export const berekenSaldo = (currentYear,ploeg, key = null) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
     const vacations = opgenomenVerlofPerPloeg[ploegKey];
-    const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
+    //const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
     const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
     const vacationsCurrentYear = vacations.filter(obj => {
         const year = parseInt(obj.datum.split('/')[2]);
@@ -90,7 +90,6 @@ export const berekenSaldo = (ploeg, key = null) => {
     if (vacationsCurrentYear.length === 0) {
         return key ? beginrechtVerlof[key] : beginrechtVerlof;
     }
-
     const calculateSaldo = (verlofKey) => {
         const opgenomen = vacationsCurrentYear.filter(obj => obj.soort === verlofKey).length;
         return beginrechtVerlof[verlofKey] - opgenomen;
@@ -208,7 +207,7 @@ export const updateCalendar = () => {
     const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
     const team = setting.selectedPloeg;
     const year = setting.currentYear;
-    const month = setting.currentMonth;
+    const month = setting.currentMonth ? setting.currentMonth : 0;
     switch (tabBlad) {
         case 0:
             updateYearCalendarTable(team, year);

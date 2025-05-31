@@ -6,7 +6,8 @@ export const dataBeginRecht = [
     "ADV": 16,
     "BF": 6,
     "AV": 0,
-    "HP": 0
+    "HP": 0,
+    "Z": 12
   },
   {
     "year": 2026,
@@ -15,7 +16,8 @@ export const dataBeginRecht = [
     "ADV": 15,
     "BF": 6,
     "AV": 1,
-    "HP": 0
+    "HP": 0,
+    "Z": 12
   },
   {
     "year": 2027,
@@ -24,7 +26,8 @@ export const dataBeginRecht = [
     "ADV": 15,
     "BF": 6,
     "AV": 2,
-    "HP": 0
+    "HP": 0,
+    "Z": 12
   },
   {
     "year": 2028,
@@ -33,7 +36,8 @@ export const dataBeginRecht = [
     "ADV": 18,
     "BF": 10,
     "AV": 0,
-    "HP": 0
+    "HP": 0,
+    "Z": 12
   },
   {
     "year": 2024,
@@ -42,7 +46,8 @@ export const dataBeginRecht = [
     "ADV": 16,
     "BF": 6,
     "AV": 0,
-    "HP": 2
+    "HP": 2,
+    "Z": 12
   },
   {
     "year": 2023,
@@ -51,7 +56,8 @@ export const dataBeginRecht = [
     "ADV": 0,
     "BF": 0,
     "AV": 0,
-    "HP": 0
+    "HP": 0,
+    "Z": 0
   },
   {
     "year": 2029,
@@ -60,7 +66,8 @@ export const dataBeginRecht = [
     "ADV": 0,
     "BF": 0,
     "AV": 0,
-    "HP": 0
+    "HP": 0,
+    "Z": 0
   }
 ];
 

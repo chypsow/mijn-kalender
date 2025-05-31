@@ -46,7 +46,7 @@ export function getBeginRechtFromLocalStorage(jaar) {
     let beginrecht = beginrechten.find(item => item.year === jaar);
 
     if (!beginrecht) {
-        beginrecht = { year: jaar, BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0 };
+        beginrecht = { year: jaar, BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0, Z: 0 };
         beginrechten.push(beginrecht);
         saveToLocalStorage('beginrechtVerlof', beginrechten);
     }
@@ -58,6 +58,7 @@ export function getBeginRechtFromLocalStorage(jaar) {
         BF: beginrecht.BF,
         AV: beginrecht.AV,
         HP: beginrecht.HP,
+        Z: beginrecht.Z
     };
 };
 
@@ -249,7 +250,7 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     update[verlof] = aantal;
     updateLocalStorage('beginrechtVerlof', null, index, update);
 
-    const saldoNieuw = berekenSaldo(selectedPloeg, verlof);
+    const saldoNieuw = berekenSaldo(currentYear, selectedPloeg, verlof);
     totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
     mySaldoElt.textContent = saldoNieuw;
     totaal2.textContent = ` ${parseInt(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
@@ -261,7 +262,7 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
 };
 
 export function behandelenSaldoVerlofdagen(verlof, oud) {
-    const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP'];
+    const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     const totaal2 = document.getElementById('totaalSaldo');
     const totaalSaldo = parseInt(totaal2.textContent.trim());
     if(!verlofdagen.includes(verlof)) {
@@ -288,7 +289,7 @@ export function behandelenSaldoVerlofdagen(verlof, oud) {
 };
 
 export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
-    const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP'];
+    const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     if(!verlofdagen.includes(verlof)) return;
     const totaal2 = document.getElementById('totaalSaldo');
     const saldoElt = document.getElementById(`saldo-${verlof}`);
@@ -299,7 +300,7 @@ export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
 
 export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
     const beginrechtVerlof = getBeginRechtFromLocalStorage(year);
-    const saldoArray = berekenSaldo(ploeg);
+    const saldoArray = berekenSaldo(year,ploeg);
     Object.entries(beginrechtVerlof).forEach(([verlof,aantal]) => {
         const elt = document.getElementById(verlof);
         if(elt) {

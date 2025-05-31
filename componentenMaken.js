@@ -64,17 +64,17 @@ export function buildButtons() {
 };
 
 export function maakVerlofContainer() {
-    /*const verlofContainer = document.createElement('div');
-    verlofContainer.classList.add('verlof-container');
-    verlofContainer.classList.add('hidden-on-small');*/
-
     const container = document.createElement('div');
     container.classList.add('verlof-inhoud');
+
     const legeCel1 = document.createElement('div');
     legeCel1.classList.add('legeCel');
     container.appendChild(legeCel1);
-    const verlofDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
-    verlofDagen.forEach(verlof => {
+
+    const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const currentYear =  instellingen.currentYear;
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
+    Object.keys(beginrechtVerlof).forEach(verlof => {
         const verlofDag = document.createElement('div');
         verlofDag.textContent = verlof;
         verlofDag.classList.add(verlof);
@@ -91,16 +91,13 @@ export function maakVerlofContainer() {
     beginRecht.textContent = 'Beginrecht';
     container.appendChild(beginRecht);
 
-    const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-    const currentYear =  instellingen.currentYear;
-    const selectedPloeg = instellingen.selectedPloeg;
-    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
+    
     //beginrechtVerlof['z'] = 0; // Adding 'z' for ziek, default to 0
-    Object.keys(beginrechtVerlof).forEach(verlof => {
+    Object.entries(beginrechtVerlof).forEach(([verlof, aantal]) => {
         const inputVak = document.createElement('input');
         inputVak.classList.add('inputVak');
         inputVak.id = verlof;
-        //inputVak.value = aantal;
+        inputVak.value = aantal;
         /*inputVak.type = 'number';*/
         inputVak.addEventListener('blur', handleBlur);
         inputVak.addEventListener('focus', function () {
@@ -108,10 +105,10 @@ export function maakVerlofContainer() {
         });
         container.appendChild(inputVak);
     });
-    const legeCel3 = document.createElement('div');
-    legeCel3.classList.add('inputvak');
+    /*const legeCel3 = document.createElement('div');
+    legeCel3.classList.add('legeCel');
     legeCel3.id = 'legeCel3';
-    container.appendChild(legeCel3);
+    container.appendChild(legeCel3);*/
     
     const totaal1 = document.createElement('div');
     totaal1.classList.add('totaal');
@@ -130,8 +127,8 @@ export function maakVerlofContainer() {
     saldo.textContent = 'Saldo';
     container.appendChild(saldo);
 
-    //const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-    const saldoArray = berekenSaldo(selectedPloeg);
+    const selectedPloeg = instellingen.selectedPloeg;
+    const saldoArray = berekenSaldo(currentYear, selectedPloeg);
     Object.entries(saldoArray).forEach(([verlof,aantal]) => {
         const outputVak = document.createElement('div');
         outputVak.classList.add('outputVak');
@@ -140,10 +137,10 @@ export function maakVerlofContainer() {
         container.appendChild(outputVak);
     });
 
-    const legeCel4 = document.createElement('div');
-    legeCel4.classList.add('outputvak');
+    /*const legeCel4 = document.createElement('div');
+    legeCel4.classList.add('legeCel');
     legeCel4.id = 'legeCel4';
-    container.appendChild(legeCel4);
+    container.appendChild(legeCel4);*/
 
     const totaal2 = document.createElement('div');
     totaal2.classList.add('totaal');

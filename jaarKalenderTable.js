@@ -34,7 +34,10 @@ export function updateYearCalendarTable(selectedPloeg, year) {
   const selectActief = Array.isArray(geselecteerd) && geselecteerd.length > 0;
   if(selectActief) {
     const activeTeam = geselecteerd[0].team;
-    if(activeTeam !== selectedPloeg) return;
+    if(activeTeam !== selectedPloeg) {
+        beginSaldoEnRestSaldoInvullen(year, selectedPloeg);
+        return;
+    }
     geselecteerd.forEach(selectedCell => {
       const dayElement = document.querySelector(`.cell[data-datum="${selectedCell.datum}"]`);
       if(dayElement) {
@@ -114,7 +117,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
     }
     );
   }
-  beginSaldoEnRestSaldoInvullen(year, selectedPloeg);
+  //beginSaldoEnRestSaldoInvullen(year, selectedPloeg);
 };
 
 function shiftenInvullen(elt, date, holidays, ploeg, cyclus) {
