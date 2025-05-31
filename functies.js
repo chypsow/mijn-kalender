@@ -62,10 +62,14 @@ export function getBeginRechtFromLocalStorage(jaar) {
     };
 };
 
-export function calculateTotals(obj) {
+/*export function calculateTotals(obj) {
     return Object.values(obj).reduce((acc, x) => acc + x);
+};*/
+export function calculateTotals(obj) {
+    const values = Object.values(obj);
+    // Exclude the last item
+    return values.slice(0, -1).reduce((acc, x) => acc + x, 0);
 };
-
 export function saveArrayToSessionStorage(key, arr) {
     if (!Array.isArray(arr)) return;
 
@@ -228,11 +232,14 @@ function afdrukVoorbereiding() {
 export function handleBlur(e) {
     const verlof = e.target.id;
     const aantal = parseInt(e.target.value);
+    if (isNaN(aantal) || aantal < 0) {
+        e.target.value = 0; // Reset naar 0 als de invoer ongeldig is
+    }
     behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal);
 };
 
 function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
-    //if(verlof === "Z") return;
+    
     const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
     const currentYear =  instellingen.currentYear;
     const selectedPloeg = instellingen.selectedPloeg;
@@ -251,8 +258,10 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     updateLocalStorage('beginrechtVerlof', null, index, update);
 
     const saldoNieuw = berekenSaldo(currentYear, selectedPloeg, verlof);
-    totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
     mySaldoElt.textContent = saldoNieuw;
+    if(verlof === "Z") return;
+    // Update de totale beginrechten en saldo
+    totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
     totaal2.textContent = ` ${parseInt(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
     
     //console.log(`oude saldo: ${saldoOud}`);
@@ -264,29 +273,41 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
 export function behandelenSaldoVerlofdagen(verlof, oud) {
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     const totaal2 = document.getElementById('totaalSaldo');
-    const totaalSaldo = parseInt(totaal2.textContent.trim());
-    if(!verlofdagen.includes(verlof)) {
-        if(verlofdagen.includes(oud)) {
-        const saldoElt2 = document.getElementById(`saldo-${oud}`);
-        saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
-        totaal2.textContent = ` ${totaalSaldo + 1}`;
+    let totaalSaldo = parseInt(totaal2.textContent.trim());
+
+    // If new type is not a verlof, but old is: restore old saldo and total
+    if (!verlofdagen.includes(verlof)) {
+        if (verlofdagen.includes(oud)) {
+            const saldoElt2 = document.getElementById(`saldo-${oud}`);
+            saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
+            if (oud === "Z") return;
+            totaal2.textContent = ` ${totaalSaldo + 1}`;
         }
         return;
     }
+
+    // Decrement new saldo
     const saldoElt1 = document.getElementById(`saldo-${verlof}`);
-    //const beginrecht = document.getElementById(verlof);
-    const saldoOud = parseInt(saldoElt1.textContent);
-    //const saldoNieuw = saldoOud--;
-    saldoElt1.textContent = saldoOud - 1;
-    if(verlofdagen.includes(oud)) {
-        const saldoElt2 = document.getElementById(`saldo-${oud}`);
-        saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
-    } else {
-        totaal2.textContent = ` ${totaalSaldo - 1}`;
+    saldoElt1.textContent = parseInt(saldoElt1.textContent) - 1;
+
+    // If old type was not a verlof, decrement total (unless verlof is Z)
+    if (!verlofdagen.includes(oud)) {
+        if (verlof !== "Z") {
+            totaal2.textContent = ` ${totaalSaldo - 1}`;
+        }
+        return;
     }
 
-    //console.log(`opgenomen: ${verlof}, oude saldo: ${saldoOud}, nieuwe saldo: ${saldoElt1.textContent}`);
-};
+    // Both new and old are verlof types
+    const saldoElt2 = document.getElementById(`saldo-${oud}`);
+    saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
+
+    if (verlof === "Z") {
+        totaal2.textContent = ` ${totaalSaldo + 1}`;
+    } else if (oud === "Z") {
+        totaal2.textContent = ` ${totaalSaldo - 1}`;
+    }
+}
 
 export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
@@ -294,6 +315,7 @@ export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
     const totaal2 = document.getElementById('totaalSaldo');
     const saldoElt = document.getElementById(`saldo-${verlof}`);
     saldoElt.textContent = parseInt(saldoElt.textContent) + 1;
+    if(verlof === "Z") return;
     const totaalSaldo = parseInt(totaal2.textContent.trim());
     totaal2.textContent = ` ${totaalSaldo + 1}`;
 };

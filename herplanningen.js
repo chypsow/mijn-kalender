@@ -5,14 +5,6 @@ import {
     behandelenSaldoVerlofdagen, behandelenRechtEnSaldoVerlofdagenNaTerugstellen, beginSaldoEnRestSaldoInvullen, 
 } from "./functies.js";
 
-export function handelVerlofAanvraag(e) {
-    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-    const selectedCells = JSON.parse(sessionStorage.getItem('selectedCells'));
-    if (!selectedCells || selectedCells[0].team !== selectedPloeg) return;
-
-    handelAanvraag(e, selectedCells, selectedPloeg);
-};
-
 export function handelHerplanning() {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const selectedCells = JSON.parse(sessionStorage.getItem('selectedCells'));
@@ -41,6 +33,14 @@ function makeModalHerplanning(selectedCells, selectedPloeg) {
     toggleModal(true, '25%');
 };
 
+export function handelVerlofAanvraag(e) {
+    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const selectedCells = JSON.parse(sessionStorage.getItem('selectedCells'));
+    if (!selectedCells || selectedCells[0].team !== selectedPloeg) return;
+
+    handelAanvraag(e, selectedCells, selectedPloeg);
+};
+
 function handelAanvraag(e, selectedCells, selectedPloeg) {
     const vrijeDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
     const elt = e.target;
@@ -53,7 +53,7 @@ function handelAanvraag(e, selectedCells, selectedPloeg) {
         calendarCells.some(cel => {
             if (cel.dataset.datum !== selectedCell.datum) return false;
 
-            const inhoud = cel.textContent.replace(/- fd$/, '');
+            const oud = cel.textContent.replace(/- fd$/, '');
 
             if (vrijeDagen.includes(aanvraag) && cel.dataset.shift.includes('x')) return true;
 
@@ -80,7 +80,7 @@ function handelAanvraag(e, selectedCells, selectedPloeg) {
 
             // Opslag en saldo
             voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
-            behandelenSaldoVerlofdagen(aanvraag, inhoud);
+            behandelenSaldoVerlofdagen(aanvraag, oud);
 
             return true;
         });
