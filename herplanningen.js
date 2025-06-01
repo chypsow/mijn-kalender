@@ -8,7 +8,7 @@ import {
 export function handelHerplanning() {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const selectedCells = JSON.parse(sessionStorage.getItem('selectedCells'));
-    if (!selectedCells || selectedCells[0].team !== selectedPloeg) return;
+    if (!Array.isArray(selectedCells) || selectedCells.length === 0 || selectedCells[0].team !== selectedPloeg) return;
 
     makeModalHerplanning(selectedCells, selectedPloeg);
 };
@@ -36,7 +36,7 @@ function makeModalHerplanning(selectedCells, selectedPloeg) {
 export function handelVerlofAanvraag(e) {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const selectedCells = JSON.parse(sessionStorage.getItem('selectedCells'));
-    if (!selectedCells || selectedCells[0].team !== selectedPloeg) return;
+    if (!Array.isArray(selectedCells) || selectedCells.length === 0 || selectedCells[0].team !== selectedPloeg) return;
 
     handelAanvraag(e, selectedCells, selectedPloeg);
 };

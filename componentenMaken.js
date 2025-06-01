@@ -74,6 +74,9 @@ export function maakVerlofContainer() {
     const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
     const currentYear =  instellingen.currentYear;
     const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
+    const aantalZ = beginrechtVerlof['Z'] || 0; // Default to 0 if 'Z' is not defined
+    //beginrechtVerlof.pop(); // Remove the last item (empty object) if it exists
+    delete beginrechtVerlof['Z']; // Remove 'Z' from beginrechtVerlof to avoid duplication
     Object.keys(beginrechtVerlof).forEach(verlof => {
         const verlofDag = document.createElement('div');
         verlofDag.textContent = verlof;
@@ -85,6 +88,13 @@ export function maakVerlofContainer() {
     const legeCel2 = document.createElement('div');
     legeCel2.classList.add('legeCel');
     container.appendChild(legeCel2);
+
+    const verlofDag = document.createElement('div');
+    verlofDag.textContent = 'Z';
+    verlofDag.classList.add('Z');
+    verlofDag.classList.add('verlofCollection');
+    verlofDag.addEventListener('click', handelVerlofAanvraag);
+    container.appendChild(verlofDag);
 
     const beginRecht = document.createElement('div');
     beginRecht.classList.add('titel');
@@ -105,10 +115,6 @@ export function maakVerlofContainer() {
         });
         container.appendChild(inputVak);
     });
-    /*const legeCel3 = document.createElement('div');
-    legeCel3.classList.add('legeCel');
-    legeCel3.id = 'legeCel3';
-    container.appendChild(legeCel3);*/
     
     const totaal1 = document.createElement('div');
     totaal1.classList.add('totaal');
@@ -122,6 +128,17 @@ export function maakVerlofContainer() {
     totaal1.appendChild(span);
     container.appendChild(totaal1);
 
+    const inputVak = document.createElement('input');
+    inputVak.classList.add('inputVak');
+    inputVak.id = 'Z';
+    inputVak.value = aantalZ;
+    /*inputVak.type = 'number';*/
+    inputVak.addEventListener('blur', handleBlur);
+    inputVak.addEventListener('focus', function () {
+        this.select();
+    });
+    container.appendChild(inputVak);
+
     const saldo = document.createElement('div');
     saldo.classList.add('titel');
     saldo.textContent = 'Saldo';
@@ -129,6 +146,9 @@ export function maakVerlofContainer() {
 
     const selectedPloeg = instellingen.selectedPloeg;
     const saldoArray = berekenSaldo(currentYear, selectedPloeg);
+    const saldoZ = saldoArray['Z'] || 0; // Default to 0 if 'Z' is not defined
+    //saldoArray.pop(); // Remove the last item (empty object) if it exists
+    delete saldoArray['Z']; // Remove 'Z' from saldoArray to avoid duplication
     Object.entries(saldoArray).forEach(([verlof,aantal]) => {
         const outputVak = document.createElement('div');
         outputVak.classList.add('outputVak');
@@ -136,11 +156,6 @@ export function maakVerlofContainer() {
         outputVak.textContent = aantal;
         container.appendChild(outputVak);
     });
-
-    /*const legeCel4 = document.createElement('div');
-    legeCel4.classList.add('legeCel');
-    legeCel4.id = 'legeCel4';
-    container.appendChild(legeCel4);*/
 
     const totaal2 = document.createElement('div');
     totaal2.classList.add('totaal');
@@ -152,6 +167,12 @@ export function maakVerlofContainer() {
     span2.textContent = ` ${saldoTotaal}`;
     totaal2.appendChild(span2);
     container.appendChild(totaal2);
+
+    const outputVak = document.createElement('div');
+    outputVak.classList.add('outputVak');
+    outputVak.id = `saldo-Z`;
+    outputVak.textContent = saldoZ;
+    container.appendChild(outputVak);
 
     DOM.middenSectie2.appendChild(container);
 

@@ -7,7 +7,7 @@ export const dataBeginRecht = [
     "BF": 6,
     "AV": 0,
     "HP": 0,
-    "Z": 12
+    "Z": 0
   },
   {
     "year": 2026,
@@ -17,7 +17,7 @@ export const dataBeginRecht = [
     "BF": 6,
     "AV": 1,
     "HP": 0,
-    "Z": 12
+    "Z": 0
   },
   {
     "year": 2027,
@@ -27,7 +27,7 @@ export const dataBeginRecht = [
     "BF": 6,
     "AV": 2,
     "HP": 0,
-    "Z": 12
+    "Z": 0
   },
   {
     "year": 2028,
@@ -37,7 +37,7 @@ export const dataBeginRecht = [
     "BF": 10,
     "AV": 0,
     "HP": 0,
-    "Z": 12
+    "Z": 0
   },
   {
     "year": 2024,
@@ -47,7 +47,7 @@ export const dataBeginRecht = [
     "BF": 6,
     "AV": 0,
     "HP": 2,
-    "Z": 12
+    "Z": 0
   },
   {
     "year": 2023,

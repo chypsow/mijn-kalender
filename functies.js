@@ -68,7 +68,8 @@ export function getBeginRechtFromLocalStorage(jaar) {
 export function calculateTotals(obj) {
     const values = Object.values(obj);
     // Exclude the last item
-    return values.slice(0, -1).reduce((acc, x) => acc + x, 0);
+    //return values.slice(0, -1).reduce((acc, x) => acc + x, 0);
+    return values.reduce((acc, x) => acc + x, 0);
 };
 export function saveArrayToSessionStorage(key, arr) {
     if (!Array.isArray(arr)) return;
@@ -131,13 +132,13 @@ export function adjustLayout() {
 export function modalAfdrukken() {
     document.getElementById("printPreview").classList.add("no-print");
     document.querySelector(".top-sectie").classList.add("no-print");
-    DOM.container.classList.add("no-print");
+    DOM.calendar.classList.add("no-print");
     window.print();
     // Reset na printen
     setTimeout(() => {
     document.getElementById("printPreview").classList.remove("no-print");
     document.querySelector(".top-sectie").classList.remove("no-print");
-    DOM.container.classList.remove("no-print");
+    DOM.calendar.classList.remove("no-print");
     }, 1000); // wacht even tot printdialoog klaar is
 };
 
