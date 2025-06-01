@@ -92,6 +92,7 @@ export function maakVerlofContainer() {
     const verlofDag = document.createElement('div');
     verlofDag.textContent = 'Z';
     verlofDag.classList.add('Z');
+    verlofDag.classList.add('hidden-on-small');
     verlofDag.classList.add('verlofCollection');
     verlofDag.addEventListener('click', handelVerlofAanvraag);
     container.appendChild(verlofDag);
@@ -130,6 +131,7 @@ export function maakVerlofContainer() {
 
     const inputVak = document.createElement('input');
     inputVak.classList.add('inputVak');
+    inputVak.classList.add('hidden-on-small');
     inputVak.id = 'Z';
     inputVak.value = aantalZ;
     /*inputVak.type = 'number';*/
@@ -170,6 +172,7 @@ export function maakVerlofContainer() {
 
     const outputVak = document.createElement('div');
     outputVak.classList.add('outputVak');
+    outputVak.classList.add('hidden-on-small');
     outputVak.id = `saldo-Z`;
     outputVak.textContent = saldoZ;
     container.appendChild(outputVak);
@@ -194,7 +197,7 @@ export function maakVerlofContainer() {
     const restoreAll = document.createElement('button');
     restoreAll.textContent = 'Alles terugstellen';
     restoreAll.addEventListener('click', cancelAlleAanvragen);
-    restoreAll.classList.add('restore');
+    restoreAll.classList.add('restoreAll');
     btnContainer.appendChild(restoreAll);
 
     DOM.middenSectie2.appendChild(btnContainer);

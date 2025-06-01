@@ -191,7 +191,7 @@ function emptyMiddenSecties() {
     DOM.middenSectie2.innerHTML = '';
     DOM.topSectie3.innerHTML = '';
     DOM.topSectie3.className = '';
-    //DOM.topSectie3.classList.add('hidden-on-small');
+    DOM.topSectie3.classList.add('hidden-on-too-small');
     DOM.titel.textContent = '';
     //DOM.container.className = '';
     DOM.calendar.className = '';

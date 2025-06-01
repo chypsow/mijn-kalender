@@ -181,13 +181,21 @@
     /*border: 2px solid rgb(75, 75, 75);*/
     /*border-radius: 5px;*/
 }
-.restore:hover {
-    /*border: 2px solid rgba(228, 228, 228, 0.575);*/
-    color: rgb(255, 255, 255);
-    /*background-color: rgba(99, 99, 99, 0.993);*/
-    /*box-shadow: 0 0 5px rgb(165, 165, 165);*/
-    outline: auto 2px rgba(128, 128, 128, 0.671);
-    
+.restoreAll {
+    width: 220px;
+    margin: 0 auto;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 0.9em;
+    font-weight: bold;
+    /*height: 48px;*/
+    background-color: #525252;
+    color: rgba(235, 235, 235, 0.815);
+    /*transition: all 0.20s ease-in-out;*/
+    cursor: pointer;
+    align-content: center;
+    text-align: center;
+    padding: 9px 15px;
+    border: 2px solid rgb(75, 75, 75);
 }
 .hpButton {
     width: 220px;
@@ -206,12 +214,17 @@
     border: 2px solid rgb(75, 75, 75);
     /*border-radius: 5px;*/
 }
+.restore:hover,
+.restoreAll:hover,
 .hpButton:hover {
-    /*box-shadow: 0 0 15px gray;*/
-    color: rgb(224, 224, 224);
     /*border: 2px solid rgba(228, 228, 228, 0.575);*/
+    color: rgb(255, 255, 255);
+    /*background-color: rgba(99, 99, 99, 0.993);*/
+    /*box-shadow: 0 0 5px rgb(165, 165, 165);*/
     outline: auto 2px rgba(128, 128, 128, 0.671);
+    
 }
+
 .verlofCollection {
     color: black;
     /*font-weight: bold;*/
