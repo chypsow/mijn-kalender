@@ -54,7 +54,9 @@ function handelAanvraag(e, selectedCells, selectedPloeg) {
             if (cel.dataset.datum !== selectedCell.datum) return false;
 
             const oud = cel.textContent.replace(/- fd$/, '');
+            if (oud === aanvraag) return false;
 
+            //console.log(`Aanvraag: ${aanvraag}, Oud: ${oud}`);
             if (vrijeDagen.includes(aanvraag) && cel.dataset.shift.includes('x')) return true;
 
             if (

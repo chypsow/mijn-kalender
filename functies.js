@@ -273,6 +273,8 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
 };
 
 export function behandelenSaldoVerlofdagen(verlof, oud) {
+    //if (verlof === oud) return;
+    //console.log(`behandelenSaldoVerlofdagen: ${verlof} - ${oud}`);
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     const totaal2 = document.getElementById('totaalSaldo');
     let totaalSaldo = parseInt(totaal2.textContent.trim());
