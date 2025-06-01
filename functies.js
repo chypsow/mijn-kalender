@@ -262,6 +262,7 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     mySaldoElt.textContent = saldoNieuw;
     if(verlof === "Z") return;
     // Update de totale beginrechten en saldo
+    delete beginrechtVerlof.Z; // Verwijder Z uit beginrechtVerlof, want die wordt apart behandeld
     totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
     totaal2.textContent = ` ${parseInt(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
     
@@ -323,7 +324,11 @@ export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
 
 export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
     const beginrechtVerlof = getBeginRechtFromLocalStorage(year);
+    const aantalZ = beginrechtVerlof.Z || 0;
+    delete beginrechtVerlof.Z; // Verwijder Z uit beginrechtVerlof, want die wordt apart behandeld
     const saldoArray = berekenSaldo(year,ploeg);
+    const saldoZ = saldoArray.Z || 0;
+    delete saldoArray.Z; // Verwijder Z uit saldoArray, want die wordt apart behandeld
     Object.entries(beginrechtVerlof).forEach(([verlof,aantal]) => {
         const elt = document.getElementById(verlof);
         if(elt) {
@@ -331,6 +336,11 @@ export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
             //elt.textContent = aantal;
         }
     });
+    const beginrechtZElt = document.getElementById('Z');
+    if(beginrechtZElt) {
+        beginrechtZElt.value = aantalZ;
+        //beginrechtZElt.textContent = aantalZ;
+    }
     const beginrechtTotaal = calculateTotals(beginrechtVerlof);
     const beginrechtElt = document.getElementById('totaalBeginrecht');
     beginrechtElt.textContent = ` ${beginrechtTotaal}`;
@@ -344,6 +354,10 @@ export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
     document.getElementById('totaalSaldo').textContent = ` ${saldoTotaal}`;
     //document.getElementById('totaalSaldo').style.color = saldoTotaal > 0 ? 'green' : 'red';
     //document.getElementById('totaalSaldo').style.fontWeight = saldoTotaal > 0 ? 'bold' : 'normal';
+    const saldoZElt = document.getElementById('saldo-Z');
+    if(saldoZElt) {
+        saldoZElt.textContent = saldoZ;
+    }
 };
 
 export function getNaamBijSymbool(obj, mark) {

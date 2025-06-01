@@ -207,7 +207,7 @@ export const updateCalendar = () => {
     const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
     const team = setting.selectedPloeg;
     const year = setting.currentYear;
-    const month = setting.currentMonth ? setting.currentMonth : 0;
+    const month = setting.currentMonth ? setting.currentMonth : null;
     switch (tabBlad) {
         case 0:
             updateYearCalendarTable(team, year);
