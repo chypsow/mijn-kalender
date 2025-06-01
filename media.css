@@ -1,0 +1,277 @@
+@media screen and (max-width: 1900px) {
+    .side-bar {
+        display: flex;
+        flex-direction: row;
+        /*justify-content: center;*/
+        width: 100%;
+        height: auto;
+        text-align: center;
+    }
+    .side-bar a {
+        display: inline;
+        font-size: 1.2em;
+        padding: 10px 15px;
+    }
+    body {
+        font-size: 12px;
+        flex-direction: column;
+        align-items: center;
+    }
+    .hoofd-container {
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+        transition: width 0.3s ease-in-out;
+    } 
+    .verlofCollection {
+        font-size: 1em;
+        padding: 5px 3px 0px 3px;
+        width: 25px;
+        height: 25px;
+        outline-offset: -2px;
+    }
+    .inputVak,
+    .outputVak {
+        width: 25px;
+        padding: 5px;
+        font-size: 1em;
+    }
+    .modal {
+        font-size: 12px;
+        width: 60%;
+        min-width: 300px;
+        padding: 20px;
+    }
+    .shift-input {
+       margin-right: 3px;
+        padding: 3px;
+        font-size: 1em;
+    }
+    .date-input {
+        font-size: 1em;
+        padding: 2px 3px;
+    }
+    .handleiding-msg {
+        min-width: 300px;
+        font-size: 0.9em;
+    }
+    .handleiding-msg ul {
+        padding-left: 0px;
+    }
+    .top-sectie2 {
+        justify-content: space-between;
+        gap: 30px;
+    }
+    .verlof-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    .verlof-inhoud {
+        max-width: 500px;
+        gap: 5px;
+    }
+    .year-container-table {
+        margin-top: 20px;
+        /*width: 100%;*/
+        font-size: 12px;
+    }
+    .year-calendar-grid {
+        /*margin-top: -70px;*/
+        font-size: 12px;
+        max-width: 85%;
+    }
+    .month-calendar {
+        max-width: 60%;
+        /*display: flex;
+        flex-direction: column;
+        align-items: center;*/
+    }
+    .year-calendar-table .cell, .header-cell {
+        font-size: 0.9em;
+        padding: 5px;
+        min-width: 23px;
+        height: 23px;
+    }
+    .team-calendar-table .table-cell, .team-header-cell {
+        font-size: 1em;
+        padding: 5px;
+        max-width: 10px;
+        height: 20px;
+    }
+    .team-calendar-table .team-cell{
+        max-width: 15px;
+    }
+    .cell:hover {
+    outline-offset: -3px;
+    outline: 2px solid #949494;
+    /*cursor: cell;*/
+    }
+    .highlight,
+    .highlight:hover {
+        outline-offset: -3px;
+        outline: 2px solid #000000;
+    }
+}
+@media screen and (max-width: 1080px) {
+    .year-calendar-grid {
+        max-width: 100%;
+    }
+    .month-calendar {
+        max-width: 100%;
+        /*display: flex;
+        flex-direction: column;
+        align-items: center;*/
+    }
+    .modal{
+        width: 90%;
+        /*min-width: 300px;
+        padding: 20px;*/
+    }
+}
+@media screen and (max-width: 900px) {
+    
+    .hidden-on-small {
+        display: none;
+    }
+    .verlof-inhoud {
+        grid-template-columns: repeat(8, 1fr);;
+    }
+
+}
+@media screen and (max-width: 710px) {
+    .top-sectie {
+        flex-direction: column;
+        align-items: center;
+    }
+    .side-bar {
+        flex-direction: column;
+        /*width: 100%;
+        height: auto;*/
+        text-align: center;
+    }
+    .hidden-on-too-small {
+        display: none;
+    }
+    .verborgen-sectie {
+        display: none;
+    }
+}
+@media print {
+    @page {
+        margin: 5mm;
+        size: auto;
+    }
+    body {
+        -webkit-print-color-adjust: exact; /* Voor WebKit-gebaseerde browsers zoals Chrome en Safari*/
+        print-color-adjust: exact; /* Standaard eigenschap voor andere browsers */
+        background: none;
+        /*transform: scale(0.7); /* Schaal naar 70% */
+        /*transform-origin: top left; /* Zorg dat de inhoud niet wordt verplaatst */
+    }
+    
+    .hoofd-container {
+        width: 100%;
+    }
+    header h1 {
+        color: #012423;
+    }
+    .no-print {
+        display: none !important;
+    }
+    .visible-on-print {
+        display: block;
+        font-size: 30px;
+        font-weight: bold ;
+        justify-self: center;
+        font-family:monospace;
+        color: rgb(77, 77, 77);   
+    }
+    
+    .year-container-grid {
+        margin-top: 0;
+    }
+    .month-year {
+        /*position: absolute;
+        left: 50%;
+        transform: translateX(-50px);*/
+        /*justify-self: center;*/
+        color: black;
+    }
+    #calendar {
+        width: 100%;
+        justify-self: center;
+        font-size: 14px;
+    }
+    #calendar .month-name, 
+    #calendar .month-days {
+        color: black;
+    }
+    #calendar .header {
+        background: rgb(44, 44, 44);
+        color: rgb(255, 255, 255);
+    }
+    #calendar .day-klein {
+        font-size: 14px;
+        font-weight: bold;
+    }
+    #calendar .month {
+        /*border: 1px solid rgb(207, 207, 207);*/
+        background: rgb(243, 243, 243);
+    }
+    #calendar .month-name {
+        font-size: 18px;
+        color: #012423;
+    }
+    .ploegenLegende-container {
+        color: rgb(0, 0, 0);
+        margin-right: 0;
+        background: none;
+        /*border: 1px solid rgb(207, 207, 207);*/
+        position: absolute;
+        top: 125px;
+        right: 10px;
+    }
+    .vandaag {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    .highlight {
+        outline: none;
+    }
+    .modal {
+        top: 20% !important;
+        background: none;
+        box-shadow: none;
+        width: 70%;
+    }
+    .modal-overlay {
+        background: none;
+        opacity: 0;
+    }
+    .vakanties, .andereInfo {
+        color: black !important;
+    }
+    .vakantie .spanRechts {
+        color: black;
+    }
+    .vakantie .spanLinks {
+        color: rgb(63, 63, 63);
+    }
+    .feestdag .spanRechts {
+        color: black;
+    }
+    .feestdag .spanLinks {
+        color: rgb(63, 63, 63);
+    }
+    
+    .rapport,
+    .rapport-header,
+    .rapport span {
+        color: black !important
+    }
+     
+    /*.rapport hr {
+        display: none;
+    }*/
+
+}
