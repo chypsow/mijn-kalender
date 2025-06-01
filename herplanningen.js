@@ -53,19 +53,23 @@ function handelAanvraag(e, selectedCells, selectedPloeg) {
         calendarCells.some(cel => {
             if (cel.dataset.datum !== selectedCell.datum) return false;
 
-            const oud = cel.textContent.replace(/- fd$/, '');
-            if (oud === aanvraag) return false;
+            const celInhoud = cel.textContent.replace(/- fd$/, '');
+            const shift = cel.dataset.shift;
+            if  (shift === aanvraag && cel.classList.contains("hp")) {
+                cel.classList.remove('hp');
+                cel.textContent = shift;
+                verwijderVerlofDatum(selectedPloeg, selectedCell.datum);
+                return true;
+            }
+            if (celInhoud === aanvraag) return true;
 
-            //console.log(`Aanvraag: ${aanvraag}, Oud: ${oud}`);
-            if (vrijeDagen.includes(aanvraag) && cel.dataset.shift.includes('x')) return true;
+            //console.log(`Aanvraag: ${aanvraag}, Inhoud: ${celInhoud}`);
+            if (vrijeDagen.includes(aanvraag) && shift.includes('x')) return true;
 
-            if (
-                aanvraag.includes('x') &&
-                (cel.dataset.shift === 'x' || cel.dataset.shift === 'x- fd')
-            ) {
+            if (aanvraag.includes('x') &&(shift === 'x' || shift === 'x- fd')) {
                 cel.classList.remove('hp');
                 cel.classList.add('x');
-                cel.textContent = cel.dataset.shift;
+                cel.textContent = shift;
                 verwijderVerlofDatum(selectedPloeg, selectedCell.datum);
                 return true;
             }
@@ -75,14 +79,12 @@ function handelAanvraag(e, selectedCells, selectedPloeg) {
             cel.classList.remove('x');
 
             // Apply new aanvraag
-            cel.textContent = cel.dataset.shift.includes('fd')
-                ? `${aanvraag}- fd`
-                : aanvraag;
+            cel.textContent = shift.includes('fd') ? `${aanvraag}- fd`: aanvraag;
             cel.classList.add(className);
 
             // Opslag en saldo
             voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
-            behandelenSaldoVerlofdagen(aanvraag, oud);
+            behandelenSaldoVerlofdagen(aanvraag, celInhoud);
 
             return true;
         });

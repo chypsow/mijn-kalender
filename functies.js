@@ -272,7 +272,7 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     //console.log(`Totaal beginrecht: ${calculateTotals(beginrechtVerlof)}`);
 };
 
-export function behandelenSaldoVerlofdagen(verlof, oud) {
+export function behandelenSaldoVerlofdagen(nieuw, oud) {
     //if (verlof === oud) return;
     //console.log(`behandelenSaldoVerlofdagen: ${verlof} - ${oud}`);
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
@@ -280,7 +280,7 @@ export function behandelenSaldoVerlofdagen(verlof, oud) {
     let totaalSaldo = parseInt(totaal2.textContent.trim());
 
     // If new type is not a verlof, but old is: restore old saldo and total
-    if (!verlofdagen.includes(verlof)) {
+    if (!verlofdagen.includes(nieuw)) {
         if (verlofdagen.includes(oud)) {
             const saldoElt2 = document.getElementById(`saldo-${oud}`);
             saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
@@ -291,12 +291,12 @@ export function behandelenSaldoVerlofdagen(verlof, oud) {
     }
 
     // Decrement new saldo
-    const saldoElt1 = document.getElementById(`saldo-${verlof}`);
+    const saldoElt1 = document.getElementById(`saldo-${nieuw}`);
     saldoElt1.textContent = parseInt(saldoElt1.textContent) - 1;
 
     // If old type was not a verlof, decrement total (unless verlof is Z)
     if (!verlofdagen.includes(oud)) {
-        if (verlof !== "Z") {
+        if (nieuw !== "Z") {
             totaal2.textContent = ` ${totaalSaldo - 1}`;
         }
         return;
@@ -306,7 +306,7 @@ export function behandelenSaldoVerlofdagen(verlof, oud) {
     const saldoElt2 = document.getElementById(`saldo-${oud}`);
     saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
 
-    if (verlof === "Z") {
+    if (nieuw === "Z") {
         totaal2.textContent = ` ${totaalSaldo + 1}`;
     } else if (oud === "Z") {
         totaal2.textContent = ` ${totaalSaldo - 1}`;
