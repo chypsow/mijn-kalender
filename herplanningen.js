@@ -1,4 +1,4 @@
-import { DOM, defaultSettings, ploegenGegevens, getAllValidCells} from "./main.js";
+import { DOM, defaultSettings, ploegenGegevens, getAllValidCells } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { 
     toggleModal, getSettingsFromLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe,

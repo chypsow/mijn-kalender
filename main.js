@@ -400,7 +400,7 @@ document.addEventListener("mouseup", (event) => {
     isSelecting = false;
 
     const target = event.target;
-    
+    if(!target.classList.contains("cell")) return;
     if (lastSelectedCells.length === 1 && target.classList.contains("highlight")) {
         const clickedDatum = target.dataset.datum;
         const clickedTeam = getCurrentTeam();
@@ -413,10 +413,23 @@ document.addEventListener("mouseup", (event) => {
         }
     }
    
-    sessionStorage.setItem("selectedCells", JSON.stringify(selectedCells));
+    syncSelectedCellsWithHighlights();
     sessionStorage.setItem("lastSelectedCells", JSON.stringify(lastSelectedCells));
 });
 
+function syncSelectedCellsWithHighlights() {
+    const highlightedCells = Array.from(document.querySelectorAll('.cell.highlight'));
+    if (highlightedCells.length === 0) {
+        sessionStorage.setItem('selectedCells', JSON.stringify([]));
+        return;
+    }
+    const currentTeam = getCurrentTeam();
+    const selectedCells = highlightedCells.map(cell => ({
+        datum: cell.dataset.datum,
+        team: currentTeam
+    }));
+    sessionStorage.setItem('selectedCells', JSON.stringify(selectedCells));
+}
 export function getAllValidCells() {
     return Array.from(DOM.calendar.querySelectorAll(".cell[data-datum]"))
         .filter(cell => cell.dataset.datum);
