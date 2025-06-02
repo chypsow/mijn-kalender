@@ -138,7 +138,7 @@ function shiftenInvullen(elt, date, holidays, ploeg, cyclus) {
   if (isHoliday) {
     if (shift === 'x') {
         setShiftProperties(elt, 'x- fd', myDate, true);
-        verwijderVerlofDatum(ploeg, myDate);
+        //verwijderVerlofDatum(ploeg, myDate); //disable verlof tijdens een inactiviteitsdag
         return;
     }
     if (shift === 'D') {
@@ -172,6 +172,7 @@ function setShiftProperties(elt, shift, date, isHome) {
 };
 
 function voegVerlofdagToeVolgensLocalStorage(ploeg, cell, isHoliday) {
+  const vrijeDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
   const herplanningen = ['N12','N','V12','V','L','D','x','OPL']
   const ploegKey = `verlofdagenPloeg${ploeg}`;
   opgenomenVerlofPerPloeg[ploegKey].forEach(obj => { 
@@ -180,6 +181,10 @@ function voegVerlofdagToeVolgensLocalStorage(ploeg, cell, isHoliday) {
       const txt = cell.textContent;
       const len = txt.length;
       herplanningen.includes(txt) || herplanningen.includes(txt.slice(0, len - 4)) ? cell.classList.add('hp') : cell.classList.add(obj.soort);
+      if(cell.classList.contains('x') && vrijeDagen.includes(obj.soort)) {
+      cell.classList.remove('x');
+      }
     }
+    
   });
 };

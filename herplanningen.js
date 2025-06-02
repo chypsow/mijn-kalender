@@ -64,7 +64,7 @@ function handelAanvraag(e, selectedCells, selectedPloeg) {
             if (celInhoud === aanvraag) return true;
 
             //console.log(`Aanvraag: ${aanvraag}, Inhoud: ${celInhoud}`);
-            if (vrijeDagen.includes(aanvraag) && shift.includes('x')) return true;
+            //if (vrijeDagen.includes(aanvraag) && shift.includes('x')) return true;
 
             if (aanvraag.includes('x') &&(shift === 'x' || shift === 'x- fd')) {
                 cel.classList.remove('hp');

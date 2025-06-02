@@ -10,57 +10,17 @@ export const dataBeginRecht = [
     "Z": 0
   },
   {
-    "year": 2026,
-    "BV": 16,
-    "CS": 0,
-    "ADV": 15,
-    "BF": 6,
-    "AV": 1,
-    "HP": 0,
-    "Z": 0
-  },
-  {
-    "year": 2027,
-    "BV": 16,
-    "CS": 0,
-    "ADV": 15,
-    "BF": 6,
-    "AV": 2,
-    "HP": 0,
-    "Z": 0
-  },
-  {
-    "year": 2028,
-    "BV": 20,
-    "CS": 10,
-    "ADV": 18,
-    "BF": 10,
-    "AV": 0,
-    "HP": 0,
-    "Z": 0
-  },
-  {
     "year": 2024,
     "BV": 16,
     "CS": 0,
-    "ADV": 16,
-    "BF": 6,
+    "ADV": 14,
+    "BF": 5,
     "AV": 0,
-    "HP": 2,
-    "Z": 0
+    "HP": 6,
+    "Z": 6
   },
   {
     "year": 2023,
-    "BV": 0,
-    "CS": 0,
-    "ADV": 0,
-    "BF": 0,
-    "AV": 0,
-    "HP": 0,
-    "Z": 0
-  },
-  {
-    "year": 2029,
     "BV": 0,
     "CS": 0,
     "ADV": 0,
@@ -111,148 +71,8 @@ export const dataShift = [
 
 export const dataVerlofdagen = [
     {
-        "datum": "7/1/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "14/1/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "15/1/2025",
-        "soort": "OPL"
-    },
-    {
-        "datum": "24/1/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "31/1/2025",
-        "soort": "OPL"
-    },
-    {
-        "datum": "11/2/2025",
-        "soort": "OPL"
-    },
-    {
-        "datum": "28/2/2025",
-        "soort": "x"
-    },
-    {
-        "datum": "18/3/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "27/5/2025",
-        "soort": "OPL"
-    },
-    {
-        "datum": "9/5/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "1/7/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "5/8/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "11/8/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "12/8/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "13/8/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "16/8/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "17/8/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "22/8/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "21/8/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "23/8/2025",
-        "soort": "BF"
-    },
-    {
-        "datum": "24/8/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "26/9/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "31/10/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "4/12/2025",
-        "soort": "BF"
-    },
-    {
-        "datum": "5/12/2025",
-        "soort": "BF"
-    },
-    {
-        "datum": "21/1/2025",
-        "soort": "L"
-    },
-    {
-        "datum": "24/2/2025",
-        "soort": "L"
-    },
-    {
-        "datum": "30/1/2025",
-        "soort": "x"
-    },
-    {
-        "datum": "22/4/2025",
-        "soort": "BF"
-    },
-    {
-        "datum": "3/4/2025",
-        "soort": "D"
-    },
-    {
-        "datum": "5/3/2025",
+        "datum": "1/1/2024",
         "soort": "V"
-    },
-    {
-        "datum": "6/3/2025",
-        "soort": "V"
-    },
-    {
-        "datum": "7/3/2025",
-        "soort": "V"
-    },
-    {
-        "datum": "1/3/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "30/10/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "3/1/2025",
-        "soort": "ADV"
     },
     {
         "datum": "4/11/2024",
@@ -443,8 +263,648 @@ export const dataVerlofdagen = [
         "soort": "V"
     },
     {
-        "datum": "21/7/2026",
+        "datum": "16/7/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "22/7/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "23/7/2024",
+        "soort": "Z"
+    },
+    {
+        "datum": "24/7/2024",
+        "soort": "Z"
+    },
+    {
+        "datum": "27/6/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "28/6/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "29/6/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "30/6/2024",
+        "soort": "V12"
+    },
+    {
+        "datum": "17/6/2024",
+        "soort": "HP"
+    },
+    {
+        "datum": "18/6/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "19/6/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "11/6/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "2/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "8/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "9/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "10/4/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "11/4/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "12/4/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "13/4/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "4/4/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "5/4/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "6/4/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "7/4/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "30/3/2024",
+        "soort": "ADV"
+    },
+    {
+        "datum": "31/3/2024",
+        "soort": "ADV"
+    },
+    {
+        "datum": "28/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "29/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "2/1/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "3/1/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "4/1/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "5/1/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "6/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "7/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "9/1/2024",
+        "soort": "D"
+    },
+    {
+        "datum": "10/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "11/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "12/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "13/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "16/1/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "17/1/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "18/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "19/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "20/1/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "21/1/2024",
+        "soort": "V12"
+    },
+    {
+        "datum": "23/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "24/1/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "26/1/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "27/1/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "29/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "30/1/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "31/1/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "1/2/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "2/2/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "3/2/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "4/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "5/2/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "6/2/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "7/2/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "8/2/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "9/2/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "10/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "11/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "13/2/2024",
+        "soort": "D"
+    },
+    {
+        "datum": "14/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "15/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "16/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "17/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "22/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "23/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "24/2/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "25/2/2024",
+        "soort": "V12"
+    },
+    {
+        "datum": "27/2/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "29/2/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "1/3/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "2/3/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "4/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "5/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "6/3/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "7/3/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "8/3/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "9/3/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "10/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "11/3/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "12/3/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "13/3/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "14/3/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "15/3/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "16/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "17/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "20/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "21/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "22/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "23/3/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "19/3/2024",
+        "soort": "D"
+    },
+    {
+        "datum": "24/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "25/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "26/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "27/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "23/4/2024",
+        "soort": "D"
+    },
+    {
+        "datum": "20/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "21/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "15/4/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "16/4/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "17/4/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "18/4/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "19/4/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "14/4/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "2/5/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "3/5/2024",
+        "soort": "x"
+    },
+    {
+        "datum": "4/5/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "5/5/2024",
+        "soort": "V12"
+    },
+    {
+        "datum": "7/5/2024",
+        "soort": "Z"
+    },
+    {
+        "datum": "11/5/2024",
+        "soort": "L"
+    },
+    {
+        "datum": "13/5/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "14/5/2024",
+        "soort": "BV"
+    },
+    {
+        "datum": "15/5/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "23/5/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "24/5/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "25/5/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "26/5/2024",
+        "soort": "V12"
+    },
+    {
+        "datum": "30/9/2024",
+        "soort": "V"
+    },
+    {
+        "datum": "25/3/2024",
+        "soort": "ADV"
+    },
+    {
+        "datum": "26/3/2024",
+        "soort": "ADV"
+    },
+    {
+        "datum": "27/3/2024",
+        "soort": "ADV"
+    },
+    {
+        "datum": "25/1/2024",
+        "soort": "ADV"
+    },
+    {
+        "datum": "7/1/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "14/1/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "15/1/2025",
+        "soort": "OPL"
+    },
+    {
+        "datum": "24/1/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "31/1/2025",
+        "soort": "OPL"
+    },
+    {
+        "datum": "11/2/2025",
+        "soort": "OPL"
+    },
+    {
+        "datum": "28/2/2025",
+        "soort": "x"
+    },
+    {
+        "datum": "18/3/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "27/5/2025",
+        "soort": "OPL"
+    },
+    {
+        "datum": "9/5/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "1/7/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "5/8/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "11/8/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "12/8/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "13/8/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "16/8/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "17/8/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "22/8/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "21/8/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "23/8/2025",
         "soort": "BF"
+    },
+    {
+        "datum": "24/8/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "26/9/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "31/10/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "4/12/2025",
+        "soort": "BF"
+    },
+    {
+        "datum": "5/12/2025",
+        "soort": "BF"
+    },
+    {
+        "datum": "21/1/2025",
+        "soort": "L"
+    },
+    {
+        "datum": "24/2/2025",
+        "soort": "L"
+    },
+    {
+        "datum": "30/1/2025",
+        "soort": "x"
+    },
+    {
+        "datum": "22/4/2025",
+        "soort": "BF"
+    },
+    {
+        "datum": "3/4/2025",
+        "soort": "D"
+    },
+    {
+        "datum": "5/3/2025",
+        "soort": "V"
+    },
+    {
+        "datum": "6/3/2025",
+        "soort": "V"
+    },
+    {
+        "datum": "7/3/2025",
+        "soort": "V"
+    },
+    {
+        "datum": "1/3/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "30/10/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "3/1/2025",
+        "soort": "ADV"
     },
     {
         "datum": "4/4/2025",
@@ -460,6 +920,34 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "25/9/2025",
+        "soort": "BF"
+    },
+    {
+        "datum": "8/5/2025",
+        "soort": "BF"
+    },
+    {
+        "datum": "18/4/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "13/6/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "30/4/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "12/6/2025",
+        "soort": "ADV"
+    },
+    {
+        "datum": "19/5/2025",
+        "soort": "BV"
+    },
+    {
+        "datum": "21/7/2026",
         "soort": "BF"
     },
     {
@@ -500,30 +988,6 @@ export const dataVerlofdagen = [
     },
     {
         "datum": "27/2/2026",
-        "soort": "BV"
-    },
-    {
-        "datum": "8/5/2025",
-        "soort": "BF"
-    },
-    {
-        "datum": "18/4/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "13/6/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "30/4/2025",
-        "soort": "BV"
-    },
-    {
-        "datum": "12/6/2025",
-        "soort": "ADV"
-    },
-    {
-        "datum": "19/5/2025",
         "soort": "BV"
     }
 ];
