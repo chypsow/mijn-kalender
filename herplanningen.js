@@ -30,7 +30,7 @@ function makeModalHerplanning(selectedCells, selectedPloeg) {
         container.appendChild(herplanning);
     });
     DOM.overlay.appendChild(container);
-    toggleModal(true, '25%');
+    toggleModal(true, '25%', '#9a9a4a');
 };
 
 export function handelVerlofAanvraag(e) {

@@ -142,22 +142,29 @@ export function modalAfdrukken() {
     }, 1000); // wacht even tot printdialoog klaar is
 };
 
-export function toggleModal(show, positie = '50%') {
-    if(!show)  {
+export function toggleModal(show, positie = '50%', backgroundColor = 'rgb(196, 196, 196)') {
+    if (!show)  {
         DOM.modalOverlay.classList.remove('open');
         setTimeout(() => {
             DOM.modalOverlay.style.display = 'none';
+            if (backgroundColor !== null && DOM.modal) {
+                DOM.modal.style.backgroundColor = ''; // Reset modal background to default
+            }
         }, 300);
     } else {
         DOM.modalOverlay.style.display = 'block';
         setTimeout(() => {
             DOM.modalOverlay.classList.add('open');
-        }, 10)
+        }, 10);
+        if (backgroundColor !== null && DOM.modal) {
+            DOM.modal.style.backgroundColor = backgroundColor; // Set modal background color
+        }
     }
-    //DOM.modalOverlay.style.display = show ? "block" : "none";
-    DOM.modal.style.top = positie;
-    DOM.modal.style.display = show ? "block" : "none";
-};
+    if (DOM.modal) {
+        DOM.modal.style.top = positie;
+        DOM.modal.style.display = show ? "block" : "none";
+    }
+}
 
 export function handleClickBtn(e) {
     const btn = e.currentTarget.id; // Gebruik currentTarget om de juiste id op te halen

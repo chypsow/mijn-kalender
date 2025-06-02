@@ -268,7 +268,7 @@
     background-color: rgb(152, 210, 224);
 }
 .AV {
-   background-color: #32AA96;
+   background-color: #55b4a4;
 }
 .HP {
     background-color: #a5a5a5;
@@ -281,12 +281,12 @@
     color: rgba(41, 41, 41, 0.63);
 }
 .OPL {
-    background-color: #a10b0b;
+    background-color: #e9ca3f;/*#a10b0b;*/
     /*color: white;*/
 }
 .hp {
-    background-color: #a10b0b;
-    color: white;
+    background-color: #e9ca3f;
+    color: rgb(0, 0, 0);
 }
 
 .highlight,
