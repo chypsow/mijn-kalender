@@ -20,6 +20,7 @@ export function buildSideBar() {
             activeLink.classList.remove("active");
             activeLink.setAttribute('aria-selected', 'false');
             hyperlink.classList.add("active");
+            hyperlink.setAttribute('aria-selected', 'true');
             tabBlad = index;
             generateCalendar();
         });
