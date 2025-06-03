@@ -204,8 +204,8 @@
     font-size: 0.9em;
     font-weight: bold;
     /*height: 48px;*/
-    background-color: #a10b0b;
-    color: rgba(235, 235, 235, 0.815);
+    background-color: #e9ca3f;
+    color: rgb(40 38 38 / 82%);
     /*transition: all 0.20s ease-in-out;*/
     cursor: pointer;
     align-content: center;
@@ -214,9 +214,12 @@
     border: 2px solid rgb(75, 75, 75);
     /*border-radius: 5px;*/
 }
-.restore:hover,
-.restoreAll:hover,
 .hpButton:hover {
+    /*color: rgb(255, 255, 255);*/
+    outline: auto 2px rgba(128, 128, 128, 0.671);
+}
+.restore:hover,
+.restoreAll:hover {
     /*border: 2px solid rgba(228, 228, 228, 0.575);*/
     color: rgb(255, 255, 255);
     /*background-color: rgba(99, 99, 99, 0.993);*/
@@ -224,6 +227,7 @@
     outline: auto 2px rgba(128, 128, 128, 0.671);
     
 }
+
 
 .verlofCollection {
     user-select: none;
