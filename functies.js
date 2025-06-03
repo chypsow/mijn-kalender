@@ -294,6 +294,7 @@ export function behandelenSaldoVerlofdagen(nieuw, oud) {
             if (oud === "Z") return;
             totaal2.textContent = ` ${totaalSaldo + 1}`;
         }
+        //console.log(`new: ${nieuw}, old: ${oud}`);
         return;
     }
 
@@ -306,6 +307,7 @@ export function behandelenSaldoVerlofdagen(nieuw, oud) {
         if (nieuw !== "Z") {
             totaal2.textContent = ` ${totaalSaldo - 1}`;
         }
+        //console.log(`new: ${nieuw}`);
         return;
     }
 

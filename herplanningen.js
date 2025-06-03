@@ -43,53 +43,35 @@ export function handelVerlofAanvraag(e) {
 
 function handelAanvraag(e, selectedCells, selectedPloeg) {
     const vrijeDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
-    const elt = e.target;
-    const aanvraag = elt.textContent;
+    const aanvraag = e.target.textContent;
     const className = vrijeDagen.includes(aanvraag) ? aanvraag : 'hp';
-
     const calendarCells = getAllValidCells();
 
-    selectedCells.forEach(selectedCell => {
-        calendarCells.some(cel => {
-            if (cel.dataset.datum !== selectedCell.datum) return false;
+    selectedCells.forEach(({ datum }) => {
+        const cel = calendarCells.find(c => c.dataset.datum === datum);
+        if (!cel) return;
 
-            const celInhoud = cel.textContent.replace(/- fd$/, '');
-            const shift = cel.dataset.shift;
-            if  (shift === aanvraag && cel.classList.contains("hp")) {
-                cel.classList.remove('hp');
-                cel.textContent = shift;
-                verwijderVerlofDatum(selectedPloeg, selectedCell.datum);
-                return true;
-            }
-            if (celInhoud === aanvraag) return true;
+        const vorigeInhoud = cel.textContent.replace(/- fd$/, '');
+        if (vorigeInhoud === aanvraag) return;
 
-            //console.log(`Aanvraag: ${aanvraag}, Inhoud: ${celInhoud}`);
-            //if (vrijeDagen.includes(aanvraag) && shift.includes('x')) return true;
+        // Reset classes
+        [...vrijeDagen, 'x'].forEach(cls => cel.classList.remove(cls));
 
-            if (aanvraag.includes('x') &&(shift === 'x' || shift === 'x- fd')) {
-                cel.classList.remove('hp');
-                cel.classList.add('x');
-                cel.textContent = shift;
-                verwijderVerlofDatum(selectedPloeg, selectedCell.datum);
-                return true;
-            }
+        const shift = cel.dataset.shift || '';
+        const heeftFd = cel.textContent.includes('fd');
+        cel.textContent = heeftFd ? `${aanvraag}- fd` : aanvraag;
 
-            // Reset cell
-            vrijeDagen.forEach(verlof => cel.classList.remove(verlof));
-            cel.classList.remove('x');
-
-            // Apply new aanvraag
-            cel.textContent = shift.includes('fd') ? `${aanvraag}- fd`: aanvraag;
+        if (shift === aanvraag || shift === `${aanvraag}- fd`) {
+            if (shift === 'x' || shift === 'x- fd') cel.classList.add('x');
+            verwijderVerlofDatum(selectedPloeg, datum);
+        } else {
             cel.classList.add(className);
+            voegVerlofDatumToe(selectedPloeg, datum, aanvraag);
+        }
 
-            // Opslag en saldo
-            voegVerlofDatumToe(selectedPloeg, selectedCell.datum, aanvraag);
-            behandelenSaldoVerlofdagen(aanvraag, celInhoud);
-
-            return true;
-        });
+        behandelenSaldoVerlofdagen(aanvraag, vorigeInhoud);
     });
-}
+};
 
 export function cancelAanvraag() {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
