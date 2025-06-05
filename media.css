@@ -167,6 +167,7 @@
         background: none;
         /*transform: scale(0.7); /* Schaal naar 70% */
         /*transform-origin: top left; /* Zorg dat de inhoud niet wordt verplaatst */
+        
     }
     
     .hoofd-container {
@@ -239,17 +240,39 @@
         outline: none;
     }
     .modal {
-        top: 20% !important;
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        background-color: #fff !important; /* of een andere lichte kleur */
+        color: #000 !important;
+        box-shadow: none !important;
+        width: 80% !important;
+        margin: 20px auto !important;
+        padding: 20px !important;
+        /*border: 1px solid #888 !important;*/
+        display: block !important;
+    }
+    .modal-overlay {
+        /*display: none !important;*/
         background: none;
+        opacity: 0;
+    }
+    /*.modal {
+        top: auto;
+        left: auto;
+        transform: translate(50%, 50%);
+        background-color: transparent !important;
         box-shadow: none;
         width: 70%;
     }
     .modal-overlay {
         background: none;
         opacity: 0;
-    }
-    .vakanties, .andereInfo {
+    }*/
+    .vakanties, .andereInfo, .feestdagen {
         color: black !important;
+        box-shadow: none !important;
     }
     .vakantie .spanRechts {
         color: black;

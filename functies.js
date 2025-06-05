@@ -142,7 +142,7 @@ export function modalAfdrukken() {
     }, 1000); // wacht even tot printdialoog klaar is
 };
 
-export function toggleModal(show, positie = '50%', backgroundColor = 'rgb(196, 196, 196)') {
+export function toggleModal(show, positie = '50%', backgroundColor = 'rgb(212, 212, 212)') {
     if (!show)  {
         DOM.modalOverlay.classList.remove('open');
         setTimeout(() => {
@@ -236,102 +236,6 @@ function afdrukVoorbereiding() {
     }
     afdrukken.appendChild(lijst);
 }
-
-export function handleBlur(e) {
-    const verlof = e.target.id;
-    const aantal = parseInt(e.target.value);
-    if (isNaN(aantal) || aantal < 0) {
-        e.target.value = 0; // Reset naar 0 als de invoer ongeldig is
-    }
-    behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal);
-};
-
-function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
-    
-    const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-    const currentYear =  instellingen.currentYear;
-    const selectedPloeg = instellingen.selectedPloeg;
-    
-    const totaal1 = document.getElementById('totaalBeginrecht');
-    const totaal2 = document.getElementById('totaalSaldo');
-    const mySaldoElt = document.getElementById(`saldo-${verlof}`);
-    const saldoOud = parseInt(mySaldoElt.textContent.trim());
-    
-    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
-    beginrechtVerlof[verlof] = aantal;
-    const beginrechtArray = JSON.parse(localStorage.getItem('beginrechtVerlof'));
-    const index = beginrechtArray.findIndex(item => item.year === currentYear);
-    const update = {};
-    update[verlof] = aantal;
-    updateLocalStorage('beginrechtVerlof', null, index, update);
-
-    const saldoNieuw = berekenSaldo(currentYear, selectedPloeg, verlof);
-    mySaldoElt.textContent = saldoNieuw;
-    if(verlof === "Z") return;
-    // Update de totale beginrechten en saldo
-    delete beginrechtVerlof.Z; // Verwijder Z uit beginrechtVerlof, want die wordt apart behandeld
-    totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
-    totaal2.textContent = ` ${parseInt(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
-    
-    //console.log(`oude saldo: ${saldoOud}`);
-    //console.log(`nieuwe saldo: ${saldoNieuw}`);
-    //console.log(`beginrecht verlofdagen: ${JSON.stringify(beginrechtVerlof, null, 2)}`);
-    //console.log(`Totaal beginrecht: ${calculateTotals(beginrechtVerlof)}`);
-};
-
-export function behandelenSaldoVerlofdagen(nieuw, oud) {
-    //if (verlof === oud) return;
-    //console.log(`behandelenSaldoVerlofdagen: ${verlof} - ${oud}`);
-    const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
-    const totaal2 = document.getElementById('totaalSaldo');
-    let totaalSaldo = parseInt(totaal2.textContent.trim());
-
-    // If new type is not a verlof, but old is: restore old saldo and total
-    if (!verlofdagen.includes(nieuw)) {
-        if (verlofdagen.includes(oud)) {
-            const saldoElt2 = document.getElementById(`saldo-${oud}`);
-            saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
-            if (oud === "Z") return;
-            totaal2.textContent = ` ${totaalSaldo + 1}`;
-        }
-        //console.log(`new: ${nieuw}, old: ${oud}`);
-        return;
-    }
-
-    // Decrement new saldo
-    const saldoElt1 = document.getElementById(`saldo-${nieuw}`);
-    saldoElt1.textContent = parseInt(saldoElt1.textContent) - 1;
-
-    // If old type was not a verlof, decrement total (unless verlof is Z)
-    if (!verlofdagen.includes(oud)) {
-        if (nieuw !== "Z") {
-            totaal2.textContent = ` ${totaalSaldo - 1}`;
-        }
-        //console.log(`new: ${nieuw}`);
-        return;
-    }
-
-    // Both new and old are verlof types
-    const saldoElt2 = document.getElementById(`saldo-${oud}`);
-    saldoElt2.textContent = parseInt(saldoElt2.textContent) + 1;
-
-    if (nieuw === "Z") {
-        totaal2.textContent = ` ${totaalSaldo + 1}`;
-    } else if (oud === "Z") {
-        totaal2.textContent = ` ${totaalSaldo - 1}`;
-    }
-}
-
-export function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
-    const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
-    if(!verlofdagen.includes(verlof)) return;
-    const totaal2 = document.getElementById('totaalSaldo');
-    const saldoElt = document.getElementById(`saldo-${verlof}`);
-    saldoElt.textContent = parseInt(saldoElt.textContent) + 1;
-    if(verlof === "Z") return;
-    const totaalSaldo = parseInt(totaal2.textContent.trim());
-    totaal2.textContent = ` ${totaalSaldo + 1}`;
-};
 
 export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
     const beginrechtVerlof = getBeginRechtFromLocalStorage(year);

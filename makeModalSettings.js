@@ -41,10 +41,12 @@ export function makeModalInstellingen(obj, arr) {
     topHeader.appendChild(hr);
     DOM.overlay.appendChild(topHeader);
 
+    const labelsContainer = document.createElement('div');
+    labelsContainer.classList.add('labels-container');
     let count = 0;
     Array.from({ length: 5}).forEach((_, i) => {
-        const labelsContainer = document.createElement('div');
-        labelsContainer.classList.add('labels-container');
+        const labelContainer = document.createElement('div');
+        labelContainer.classList.add('label-container');
         const label1 = document.createElement('label');
         label1.classList.add('label-week');
         const span = document.createElement('span');
@@ -58,13 +60,13 @@ export function makeModalInstellingen(obj, arr) {
             input.value = arr[count] || '';
             input.addEventListener('focus', function() {
                 this.select();
-                document.getElementById('btnOverlay').disabled = false;
-                document.getElementById('reset').disabled = false;
+                //document.getElementById('btnOverlay').disabled = false;
+                //document.getElementById('reset').disabled = false;
             });
             count++;
             label1.appendChild(input);
         });
-        labelsContainer.appendChild(label1);
+        labelContainer.appendChild(label1);
 
         const label = document.createElement('label');
         label.classList.add('label-date');
@@ -77,17 +79,9 @@ export function makeModalInstellingen(obj, arr) {
         input2.className = 'date-input';
         input2.value = obj[i+1] || '';
         label.appendChild(input2);
-        //label.appendChild(document.createElement('br'));
-        //label.appendChild(document.createElement('br'));
-        //label.appendChild(document.createElement('br'));
-        labelsContainer.appendChild(label);
-        DOM.overlay.appendChild(labelsContainer);
-        
+        labelContainer.appendChild(label);
+        labelsContainer.appendChild(labelContainer);
     });
-
-    DOM.overlay.appendChild(document.createElement('br'));
-    DOM.overlay.appendChild(document.createElement('br'));
-
     const div = document.createElement('div');
     div.classList.add('button-container');
     const button = document.createElement('button');
@@ -102,7 +96,17 @@ export function makeModalInstellingen(obj, arr) {
         resetDefaultSettings(startDatums, ploegSchema);
     });
     div.appendChild(reset);
-    DOM.overlay.appendChild(div);
+    labelsContainer.appendChild(div)
+    DOM.overlay.appendChild(labelsContainer);
+
+    const cBoxContainer = document.createElement('div');
+    cBoxContainer.classList.add('checkbox-container');
+    let html = `
+        <label><input type="checkbox" id="cbVerlofRustdag" checked>Enable verlof aanvraag tijdens een rustdag.</label>
+        <label><input type="checkbox" id="cbAutoBF">Enable automatisch BF invullen op een D shift die op een feestdag valt.</label>
+    `;
+    cBoxContainer.innerHTML = html;
+    DOM.overlay.appendChild(cBoxContainer);
 };
 
 function resetDefaultSettings(obj, arr) {
@@ -121,9 +125,9 @@ function resetDefaultSettings(obj, arr) {
         }
     }
     gegevensOpslaan(arr, obj, false);
-    document.getElementById('btnOverlay').disabled = true;
-    document.getElementById('reset').disabled = true;
-    //toggleModal(false);
+    //document.getElementById('btnOverlay').disabled = true;
+    //document.getElementById('reset').disabled = true;
+    toggleModal(false);
 };
 
 

@@ -136,18 +136,19 @@ function shiftenInvullen(elt, date, holidays, ploeg, cyclus) {
   };
 
   if (isHoliday) {
-     //disable verlof tijdens een inactiviteitsdag
+     //disable verlof tijdens een inactiviteitsdag & enable Automatisch BF invullen als 
+     // een feestdag op een D shift valt (2 keuzes moeten samen verwerkt worden)
     /*if (shift === 'x') {
         setShiftProperties(elt, 'x- fd', myDate, true);
         verwijderVerlofDatum(ploeg, myDate);
         return;
-    }*/
+    }
     if (shift === 'D') {
         setShiftProperties(elt, 'D- fd', myDate, false);
         if(!isReedsOpgenomen()) voegVerlofDatumToe(ploeg, myDate, 'BF');
         voegVerlofdagToeVolgensLocalStorage(ploeg, elt, isHoliday);
         return; // Geen verdere acties nodig
-    }
+    }*/
     setShiftProperties(elt, `${shift}- fd`, myDate, shift === 'x' ? true : false);
     voegVerlofdagToeVolgensLocalStorage(ploeg, elt, isHoliday);
     return;

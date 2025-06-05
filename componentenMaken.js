@@ -1,6 +1,6 @@
 import { ploegenGegevens, DOM, generateCalendar, defaultSettings, berekenSaldo } from './main.js';
-import { calculateTotals, getBeginRechtFromLocalStorage, getSettingsFromLocalStorage, handleBlur, handleClickBtn } from './functies.js';
-import { handelVerlofAanvraag, cancelAanvraag, cancelAlleAanvragen, handelHerplanning } from './herplanningen.js';
+import { calculateTotals, getBeginRechtFromLocalStorage, getSettingsFromLocalStorage, handleClickBtn } from './functies.js';
+import { handleBlur, handelVerlofAanvraag, cancelAanvraag, cancelAlleAanvragen, handelHerplanning } from './herplanningen.js';
 
 export let tabBlad = 0;
 
