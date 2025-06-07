@@ -2,7 +2,7 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, adjustLayout, getBeginRechtFromLocalStorage} from './functies.js';
+import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, getBeginRechtFromLocalStorage} from './functies.js';
 import { tabBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
 
