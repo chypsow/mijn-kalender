@@ -1,4 +1,4 @@
-import { DOM, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, updateLocalStorage } from "./main.js";
+import { DOM, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, updateLocalStorage, getAllValidCells } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
@@ -106,28 +106,6 @@ export function voegVerlofDatumToe(ploeg, datum, soort) {
     saveToLocalStorage(localStoragePloegen[ploeg], array);
 
 };
-export function adjustLayout() {
-    const schermGrootte = 1900;
-    if (window.innerWidth < schermGrootte) {
-    document.body.style.fontSize = '10px'; // Pas de fontgrootte aan naar wens
-    document.querySelectorAll('.hidden-on-small').forEach(element => {
-        element.style.visibility = 'hidden'; // Verberg elementen met inline style
-    });
-    //DOM.topNav.classList.add('close');
-    //document.querySelector('.hoofd-container').style.width = '100%';
-    document.getElementById('bars').classList.remove('hidden');
-        //console.log(`schermgrootte is minder dan ${schermGrootte}px geweest : ${window.innerWidth}px`);
-    } else {
-    document.body.style.fontSize = ''; // Reset de fontgrootte
-    document.querySelectorAll('.hidden-on-small').forEach(element => {
-        element.style.visibility = ''; // Zet display terug naar 'flex'
-    });
-    DOM.topNav.classList.remove('close');
-    //document.querySelector('.hoofd-container').style.width = '87%';
-    //console.log(`schermgrootte: ${window.innerWidth}px`);
-    document.getElementById('bars').classList.add('hidden');
-    }
-};
 
 export function modalAfdrukken() {
     document.getElementById("printPreview").classList.add("no-print");
@@ -228,11 +206,8 @@ function afdrukVoorbereiding() {
         lijst.appendChild(ploeg);
     }
     if(tabBlad === 0) {
-        document.querySelectorAll('.cell').forEach(cel => {
-            if(cel.classList.contains('today')) {
-                cel.classList.remove('today');
-            }
-        });
+        const today = getAllValidCells().find(cel => cel.classList.contains('today'));
+        if(today) today.classList.remove('today');
     }
     afdrukken.appendChild(lijst);
 }

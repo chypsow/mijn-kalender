@@ -158,8 +158,8 @@
 }
 @media print {
     @page {
-        margin: 5mm;
-        size: auto;
+        margin: 10mm;
+        size: 0.75;
     }
     body {
         -webkit-print-color-adjust: exact; /* Voor WebKit-gebaseerde browsers zoals Chrome en Safari*/
@@ -272,6 +272,7 @@
     }*/
     .vakanties, .andereInfo, .feestdagen {
         color: black !important;
+        background-color: #fff;
         box-shadow: none !important;
     }
     .vakantie .spanRechts {

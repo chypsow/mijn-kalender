@@ -3,11 +3,14 @@ import { toggleModal } from "./functies.js";
 
 export function makeModalInstellingen(obj, arr) {
     DOM.overlay.innerHTML = '';
+    const labelsContainer = document.createElement('div');
+    labelsContainer.classList.add('labels-container');
+    
     const topHeader = document.createElement('div');
     topHeader.classList.add('top-header');
     const heading = document.createElement('h2');
     heading.classList.add('heading-modal');
-    heading.textContent = 'Ploegschema personnalizeren:';
+    heading.textContent = 'Ploegschema aanpassen:';
     topHeader.appendChild(heading);
     const handleidingContainer = document.createElement('div');
     handleidingContainer.classList.add('handleiding-container');
@@ -39,10 +42,9 @@ export function makeModalInstellingen(obj, arr) {
     const hr = document.createElement('hr');
     hr.classList.add('line');
     topHeader.appendChild(hr);
-    DOM.overlay.appendChild(topHeader);
+    labelsContainer.appendChild(topHeader);
 
-    const labelsContainer = document.createElement('div');
-    labelsContainer.classList.add('labels-container');
+    
     let count = 0;
     Array.from({ length: 5}).forEach((_, i) => {
         const labelContainer = document.createElement('div');
