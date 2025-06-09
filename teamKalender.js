@@ -1,10 +1,12 @@
-import { DOM, shiftPattern, startDates } from "./main.js";
-import { getDaysSinceStart } from "./functies.js";
+import { DOM } from "./main.js";
+import { getDaysSinceStart, getArrayValues } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
+import { shiftPatroon, startDates } from "./makeModalSettings.js";
 
 export function updateTeamCalendar(year, month) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    const shiftPattern = getArrayValues(shiftPatroon);
     const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
     const teamElementen = document.querySelectorAll('#calendar .team-row');
     const legeCellen = new Set();
@@ -43,12 +45,13 @@ export function updateTeamCalendar(year, month) {
             headerCell.classList.remove('emptyDay');
         }
     }
-}
+};
 
 export function generateTeamCalendar(year, month) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+    const shiftPattern = getArrayValues(shiftPatroon);
     const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
     // Header rij (1–31 voor de dagen van de maand)
     const headerRow = document.createElement("div");
@@ -67,7 +70,8 @@ export function generateTeamCalendar(year, month) {
     calendar.appendChild(headerRow);
     // Genereer rijen voor elke ploeg
     const legeCellen = new Set();
-    for (let team = 1; team < 6; team++) {
+    const aantalPloegen = Object.keys(shiftPatroon).length;
+    for (let team = 1; team <= aantalPloegen; team++) {
         const teamRow = document.createElement("div");
         teamRow.classList.add("team-row");
 

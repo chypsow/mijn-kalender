@@ -1,11 +1,12 @@
-import { DOM, shiftPattern, startDates, opgenomenVerlofPerPloeg } from "./main.js";
-import { getDaysSinceStart, verwijderVerlofDatum, voegVerlofDatumToe, beginSaldoEnRestSaldoInvullen } from "./functies.js";
+import { DOM, opgenomenVerlofPerPloeg } from "./main.js";
+import { getDaysSinceStart, verwijderVerlofDatum, voegVerlofDatumToe, beginSaldoEnRestSaldoInvullen, getArrayValues } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
+import { shiftPatroon, startDates } from "./makeModalSettings.js";
 
 export function updateYearCalendarTable(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
+  const shiftPattern = getArrayValues(shiftPatroon);
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const cyclusLengte = shiftPattern.length;
   const vandaag = new Date();
   const today = vandaag.toLocaleDateString("nl-BE");
   const monthElementen = document.querySelectorAll('#calendar .row');
@@ -20,7 +21,7 @@ export function updateYearCalendarTable(selectedPloeg, year) {
         day.classList.add('cell');
         const currentDate = new Date(year, index-1, i+1);
         if (currentDate.getMonth() === index-1) {
-          shiftenInvullen(day, currentDate, holidays, selectedPloeg, cyclusLengte);
+          shiftenInvullen(day, currentDate, holidays, selectedPloeg, shiftPattern);
           if (today === currentDate.toLocaleDateString("nl-BE")) {
             day.classList.add("today");
           }
@@ -52,8 +53,8 @@ export function updateYearCalendarTable(selectedPloeg, year) {
 export function generateYearCalendarTable(selectedPloeg, year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
+  const shiftPattern = getArrayValues(shiftPatroon);
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const cyclusLengte = shiftPattern.length;
   const vandaag = new Date();
   const today = vandaag.toLocaleDateString("nl-BE");
   // Header rij (1–31 voor de dagen van de maand)
@@ -92,7 +93,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
       const currentDate = new Date(year, month, day);
       // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
       if (currentDate.getMonth() === month) {
-        shiftenInvullen(dayCell, currentDate, holidays, selectedPloeg, cyclusLengte);
+        shiftenInvullen(dayCell, currentDate, holidays, selectedPloeg, shiftPattern);
         if (today === currentDate.toLocaleDateString("nl-BE")) {
           dayCell.classList.add("today");
         }
@@ -117,10 +118,10 @@ export function generateYearCalendarTable(selectedPloeg, year) {
     }
     );
   }
-  //beginSaldoEnRestSaldoInvullen(year, selectedPloeg);
 };
 
-function shiftenInvullen(elt, date, holidays, ploeg, cyclus) {
+function shiftenInvullen(elt, date, holidays, ploeg, shiftPattern) {
+  const cyclus = shiftPattern.length;
   const startDate = startDates[ploeg];
   const daysSinceStart = getDaysSinceStart(date, startDate);
   if (daysSinceStart < 0) return;

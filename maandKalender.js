@@ -1,13 +1,11 @@
-import { DOM, shiftPattern, ploegenGegevens, startDates } from "./main.js";
-import { getDaysSinceStart, getNaamBijSymbool } from "./functies.js";
+import { DOM, ploegenGegevens } from "./main.js";
+import { getDaysSinceStart, getNaamBijSymbool, getArrayValues } from "./functies.js";
+import { shiftPatroon, startDates } from "./makeModalSettings.js";
 
 export function updateMonthCalendar(selectedPloeg, year, month) {
-    //const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-    //const month = settings.currentMonth;
-    //const year = settings.currentYear;
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-    //const selectedPloeg = settings.selectedPloeg;
+    const shiftPattern = getArrayValues(shiftPatroon);
     const startDate = startDates[selectedPloeg];
     const totalCells = 42;
     const firstDay = new Date(year, month, 1).getDay();
@@ -49,14 +47,13 @@ export function updateMonthCalendar(selectedPloeg, year, month) {
       myDay.className = '';
       myDay.classList.add('emptyCellGroot');
     }
-}
-
+};
 
 export function generateMonthCalendar(selectedPloeg, year, month) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
-    //const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const shiftPattern = getArrayValues(shiftPatroon);
     const startDate = startDates[selectedPloeg];
     // Eerste dag van de maand en aantal dagen in de maand
     const firstDay = new Date(year, month, 1).getDay();
@@ -113,4 +110,4 @@ export function generateMonthCalendar(selectedPloeg, year, month) {
     // Toon de maand en het jaar
     
     //monthYear.textContent = `${monthSelect.options[monthSelect.selectedIndex].text} ${year}`;
-}
+};

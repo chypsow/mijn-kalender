@@ -1,6 +1,7 @@
 import { ploegenGegevens, DOM, generateCalendar, defaultSettings, berekenSaldo } from './main.js';
-import { calculateTotals, getBeginRechtFromLocalStorage, getSettingsFromLocalStorage, handleClickBtn } from './functies.js';
+import { calculateTotals, getArrayValues, getBeginRechtFromLocalStorage, getSettingsFromLocalStorage, handleClickBtn } from './functies.js';
 import { handleBlur, handelVerlofAanvraag, cancelAanvraag, cancelAlleAanvragen, handelHerplanning } from './herplanningen.js';
+import { shiftPatroon } from './makeModalSettings.js';
 
 export let tabBlad = 0;
 
@@ -26,9 +27,9 @@ export function buildSideBar() {
         });
         DOM.topNav.appendChild(hyperlink);
     });
-}
+};
 
-export function buildTeamDropdown(numberOfTeams = 5) {
+export function buildTeamDropdown(numberOfTeams) {
     Array.from({ length: numberOfTeams }).forEach((_, i) => {
         const option = document.createElement('option');
         option.value = i + 1;
@@ -233,30 +234,18 @@ export function maakVerlofLegende() {
 };
 
 export function maakPloegenLegende() {
-    //const ploegenLegende = document.createElement('div');
-    //ploegenLegende.classList.add('ploegenLegende-container');
-    //ploegenLegende.classList.add('hidden-on-small');
-    let mijnData = [...ploegenGegevens];
-    //mijnData.splice(2, 1);
-    //console.log(mijnData);
-    mijnData.pop();
-    //mijnData.shift();
-    //console.log(mijnData);
-
+    const setShiften = new Set(getArrayValues(shiftPatroon));
+    const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool)).reverse();
     mijnData.forEach(shift => {
     const legendeItem = document.createElement('div');
     legendeItem.classList.add('ploegenLegende-item');
-    
     const kleurVak = document.createElement('span');
     kleurVak.classList.add('ploegenLegende-vak');
     kleurVak.style.backgroundColor = shift.kleur;
     legendeItem.appendChild(kleurVak);
-
     const beschrijving = document.createElement('span');
     beschrijving.textContent = `${shift.naam.charAt(0).toUpperCase()}${shift.naam.slice(1)}`;
     legendeItem.appendChild(beschrijving);
-
-
     DOM.topSectie3.appendChild(legendeItem);
     });
     DOM.topSectie3.classList.add('ploegenLegende-container');

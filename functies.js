@@ -1,9 +1,17 @@
-import { DOM, berekenSaldo, defaultSettings, startDates, shiftPattern, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, getAllValidCells } from "./main.js";
+import { DOM, berekenSaldo, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, getAllValidCells } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
-import { makeModalInstellingen } from "./makeModalSettings.js";
+import { makeModalInstellingen, shiftPatroon, startDates } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { makeModalRapport } from "./makeModalRapport.js";
+
+export function updateLocalStorage(settings, defaultSet = null, index, updates = {}) {
+    const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet();
+    Object.entries(updates).forEach(([key, value]) => {
+        instellingen[index][key] = value;
+    });
+    saveToLocalStorage(settings, instellingen);
+};
 
 export function getSettingsFromLocalStorage(blad, setting) {
     let instellingen;
@@ -148,7 +156,7 @@ export function handleClickBtn(e) {
     const btn = e.currentTarget.id; // Gebruik currentTarget om de juiste id op te halen
     switch(btn) {
         case 'instellingen':
-            makeModalInstellingen(startDates, shiftPattern);
+            makeModalInstellingen(startDates, shiftPatroon);
             toggleModal(true);
             break;
         case 'feestdagen':
@@ -248,6 +256,18 @@ export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
     if(saldoZElt) {
         saldoZElt.textContent = saldoZ;
     }
+};
+
+export const getArrayValues = (obj) => {
+    let output = [];
+    Object.values(obj).forEach( val => {
+        output.push(val);
+    });
+    return output.flat();
+};
+
+export function getNumberOfTeams() {
+    return Object.keys(shiftPatroon).length;
 };
 
 export function getNaamBijSymbool(obj, mark) {

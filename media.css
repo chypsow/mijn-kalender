@@ -224,12 +224,13 @@
         color: #012423;
     }
     .ploegenLegende-container {
+        width: 10em;
         color: rgb(0, 0, 0);
         margin-right: 0;
         background: none;
         /*border: 1px solid rgb(207, 207, 207);*/
         position: absolute;
-        top: 125px;
+        top: 90px;
         right: 10px;
     }
     .vandaag {

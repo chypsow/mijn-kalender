@@ -2,26 +2,10 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, getBeginRechtFromLocalStorage} from './functies.js';
+import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, getBeginRechtFromLocalStorage, updateLocalStorage, getNumberOfTeams} from './functies.js';
 import { tabBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
-import { dataVerlofdagen, dataBeginRecht, dataShift } from "./config.js";
+import { dataVerlofdagen, dataBeginRecht, dataShift, dataDates } from "./config.js";
 
-// default settings
-const week1 = ['N', 'N', 'N', 'x', 'x', 'V', 'V12'];
-const week2 = ['L', 'L', 'x', 'N', 'N', 'N', 'N12'];
-const week3 = ['x', 'x', 'L', 'L', 'L', 'L', 'x'];
-const week4 = ['V', 'V', 'V', 'V', 'V', 'x', 'x'];
-const week5 = ['D', 'D', 'D', 'D', 'D', 'x', 'x'];
-export const ploegSchema = [...week1, ...week2, ...week3, ...week4, ...week5];
-export const startDatums = {
-    1: "2010-02-01", 
-    2: "2010-01-18", 
-    3: "2010-01-25", 
-    4: "2010-01-04", 
-    5: "2010-01-11"
-};
-export let shiftPattern = JSON.parse(localStorage.getItem("shiftPattern")) || ploegSchema;
-export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
 export const ploegenGegevens = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
     {symbool:'N', naam:'nacht', kleur:'#4a91e2'},
@@ -30,9 +14,9 @@ export const ploegenGegevens = [
     {symbool:'L', naam:'late', kleur:'#4c9182cb'},
     {symbool:'D', naam:'dag', kleur:'#949494'},
     {symbool:'x', naam:'thuis', kleur:'#cfcfcf'},
-    {symbool:'OPL', naam:'opleiding', kleur:'red'}
+    {symbool:'R', naam:'reserve', kleur:'#a10b0b'},
+    {symbool:'OPL', naam:'opleiding', kleur:'#e9ca3f'}
 ];
-//export const shiftData = JSON.parse(localStorage.getItem("shiftData")) || shiftData; 
 
 export const defaultSettings = () => {
     const date = new Date();
@@ -52,23 +36,18 @@ export const opgenomenVerlofPerPloeg = {
     verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
     verlofdagenPloeg3: JSON.parse(localStorage.getItem('verlofdagenPloeg3')) || [],
     verlofdagenPloeg4: JSON.parse(localStorage.getItem('verlofdagenPloeg4')) || [],
-    verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || []
+    verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || [],
+    verlofdagenPloeg6: JSON.parse(localStorage.getItem('verlofdagenPloeg6')) || [],
+    verlofdagenPloeg7: JSON.parse(localStorage.getItem('verlofdagenPloeg7')) || []
 };
 export const localStoragePloegen = {
     1: 'verlofdagenPloeg1',
     2: 'verlofdagenPloeg2',
     3: 'verlofdagenPloeg3',
     4: 'verlofdagenPloeg4',
-    5: 'verlofdagenPloeg5'
-};
-
-export const gegevensOpslaan = (cyclus, datums, bevestiging = true) => {
-    shiftPattern = cyclus;
-    startDates = datums;
-    saveToLocalStorage('shiftPattern', cyclus);
-    saveToLocalStorage('startDates', datums);
-    if(bevestiging) alert("Wijzigingen succesvol opgeslagen!");
-    updateCalendar();
+    5: 'verlofdagenPloeg5',
+    6: 'verlofdagenPloeg6',
+    7: 'verlofdagenPloeg7'
 };
 
 function savePloegenToLocalStorage() {
@@ -223,13 +202,6 @@ export const updateCalendar = () => {
     }
 };
 
-export function updateLocalStorage(settings, defaultSet = null, index, updates = {}) {
-    const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet();
-    Object.entries(updates).forEach(([key, value]) => {
-        instellingen[index][key] = value;
-    });
-    saveToLocalStorage(settings, instellingen);
-}
 function triggerPrev() {
     let currentMonth = 0;
     let currentYear = 0;
@@ -462,7 +434,10 @@ document.addEventListener("click", (event) => {
 function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 = true) {
     if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
     if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
-    if(cond3) saveToLocalStorage('shiftPattern', dataShift);
+    if(cond3) {
+        saveToLocalStorage('shiftPatroon', dataShift);
+        saveToLocalStorage('startDates', dataDates);
+    }
     location.reload(true); // of location.href = location.href;
 };
 //local storage aanpassen volgens het bestand config.js
@@ -479,7 +454,7 @@ document.addEventListener('keydown', (event) => {
             message = "Alleen beginrecht verlof wordt aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
         } else if (event.key === "3") {
             cond3 = true;
-            message = "Alleen shiftPattern wordt aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
+            message = "Alleen shiftPatroon en datums worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
         } else if (event.key === "0") {
             cond1 = cond2 = cond3 = true;
             message = "Alle instellingen worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
@@ -512,7 +487,7 @@ document.getElementById('bars').addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     savePloegenToLocalStorage();
     buildSideBar();
-    buildTeamDropdown();
+    buildTeamDropdown(getNumberOfTeams());
     buildButtons();
     generateCalendar();
 });

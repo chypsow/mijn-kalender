@@ -1,8 +1,10 @@
-import { DOM, shiftPattern, ploegenGegevens, startDates } from "./main.js";
-import { getDaysSinceStart, getNaamBijSymbool } from "./functies.js";
+import { DOM, ploegenGegevens } from "./main.js";
+import { getDaysSinceStart, getNaamBijSymbool, getArrayValues } from "./functies.js";
+import { shiftPatroon, startDates } from "./makeModalSettings.js";
 
 export function updateYearCalendarGrid(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
+  const shiftPattern = getArrayValues(shiftPatroon);
   const startDate = startDates[selectedPloeg];
   const totalCells = 42;
   const vandaag = new Date();
@@ -51,6 +53,7 @@ export function updateYearCalendarGrid(selectedPloeg, year) {
 export function generateYearCalendar(selectedPloeg, year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
+  const shiftPattern = getArrayValues(shiftPatroon);
   const startDate = startDates[selectedPloeg];
   const vandaag = new Date();
   for (let month = 0; month < 12; month++) {

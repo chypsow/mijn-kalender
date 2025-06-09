@@ -1,6 +1,6 @@
 import { DOM, defaultSettings, ploegenGegevens, getAllValidCells } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
-import { toggleModal, getSettingsFromLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe, beginSaldoEnRestSaldoInvullen } from "./functies.js";
+import { toggleModal, getSettingsFromLocalStorage, updateLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe, beginSaldoEnRestSaldoInvullen } from "./functies.js";
 
 export function handleBlur(e) {
     const verlof = e.target.id;
@@ -128,6 +128,7 @@ function makeModalHerplanning(selectedCells, selectedPloeg) {
 
 function handelAanvraag(e, selectedCells, selectedPloeg) {
     const vrijeDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
+    
     const aanvraag = e.target.textContent;
     const className = vrijeDagen.includes(aanvraag) ? aanvraag : 'hp';
     const calendarCells = getAllValidCells();
@@ -196,7 +197,7 @@ export function cancelAanvraag() {
             return true;
         });
     });
-}
+};
 
 export function cancelAlleAanvragen() {
     const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
@@ -228,4 +229,4 @@ Als u op OK drukt zullen alle verlofdagen alsook herplanningen van het jaar ${cu
     });
 
     beginSaldoEnRestSaldoInvullen(currentYear, selectedPloeg);
-}
+};
