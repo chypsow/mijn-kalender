@@ -1,13 +1,13 @@
-.team-container {
+/*.team-container {
     margin: 20px auto;
     text-align: center;
-}
+}*/
 .team-calendar-table {
     display: table;
     width: 100%;
     border-collapse: collapse;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 40px;
     font-family: Arial, sans-serif;
     font-size: 0.9em;
 }
