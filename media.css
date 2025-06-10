@@ -139,7 +139,7 @@
 
 }
 @media screen and (max-width: 710px) {
-    .top-sectie {
+    .top-secties {
         flex-direction: column;
         align-items: center;
     }

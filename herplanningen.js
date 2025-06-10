@@ -37,16 +37,9 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     delete beginrechtVerlof.Z; // Verwijder Z uit beginrechtVerlof, want die wordt apart behandeld
     totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
     totaal2.textContent = ` ${parseInt(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;
-    
-    //console.log(`oude saldo: ${saldoOud}`);
-    //console.log(`nieuwe saldo: ${saldoNieuw}`);
-    //console.log(`beginrecht verlofdagen: ${JSON.stringify(beginrechtVerlof, null, 2)}`);
-    //console.log(`Totaal beginrecht: ${calculateTotals(beginrechtVerlof)}`);
 };
 
 function behandelenSaldoVerlofdagen(nieuw, oud) {
-    //if (verlof === oud) return;
-    //console.log(`behandelenSaldoVerlofdagen: ${verlof} - ${oud}`);
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
     const totaal2 = document.getElementById('totaalSaldo');
     let totaalSaldo = parseInt(totaal2.textContent.trim());
@@ -59,7 +52,6 @@ function behandelenSaldoVerlofdagen(nieuw, oud) {
             if (oud === "Z") return;
             totaal2.textContent = ` ${totaalSaldo + 1}`;
         }
-        //console.log(`new: ${nieuw}, old: ${oud}`);
         return;
     }
 
@@ -72,7 +64,6 @@ function behandelenSaldoVerlofdagen(nieuw, oud) {
         if (nieuw !== "Z") {
             totaal2.textContent = ` ${totaalSaldo - 1}`;
         }
-        //console.log(`new: ${nieuw}`);
         return;
     }
 
@@ -85,7 +76,7 @@ function behandelenSaldoVerlofdagen(nieuw, oud) {
     } else if (oud === "Z") {
         totaal2.textContent = ` ${totaalSaldo - 1}`;
     }
-}
+};
 
 function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
     const verlofdagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z'];
@@ -102,7 +93,6 @@ export function handelHerplanning() {
     const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
     const selectedCells = JSON.parse(sessionStorage.getItem('selectedCells'));
     if (!Array.isArray(selectedCells) || selectedCells.length === 0 || selectedCells[0].team !== selectedPloeg) return;
-
     makeModalHerplanning(selectedCells, selectedPloeg);
 };
 

@@ -117,13 +117,13 @@ export function voegVerlofDatumToe(ploeg, datum, soort) {
 
 export function modalAfdrukken() {
     document.getElementById("printPreview").classList.add("no-print");
-    document.querySelector(".top-sectie").classList.add("no-print");
+    document.querySelector(".top-secties").classList.add("no-print");
     DOM.calendar.classList.add("no-print");
     window.print();
     // Reset na printen
     setTimeout(() => {
     document.getElementById("printPreview").classList.remove("no-print");
-    document.querySelector(".top-sectie").classList.remove("no-print");
+    document.querySelector(".top-secties").classList.remove("no-print");
     DOM.calendar.classList.remove("no-print");
     }, 1000); // wacht even tot printdialoog klaar is
 };

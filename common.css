@@ -65,7 +65,7 @@ body {
     cursor: pointer;
     color: #dddddd;
 }
-.top-sectie {
+.top-secties {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
