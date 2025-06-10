@@ -1,6 +1,6 @@
 import { DOM, berekenSaldo, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, getAllValidCells } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
-import { makeModalInstellingen, shiftPatroon, startDates } from "./makeModalSettings.js";
+import { makeModalInstellingen, shiftPatroon } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { makeModalRapport } from "./makeModalRapport.js";
@@ -156,7 +156,7 @@ export function handleClickBtn(e) {
     const btn = e.currentTarget.id; // Gebruik currentTarget om de juiste id op te halen
     switch(btn) {
         case 'instellingen':
-            makeModalInstellingen(startDates, shiftPatroon);
+            makeModalInstellingen(shiftPatroon);
             toggleModal(true);
             break;
         case 'feestdagen':
@@ -260,8 +260,9 @@ export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
 
 export const getArrayValues = (obj) => {
     let output = [];
-    Object.values(obj).forEach( val => {
-        output.push(val);
+    obj.forEach( week => {
+        const shiftsArray = [...week.schema];
+        output.push(shiftsArray);
     });
     return output.flat();
 };

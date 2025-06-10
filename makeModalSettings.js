@@ -1,28 +1,22 @@
 import { DOM, defaultSettings, ploegenGegevens, updateCalendar } from "./main.js";
-import { toggleModal, saveToLocalStorage, getArrayValues, updateLocalStorage, getSettingsFromLocalStorage } from "./functies.js";
+import { toggleModal, saveToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage } from "./functies.js";
 import { buildTeamDropdown, maakPloegenLegende, tabBlad } from "./componentenMaken.js";
+import { generateTeamCalendar } from "./teamKalender.js";
 
 // default settings
-const ploegSchema = {
-    Week1 : ['N', 'N', 'N', 'x', 'x', 'V', 'V12'],
-    Week2 : ['L', 'L', 'x', 'N', 'N', 'N', 'N12'],
-    Week3 : ['x', 'x', 'L', 'L', 'L', 'L', 'x'],
-    Week4 : ['V', 'V', 'V', 'V', 'V', 'x', 'x'],
-    Week5 : ['D', 'D', 'D', 'D', 'D', 'x', 'x']
-};
-const startDatums = {
-    1: "2010-02-01", 
-    2: "2010-01-18", 
-    3: "2010-01-25", 
-    4: "2010-01-04", 
-    5: "2010-01-11"
-};
-export let shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || ploegSchema;
-export let startDates = JSON.parse(localStorage.getItem("startDates")) || startDatums;
+const ploegSchema = [
+    {ploeg:1, schema:['N', 'N', 'N', 'x', 'x', 'V', 'V12'], startDatum:"2010-02-01"},
+    {ploeg:2, schema:['L', 'L', 'x', 'N', 'N', 'N', 'N12'], startDatum:"2010-01-18"},
+    {ploeg:3, schema:['x', 'x', 'L', 'L', 'L', 'L', 'x'], startDatum:"2010-01-25"},
+    {ploeg:4, schema:['V', 'V', 'V', 'V', 'V', 'x', 'x'], startDatum:"2010-01-04"},
+    {ploeg:5, schema:['D', 'D', 'D', 'D', 'D', 'x', 'x'], startDatum:"2010-01-11"}
+];
 
-export function makeModalInstellingen(obj, shiftPatroon) {
+export let shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || ploegSchema;
+
+export function makeModalInstellingen(shiftPatroon) {
     DOM.overlay.innerHTML = '';
-    const aantalWeken = Object.keys(shiftPatroon).length;
+    const aantalWeken = shiftPatroon.length;
     const container = document.createElement('div');
     container.classList.add('overlay-container');
     
@@ -65,52 +59,67 @@ export function makeModalInstellingen(obj, shiftPatroon) {
     container.appendChild(topHeader);
 
     const btnContainer = document.createElement('div');
-    btnContainer.classList.add('weken-container');
-    btnContainer.innerHTML = `
-        <button id="add">1 week toevoegen</button>
-        <button id="delete">1 week verwijderen</button>
-    `;
+    btnContainer.classList.add('knop-container');
+    const toevoegen = document.createElement('button');
+    toevoegen.setAttribute('id', 'add');
+    toevoegen.textContent = "1 ploeg toevoegen";
+    toevoegen.addEventListener('click', () => addOneWeek(shiftPatroon));
+    btnContainer.appendChild(toevoegen);
+    const verwijderen = document.createElement('button');
+    verwijderen.setAttribute('id', 'delete');
+    verwijderen.textContent = "1 ploeg verwijderen";
+    verwijderen.addEventListener('click', deleteOneWeek);
+    btnContainer.appendChild(verwijderen);
     container.appendChild(btnContainer);
     
-    const labelsContainer = document.createElement('div');
-    labelsContainer.classList.add('labels-container');
-    Object.entries(shiftPatroon).forEach(([key, value], i) => {
-        //console.log(`patroon: ${key}: ${value}`);
-        const labelContainer = document.createElement('div');
-        labelContainer.classList.add('label-container');
-        const label1 = document.createElement('label');
-        label1.classList.add('label-week');
+    const shiftPatroonContainer = document.createElement('div');
+    shiftPatroonContainer.classList.add('patroon-container');
+    const wekenContainer = document.createElement('div');
+    wekenContainer.classList.add('weken-container');
+
+    shiftPatroon.forEach((week, i) => {
+        const weekContainer = document.createElement('div');
+        weekContainer.classList.add('week-container');
+        const shiftsLabel = document.createElement('label');
+        shiftsLabel.classList.add('label-week');
         const span = document.createElement('span');
-        span.textContent = `${key}: `;
-        label1.appendChild(span);
-        value.forEach((val, j) => {
+        span.textContent = `Ploeg${i+1}: `;
+        shiftsLabel.appendChild(span);
+        week.schema.forEach((shift, j) => {
             const input = document.createElement('input');
             input.type = 'text';
             input.id = `day-${i+1}${j+1}`;
             input.className = 'shift-input';
-            input.value = val || '';
+            input.value = shift || '';
             input.addEventListener('focus', function() {
                 this.select();
             });
-            label1.appendChild(input);
+            shiftsLabel.appendChild(input);
         });
-        labelContainer.appendChild(label1);
-
-        const label = document.createElement('label');
-        label.classList.add('label-date');
-        const span2 = document.createElement('span');
-        span2.textContent = `Startdatum ${i+1}: `;
-        label.appendChild(span2);
-        const input2 = document.createElement('input');
-        input2.type = 'date';
-        input2.id = `date${i+1}`;
-        input2.className = 'date-input';
-        input2.value = obj[i+1] || '';
-        label.appendChild(input2);
-        labelContainer.appendChild(label);
-        labelsContainer.appendChild(labelContainer);
+        weekContainer.appendChild(shiftsLabel);
+        wekenContainer.appendChild(weekContainer);
     });
-    container.appendChild(labelsContainer);
+    shiftPatroonContainer.appendChild(wekenContainer);
+
+    const datumsContainer = document.createElement('div');
+    datumsContainer.classList.add('datums-container');
+    shiftPatroon.forEach((week, i) => {
+        const dateLabel = document.createElement('label');
+        dateLabel.classList.add('label-date');
+        const span = document.createElement('span');
+        span.textContent = `Startdatum ${i+1}: `;
+        dateLabel.appendChild(span);
+        const input = document.createElement('input');
+        input.type = 'date';
+        input.id = `date${i+1}`;
+        input.className = 'date-input';
+        input.value = week.startDatum || '';
+        dateLabel.appendChild(input);
+        datumsContainer.appendChild(dateLabel);
+    });
+    shiftPatroonContainer.appendChild(datumsContainer);
+    container.appendChild(shiftPatroonContainer);
+
     const div = document.createElement('div');
     div.classList.add('button-container');
     const button = document.createElement('button');
@@ -134,56 +143,57 @@ export function makeModalInstellingen(obj, shiftPatroon) {
     `;
     cBoxContainer.innerHTML = html;
     DOM.overlay.appendChild(cBoxContainer);
-    
-    document.getElementById('add').addEventListener('click', () => addOneWeek(obj, shiftPatroon));
-    document.getElementById('delete').addEventListener('click', deleteOneWeek);
 };
 
-function addOneWeek(obj, shiftPatroon) {
-    const labelsContainer = document.querySelector('.labels-container');
-    const lengte = labelsContainer.children.length;
+function addOneWeek(shiftPatroon) {
+    const wekenContainer = document.querySelector('.weken-container');
+    const lengte = wekenContainer.children.length;
     if(lengte === 7) return;
-    const labelContainer = document.createElement('div');
-    labelContainer.classList.add('label-container');
-    const label1 = document.createElement('label');
-    label1.classList.add('label-week');
+    const weekContainer = document.createElement('div');
+    weekContainer.classList.add('week-container');
+    const shiftsLabel = document.createElement('label');
+    shiftsLabel.classList.add('label-week');
     const span = document.createElement('span');
-    span.textContent = `Week${lengte + 1}: `;
-    label1.appendChild(span);
-    
+    span.textContent = `Ploeg${lengte+1}: `;
+    shiftsLabel.appendChild(span);
     Array.from({length : 7}).forEach( (_,i) => {
         const input = document.createElement('input');
         input.type = 'text';
         input.id = `day-${lengte+1}${i+1}`;
         input.className = 'shift-input';
-        input.value = shiftPatroon[`Week${lengte + 1}`] ? shiftPatroon[`Week${lengte + 1}`][i] : '';
+        input.value = shiftPatroon[lengte] ? shiftPatroon[lengte].schema[i] : '';
         input.addEventListener('focus', function() {
             this.select();
         });
-        label1.appendChild(input);
+        shiftsLabel.appendChild(input);
     });
-    labelContainer.appendChild(label1);
+    weekContainer.appendChild(shiftsLabel);
+    wekenContainer.appendChild(weekContainer);
 
-    const label = document.createElement('label');
-    label.classList.add('label-date');
-    const span2 = document.createElement('span');
-    span2.textContent = `Startdatum ${lengte+1}: `;
-    label.appendChild(span2);
-    const input2 = document.createElement('input');
-    input2.type = 'date';
-    input2.id = `date${lengte+1}`;
-    input2.className = 'date-input';
-    input2.value = obj[lengte+1] || '';
-    label.appendChild(input2);
-    labelContainer.appendChild(label);
-    labelsContainer.appendChild(labelContainer);
+    const datumsContainer = document.querySelector('.datums-container');
+    const dateLabel = document.createElement('label');
+    dateLabel.classList.add('label-date');
+    const spanDate = document.createElement('span');
+    spanDate.textContent = `Startdatum ${lengte}: `;
+    dateLabel.appendChild(spanDate);
+    const input = document.createElement('input');
+    input.type = 'date';
+    input.id = `date${lengte+1}`;
+    input.className = 'date-input';
+    input.value = shiftPatroon[lengte] ? shiftPatroon[lengte].startDatum : '';
+    dateLabel.appendChild(input);
+    datumsContainer.appendChild(dateLabel);
 };
 
 function deleteOneWeek() {
-    const labelsContainer = document.querySelector('.labels-container');
+    const labelsContainer = document.querySelector('.weken-container');
     // Alleen verwijderen als er meer dan 1 week overblijft
     if (labelsContainer.children.length > 1) {
         labelsContainer.removeChild(labelsContainer.lastElementChild);
+    }
+    const datumsContainer = document.querySelector('.datums-container');
+    if (datumsContainer.children.length > 1) {
+        datumsContainer.removeChild(datumsContainer.lastElementChild);
     }
 };
 
@@ -193,26 +203,37 @@ function resetDefaultSettings() {
     // If the user cancels, exit the function
     if (!userResponse) return;
     
-    gegevensOpslaan(ploegSchema, startDatums, 5, false);
+    gegevensOpslaan(ploegSchema, 5, false);
     toggleModal(false);
 };
 
-const gegevensOpslaan = (weken, datums, aantalPloegen, bevestiging = true) => {
-    shiftPatroon = weken;
-    startDates = datums;
+const gegevensOpslaan = (obj, aantalPloegen, bevestiging = true) => {
+    shiftPatroon = obj;
+    //startDates = datums;
     saveToLocalStorage('shiftPatroon', shiftPatroon);
-    saveToLocalStorage('startDates', startDates);
+    //saveToLocalStorage('startDates', startDates);
+    //console.log(`aantal ploegen: ${aantalPloegen}`);
     const aantalPloegenSelect = DOM.ploeg.options.length;
     if(bevestiging) alert("Wijzigingen succesvol opgeslagen!");
     if(aantalPloegenSelect > aantalPloegen) {
-        const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-        if(instellingen.selectedPloeg > aantalPloegen) updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {ploeg:1});
+        Array.from({length:4}).forEach((_, i) => {
+            const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
+            if(instellingen.selectedPloeg > aantalPloegen) updateLocalStorage('standaardInstellingen', defaultSettings, i, {ploeg:1});
+        });
         updatePloegDropdown(aantalPloegen, instellingen.selectedPloeg);
     } else if (aantalPloegenSelect < aantalPloegen) {
         const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
         updatePloegDropdown(aantalPloegen, selectedPloeg);
     }
-    if(tabBlad === 1 || tabBlad === 2) updatePloegenLegende();
+    if(tabBlad === 1 || tabBlad === 2) {
+        updatePloegenLegende();
+    } else if (tabBlad === 3) {
+        const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+        const month = instellingen.currentMonth;
+        const year = instellingen.currentYear;
+        generateTeamCalendar(year, month);
+        return;
+    }
     updateCalendar();
 };
 
@@ -233,13 +254,11 @@ function updatePloegDropdown(aantal, ploeg = 1) {
 
 function ploegSysteemOpslaan() {
     let shiften = [];
-    let shiftObj = {};
-    let datums = {};
-    const labelsContainer = document.querySelector('.labels-container');
-    const lengte = labelsContainer.children.length;
+    let datums = [];
+    const wekenContainer = document.querySelector('.weken-container');
+    const lengte = wekenContainer.children.length;
+    //console.log(`lengte: ${lengte}`);
     for(let i = 1; i <= lengte; i++) {
-        const datum = document.getElementById(`date${i}`).value;
-        datums[i] = datum;
         for(let j = 1; j <= 7; j++) {
             const dayElement = document.getElementById(`day-${i}${j}`);
             if (dayElement.value === '') {
@@ -248,14 +267,19 @@ function ploegSysteemOpslaan() {
                 shiften.push(dayElement.value === 'x' ? dayElement.value.toLowerCase() : dayElement.value.toUpperCase());
             }
         }
-        shiftObj[`Week${i}`] = [...shiften];
-        shiften.length = 0;
+        /*shiftObj[`Ploeg${i}`] = [...shiften];
+        shiften.length = 0;*/
+        const datum = document.getElementById(`date${i}`).value;
+        datums.push(datum);
     }
-    const cyclus = getArrayValues(shiftObj);
+
+    //const cyclus = getArrayValues(shiftObj);
     //console.log(`cyclus: ${cyclus}`);
-    const isValid = checkIngevoerdeWaarden(cyclus) && checkIngevoerdeDatums(datums);
+    const isValid = checkIngevoerdeWaarden(shiften) && checkIngevoerdeDatums(datums);
     if (isValid) {
-        gegevensOpslaan(shiftObj, datums, lengte);
+        const shiftObj = arraysOmzettenNaarObeject(shiften, datums);
+        //console.log(`first object: ${JSON.stringify(shiftObj[0])}`);
+        gegevensOpslaan(shiftObj, lengte);
         toggleModal(false);
     } else {
         alert('Sommige velden zijn niet correct ingevuld !');
@@ -264,9 +288,24 @@ function ploegSysteemOpslaan() {
 function checkIngevoerdeWaarden(cyclus) {
     const filteredData = ploegenGegevens.filter(item => item.symbool !== 'OPL');
     return cyclus.every(cyc => {
-        return filteredData.some(item => item.symbool === cyc) || cyc === '';
+        return filteredData.some(item => item.symbool === cyc);
     });
 };
 function checkIngevoerdeDatums(datums) {
     return Object.values(datums).every(val => val !== '');
-}
+};
+function arraysOmzettenNaarObeject(arr1, arr2) {
+    let obj = [];
+    const shiftArrays = [];
+    for (let i = 0; i < arr1.length; i += 7) {
+        shiftArrays.push(arr1.slice(i, i + 7));
+    }
+    shiftArrays.forEach((serie, i) => {
+        obj.push({
+            ploeg: i + 1,
+            schema: serie,
+            startDatum: arr2[i]
+        });
+    });
+    return obj;
+};

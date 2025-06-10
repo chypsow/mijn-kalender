@@ -1,12 +1,12 @@
 import { DOM, ploegenGegevens } from "./main.js";
 import { getDaysSinceStart, getNaamBijSymbool, getArrayValues } from "./functies.js";
-import { shiftPatroon, startDates } from "./makeModalSettings.js";
+import { shiftPatroon } from "./makeModalSettings.js";
 
 export function updateMonthCalendar(selectedPloeg, year, month) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const shiftPattern = getArrayValues(shiftPatroon);
-    const startDate = startDates[selectedPloeg];
+    const startDate = shiftPatroon.find(week => week.ploeg === selectedPloeg).startDatum;
     const totalCells = 42;
     const firstDay = new Date(year, month, 1).getDay();
     const firstDayMondayBased = (firstDay + 6) % 7; // Pas aan voor maandag als startdag
@@ -53,8 +53,11 @@ export function generateMonthCalendar(selectedPloeg, year, month) {
     calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
+
+    const weekObj = shiftPatroon.find(week => week.ploeg === selectedPloeg);
+    if (!weekObj) return;
+    const startDate = weekObj.startDatum;
     const shiftPattern = getArrayValues(shiftPatroon);
-    const startDate = startDates[selectedPloeg];
     // Eerste dag van de maand en aantal dagen in de maand
     const firstDay = new Date(year, month, 1).getDay();
     const firstDayMondayBased = (firstDay + 6) % 7; // Pas aan voor maandag als startdag

@@ -1,7 +1,7 @@
 import { DOM } from "./main.js";
 import { getDaysSinceStart, getArrayValues } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
-import { shiftPatroon, startDates } from "./makeModalSettings.js";
+import { shiftPatroon } from "./makeModalSettings.js";
 
 export function updateTeamCalendar(year, month) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
@@ -19,7 +19,10 @@ export function updateTeamCalendar(year, month) {
                 day.classList.add('table-cell');
                 const currentDate = new Date(year, month, i);
                 if(currentDate.getMonth() === month) {
-                    const daysSinceStart = getDaysSinceStart(currentDate, startDates[index]);
+                    const weekObj = shiftPatroon.find(week => week.ploeg === index);
+                    if (!weekObj) return;
+                    const startDate = weekObj.startDatum;
+                    const daysSinceStart = getDaysSinceStart(currentDate, startDate);
                     if(daysSinceStart >= 0) {
                         const myDate = currentDate.toLocaleDateString("nl-BE");
                         const shiftIndex = daysSinceStart % shiftPattern.length;
@@ -92,7 +95,10 @@ export function generateTeamCalendar(year, month) {
             // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
             if (currentDate.getMonth() === month) {
                 // Bereken de ploeg
-                const daysSinceStart = getDaysSinceStart(currentDate, startDates[team]);
+                const weekObj = shiftPatroon.find(week => week.ploeg === team);
+                if (!weekObj) return;
+                const startDate = weekObj.startDatum;
+                const daysSinceStart = getDaysSinceStart(currentDate, startDate);
                 if(daysSinceStart >= 0) {
                     const myDate = currentDate.toLocaleDateString("nl-BE");
                     const shiftIndex = daysSinceStart % shiftPattern.length;

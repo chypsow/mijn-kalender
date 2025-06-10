@@ -4,7 +4,7 @@ import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalen
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
 import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, getBeginRechtFromLocalStorage, updateLocalStorage, getNumberOfTeams} from './functies.js';
 import { tabBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
-import { dataVerlofdagen, dataBeginRecht, dataShift, dataDates } from "./config.js";
+import { dataVerlofdagen, dataBeginRecht, customData } from "./config.js";
 
 export const ploegenGegevens = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
@@ -27,7 +27,7 @@ export const defaultSettings = () => {
         {pagina: 0, ploeg: 1, jaar: currentYear},
         {pagina: 1, ploeg: 1, jaar: currentYear},
         {pagina: 2, ploeg: 1, maand: currentMonth, jaar: currentYear},
-        {pagina: 3, ploeg: 1, maand: currentMonth, jaar: currentYear}
+        {pagina: 3, maand: currentMonth, jaar: currentYear}
     ];
 };
   
@@ -57,6 +57,28 @@ function savePloegenToLocalStorage() {
     });
 };
 
+export const DOM = {
+    monthYear: document.getElementById('month-year'),
+    monthSelect: document.getElementById("month-select"),
+    yearSelect: document.getElementById("year-select"),
+    prev: document.getElementById('prev'),
+    next: document.getElementById('next'),
+    selectOverlay: document.getElementById('select-overlay'),
+    dropdowns: document.getElementById("dropdowns"),
+    topNav: document.getElementById("top-nav"),
+    container: document.getElementById('calendar-container'),
+    buttonContainer: document.getElementById('buttons-container'),
+    middenSectie2: document.getElementById('midden-sectie2'),
+    topSectie3: document.getElementById('top-sectie3'),
+    ploeg: document.getElementById('ploeg'),
+    titel: document.getElementById('titel'),
+    calendar: document.getElementById('calendar'),
+    modalOverlay: document.getElementById("modal-overlay"),
+    modal: document.getElementById("modal"),
+    overlay: document.getElementById('overlay'),
+    sluiten: document.getElementById('sluiten')
+};
+
 export const berekenSaldo = (currentYear,ploeg, key = null) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
     const vacations = opgenomenVerlofPerPloeg[ploegKey];
@@ -81,28 +103,6 @@ export const berekenSaldo = (currentYear,ploeg, key = null) => {
         saldo[verlofKey] = calculateSaldo(verlofKey);
     });
     return saldo;
-};
-
-export const DOM = {
-    monthYear: document.getElementById('month-year'),
-    monthSelect: document.getElementById("month-select"),
-    yearSelect: document.getElementById("year-select"),
-    prev: document.getElementById('prev'),
-    next: document.getElementById('next'),
-    selectOverlay: document.getElementById('select-overlay'),
-    dropdowns: document.getElementById("dropdowns"),
-    topNav: document.getElementById("top-nav"),
-    container: document.getElementById('calendar-container'),
-    buttonContainer: document.getElementById('buttons-container'),
-    middenSectie2: document.getElementById('midden-sectie2'),
-    topSectie3: document.getElementById('top-sectie3'),
-    ploeg: document.getElementById('ploeg'),
-    titel: document.getElementById('titel'),
-    calendar: document.getElementById('calendar'),
-    modalOverlay: document.getElementById("modal-overlay"),
-    modal: document.getElementById("modal"),
-    overlay: document.getElementById('overlay'),
-    sluiten: document.getElementById('sluiten')
 };
 
 export function generateCalendar() {
@@ -184,7 +184,7 @@ function refreshCalendar() {
 };
 export const updateCalendar = () => {
     const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-    const team = setting.selectedPloeg;
+    const team = setting.selectedPloeg ? setting.selectedPloeg : null;
     const year = setting.currentYear;
     const month = setting.currentMonth ? setting.currentMonth : null;
     switch (tabBlad) {
@@ -435,8 +435,12 @@ function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 
     if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
     if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
     if(cond3) {
-        saveToLocalStorage('shiftPatroon', dataShift);
-        saveToLocalStorage('startDates', dataDates);
+        saveToLocalStorage('shiftPatroon', customData);
+        const lengte = customData.length;
+        Array.from({length:4}).forEach((_, i) => {
+            const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
+            if(instellingen.selectedPloeg > lengte) updateLocalStorage('standaardInstellingen', defaultSettings, i, {ploeg:1});
+        }); 
     }
     location.reload(true); // of location.href = location.href;
 };

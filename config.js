@@ -31,21 +31,13 @@ export const dataBeginRecht = [
   }
 ];
 
-export const dataShift = {
-    Week1 : ['N', 'N', 'N', 'x', 'x', 'V', 'V12'],
-    Week2 : ['x', 'x', 'x', 'N', 'N', 'N', 'N12'],
-    Week3 : ['x', 'x', 'L', 'L', 'L', 'L', 'x'],
-    Week4 : ['V', 'V', 'V', 'V', 'V', 'x', 'x'],
-    Week5 : ['x', 'D', 'x', 'x', 'x', 'x', 'x']
-};
-
-export const dataDates = {
-    1: "2010-02-01", 
-    2: "2010-01-18", 
-    3: "2010-01-25", 
-    4: "2010-01-04", 
-    5: "2010-01-11"
-};
+export const customData = [
+    {ploeg:1, schema:['N', 'N', 'N', 'x', 'x', 'V', 'V12'], startDatum:"2010-02-01"},
+    {ploeg:2, schema:['x', 'x', 'x', 'N', 'N', 'N', 'N12'], startDatum:"2010-01-18"},
+    {ploeg:3, schema:['x', 'x', 'L', 'L', 'L', 'L', 'x'], startDatum:"2010-01-25"},
+    {ploeg:4, schema:['V', 'V', 'V', 'V', 'V', 'x', 'x'], startDatum:"2010-01-04"},
+    {ploeg:5, schema:['x', 'D', 'x', 'x', 'x', 'x', 'x'], startDatum:"2010-01-11"}
+];
 
 export const dataVerlofdagen = [
     {
