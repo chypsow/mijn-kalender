@@ -62,12 +62,12 @@ export function makeModalInstellingen(shiftPatroon) {
     btnContainer.classList.add('knop-container');
     const toevoegen = document.createElement('button');
     toevoegen.setAttribute('id', 'add');
-    toevoegen.textContent = "1 ploeg toevoegen";
+    toevoegen.textContent = "Een ploeg toevoegen";
     toevoegen.addEventListener('click', () => addOneWeek(shiftPatroon));
     btnContainer.appendChild(toevoegen);
     const verwijderen = document.createElement('button');
     verwijderen.setAttribute('id', 'delete');
-    verwijderen.textContent = "1 ploeg verwijderen";
+    verwijderen.textContent = "Een ploeg verwijderen";
     verwijderen.addEventListener('click', deleteOneWeek);
     btnContainer.appendChild(verwijderen);
     container.appendChild(btnContainer);
@@ -121,7 +121,7 @@ export function makeModalInstellingen(shiftPatroon) {
     container.appendChild(shiftPatroonContainer);
 
     const div = document.createElement('div');
-    div.classList.add('button-container');
+    div.classList.add('modal-button-container');
     const button = document.createElement('button');
     button.id = "btnOverlay";
     button.textContent = "Opslaan";
@@ -174,7 +174,7 @@ function addOneWeek(shiftPatroon) {
     const dateLabel = document.createElement('label');
     dateLabel.classList.add('label-date');
     const spanDate = document.createElement('span');
-    spanDate.textContent = `Startdatum ${lengte}: `;
+    spanDate.textContent = `Startdatum ${lengte+1}: `;
     dateLabel.appendChild(spanDate);
     const input = document.createElement('input');
     input.type = 'date';
@@ -209,12 +209,9 @@ function resetDefaultSettings() {
 
 const gegevensOpslaan = (obj, aantalPloegen, bevestiging = true) => {
     shiftPatroon = obj;
-    //startDates = datums;
     saveToLocalStorage('shiftPatroon', shiftPatroon);
-    //saveToLocalStorage('startDates', startDates);
-    //console.log(`aantal ploegen: ${aantalPloegen}`);
+    
     const aantalPloegenSelect = DOM.ploeg.options.length;
-    if(bevestiging) alert("Wijzigingen succesvol opgeslagen!");
     if(aantalPloegenSelect > aantalPloegen) {
         Array.from({length:4}).forEach((_, i) => {
             const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
@@ -232,9 +229,12 @@ const gegevensOpslaan = (obj, aantalPloegen, bevestiging = true) => {
         const month = instellingen.currentMonth;
         const year = instellingen.currentYear;
         generateTeamCalendar(year, month);
+        if(bevestiging) alert("Wijzigingen succesvol opgeslagen!");
         return;
     }
     updateCalendar();
+
+    if(bevestiging) alert("Wijzigingen succesvol opgeslagen!");
 };
 
 function updatePloegenLegende() {
@@ -257,7 +257,6 @@ function ploegSysteemOpslaan() {
     let datums = [];
     const wekenContainer = document.querySelector('.weken-container');
     const lengte = wekenContainer.children.length;
-    //console.log(`lengte: ${lengte}`);
     for(let i = 1; i <= lengte; i++) {
         for(let j = 1; j <= 7; j++) {
             const dayElement = document.getElementById(`day-${i}${j}`);
@@ -267,18 +266,13 @@ function ploegSysteemOpslaan() {
                 shiften.push(dayElement.value === 'x' ? dayElement.value.toLowerCase() : dayElement.value.toUpperCase());
             }
         }
-        /*shiftObj[`Ploeg${i}`] = [...shiften];
-        shiften.length = 0;*/
         const datum = document.getElementById(`date${i}`).value;
         datums.push(datum);
     }
 
-    //const cyclus = getArrayValues(shiftObj);
-    //console.log(`cyclus: ${cyclus}`);
     const isValid = checkIngevoerdeWaarden(shiften) && checkIngevoerdeDatums(datums);
     if (isValid) {
-        const shiftObj = arraysOmzettenNaarObeject(shiften, datums);
-        //console.log(`first object: ${JSON.stringify(shiftObj[0])}`);
+        const shiftObj = arraysOmzettenNaarObject(shiften, datums);
         gegevensOpslaan(shiftObj, lengte);
         toggleModal(false);
     } else {
@@ -294,7 +288,7 @@ function checkIngevoerdeWaarden(cyclus) {
 function checkIngevoerdeDatums(datums) {
     return Object.values(datums).every(val => val !== '');
 };
-function arraysOmzettenNaarObeject(arr1, arr2) {
+/*function arraysOmzettenNaarObeject(arr1, arr2) {
     let obj = [];
     const shiftArrays = [];
     for (let i = 0; i < arr1.length; i += 7) {
@@ -308,4 +302,11 @@ function arraysOmzettenNaarObeject(arr1, arr2) {
         });
     });
     return obj;
+};*/
+function arraysOmzettenNaarObject(arr1, arr2) {
+    return Array.from({ length: Math.ceil(arr1.length / 7) }, (_, i) => ({           // or {length : arr2.length}
+        ploeg: i + 1,
+        schema: arr1.slice(i * 7, i * 7 + 7),
+        startDatum: arr2[i]
+    }));
 };

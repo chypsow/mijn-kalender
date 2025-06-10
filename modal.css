@@ -1,0 +1,405 @@
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    z-index: 3;
+    transition: opacity 0.3s ease-in-out;
+}
+.modal-overlay.open {
+    /*display: block;*/
+    opacity: 1;
+}
+.modal {
+    font-size: 18px;
+    font-family: monospace;
+    display: none; /* Verborgen standaard */
+    position: fixed;
+    /*top: 50%;*/
+    left: 50%;
+    min-width: 800px;
+    /*min-height: 100px;*/
+    padding: 80px 40px 40px;
+    /*background-color: rgb(196, 196, 196);*/
+    color: rgba(0, 0, 0, 0.884);
+    /*background-color: rgb(247, 247, 247);
+    color: rgba(0, 0, 0, 0.884);*/
+    box-shadow: 0px 0px 10px rgb(26, 26, 26);
+    border-radius: 7px;
+    /*border: 4px solid #353535;*/
+    z-index: 4;
+    transform: translate(-50%, -50%) scale(0); /* Start klein, gecentreerd */
+    animation: zoom 0.3s forwards; /* Gebruik forwards om animatie op het einde te bewaren */
+}
+.overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /*align-items: center;*/
+    gap: 30px;
+}
+.fa-close {
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    color: #303030;
+    font-size: 25px;
+    font-weight: normal;
+    transition: 0.2s;
+}
+.fa-close:hover {
+    color: #db1c1c;
+}
+.overlay-container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    padding: 20px;
+    border: 1px solid rgb(151, 151, 151);
+    background-color: #d1d1d1;
+    box-shadow: inset 0 0 10px rgb(155, 155, 155);
+}
+.overlay button {
+    /*font-size: 1em;*/
+    background-color: #e9e9e9;
+    color: #000000;
+    border-radius: 3px;
+    border: none;
+    /*width: 250px;*/
+    display: inline;
+    padding: 10px 20px;
+    font-size: 0.9em;
+    /*border: 1px solid rgb(151, 151, 151);*/
+    transition: all 0.20s ease-in-out;
+}
+.overlay button:hover {
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(94, 94, 94, 0.9);
+    background: #e9e9e9;
+    /*color: #d1d1d1;*/
+    /*background-color: #acacac;;
+    color: #070707;*/
+}
+.patroon-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-height: 11.7em;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid rgb(179, 179, 179);
+}
+.heading-modal {
+    display: inline-block;
+    margin: 0;
+    /*margin-bottom: 80px;*/
+}
+.handleiding-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+/*.top-header {
+    margin-bottom: 20px;
+}*/
+/*.line {
+    margin-bottom: 20px;
+}*/
+.handleiding-msg h4 {
+    font-weight: bold;
+    color: rgb(172, 186, 189);
+    margin-bottom: 5px;
+}
+.handleiding-msg ul {
+    padding-left: 10px;
+}
+.handleiding-msg {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    min-width: 600px;
+    font-size: 0.8em;
+    visibility: hidden;
+    background-color: #464646;
+    color: rgb(147, 173, 179);
+    text-align: left;
+    padding: 15px 10px;  
+    border-radius: 5px;
+    position: absolute;
+    top: 200%; /* onder het icoon */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.handleiding-msg::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, 5%);
+    border-width: 15px;
+    border-style: solid;
+    border-color: transparent transparent #464646 transparent;
+}
+.handleiding-container:hover .handleiding-msg {
+    visibility: visible;
+    opacity: 1;
+}
+
+.knop-container {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0 20px;
+    gap: 20px;
+    
+}
+.knop-container button {
+    background: rgb(189, 189, 189);
+    color: #000000;
+    width: 13em;
+    font-size: 0.8em;
+    white-space: nowrap;
+}
+.knop-container button:hover {
+    cursor: default;
+    box-shadow: none;
+    background: rgb(172, 186, 189);
+}
+.weken-container {
+    display: flex;
+    flex-direction: column;
+    /*min-height: 11.7em;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid rgb(179, 179, 179);*/
+    /*background-color: #d3d3d3;
+    box-shadow: 0 0 10px rgb(155, 155, 155);*/
+}
+.week-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    /*border-top: 2px solid #424242;*/
+    /*border-bottom: 1px solid #424242;*/
+    /*margin-top: 20px;*/
+}
+.datums-container {
+    display: flex;
+    flex-direction: column;
+}
+.label-week,
+.label-date {
+    display: inline-block;
+}
+.shift-input {
+    width: 2em;
+    height: 25px;
+    padding-inline: 5px;
+    margin-right: 5px;
+    text-align: center;
+    font-size: 16px;
+    background-color: #e9e9e9;
+    color: #000000;
+    border-radius: 4px;
+    /*outline: none;*/
+    border: 1px solid rgb(151, 151, 151);
+    transition: all 0.10s ease-in-out;
+}
+/*.shift-input::selection {
+    background-color: transparent;
+    color: #57c9c9;
+}*/
+
+.shift-input:focus,
+.date-input:focus
+ {
+    box-shadow: 0 0 15px rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    
+}
+.date-input {
+    height: 27px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    padding-inline: 5px;
+    border-radius: 4px;
+    background-color: #e9e9e9;
+    color: #000000;
+    outline: none;
+    border: 1px solid rgb(151, 151, 151);
+    transition: all 0.10s ease-in-out;
+}
+
+input[type=checkbox] {
+    margin: 15px;
+    scale: 1.5;
+}
+.modal-button-container {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+.feestdagen {
+    border-radius: 5px;
+    padding: 20px;
+    /*border: 1px solid rgb(151, 151, 151);*/
+    background-color: #e9e9e9;
+    box-shadow: inset 0 0 10px rgb(155, 155, 155);
+}
+.feestdag {
+    display: flex;
+    justify-content: space-between; /* Verspreid de items over de volledige breedte */
+    padding: 8px 0;
+    border-bottom: 1px solid #afafaf;
+    /*gap: 200px;*/
+}
+.feestdag span {
+    font-family: monospace  , sans-serif;
+    /*width: 350px;*/
+}
+.feestdag .spanLinks,
+.vakantie .spanLinks {
+    color: #003e41;
+
+} 
+.feestdag .spanRechts,
+.vakantie .spanRechts{
+    color: rgb(0, 0, 0);
+}
+.year-holiday {
+    color: #000000;
+}
+.vakantie {
+    text-align: left;
+}
+.vakanties,
+.andereInfo {
+    border-radius: 5px;
+    padding: 20px;
+    /*border: 1px solid rgb(151, 151, 151);*/
+    background-color: #e9e9e9;
+    box-shadow: inset 0 0 10px rgb(155, 155, 155);
+}
+.vakanties th {
+    height: 50px;
+    text-align: left;
+}
+.vakanties td {
+    width: 350px;
+    padding: 6px 0;
+    border-bottom: 1px solid #afafaf;
+}
+.andereInfo td {
+    width: 350px;
+    padding: 6px 0;
+    border-bottom: 1px solid #afafaf;
+}
+.print-modal-button {
+   /* margin-top: 20px;*/
+    max-width: 120px;
+}
+.rapport {
+    color: #022124de;
+}
+.rapport-grid {
+  display: flex;
+  gap: 4rem;
+  /*justify-content: space-between;*/
+}
+.kolom-rapport {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+.rapport-tabel {
+  width: 200px;
+  border-collapse: collapse;
+}
+.rapport-tabel td {
+  padding: 4px 8px;
+  vertical-align: top;
+}
+.totaal-rij td {
+  border-top: 1px solid #999;
+  font-weight: bold;
+  background-color: #eaeaea;
+}
+.kolom-rapport table {
+  margin-bottom: auto; /* duwt de totaal naar onder */
+}
+.kolom-rapport td:first-child {
+  text-align: left;
+}
+
+.kolom-rapport td:last-child {
+  text-align: right;
+  font-weight: bold;
+}
+.totaal-kolom-rapport {
+    margin-top: 10px;
+    background: #445f66;
+    color: white;
+    padding: 6px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 4px;
+    color: #dbdbdb;
+}
+.ratio-rapport {
+    margin: 20px 0;
+    text-align: center;
+    padding: 0 15px;
+    background-color: #eaeaea;
+    border: 1px solid #a5a5a5;
+    border-radius: 4px;
+}
+.rapport-footer {
+    display: block;
+    font-size: 14px;
+    margin-bottom: auto;
+}
+
+#btnOverlay[disabled] {
+    background-color: #b0b0b0;
+    color: #7a7a7a;
+    cursor: default;
+    box-shadow: none;
+}
+#reset[disabled] {
+    background-color: #b0b0b0;
+    color: #7a7a7a;
+    cursor: default;
+    box-shadow: none;
+}
+
+.checkbox-container {
+    display: none;
+    /*margin-top: 20px;*/
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid rgb(151, 151, 151);
+    background-color: #d3d3d3;
+    box-shadow: 0 0 10px rgb(155, 155, 155);
+}
+.checkbox-container label{
+    display: block;
+}
+
+@keyframes zoom {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+    /*80% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }*/
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
