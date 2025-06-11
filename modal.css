@@ -245,6 +245,7 @@ input[type=checkbox] {
     scale: 1.5;
 }
 .feestdagen {
+    margin: 0;
     border-radius: 5px;
     padding: 20px;
     /*border: 1px solid rgb(151, 151, 151);*/

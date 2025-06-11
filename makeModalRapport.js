@@ -9,7 +9,7 @@ export function makeModalRapport(tabBlad, defaultSettings) {
     const dayElementen = getAllValidCells();
     //const filteredDayElementen = Array.from(dayElementen).filter(day => day.dataset.datum !== '0');
 
-    const prestaties = ['N', 'N12', 'N- fd', 'N12- fd', 'V', 'V12', 'V- fd', 'V12- fd', 'L', 'L- fd', 'D', 'OPL'];
+    const prestaties = ['N', 'N12', 'N- fd', 'N12- fd', 'V', 'V12', 'V- fd', 'V12- fd', 'L', 'L- fd', 'D', 'D- fd', 'OPL'];
     const afwezigheden = ['BV', 'BV- fd', 'CS', 'CS- fd', 'ADV','ADV- fd', 'BF','BF- fd', 'AV', 'AV- fd', 'HP', 'HP- fd', 'x', 'x- fd', 'Z', 'Z- fd'];
 
     let html = `

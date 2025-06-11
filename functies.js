@@ -128,7 +128,7 @@ export function modalAfdrukken() {
     }, 1000); // wacht even tot printdialoog klaar is
 };
 
-export function toggleModal(show, positie = '50%', backgroundColor = 'rgb(212, 212, 212)') {
+export function toggleModal(show, positie = '50%', backgroundColor = 'rgb(226, 226, 226)') {
     if (!show)  {
         DOM.modalOverlay.classList.remove('open');
         setTimeout(() => {
