@@ -1,4 +1,4 @@
-import { DOM, berekenSaldo, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, getAllValidCells } from "./main.js";
+import { DOM, berekenSaldo, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, getAllValidCells, ploegenGegevens } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
 import { makeModalInstellingen, shiftPatroon } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
@@ -189,9 +189,12 @@ function afdrukVoorbereiding() {
     const month = setting.currentMonth;
     const monthStr = month ? new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month)): null;
     const afdrukken = document.getElementById("printPreview");
-    afdrukken.innerHTML='';
+    const setShiften = new Set(getArrayValues(shiftPatroon));
+    const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool));
+    console.log(`aantal shiften: ${mijnData.length}`);
+    afdrukken.innerHTML = '';
 
-    if(tabBlad === 1 || tabBlad === 2) {
+    if((tabBlad === 1 || tabBlad === 2) && mijnData.length > 1 ) {
         DOM.topSectie3.classList.remove('no-print');
     } else {
         DOM.topSectie3.classList.add('no-print');
@@ -208,7 +211,7 @@ function afdrukVoorbereiding() {
         maand.textContent = `Maand: ${monthStr}`;
         lijst.appendChild(maand);
     }
-    if (tabBlad !== 3) {
+    if (tabBlad !== 3 && mijnData.length > 1) {
         const ploeg = document.createElement('li');
         ploeg.textContent = `Ploeg ${selectedPloeg}`;
         lijst.appendChild(ploeg);
