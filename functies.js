@@ -191,7 +191,7 @@ function afdrukVoorbereiding() {
     const afdrukken = document.getElementById("printPreview");
     const setShiften = new Set(getArrayValues(shiftPatroon));
     const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool));
-    console.log(`aantal shiften: ${mijnData.length}`);
+    //console.log(`aantal shiften: ${mijnData.length}`);
     afdrukken.innerHTML = '';
 
     if((tabBlad === 1 || tabBlad === 2) && mijnData.length > 1 ) {

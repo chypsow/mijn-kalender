@@ -236,6 +236,10 @@ export function maakVerlofLegende() {
 export function maakPloegenLegende() {
     const setShiften = new Set(getArrayValues(shiftPatroon));
     const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool)).reverse();
+    if(mijnData.length < 2) {
+        DOM.topSectie3.classList.add('ploegenLegende-container');
+        return;
+    }
     mijnData.forEach(shift => {
     const legendeItem = document.createElement('div');
     legendeItem.classList.add('ploegenLegende-item');

@@ -26,8 +26,8 @@ export const defaultSettings = () => {
     return [
         {pagina: 0, ploeg: 1, jaar: currentYear},
         {pagina: 1, ploeg: 1, jaar: currentYear},
-        {pagina: 2, ploeg: 1, maand: currentMonth, jaar: currentYear},
-        {pagina: 3, maand: currentMonth, jaar: currentYear}
+        {pagina: 2, ploeg: 1, jaar: currentYear, maand: currentMonth},
+        {pagina: 3, jaar: currentYear, maand: currentMonth}
     ];
 };
   
@@ -108,7 +108,7 @@ export const berekenSaldo = (currentYear,ploeg, key = null) => {
 export function generateCalendar() {
     if (calendarGenerators[tabBlad]) {
         const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-        const currentMonth = settings.currentMonth ? settings.currentMonth : null;
+        const currentMonth = settings.currentMonth ? settings.currentMonth : 0;
         const currentYear = settings.currentYear;
         const selectedPloeg = settings.selectedPloeg;
         DOM.ploeg.value = selectedPloeg;
@@ -184,9 +184,9 @@ function refreshCalendar() {
 };
 export const updateCalendar = () => {
     const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-    const team = setting.selectedPloeg ? setting.selectedPloeg : null;
+    const team = setting.selectedPloeg ? setting.selectedPloeg : 0;
     const year = setting.currentYear;
-    const month = setting.currentMonth ? setting.currentMonth : null;
+    const month = setting.currentMonth ? setting.currentMonth : 0;
     switch (tabBlad) {
         case 0:
             updateYearCalendarTable(team, year);

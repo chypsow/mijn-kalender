@@ -135,7 +135,7 @@ section {
     position: absolute;
 }
 .calendar-nav {
-    max-width: 400px;
+    /*max-width: 400px;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -168,10 +168,11 @@ section {
     /*transition: opacity 0.3s ease-in-out;*/
 }
 .month-year {
-    /*min-width: 280px;*/
+    min-width: 300px;
     color: #dbdbdb;
     cursor: default;
-    margin: 0 80px;
+    text-align: center;
+    /*margin: 0 80px;*/
     /*font-weight: bold;*/
 }
 .dropdowns {

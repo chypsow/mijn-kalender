@@ -181,7 +181,7 @@ function setShiftProperties(elt, shift, date, isHome) {
 
 function voegVerlofdagToeVolgensLocalStorage(ploeg, cell, isHoliday) {
   const vrijeDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
-  const herplanningen = ['N12','N','V12','V','L','D','x','OPL']
+  const herplanningen = ['N12','N','V12','V','L','D','x', 'R', 'OPL']
   const ploegKey = `verlofdagenPloeg${ploeg}`;
   opgenomenVerlofPerPloeg[ploegKey].forEach(obj => { 
     if(obj.datum === cell.dataset.datum) {
