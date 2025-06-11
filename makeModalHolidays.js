@@ -4,7 +4,9 @@ import { getSettingsFromLocalStorage, modalAfdrukken } from "./functies.js";
 export function makeModalFeestdagen(tab, setting) {
     DOM.overlay.innerHTML = '';
     let jaar = getSettingsFromLocalStorage(tab, setting).currentYear;
-    DOM.overlay.innerHTML = `
+    //const container = document.createElement('div');
+    //container.classList.add('overlay-container');
+    let html = `
         <div class="calendar-nav">
             <button class="vorig no-print"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
             <span id="jaar" class="month-year year-holiday">${jaar}</span>
@@ -13,6 +15,8 @@ export function makeModalFeestdagen(tab, setting) {
         <ul class="feestdagen"></ul>
         <button class="print-modal-button">Afdrukken</button>
     `;
+    //container.innerHTML = html;
+    DOM.overlay.innerHTML = html;
     const printButton = document.querySelector(".print-modal-button");
     printButton.addEventListener("click", modalAfdrukken);
     printButton.classList.add('no-print');

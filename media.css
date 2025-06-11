@@ -1,3 +1,133 @@
+@media print {
+    @page {
+        margin: 10mm;
+        size: 0.75;
+    }
+    body {
+        -webkit-print-color-adjust: exact; /* Voor WebKit-gebaseerde browsers zoals Chrome en Safari*/
+        print-color-adjust: exact; /* Standaard eigenschap voor andere browsers */
+        background: none;
+        /*transform: scale(0.7); /* Schaal naar 70% */
+        /*transform-origin: top left; /* Zorg dat de inhoud niet wordt verplaatst */
+    }
+    .hoofd-container {
+        width: 100%;
+    }
+    header h1 {
+        color: #012423;
+    }
+    .no-print {
+        display: none !important;
+    }
+    .visible-on-print {
+        display: block;
+        font-size: 30px;
+        font-weight: bold ;
+        justify-self: center;
+        font-family:monospace;
+        color: rgb(77, 77, 77);   
+    }
+    .year-container-grid {
+        margin-top: 0;
+    }
+    .month-year {
+        /*position: absolute;
+        left: 50%;
+        transform: translateX(-50px);*/
+        /*justify-self: center;*/
+        color: black;
+    }
+    #calendar {
+        width: 100%;
+        justify-self: center;
+        font-size: 14px;
+    }
+    #calendar .month-name, 
+    #calendar .month-days {
+        color: black;
+    }
+    #calendar .header {
+        /*background: rgb(44, 44, 44);*/
+        color: rgb(255, 255, 255);
+    }
+    #calendar .day-klein {
+        font-size: 14px;
+        font-weight: bold;
+    }
+    #calendar .month {
+        /*border: 1px solid rgb(207, 207, 207);*/
+        background: rgb(243, 243, 243);
+    }
+    #calendar .month-name {
+        font-size: 18px;
+        color: #012423;
+    }
+    .ploegenLegende-container {
+        width: 10em;
+        color: rgb(0, 0, 0);
+        margin-right: 0;
+        background: none;
+        /*border: 1px solid rgb(207, 207, 207);*/
+        position: absolute;
+        top: 90px;
+        right: 10px;
+    }
+    .vandaag {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    .highlight {
+        outline: none;
+    }
+    .modal {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        background-color: #fff !important; /* of een andere lichte kleur */
+        color: #000 !important;
+        box-shadow: none !important;
+        width: 80% !important;
+        margin: 20px auto !important;
+        padding: 20px !important;
+        /*border: 1px solid #888 !important;*/
+        display: block !important;
+    }
+    .modal-overlay {
+        /*display: none !important;*/
+        background: none;
+        opacity: 0;
+    }
+    .vakanties, .andereInfo, .feestdagen {
+        color: black !important;
+        background-color: #fff;
+        box-shadow: none !important;
+    }
+    .vakantie .spanRechts {
+        color: black;
+    }
+    .vakantie .spanLinks {
+        color: rgb(63, 63, 63);
+    }
+    .feestdag .spanRechts {
+        color: black;
+    }
+    .feestdag .spanLinks {
+        color: rgb(63, 63, 63);
+    }
+    
+    .rapport,
+    .rapport-header,
+    .rapport span {
+        color: black !important
+    }
+     
+    /*.rapport hr {
+        display: none;
+    }*/
+
+}
+
 @media screen and (max-width: 1900px) {
     .side-bar {
         display: flex;
@@ -155,148 +285,4 @@
     .verborgen-sectie {
         display: none;
     }
-}
-@media print {
-    @page {
-        margin: 10mm;
-        size: 0.75;
-    }
-    body {
-        -webkit-print-color-adjust: exact; /* Voor WebKit-gebaseerde browsers zoals Chrome en Safari*/
-        print-color-adjust: exact; /* Standaard eigenschap voor andere browsers */
-        background: none;
-        /*transform: scale(0.7); /* Schaal naar 70% */
-        /*transform-origin: top left; /* Zorg dat de inhoud niet wordt verplaatst */
-        
-    }
-    
-    .hoofd-container {
-        width: 100%;
-    }
-    header h1 {
-        color: #012423;
-    }
-    .no-print {
-        display: none !important;
-    }
-    .visible-on-print {
-        display: block;
-        font-size: 30px;
-        font-weight: bold ;
-        justify-self: center;
-        font-family:monospace;
-        color: rgb(77, 77, 77);   
-    }
-    
-    .year-container-grid {
-        margin-top: 0;
-    }
-    .month-year {
-        /*position: absolute;
-        left: 50%;
-        transform: translateX(-50px);*/
-        /*justify-self: center;*/
-        color: black;
-    }
-    #calendar {
-        width: 100%;
-        justify-self: center;
-        font-size: 14px;
-    }
-    #calendar .month-name, 
-    #calendar .month-days {
-        color: black;
-    }
-    #calendar .header {
-        background: rgb(44, 44, 44);
-        color: rgb(255, 255, 255);
-    }
-    #calendar .day-klein {
-        font-size: 14px;
-        font-weight: bold;
-    }
-    #calendar .month {
-        /*border: 1px solid rgb(207, 207, 207);*/
-        background: rgb(243, 243, 243);
-    }
-    #calendar .month-name {
-        font-size: 18px;
-        color: #012423;
-    }
-    .ploegenLegende-container {
-        width: 10em;
-        color: rgb(0, 0, 0);
-        margin-right: 0;
-        background: none;
-        /*border: 1px solid rgb(207, 207, 207);*/
-        position: absolute;
-        top: 90px;
-        right: 10px;
-    }
-    .vandaag {
-        outline: none !important;
-        box-shadow: none !important;
-    }
-    .highlight {
-        outline: none;
-    }
-    .modal {
-        position: static !important;
-        top: auto !important;
-        left: auto !important;
-        transform: none !important;
-        background-color: #fff !important; /* of een andere lichte kleur */
-        color: #000 !important;
-        box-shadow: none !important;
-        width: 80% !important;
-        margin: 20px auto !important;
-        padding: 20px !important;
-        /*border: 1px solid #888 !important;*/
-        display: block !important;
-    }
-    .modal-overlay {
-        /*display: none !important;*/
-        background: none;
-        opacity: 0;
-    }
-    /*.modal {
-        top: auto;
-        left: auto;
-        transform: translate(50%, 50%);
-        background-color: transparent !important;
-        box-shadow: none;
-        width: 70%;
-    }
-    .modal-overlay {
-        background: none;
-        opacity: 0;
-    }*/
-    .vakanties, .andereInfo, .feestdagen {
-        color: black !important;
-        background-color: #fff;
-        box-shadow: none !important;
-    }
-    .vakantie .spanRechts {
-        color: black;
-    }
-    .vakantie .spanLinks {
-        color: rgb(63, 63, 63);
-    }
-    .feestdag .spanRechts {
-        color: black;
-    }
-    .feestdag .spanLinks {
-        color: rgb(63, 63, 63);
-    }
-    
-    .rapport,
-    .rapport-header,
-    .rapport span {
-        color: black !important
-    }
-     
-    /*.rapport hr {
-        display: none;
-    }*/
-
 }

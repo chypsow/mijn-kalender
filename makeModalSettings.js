@@ -17,8 +17,8 @@ export let shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || pl
 export function makeModalInstellingen(shiftPatroon) {
     DOM.overlay.innerHTML = '';
     const aantalWeken = shiftPatroon.length;
-    const container = document.createElement('div');
-    container.classList.add('overlay-container');
+    //const container = document.createElement('div');
+    //container.classList.add('overlay-container');
     
     const topHeader = document.createElement('div');
     topHeader.classList.add('top-header');
@@ -56,7 +56,7 @@ export function makeModalInstellingen(shiftPatroon) {
     const hr = document.createElement('hr');
     hr.classList.add('line');
     topHeader.appendChild(hr);
-    container.appendChild(topHeader);
+    DOM.overlay.appendChild(topHeader);
 
     const btnContainer = document.createElement('div');
     btnContainer.classList.add('knop-container');
@@ -70,7 +70,7 @@ export function makeModalInstellingen(shiftPatroon) {
     verwijderen.textContent = "Een ploeg verwijderen";
     verwijderen.addEventListener('click', deleteOneWeek);
     btnContainer.appendChild(verwijderen);
-    container.appendChild(btnContainer);
+    DOM.overlay.appendChild(btnContainer);
     
     const shiftPatroonContainer = document.createElement('div');
     shiftPatroonContainer.classList.add('patroon-container');
@@ -83,7 +83,7 @@ export function makeModalInstellingen(shiftPatroon) {
         const shiftsLabel = document.createElement('label');
         shiftsLabel.classList.add('label-week');
         const span = document.createElement('span');
-        span.textContent = `Ploeg${i+1}: `;
+        span.textContent = `Ploeg ${i+1}: `;
         shiftsLabel.appendChild(span);
         week.schema.forEach((shift, j) => {
             const input = document.createElement('input');
@@ -118,7 +118,7 @@ export function makeModalInstellingen(shiftPatroon) {
         datumsContainer.appendChild(dateLabel);
     });
     shiftPatroonContainer.appendChild(datumsContainer);
-    container.appendChild(shiftPatroonContainer);
+    DOM.overlay.appendChild(shiftPatroonContainer);
 
     const div = document.createElement('div');
     div.classList.add('modal-button-container');
@@ -132,8 +132,8 @@ export function makeModalInstellingen(shiftPatroon) {
     reset.textContent = "Standaardinstellingen terugzetten";
     reset.addEventListener('click', resetDefaultSettings);
     div.appendChild(reset);
-    container.appendChild(div);
-    DOM.overlay.appendChild(container);
+    DOM.overlay.appendChild(div);
+    //DOM.overlay.appendChild(container);
 
     const cBoxContainer = document.createElement('div');
     cBoxContainer.classList.add('checkbox-container');
@@ -154,7 +154,7 @@ function addOneWeek(shiftPatroon) {
     const shiftsLabel = document.createElement('label');
     shiftsLabel.classList.add('label-week');
     const span = document.createElement('span');
-    span.textContent = `Ploeg${lengte+1}: `;
+    span.textContent = `Ploeg ${lengte+1}: `;
     shiftsLabel.appendChild(span);
     Array.from({length : 7}).forEach( (_,i) => {
         const input = document.createElement('input');
