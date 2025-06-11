@@ -34,8 +34,8 @@ export function getSettingsFromLocalStorage(blad, setting) {
     }
     return {
         selectedPloeg: instelling.ploeg,
-        currentMonth: instelling.maand,
         currentYear: instelling.jaar,
+        currentMonth: instelling.maand,
     }; 
 };
 

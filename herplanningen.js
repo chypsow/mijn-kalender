@@ -1,12 +1,20 @@
-import { DOM, defaultSettings, ploegenGegevens, getAllValidCells } from "./main.js";
+import { DOM, defaultSettings, ploegenGegevens, getAllValidCells, berekenSaldo } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
-import { toggleModal, getSettingsFromLocalStorage, updateLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe, beginSaldoEnRestSaldoInvullen } from "./functies.js";
+import { 
+    toggleModal, getSettingsFromLocalStorage, updateLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe, 
+    beginSaldoEnRestSaldoInvullen, getBeginRechtFromLocalStorage, calculateTotals 
+} from "./functies.js";
 
 export function handleBlur(e) {
     const verlof = e.target.id;
     const aantal = parseInt(e.target.value);
     if (isNaN(aantal) || aantal < 0) {
-        e.target.value = 0; // Reset naar 0 als de invoer ongeldig is
+        const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+        const currentYear =  instellingen.currentYear;
+        const beginrechtArray = JSON.parse(localStorage.getItem('beginrechtVerlof'));
+        const index = beginrechtArray.findIndex(item => item.year === currentYear);
+        e.target.value = beginrechtArray[index][verlof];
+        return;
     }
     behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal);
 };
