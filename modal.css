@@ -313,6 +313,13 @@ input[type=checkbox] {
     gap: 5px;
     flex-direction: column;
 }
+.kolom-rapport h3 {
+    padding: 5px;
+    background-color: #eaeaea;
+    border-radius: 3px;
+    text-align: center;
+    /*color: white;*/
+}
 .rapport-tabel {
   width: 200px;
   border-collapse: collapse;
