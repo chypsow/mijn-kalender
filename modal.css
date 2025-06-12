@@ -160,7 +160,6 @@
     flex-direction: row;
     /*margin: 10px 0 20px;*/
     gap: 20px;
-    
 }
 .knop-container button {
     background: rgb(189, 189, 189);
@@ -170,7 +169,7 @@
     white-space: nowrap;
 }
 .knop-container button:hover {
-    cursor: default;
+    cursor: pointer;
     box-shadow: none;
     background: rgb(172, 186, 189);
 }
