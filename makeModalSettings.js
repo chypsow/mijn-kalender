@@ -16,7 +16,7 @@ export let shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || pl
 
 export function makeModalInstellingen(shiftPatroon) {
     DOM.overlay.innerHTML = '';
-    const aantalWeken = shiftPatroon.length;
+    //const aantalWeken = shiftPatroon.length;
     //const container = document.createElement('div');
     //container.classList.add('overlay-container');
     
@@ -38,15 +38,15 @@ export function makeModalInstellingen(shiftPatroon) {
     handleidingMsg.classList.add('handleiding-msg');
     handleidingMsg.innerHTML = `
     <ul style='list-style-type: none;'>
-        <li><h4>Volledige cyclus (<span id="hl1">${aantalWeken}</span> weken):</h4> 
-            Een volledige cyclus bestaat uit <span id="hl2">${aantalWeken}</span> weken. 
-            Elke ploeg werkt en rust in een specifiek patroon dat zich herhaalt na <span id="hl3">${aantalWeken}</span> weken.
+        <li><h4>Volledige cyclus (<span id="hl1"></span> weken):</h4> 
+            Een volledige cyclus bestaat uit <span id="hl2"></span> weken. 
+            Elke ploeg werkt en rust in een specifiek patroon dat zich herhaalt na <span id="hl3"></span> weken.
         </li>
         <li><h4>Startdatum:</h4>
             Welke ploeg in welke week actief is, wordt bepaald door de gekozen startdatum.
             Bijvoorbeeld: als we 1 februari 2010 als startdatum P1 (P1=ploeg 1) kiezen,
             begint P1 op die datum met het ploegschema (week1, week2 ...). Als we 7 dagen eerder 
-            (dagen interval moet een veelvoud van 7 zijn) als startdatum P2 kiezen, begint Ploeg 2 op 25 januari 2010 met het 
+            (interval moet een veelvoud van 7 dagen zijn) als startdatum P2 kiezen, begint Ploeg 2 op 25 januari 2010 met het 
             ploegschema (week1, week2 ...) en zo voort.
             <br><br><span style="color:rgb(172, 186, 189); font-weight:bold;">Opmerking:</span> In ons geval zijn de startdatums 
             zo gekozen dat het ploegschema overeenkomt met de werkelijkheid.
@@ -145,6 +145,12 @@ export function makeModalInstellingen(shiftPatroon) {
     `;
     cBoxContainer.innerHTML = html;
     DOM.overlay.appendChild(cBoxContainer);
+
+    handleidingContainer.addEventListener('mouseover', () => {
+        Array.from({length:3}).forEach( (_,i) => {
+            document.getElementById(`hl${i+1}`).textContent = wekenContainer.children.length;
+        });
+    });
 };
 
 function addOneWeek(shiftPatroon) {
@@ -185,10 +191,6 @@ function addOneWeek(shiftPatroon) {
     input.value = shiftPatroon[lengte] ? shiftPatroon[lengte].startDatum : '';
     dateLabel.appendChild(input);
     datumsContainer.appendChild(dateLabel);
-
-    Array.from({length:3}).forEach( (_,i) => {
-        document.getElementById(`hl${i+1}`).textContent = lengte + 1;
-    });
 };
 
 function deleteOneWeek() {
@@ -199,9 +201,6 @@ function deleteOneWeek() {
         wekenContainer.removeChild(wekenContainer.lastElementChild);
         datumsContainer.removeChild(datumsContainer.lastElementChild);
     }
-    Array.from({length:3}).forEach( (_,i) => {
-        document.getElementById(`hl${i+1}`).textContent = lengte - 1;
-    });
 };
 
 function resetDefaultSettings() {
