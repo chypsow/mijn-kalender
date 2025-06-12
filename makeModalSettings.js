@@ -44,10 +44,11 @@ export function makeModalInstellingen(shiftPatroon) {
         </li>
         <li><h4>Startdatum:</h4>
             Welke ploeg in welke week actief is, hangt af van een startdatum.
-            Bijvoorbeeld: als we 1 februari 2010 als startdatum 1 kiezen, 
-            begint Ploeg 1 op die datum met week 1 (in ons geval de week van 3 nachten). Als we 25 januari 2010 (7 dagen eerder) 
-            als startdatum 2 kiezen, begint Ploeg 2 op 1 februari 2010 met week 2 (in ons geval de week van 4 nachten) en zo verder.
-            <br><br> *<b>Opmerking:</b> In ons geval zijn de startdatums zo gekozen dat het ploegnummer en het ploegschema overeenkomen met de realiteit.*
+            Bijvoorbeeld: als we 1 februari 2010 als startdatum P1 kiezen, 
+            begint Ploeg 1 op die datum met het ploegpatroon (week1, week2 ...). Als we 25 januari 2010 (7 dagen eerder) 
+            als startdatum P2 kiezen, begint Ploeg 2 op 25 januari 2010 met het ploegpatroon (week1, week2 ...) en zo verder.
+            <br><br><span style="color:rgb(172, 186, 189); font-weight:bold;">Opmerking:</span> In ons geval zijn de startdatums 
+            zo gekozen dat het ploegschema overeenkomt met de realiteit.
         </li>
     </ul>
     `;
@@ -83,7 +84,7 @@ export function makeModalInstellingen(shiftPatroon) {
         const shiftsLabel = document.createElement('label');
         shiftsLabel.classList.add('label-week');
         const span = document.createElement('span');
-        span.textContent = `Ploeg ${i+1}: `;
+        span.textContent = `Week ${i+1}: `;
         shiftsLabel.appendChild(span);
         week.schema.forEach((shift, j) => {
             const input = document.createElement('input');
@@ -107,7 +108,7 @@ export function makeModalInstellingen(shiftPatroon) {
         const dateLabel = document.createElement('label');
         dateLabel.classList.add('label-date');
         const span = document.createElement('span');
-        span.textContent = `Startdatum ${i+1}: `;
+        span.textContent = `Startdatum P${i+1}: `;
         dateLabel.appendChild(span);
         const input = document.createElement('input');
         input.type = 'date';
@@ -154,7 +155,7 @@ function addOneWeek(shiftPatroon) {
     const shiftsLabel = document.createElement('label');
     shiftsLabel.classList.add('label-week');
     const span = document.createElement('span');
-    span.textContent = `Ploeg ${lengte+1}: `;
+    span.textContent = `Week ${lengte+1}: `;
     shiftsLabel.appendChild(span);
     Array.from({length : 7}).forEach( (_,i) => {
         const input = document.createElement('input');
@@ -174,7 +175,7 @@ function addOneWeek(shiftPatroon) {
     const dateLabel = document.createElement('label');
     dateLabel.classList.add('label-date');
     const spanDate = document.createElement('span');
-    spanDate.textContent = `Startdatum ${lengte+1}: `;
+    spanDate.textContent = `Startdatum P${lengte+1}: `;
     dateLabel.appendChild(spanDate);
     const input = document.createElement('input');
     input.type = 'date';

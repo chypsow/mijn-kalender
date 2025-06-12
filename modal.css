@@ -104,8 +104,8 @@
 }
 .handleiding-container {
     position: relative;
-    /*display: inline;*/
-    display: none;
+    display: inline;
+    /*display: none;*/
     cursor: pointer;
 }
 /*.top-header {
