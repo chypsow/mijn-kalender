@@ -258,6 +258,7 @@
     }
     .modal{
         width: 90%;
+        top: 10px !important;
         /*min-width: 300px;
         padding: 20px;*/
     }

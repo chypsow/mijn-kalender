@@ -1,7 +1,7 @@
 import { DOM } from "./main.js";
 import { getDaysSinceStart, getArrayValues } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
-import { shiftPatroon } from "./makeModalSettings.js";
+import { shiftPatroon, startDatums } from "./makeModalSettings.js";
 
 export function updateTeamCalendar(year, month) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
@@ -19,9 +19,9 @@ export function updateTeamCalendar(year, month) {
                 day.classList.add('table-cell');
                 const currentDate = new Date(year, month, i);
                 if(currentDate.getMonth() === month) {
-                    const weekObj = shiftPatroon.find(week => week.ploeg === index);
-                    if (!weekObj) return;
-                    const startDate = weekObj.startDatum;
+                    const ploegObj = startDatums.find(obj => obj.ploeg === index);
+                    if (!ploegObj) return;
+                    const startDate = ploegObj.startDatum;
                     const daysSinceStart = getDaysSinceStart(currentDate, startDate);
                     if(daysSinceStart >= 0) {
                         const myDate = currentDate.toLocaleDateString("nl-BE");
@@ -73,7 +73,7 @@ export function generateTeamCalendar(year, month) {
     calendar.appendChild(headerRow);
     // Genereer rijen voor elke ploeg
     const legeCellen = new Set();
-    const aantalPloegen = Object.keys(shiftPatroon).length;
+    const aantalPloegen = startDatums.length;
     for (let team = 1; team <= aantalPloegen; team++) {
         const teamRow = document.createElement("div");
         teamRow.classList.add("team-row");
@@ -95,9 +95,9 @@ export function generateTeamCalendar(year, month) {
             // Controleer of de datum geldig is (voor maanden met minder dan 31 dagen)
             if (currentDate.getMonth() === month) {
                 // Bereken de ploeg
-                const weekObj = shiftPatroon.find(week => week.ploeg === team);
-                if (!weekObj) return;
-                const startDate = weekObj.startDatum;
+                const ploegObj = startDatums.find(obj => obj.ploeg === team);
+                if (!ploegObj) return;
+                const startDate = ploegObj.startDatum;
                 const daysSinceStart = getDaysSinceStart(currentDate, startDate);
                 if(daysSinceStart >= 0) {
                     const myDate = currentDate.toLocaleDateString("nl-BE");

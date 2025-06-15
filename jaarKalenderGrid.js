@@ -1,13 +1,13 @@
 import { DOM, ploegenGegevens } from "./main.js";
 import { getDaysSinceStart, getNaamBijSymbool, getArrayValues } from "./functies.js";
-import { shiftPatroon } from "./makeModalSettings.js";
+import { shiftPatroon, startDatums } from "./makeModalSettings.js";
 
 export function updateYearCalendarGrid(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
   
-  const weekObj = shiftPatroon.find(week => week.ploeg === selectedPloeg);
-  if (!weekObj) return;
-  const startDate = weekObj.startDatum;
+  const ploegObj = startDatums.find(obj => obj.ploeg === selectedPloeg);
+  if (!ploegObj) return;
+  const startDate = ploegObj.startDatum;
   const shiftPattern = getArrayValues(shiftPatroon);
   const totalCells = 42;
   const vandaag = new Date();
@@ -57,9 +57,9 @@ export function generateYearCalendar(selectedPloeg, year) {
   calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
   
-  const weekObj = shiftPatroon.find(week => week.ploeg === selectedPloeg);
-  if (!weekObj) return;
-  const startDate = weekObj.startDatum;
+  const ploegObj = startDatums.find(obj => obj.ploeg === selectedPloeg);
+  if (!ploegObj) return;
+  const startDate = ploegObj.startDatum;
   const shiftPattern = getArrayValues(shiftPatroon);
   const vandaag = new Date();
   for (let month = 0; month < 12; month++) {

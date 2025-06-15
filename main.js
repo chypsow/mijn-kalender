@@ -2,9 +2,10 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, getBeginRechtFromLocalStorage, updateLocalStorage, getNumberOfTeams} from './functies.js';
+import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, getBeginRechtFromLocalStorage, updateLocalStorage } from './functies.js';
 import { tabBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
-import { dataVerlofdagen, dataBeginRecht, customData } from "./config.js";
+import { dataVerlofdagen, dataBeginRecht, shiftData, dateData } from "./config.js";
+import { shiftPatroon, startDatums } from './makeModalSettings.js';
 
 export const ploegenGegevens = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
@@ -108,9 +109,10 @@ export const berekenSaldo = (currentYear,ploeg, key = null) => {
 export function generateCalendar() {
     if (calendarGenerators[tabBlad]) {
         const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-        const currentMonth = settings.currentMonth ? settings.currentMonth : 0;
-        const currentYear = settings.currentYear;
         const selectedPloeg = settings.selectedPloeg;
+        const currentMonth = settings.currentMonth;
+        const currentYear = settings.currentYear;
+        
         DOM.ploeg.value = selectedPloeg;
         if(tabBlad === 0 || tabBlad === 1) calendarGenerators[tabBlad](selectedPloeg, currentYear);
         if(tabBlad === 2) calendarGenerators[tabBlad](selectedPloeg, currentYear, currentMonth);
@@ -119,6 +121,7 @@ export function generateCalendar() {
         //adjustLayout();
     } else {
         console.error(`Geen kalendergenerator gevonden voor blad: ${tabBlad}`);
+
     }
 };
 const calendarGenerators = {
@@ -184,9 +187,9 @@ function refreshCalendar() {
 };
 export const updateCalendar = () => {
     const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
-    const team = setting.selectedPloeg ? setting.selectedPloeg : 0;
+    const team = setting.selectedPloeg;
     const year = setting.currentYear;
-    const month = setting.currentMonth ? setting.currentMonth : 0;
+    const month = setting.currentMonth;
     switch (tabBlad) {
         case 0:
             updateYearCalendarTable(team, year);
@@ -195,7 +198,7 @@ export const updateCalendar = () => {
             updateYearCalendarGrid(team, year);
             break;
         case 2:
-            updateMonthCalendar(team, year,month);
+            updateMonthCalendar(team, year, month);
             break;
         case 3:
             updateTeamCalendar(year, month);
@@ -435,8 +438,9 @@ function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 
     if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
     if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
     if(cond3) {
-        saveToLocalStorage('shiftPatroon', customData);
-        const lengte = customData.length;
+        saveToLocalStorage('shiftPatroon', shiftData);
+        saveToLocalStorage('startDatums', dateData);
+        const lengte = startDatums.length;
         Array.from({length:4}).forEach((_, i) => {
             const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
             if(instellingen.selectedPloeg > lengte) updateLocalStorage('standaardInstellingen', defaultSettings, i, {ploeg:1});
@@ -491,7 +495,7 @@ document.getElementById('bars').addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     savePloegenToLocalStorage();
     buildSideBar();
-    buildTeamDropdown(getNumberOfTeams());
+    buildTeamDropdown(startDatums.length);
     buildButtons();
     generateCalendar();
 });

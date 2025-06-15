@@ -1,7 +1,7 @@
 import { DOM, opgenomenVerlofPerPloeg } from "./main.js";
 import { getDaysSinceStart, verwijderVerlofDatum, voegVerlofDatumToe, beginSaldoEnRestSaldoInvullen, getArrayValues } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
-import { shiftPatroon } from "./makeModalSettings.js";
+import { shiftPatroon, startDatums } from "./makeModalSettings.js";
 
 export function updateYearCalendarTable(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
@@ -10,9 +10,9 @@ export function updateYearCalendarTable(selectedPloeg, year) {
   const vandaag = new Date();
   const today = vandaag.toLocaleDateString("nl-BE");
   const monthElementen = document.querySelectorAll('#calendar .row');
-  const weekObj = shiftPatroon.find(week => week.ploeg === selectedPloeg);
-  if (!weekObj) return;
-  const startDate = weekObj.startDatum;
+  const ploegObj = startDatums.find(obj => obj.ploeg === selectedPloeg);
+  if (!ploegObj) return;
+  const startDate = ploegObj.startDatum;
   monthElementen.forEach((month, index) => {
     const dayElementen = month.querySelectorAll('.cell');
     dayElementen.forEach((day, i) => {
@@ -75,9 +75,10 @@ export function generateYearCalendarTable(selectedPloeg, year) {
   }
   calendar.appendChild(headerRow);
   
-  const weekObj = shiftPatroon.find(week => week.ploeg === selectedPloeg);
-  if (!weekObj) return;
-  const startDate = weekObj.startDatum;
+  const ploegObj = startDatums.find(obj => obj.ploeg === selectedPloeg);
+  if (!ploegObj) return;
+  const startDate = ploegObj.startDatum;
+  //console.log(`startdatum: ${startDate}, type of: ${typeof startDate}`);
 
   // Genereer rijen voor elke maand
   for (let month = 0; month < 12; month++) {

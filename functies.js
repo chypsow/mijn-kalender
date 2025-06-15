@@ -1,6 +1,6 @@
 import { DOM, berekenSaldo, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, getAllValidCells, ploegenGegevens } from "./main.js";
 import { tabBlad } from "./componentenMaken.js";
-import { makeModalInstellingen, shiftPatroon } from "./makeModalSettings.js";
+import { makeModalInstellingen, shiftPatroon, startDatums } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { makeModalRapport } from "./makeModalRapport.js";
@@ -33,10 +33,10 @@ export function getSettingsFromLocalStorage(blad, setting) {
         return null;
     }
     return {
-        selectedPloeg: instelling.ploeg,
+        selectedPloeg: instelling.ploeg ? instelling.ploeg : 1,
         currentYear: instelling.jaar,
-        currentMonth: instelling.maand,
-    }; 
+        currentMonth: instelling.maand ? instelling.maand : 0
+    };
 };
 
 export function getBeginRechtFromLocalStorage(jaar) {
@@ -128,7 +128,7 @@ export function modalAfdrukken() {
     }, 1000); // wacht even tot printdialoog klaar is
 };
 
-export function toggleModal(show, positie = '50%', backgroundColor = 'rgb(226, 226, 226)') {
+export function toggleModal(show, positie = '150px', backgroundColor = 'rgb(226, 226, 226)') {
     if (!show)  {
         DOM.modalOverlay.classList.remove('open');
         setTimeout(() => {
@@ -150,13 +150,13 @@ export function toggleModal(show, positie = '50%', backgroundColor = 'rgb(226, 2
         DOM.modal.style.top = positie;
         DOM.modal.style.display = show ? "block" : "none";
     }
-}
+};
 
 export function handleClickBtn(e) {
     const btn = e.currentTarget.id; // Gebruik currentTarget om de juiste id op te halen
     switch(btn) {
         case 'instellingen':
-            makeModalInstellingen(shiftPatroon);
+            makeModalInstellingen(shiftPatroon, startDatums);
             toggleModal(true);
             break;
         case 'feestdagen':
@@ -189,11 +189,11 @@ function afdrukVoorbereiding() {
     const month = setting.currentMonth;
     const monthStr = month ? new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month)): null;
     const afdrukken = document.getElementById("printPreview");
-    const setShiften = new Set(getArrayValues(shiftPatroon));
-    const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool));
-    //console.log(`aantal shiften: ${mijnData.length}`);
     afdrukken.innerHTML = '';
 
+    const setShiften = new Set(getArrayValues(shiftPatroon));
+    const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool));
+    
     if((tabBlad === 1 || tabBlad === 2) && mijnData.length > 1 ) {
         DOM.topSectie3.classList.remove('no-print');
     } else {
@@ -211,7 +211,7 @@ function afdrukVoorbereiding() {
         maand.textContent = `Maand: ${monthStr}`;
         lijst.appendChild(maand);
     }
-    if (tabBlad !== 3 && mijnData.length > 1) {
+    if (tabBlad !== 3 && mijnData.length > 1 && shiftPatroon.length > 1) {
         const ploeg = document.createElement('li');
         ploeg.textContent = `Ploeg ${selectedPloeg}`;
         lijst.appendChild(ploeg);
@@ -268,10 +268,6 @@ export const getArrayValues = (obj) => {
         output.push(shiftsArray);
     });
     return output.flat();
-};
-
-export function getNumberOfTeams() {
-    return Object.keys(shiftPatroon).length;
 };
 
 export function getNaamBijSymbool(obj, mark) {

@@ -1,12 +1,14 @@
 import { DOM, ploegenGegevens } from "./main.js";
 import { getDaysSinceStart, getNaamBijSymbool, getArrayValues } from "./functies.js";
-import { shiftPatroon } from "./makeModalSettings.js";
+import { shiftPatroon, startDatums } from "./makeModalSettings.js";
 
 export function updateMonthCalendar(selectedPloeg, year, month) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const shiftPattern = getArrayValues(shiftPatroon);
-    const startDate = shiftPatroon.find(week => week.ploeg === selectedPloeg).startDatum;
+    const ploegObj = startDatums.find(obj => obj.ploeg === selectedPloeg);
+    if (!ploegObj) return;
+    const startDate = ploegObj.startDatum;
     const totalCells = 42;
     const firstDay = new Date(year, month, 1).getDay();
     const firstDayMondayBased = (firstDay + 6) % 7; // Pas aan voor maandag als startdag
@@ -54,9 +56,9 @@ export function generateMonthCalendar(selectedPloeg, year, month) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
 
-    const weekObj = shiftPatroon.find(week => week.ploeg === selectedPloeg);
-    if (!weekObj) return;
-    const startDate = weekObj.startDatum;
+    const ploegObj = startDatums.find(obj => obj.ploeg === selectedPloeg);
+    if (!ploegObj) return;
+    const startDate = ploegObj.startDatum;
     const shiftPattern = getArrayValues(shiftPatroon);
     // Eerste dag van de maand en aantal dagen in de maand
     const firstDay = new Date(year, month, 1).getDay();

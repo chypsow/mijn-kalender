@@ -1,24 +1,28 @@
 import { DOM, defaultSettings, ploegenGegevens, updateCalendar } from "./main.js";
-import { toggleModal, saveToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage } from "./functies.js";
+import { toggleModal, saveToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, getArrayValues } from "./functies.js";
 import { buildTeamDropdown, maakPloegenLegende, tabBlad } from "./componentenMaken.js";
 import { generateTeamCalendar } from "./teamKalender.js";
 
 // default settings
 const ploegSchema = [
-    {ploeg:1, schema:['N', 'N', 'N', 'x', 'x', 'V', 'V12'], startDatum:"2010-02-01"},
-    {ploeg:2, schema:['L', 'L', 'x', 'N', 'N', 'N', 'N12'], startDatum:"2010-01-18"},
-    {ploeg:3, schema:['x', 'x', 'L', 'L', 'L', 'L', 'x'], startDatum:"2010-01-25"},
-    {ploeg:4, schema:['V', 'V', 'V', 'V', 'V', 'x', 'x'], startDatum:"2010-01-04"},
-    {ploeg:5, schema:['D', 'D', 'D', 'D', 'D', 'x', 'x'], startDatum:"2010-01-11"}
+    {week:1, schema:['N', 'N', 'N', 'x', 'x', 'V', 'V12']},
+    {week:2, schema:['L', 'L', 'x', 'N', 'N', 'N', 'N12']},
+    {week:3, schema:['x', 'x', 'L', 'L', 'L', 'L', 'x']},
+    {week:4, schema:['V', 'V', 'V', 'V', 'V', 'x', 'x']},
+    {week:5, schema:['D', 'D', 'D', 'D', 'D', 'x', 'x']}
 ];
-
+const startDates = [
+    {ploeg:1, startDatum:"2010-02-01"},
+    {ploeg:2, startDatum:"2010-01-18"},
+    {ploeg:3, startDatum:"2010-01-25"},
+    {ploeg:4, startDatum:"2010-01-04"},
+    {ploeg:5, startDatum:"2010-01-11"}
+];
 export let shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || ploegSchema;
+export let startDatums = JSON.parse(localStorage.getItem("startDatums")) || startDates;
 
-export function makeModalInstellingen(shiftPatroon) {
+export function makeModalInstellingen(shiftPatroon, startDatums) {
     DOM.overlay.innerHTML = '';
-    //const aantalWeken = shiftPatroon.length;
-    //const container = document.createElement('div');
-    //container.classList.add('overlay-container');
     
     const topHeader = document.createElement('div');
     topHeader.classList.add('top-header');
@@ -60,32 +64,35 @@ export function makeModalInstellingen(shiftPatroon) {
     topHeader.appendChild(hr);
     DOM.overlay.appendChild(topHeader);
 
-    const btnContainer = document.createElement('div');
-    btnContainer.classList.add('knop-container');
-    const toevoegen = document.createElement('button');
-    toevoegen.setAttribute('id', 'add');
-    toevoegen.textContent = "Een ploeg toevoegen";
-    toevoegen.addEventListener('click', () => addOneWeek(shiftPatroon));
-    btnContainer.appendChild(toevoegen);
-    const verwijderen = document.createElement('button');
-    verwijderen.setAttribute('id', 'delete');
-    verwijderen.textContent = "Een ploeg verwijderen";
-    verwijderen.addEventListener('click', deleteOneWeek);
-    btnContainer.appendChild(verwijderen);
-    DOM.overlay.appendChild(btnContainer);
-    
     const shiftPatroonContainer = document.createElement('div');
     shiftPatroonContainer.classList.add('patroon-container');
+
+    const shiftenContainer = document.createElement('div');
+    shiftenContainer.classList.add('shiften-container');
+
+    const shiftBtnContainer = document.createElement('div');
+    shiftBtnContainer.classList.add('knop-container');
+    const shiftVerwijderen = document.createElement('button');
+    shiftVerwijderen.setAttribute('id', 'delete-shift');
+    shiftVerwijderen.innerHTML = `<i class="fa fa-minus"></i><span> shift</span>`;
+    shiftVerwijderen.addEventListener('click', deleteOneShift);
+    shiftBtnContainer.appendChild(shiftVerwijderen);
+    const shiftToevoegen = document.createElement('button');
+    shiftToevoegen.setAttribute('id', 'add-shift');
+    shiftToevoegen.innerHTML = `<i class="fa fa-plus"></i><span> shift</span>`;
+    shiftToevoegen.addEventListener('click', addOneShift);
+    shiftBtnContainer.appendChild(shiftToevoegen);
+    shiftenContainer.appendChild(shiftBtnContainer);
+
     const wekenContainer = document.createElement('div');
     wekenContainer.classList.add('weken-container');
-
     shiftPatroon.forEach((week, i) => {
         const weekContainer = document.createElement('div');
         weekContainer.classList.add('week-container');
         const shiftsLabel = document.createElement('label');
         shiftsLabel.classList.add('label-week');
         const span = document.createElement('span');
-        span.textContent = `Week ${i+1}: `;
+        span.textContent = `Week-${i+1}: `;
         shiftsLabel.appendChild(span);
         week.schema.forEach((shift, j) => {
             const input = document.createElement('input');
@@ -101,25 +108,44 @@ export function makeModalInstellingen(shiftPatroon) {
         weekContainer.appendChild(shiftsLabel);
         wekenContainer.appendChild(weekContainer);
     });
-    shiftPatroonContainer.appendChild(wekenContainer);
+    shiftenContainer.appendChild(wekenContainer);
+    shiftPatroonContainer.appendChild(shiftenContainer);
+
+    const ploegenContainer = document.createElement('div');
+    ploegenContainer.classList.add('ploegen-container');
+
+    const ploegBtnContainer = document.createElement('div');
+    ploegBtnContainer.classList.add('knop-container');
+    const ploegVerwijderen = document.createElement('button');
+    ploegVerwijderen.setAttribute('id', 'delete-ploeg');
+    ploegVerwijderen.innerHTML = `<i class="fa fa-minus"></i><span> ploeg</span>`;
+    ploegVerwijderen.addEventListener('click', deleteOneTeam);
+    ploegBtnContainer.appendChild(ploegVerwijderen);
+    const ploegToevoegen = document.createElement('button');
+    ploegToevoegen.setAttribute('id', 'add-ploeg');
+    ploegToevoegen.innerHTML = `<i class="fa fa-plus"></i><span> ploeg</span>`;
+    ploegToevoegen.addEventListener('click', addOneTeam);
+    ploegBtnContainer.appendChild(ploegToevoegen);
+    ploegenContainer.appendChild(ploegBtnContainer);
 
     const datumsContainer = document.createElement('div');
     datumsContainer.classList.add('datums-container');
-    shiftPatroon.forEach((week, i) => {
+    startDatums.forEach((ploeg, i) => {
         const dateLabel = document.createElement('label');
         dateLabel.classList.add('label-date');
         const span = document.createElement('span');
-        span.textContent = `Startdatum P${i+1}: `;
+        span.textContent = `Ploeg-${i+1} [startdatum]: `;
         dateLabel.appendChild(span);
         const input = document.createElement('input');
         input.type = 'date';
         input.id = `date${i+1}`;
         input.className = 'date-input';
-        input.value = week.startDatum || '';
+        input.value = ploeg.startDatum || '';
         dateLabel.appendChild(input);
         datumsContainer.appendChild(dateLabel);
     });
-    shiftPatroonContainer.appendChild(datumsContainer);
+    ploegenContainer.appendChild(datumsContainer);
+    shiftPatroonContainer.appendChild(ploegenContainer);
     DOM.overlay.appendChild(shiftPatroonContainer);
 
     const div = document.createElement('div');
@@ -135,7 +161,6 @@ export function makeModalInstellingen(shiftPatroon) {
     reset.addEventListener('click', resetDefaultSettings);
     div.appendChild(reset);
     DOM.overlay.appendChild(div);
-    //DOM.overlay.appendChild(container);
 
     const cBoxContainer = document.createElement('div');
     cBoxContainer.classList.add('checkbox-container');
@@ -148,57 +173,90 @@ export function makeModalInstellingen(shiftPatroon) {
 
     handleidingContainer.addEventListener('mouseover', () => {
         Array.from({length:3}).forEach( (_,i) => {
-            document.getElementById(`hl${i+1}`).textContent = wekenContainer.children.length;
+            document.getElementById(`hl${i+1}`).textContent = datumsContainer.children.length;
         });
     });
 };
 
-function addOneWeek(shiftPatroon) {
+function addOneShift() {
     const wekenContainer = document.querySelector('.weken-container');
-    const lengte = wekenContainer.children.length;
-    if(lengte === 7) return;
-    const weekContainer = document.createElement('div');
-    weekContainer.classList.add('week-container');
-    const shiftsLabel = document.createElement('label');
-    shiftsLabel.classList.add('label-week');
-    const span = document.createElement('span');
-    span.textContent = `Week ${lengte+1}: `;
-    shiftsLabel.appendChild(span);
-    Array.from({length : 7}).forEach( (_,i) => {
+    const aantalShiften = document.querySelectorAll('.shift-input').length;
+    const shiftPattern = getArrayValues(shiftPatroon);
+    //console.log(`alle shiften: ${aantalShiften}`);
+    
+    if(aantalShiften === 63) return;
+    if(aantalShiften % 7 === 0) {
+        const weekContainer = document.createElement('div');
+        weekContainer.classList.add('week-container');
+        const shiftsLabel = document.createElement('label');
+        shiftsLabel.classList.add('label-week');
+        const span = document.createElement('span');
+        const rowIndex = Math.ceil((aantalShiften+1)/7);
+        span.textContent = `Week-${rowIndex}: `;
+        shiftsLabel.appendChild(span);
         const input = document.createElement('input');
         input.type = 'text';
-        input.id = `day-${lengte+1}${i+1}`;
+        input.id = `day-${rowIndex}${(aantalShiften+1)%7}`;
         input.className = 'shift-input';
-        input.value = shiftPatroon[lengte] ? shiftPatroon[lengte].schema[i] : '';
+        input.value = shiftPattern[aantalShiften] ? shiftPattern[aantalShiften] : '';
         input.addEventListener('focus', function() {
             this.select();
         });
         shiftsLabel.appendChild(input);
-    });
-    weekContainer.appendChild(shiftsLabel);
-    wekenContainer.appendChild(weekContainer);
-
+        weekContainer.appendChild(shiftsLabel);
+        wekenContainer.appendChild(weekContainer);
+    } else {
+        const wekenContainer = document.querySelector('.weken-container');
+        const lastWeekContainer = wekenContainer.lastElementChild;
+        const lastLabelContainer = lastWeekContainer.lastElementChild;
+        const input = document.createElement('input');
+        const rowIndex = Math.ceil((aantalShiften+1)/7);
+        input.type = 'text';
+        input.id = `day-${rowIndex}${(aantalShiften+1)%7}`;
+        input.className = 'shift-input';
+        input.value = shiftPattern[aantalShiften] ? shiftPattern[aantalShiften] : '';
+        input.addEventListener('focus', function() {
+            this.select();
+        });
+        lastLabelContainer.appendChild(input);
+    }
+};
+function deleteOneShift() {
+    const wekenContainer = document.querySelector('.weken-container');
+    const aantalShiften = document.querySelectorAll('.shift-input').length;
+    //console.log(`alle shiften: ${aantalShiften}`);
+    
+    if(aantalShiften === 1) return;
+    if((aantalShiften - 1) % 7 === 0) {
+        wekenContainer.removeChild(wekenContainer.lastElementChild);
+    } else {
+        //console.log(`kolom index: ${(aantalShiften - 1) % 7}`);
+        const lastWeekContainer = wekenContainer.lastElementChild;
+        const lastLabelContainer = lastWeekContainer.lastElementChild;
+        lastLabelContainer.removeChild(lastLabelContainer.lastElementChild);
+    }
+};
+function addOneTeam() {
     const datumsContainer = document.querySelector('.datums-container');
+    const lengte = datumsContainer.children.length;
+    if(lengte === 9) return;
     const dateLabel = document.createElement('label');
     dateLabel.classList.add('label-date');
     const spanDate = document.createElement('span');
-    spanDate.textContent = `Startdatum P${lengte+1}: `;
+    spanDate.textContent = `Ploeg-${lengte+1} [startdatum]: `;
     dateLabel.appendChild(spanDate);
     const input = document.createElement('input');
     input.type = 'date';
     input.id = `date${lengte+1}`;
     input.className = 'date-input';
-    input.value = shiftPatroon[lengte] ? shiftPatroon[lengte].startDatum : '';
+    input.value = startDatums[lengte] ? startDatums[lengte].startDatum : '';
     dateLabel.appendChild(input);
     datumsContainer.appendChild(dateLabel);
 };
-
-function deleteOneWeek() {
-    const wekenContainer = document.querySelector('.weken-container');
+function deleteOneTeam() {
     const datumsContainer = document.querySelector('.datums-container');
-    const lengte = wekenContainer.children.length;
+    const lengte = datumsContainer.children.length;
     if (lengte > 1) {
-        wekenContainer.removeChild(wekenContainer.lastElementChild);
         datumsContainer.removeChild(datumsContainer.lastElementChild);
     }
 };
@@ -209,14 +267,17 @@ function resetDefaultSettings() {
     // If the user cancels, exit the function
     if (!userResponse) return;
     
-    gegevensOpslaan(ploegSchema, 5, false);
+    gegevensOpslaan(ploegSchema, startDates, false);
     toggleModal(false);
 };
 
-const gegevensOpslaan = (obj, aantalPloegen, bevestiging = true) => {
-    shiftPatroon = obj;
+const gegevensOpslaan = (shiftObj, dateObj, bevestiging = true) => {
+    shiftPatroon = shiftObj;
+    startDatums = dateObj;
     saveToLocalStorage('shiftPatroon', shiftPatroon);
+    saveToLocalStorage('startDatums', startDatums);
     
+    const aantalPloegen = startDatums.length;
     const aantalPloegenSelect = DOM.ploeg.options.length;
     if(aantalPloegenSelect > aantalPloegen) {
         Array.from({length:4}).forEach((_, i) => {
@@ -248,7 +309,7 @@ function updatePloegenLegende() {
     maakPloegenLegende();
 };
 
-function updatePloegDropdown(aantal, ploeg = 1) {
+function updatePloegDropdown(aantal, ploeg) {
     DOM.ploeg.innerHTML = '';
     buildTeamDropdown(aantal);
     if (DOM.ploeg.options[ploeg]) {
@@ -261,28 +322,31 @@ function updatePloegDropdown(aantal, ploeg = 1) {
 function ploegSysteemOpslaan() {
     let shiften = [];
     let datums = [];
-    const wekenContainer = document.querySelector('.weken-container');
-    const lengte = wekenContainer.children.length;
-    for(let i = 1; i <= lengte; i++) {
-        for(let j = 1; j <= 7; j++) {
-            const dayElement = document.getElementById(`day-${i}${j}`);
-            if (dayElement.value === '') {
-                shiften.push('x');
-            } else {
-                shiften.push(dayElement.value === 'x' ? dayElement.value.toLowerCase() : dayElement.value.toUpperCase());
-            }
-        }
-        const datum = document.getElementById(`date${i}`).value;
-        datums.push(datum);
+    
+    const dateElts = document.querySelectorAll('.date-input');
+    const dateEltIsValid = Array.from(dateElts).every(date => date.value !== '');
+    if(!dateEltIsValid) {
+        alert('Sommige datum-inputs zijn nog niet ingevuld !');
+        return;
     }
-
-    const isValid = checkIngevoerdeWaarden(shiften) && checkIngevoerdeDatums(datums);
-    if (isValid) {
-        const shiftObj = arraysOmzettenNaarObject(shiften, datums);
-        gegevensOpslaan(shiftObj, lengte);
+    const shiftElts = document.querySelectorAll('.shift-input');
+    shiftElts.forEach(shift => {
+        if(shift.value === '') {
+            shiften.push('x');
+        } else {
+            shiften.push(shift.value === 'x' ? shift.value.toLowerCase() : shift.value.toUpperCase());
+        }
+    });
+    dateElts.forEach(date => datums.push(date.value));
+    
+    const shiftIsValid = checkIngevoerdeWaarden(shiften);
+    if (shiftIsValid) {
+        const shiftObj = shiftenOmzettenNaarObject(shiften);
+        const dateObj = datumsOmzettenNaarObject(datums, 1, 'ploeg', 'startDatum');
+        gegevensOpslaan(shiftObj, dateObj);
         toggleModal(false);
     } else {
-        alert('Sommige velden zijn niet correct ingevuld !');
+        alert('Sommige shift-inputs waren niet correct ingevuld !');
     }
 };
 function checkIngevoerdeWaarden(cyclus) {
@@ -291,28 +355,15 @@ function checkIngevoerdeWaarden(cyclus) {
         return filteredData.some(item => item.symbool === cyc);
     });
 };
-function checkIngevoerdeDatums(datums) {
-    return Object.values(datums).every(val => val !== '');
+function shiftenOmzettenNaarObject(arr) {
+    return Array.from({ length: Math.ceil(arr.length / 7) }, (_, i) => ({
+        week: i + 1,
+        schema: arr.slice(i * 7, i * 7 + 7)
+    }));
 };
-/*function arraysOmzettenNaarObeject(arr1, arr2) {
-    let obj = [];
-    const shiftArrays = [];
-    for (let i = 0; i < arr1.length; i += 7) {
-        shiftArrays.push(arr1.slice(i, i + 7));
-    }
-    shiftArrays.forEach((serie, i) => {
-        obj.push({
-            ploeg: i + 1,
-            schema: serie,
-            startDatum: arr2[i]
-        });
-    });
-    return obj;
-};*/
-function arraysOmzettenNaarObject(arr1, arr2) {
-    return Array.from({ length: Math.ceil(arr1.length / 7) }, (_, i) => ({           // or {length : arr2.length}
+function datumsOmzettenNaarObject(arr) {
+    return Array.from({ length: arr.length}, (_,i) => ({
         ploeg: i + 1,
-        schema: arr1.slice(i * 7, i * 7 + 7),
-        startDatum: arr2[i]
+        startDatum: arr[i]
     }));
 };
