@@ -30,7 +30,7 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     heading.classList.add('heading-modal');
     heading.textContent = 'Ploegschema aanpassen:';
     topHeader.appendChild(heading);
-    const handleidingContainer = document.createElement('div');
+    /*const handleidingContainer = document.createElement('div');
     handleidingContainer.classList.add('handleiding-container');
     const icoon = document.createElement('i');
     icoon.classList.add('fa');
@@ -48,17 +48,16 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
         </li>
         <li><h4>Startdatum:</h4>
             Welke ploeg in welke week actief is, wordt bepaald door de gekozen startdatum.
-            Bijvoorbeeld: als we 1 februari 2010 als startdatum P1 (P1=ploeg 1) kiezen,
-            begint P1 op die datum met het ploegschema (week1, week2 ...). Als we 7 dagen eerder 
-            (interval moet een veelvoud van 7 dagen zijn) als startdatum P2 kiezen, begint Ploeg 2 op 25 januari 2010 met het 
-            ploegschema (week1, week2 ...) en zo voort.
+            Bijvoorbeeld: als we 1 februari 2010 als ploeg-1 startdatum kiezen,
+            begint Ploeg-1 op die datum met het ploegschema (week-1, week-2 ...). Als we ploeg-2 startdatum ingeven met een verschil
+            van 7 dagen, begint Ploeg-2 7 dagen eerder met het ploegschema (week1, week2 ...) en zo voort.
             <br><br><span style="color:rgb(172, 186, 189); font-weight:bold;">Opmerking:</span> In ons geval zijn de startdatums 
             zo gekozen dat het ploegschema overeenkomt met de werkelijkheid.
         </li>
     </ul>
     `;
     handleidingContainer.appendChild(handleidingMsg);
-    topHeader.appendChild(handleidingContainer);
+    topHeader.appendChild(handleidingContainer);*/
     const hr = document.createElement('hr');
     hr.classList.add('line');
     topHeader.appendChild(hr);
@@ -171,56 +170,52 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     cBoxContainer.innerHTML = html;
     DOM.overlay.appendChild(cBoxContainer);
 
-    handleidingContainer.addEventListener('mouseover', () => {
+    /*handleidingContainer.addEventListener('mouseover', () => {
         Array.from({length:3}).forEach( (_,i) => {
             document.getElementById(`hl${i+1}`).textContent = datumsContainer.children.length;
         });
-    });
+    });*/
 };
 
 function addOneShift() {
     const wekenContainer = document.querySelector('.weken-container');
-    const aantalShiften = document.querySelectorAll('.shift-input').length;
+    const shiftInputs = document.querySelectorAll('.shift-input');
+    const aantalShiften = shiftInputs.length;
     const shiftPattern = getArrayValues(shiftPatroon);
-    //console.log(`alle shiften: ${aantalShiften}`);
-    
-    if(aantalShiften === 63) return;
-    if(aantalShiften % 7 === 0) {
+
+    if (aantalShiften >= 49) return; // Max 7 weken * 7 dagen
+
+    const isNewWeek = aantalShiften % 7 === 0;
+    const weekIndex = Math.floor(aantalShiften / 7) + 1;
+    const dayIndex = (aantalShiften % 7) + 1;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = `day-${weekIndex}${dayIndex}`;
+    input.className = 'shift-input';
+    input.value = shiftPattern[aantalShiften] || '';
+    input.addEventListener('focus', function () {
+        this.select();
+    });
+
+    if (isNewWeek) {
         const weekContainer = document.createElement('div');
         weekContainer.classList.add('week-container');
         const shiftsLabel = document.createElement('label');
         shiftsLabel.classList.add('label-week');
         const span = document.createElement('span');
-        const rowIndex = Math.ceil((aantalShiften+1)/7);
-        span.textContent = `Week-${rowIndex}: `;
+        span.textContent = `Week-${weekIndex}: `;
         shiftsLabel.appendChild(span);
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.id = `day-${rowIndex}${(aantalShiften+1)%7}`;
-        input.className = 'shift-input';
-        input.value = shiftPattern[aantalShiften] ? shiftPattern[aantalShiften] : '';
-        input.addEventListener('focus', function() {
-            this.select();
-        });
         shiftsLabel.appendChild(input);
         weekContainer.appendChild(shiftsLabel);
         wekenContainer.appendChild(weekContainer);
     } else {
-        const wekenContainer = document.querySelector('.weken-container');
         const lastWeekContainer = wekenContainer.lastElementChild;
-        const lastLabelContainer = lastWeekContainer.lastElementChild;
-        const input = document.createElement('input');
-        const rowIndex = Math.ceil((aantalShiften+1)/7);
-        input.type = 'text';
-        input.id = `day-${rowIndex}${(aantalShiften+1)%7}`;
-        input.className = 'shift-input';
-        input.value = shiftPattern[aantalShiften] ? shiftPattern[aantalShiften] : '';
-        input.addEventListener('focus', function() {
-            this.select();
-        });
+        const lastLabelContainer = lastWeekContainer.querySelector('.label-week');
         lastLabelContainer.appendChild(input);
     }
 };
+
 function deleteOneShift() {
     const wekenContainer = document.querySelector('.weken-container');
     const aantalShiften = document.querySelectorAll('.shift-input').length;
@@ -239,7 +234,7 @@ function deleteOneShift() {
 function addOneTeam() {
     const datumsContainer = document.querySelector('.datums-container');
     const lengte = datumsContainer.children.length;
-    if(lengte === 9) return;
+    if(lengte === 7) return;
     const dateLabel = document.createElement('label');
     dateLabel.classList.add('label-date');
     const spanDate = document.createElement('span');
@@ -284,13 +279,13 @@ const gegevensOpslaan = (shiftObj, dateObj, bevestiging = true) => {
             const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
             if(instellingen.selectedPloeg > aantalPloegen) updateLocalStorage('standaardInstellingen', defaultSettings, i, {ploeg:1});
         });
-        updatePloegDropdown(aantalPloegen, instellingen.selectedPloeg);
+        buildTeamDropdown(aantalPloegen, instellingen.selectedPloeg);
     } else if (aantalPloegenSelect < aantalPloegen) {
         const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
-        updatePloegDropdown(aantalPloegen, selectedPloeg);
+        buildTeamDropdown(aantalPloegen, selectedPloeg);
     }
     if(tabBlad === 1 || tabBlad === 2) {
-        updatePloegenLegende();
+        maakPloegenLegende();
     } else if (tabBlad === 3) {
         const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
         const month = instellingen.currentMonth;
@@ -304,31 +299,18 @@ const gegevensOpslaan = (shiftObj, dateObj, bevestiging = true) => {
     if(bevestiging) alert("Wijzigingen succesvol opgeslagen!");
 };
 
-function updatePloegenLegende() {
-    DOM.topSectie3.innerHTML = '';
-    maakPloegenLegende();
-};
-
-function updatePloegDropdown(aantal, ploeg) {
-    DOM.ploeg.innerHTML = '';
-    buildTeamDropdown(aantal);
-    if (DOM.ploeg.options[ploeg]) {
-        DOM.ploeg.selectedIndex = ploeg-1;
-    } else {
-        DOM.ploeg.selectedIndex = 0;
-    }
-};
-
 function ploegSysteemOpslaan() {
     let shiften = [];
     let datums = [];
     
     const dateElts = document.querySelectorAll('.date-input');
-    const dateEltIsValid = Array.from(dateElts).every(date => date.value !== '');
-    if(!dateEltIsValid) {
-        alert('Sommige datum-inputs zijn nog niet ingevuld !');
+    const dateIsValid = Array.from(dateElts).every(date => date.value !== '');
+    if(!dateIsValid) {
+        alert('Sommige startdatums waren niet ingevuld !');
         return;
     }
+    dateElts.forEach(date => datums.push(date.value));
+
     const shiftElts = document.querySelectorAll('.shift-input');
     shiftElts.forEach(shift => {
         if(shift.value === '') {
@@ -337,12 +319,10 @@ function ploegSysteemOpslaan() {
             shiften.push(shift.value === 'x' ? shift.value.toLowerCase() : shift.value.toUpperCase());
         }
     });
-    dateElts.forEach(date => datums.push(date.value));
-    
     const shiftIsValid = checkIngevoerdeWaarden(shiften);
     if (shiftIsValid) {
         const shiftObj = shiftenOmzettenNaarObject(shiften);
-        const dateObj = datumsOmzettenNaarObject(datums, 1, 'ploeg', 'startDatum');
+        const dateObj = datumsOmzettenNaarObject(datums);
         gegevensOpslaan(shiftObj, dateObj);
         toggleModal(false);
     } else {

@@ -29,15 +29,22 @@ export function buildSideBar() {
     });
 };
 
-export function buildTeamDropdown(numberOfTeams) {
-    Array.from({ length: numberOfTeams }).forEach((_, i) => {
+export function buildTeamDropdown(numberOfTeams, selectedTeam = 1) {
+    DOM.ploeg.innerHTML = '';
+    if (numberOfTeams <= 1) {
+        DOM.ploeg.style.display = 'none';
+        return;
+    }
+    DOM.ploeg.style.display = '';
+
+    for (let i = 1; i <= numberOfTeams; i++) {
         const option = document.createElement('option');
-        option.value = i + 1;
-        option.textContent = `Ploeg ${i + 1}`;
-        option.style.color = 'black';
+        option.value = i;
+        option.textContent = `Ploeg ${i}`;
         DOM.ploeg.appendChild(option);
-    }); 
-};
+    }
+    DOM.ploeg.selectedIndex = Math.max(0, selectedTeam - 1);
+}
 
 export function buildButtons() {
     const knoppen = [
@@ -203,16 +210,12 @@ export function maakVerlofContainer() {
     btnContainer.appendChild(restoreAll);
 
     DOM.middenSectie2.appendChild(btnContainer);
-    //DOM.middenSectie2.appendChild(verlofContainer);
 };
 
 export function maakVerlofLegende() {
-    //const legende = document.createElement('div');
-    //legende.classList.add('verlofLegende-container');
-    //legende.classList.add('hidden-on-small');
-
     const verlofBeschrijving = {'BV': 'Betaald verlof', 'CS':'Compensatieshift', 'ADV':'Arbeidsduurvermindering',
         'BF':'Betaalde feestdag', 'AV':'Ancieniteitsverlof','HP':'Recup-herplanning', 'Z':'Ziek', 'OPL':'Opleiding/herplanning'};
+
     Object.entries(verlofBeschrijving).forEach(([kort, lang]) => {
     const legendeItem = document.createElement('div');
     legendeItem.classList.add('verlofLegende-item');
@@ -230,16 +233,14 @@ export function maakVerlofLegende() {
     DOM.topSectie3.appendChild(legendeItem);
     });
     DOM.topSectie3.classList.add('verlofLegende-container');
-    //DOM.topSectie3.classList.add('hidden-on-small');
 };
 
 export function maakPloegenLegende() {
+    DOM.topSectie3.innerHTML = '';
+    DOM.topSectie3.classList.remove('ploegenLegende-container');
     const setShiften = new Set(getArrayValues(shiftPatroon));
     const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool)).reverse();
-    if(mijnData.length < 2) {
-        DOM.topSectie3.classList.add('ploegenLegende-container');
-        return;
-    }
+    if(mijnData.length < 2) return;
     mijnData.forEach(shift => {
     const legendeItem = document.createElement('div');
     legendeItem.classList.add('ploegenLegende-item');
@@ -253,7 +254,6 @@ export function maakPloegenLegende() {
     DOM.topSectie3.appendChild(legendeItem);
     });
     DOM.topSectie3.classList.add('ploegenLegende-container');
-    //DOM.topSectie3.classList.add('hidden-on-small');
 };
 
 export function maakDropdowns() {

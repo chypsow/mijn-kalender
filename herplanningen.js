@@ -11,9 +11,9 @@ export function handleBlur(e) {
     if (isNaN(aantal) || aantal < 0) {
         const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
         const currentYear =  instellingen.currentYear;
-        const beginrechtArray = JSON.parse(localStorage.getItem('beginrechtVerlof'));
-        const index = beginrechtArray.findIndex(item => item.year === currentYear);
-        e.target.value = beginrechtArray[index][verlof];
+        const beginrechtObj = JSON.parse(localStorage.getItem('beginrechtVerlof'));
+        //const index = beginrechtArray.findIndex(item => item.year === currentYear);
+        e.target.value = beginrechtObj[currentYear][verlof];
         return;
     }
     behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal);
@@ -29,19 +29,16 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     const totaal2 = document.getElementById('totaalSaldo');
     const mySaldoElt = document.getElementById(`saldo-${verlof}`);
     const saldoOud = parseInt(mySaldoElt.textContent.trim());
-    
-    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
-    beginrechtVerlof[verlof] = aantal;
-    const beginrechtArray = JSON.parse(localStorage.getItem('beginrechtVerlof'));
-    const index = beginrechtArray.findIndex(item => item.year === currentYear);
+
     const update = {};
     update[verlof] = aantal;
-    updateLocalStorage('beginrechtVerlof', null, index, update);
-
+    updateLocalStorage('beginrechtVerlof', null, currentYear, update);
+    
     const saldoNieuw = berekenSaldo(currentYear, selectedPloeg, verlof);
     mySaldoElt.textContent = saldoNieuw;
     if(verlof === "Z") return;
     // Update de totale beginrechten en saldo
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
     delete beginrechtVerlof.Z; // Verwijder Z uit beginrechtVerlof, want die wordt apart behandeld
     totaal1.textContent = ` ${calculateTotals(beginrechtVerlof)}`;
     totaal2.textContent = ` ${parseInt(totaal2.textContent.trim()) - saldoOud + saldoNieuw}`;

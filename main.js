@@ -4,8 +4,8 @@ import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalen
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
 import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, getBeginRechtFromLocalStorage, updateLocalStorage } from './functies.js';
 import { tabBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
-import { dataVerlofdagen, dataBeginRecht, shiftData, dateData } from "./config.js";
-import { shiftPatroon, startDatums } from './makeModalSettings.js';
+import { shiftData, dateData, dataVerlofdagen, dataBeginRecht} from "./config.js"
+import { startDatums } from './makeModalSettings.js';
 
 export const ploegenGegevens = [
     {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
@@ -33,13 +33,13 @@ export const defaultSettings = () => {
 };
   
 export const opgenomenVerlofPerPloeg = {
-    verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || [],
-    verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || [],
-    verlofdagenPloeg3: JSON.parse(localStorage.getItem('verlofdagenPloeg3')) || [],
-    verlofdagenPloeg4: JSON.parse(localStorage.getItem('verlofdagenPloeg4')) || [],
-    verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || [],
-    verlofdagenPloeg6: JSON.parse(localStorage.getItem('verlofdagenPloeg6')) || [],
-    verlofdagenPloeg7: JSON.parse(localStorage.getItem('verlofdagenPloeg7')) || []
+    verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || {},
+    verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || {},
+    verlofdagenPloeg3: JSON.parse(localStorage.getItem('verlofdagenPloeg3')) || {},
+    verlofdagenPloeg4: JSON.parse(localStorage.getItem('verlofdagenPloeg4')) || {},
+    verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || {},
+    verlofdagenPloeg6: JSON.parse(localStorage.getItem('verlofdagenPloeg6')) || {},
+    verlofdagenPloeg7: JSON.parse(localStorage.getItem('verlofdagenPloeg7')) || {}
 };
 export const localStoragePloegen = {
     1: 'verlofdagenPloeg1',
@@ -80,16 +80,16 @@ export const DOM = {
     sluiten: document.getElementById('sluiten')
 };
 
-export const berekenSaldo = (currentYear,ploeg, key = null) => {
+export const berekenSaldo = (currentYear, ploeg, key = null) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const vacations = opgenomenVerlofPerPloeg[ploegKey];
+    const vacationsCurrentYear = opgenomenVerlofPerPloeg[ploegKey][currentYear];
     //const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
     const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
-    const vacationsCurrentYear = vacations.filter(obj => {
+    /*const vacationsCurrentYear = vacations.filter(obj => {
         const year = parseInt(obj.datum.split('/')[2]);
         return year === currentYear;
-    });
-    if (vacationsCurrentYear.length === 0) {
+    });*/
+    if (!vacationsCurrentYear) {
         return key ? beginrechtVerlof[key] : beginrechtVerlof;
     }
     const calculateSaldo = (verlofKey) => {
@@ -434,6 +434,35 @@ document.addEventListener("click", (event) => {
     }
 });
 
+//local storage aanpassen volgens het bestand config.js
+document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.altKey) {
+        let cond1 = false, cond2 = false, cond3 = false;
+        let message = "";
+        //const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
+
+        if (event.key === "1") {
+            cond1 = true;
+            message = `Alleen verlofdagen van ploeg 1 worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
+        } else if (event.key === "2") {
+            cond2 = true;
+            message = `Alleen beginrecht verlof wordt aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
+        } else if (event.key === "3") {
+            cond3 = true;
+            message = "Alleen shiftPatroon en datums worden aangepast volgens configCommon.js. Weet je zeker dat je dit wilt doen?";
+        } else if (event.key === "0") {
+            cond1 = cond2 = cond3 = true;
+            message = `Alle instellingen worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
+        } else {
+            return;
+        }
+
+        event.preventDefault();
+        const userResponse = confirm(message);
+        if (!userResponse) return;
+        localStorageAanpassenVolgensConfigJS(cond1, cond2, cond3);
+    }
+});
 function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 = true) {
     if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
     if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
@@ -448,49 +477,6 @@ function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 
     }
     location.reload(true); // of location.href = location.href;
 };
-//local storage aanpassen volgens het bestand config.js
-document.addEventListener('keydown', (event) => {
-    if (event.ctrlKey && event.altKey) {
-        let cond1 = false, cond2 = false, cond3 = false;
-        let message = "";
-
-        if (event.key === "1") {
-            cond1 = true;
-            message = "Alleen verlofdagen van ploeg 1 worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
-        } else if (event.key === "2") {
-            cond2 = true;
-            message = "Alleen beginrecht verlof wordt aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
-        } else if (event.key === "3") {
-            cond3 = true;
-            message = "Alleen shiftPatroon en datums worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
-        } else if (event.key === "0") {
-            cond1 = cond2 = cond3 = true;
-            message = "Alle instellingen worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?";
-        } else {
-            return;
-        }
-
-        event.preventDefault();
-        const userResponse = confirm(message);
-        if (!userResponse) return;
-        localStorageAanpassenVolgensConfigJS(cond1, cond2, cond3);
-    }
-});
-
-//window.addEventListener('resize', adjustLayout);
-//window.addEventListener('load', adjustLayout);
-document.getElementById('bars').addEventListener('click', () => {
-    const isClosed = document.querySelector('.side-bar').classList.contains('close');
-    if (isClosed) {
-        document.querySelector('.side-bar').classList.remove('close');
-        //document.getElementById('chevron').classList.remove('fa-chevron-right');
-        //document.getElementById('chevron').classList.add('fa-chevron-left');
-    } else {
-        document.querySelector('.side-bar').classList.add('close');
-        //document.getElementById('chevron').classList.remove('fa-chevron-left');
-        //document.getElementById('chevron').classList.add('fa-chevron-right');
-    }
-});
 
 document.addEventListener('DOMContentLoaded', () => {
     savePloegenToLocalStorage();

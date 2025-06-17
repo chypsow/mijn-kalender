@@ -5,70 +5,61 @@ import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { makeModalRapport } from "./makeModalRapport.js";
 
-export function updateLocalStorage(settings, defaultSet = null, index, updates = {}) {
-    const instellingen = JSON.parse(localStorage.getItem(settings)) || defaultSet();
+export function updateLocalStorage(obj, defaultSet = null, index, updates = {}) {
+    const getObject = JSON.parse(localStorage.getItem(obj)) || defaultSet();
     Object.entries(updates).forEach(([key, value]) => {
-        instellingen[index][key] = value;
+        getObject[index][key] = value;
     });
-    saveToLocalStorage(settings, instellingen);
+    saveToLocalStorage(obj, getObject);
 };
 
 export function getSettingsFromLocalStorage(blad, setting) {
     let instellingen;
     try {
         instellingen = JSON.parse(localStorage.getItem('standaardInstellingen'));
-        if (!Array.isArray(instellingen)) {
-            instellingen = setting();
-            saveToLocalStorage('standaardInstellingen', instellingen);
-        }
-    } catch (error) {
-        console.error("Failed to parse local storage settings:", error);
+        if (!Array.isArray(instellingen)) throw new Error();
+    } catch {
         instellingen = setting();
         saveToLocalStorage('standaardInstellingen', instellingen);
     }
 
-    let instelling = instellingen.find(item => item.pagina === blad);
+    const instelling = instellingen.find(item => item.pagina === blad);
     if (!instelling) {
         console.warn("No matching instellingen found for tabBlad:", blad);
         return null;
     }
     return {
-        selectedPloeg: instelling.ploeg ? instelling.ploeg : 1,
+        selectedPloeg: instelling.ploeg ?? 1,
         currentYear: instelling.jaar,
-        currentMonth: instelling.maand ? instelling.maand : 0
+        currentMonth: instelling.maand ?? 0
     };
-};
+}
 
 export function getBeginRechtFromLocalStorage(jaar) {
-    let beginrechten;
+    const defaultValues = { BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0, Z: 0 };
+    let beginrechten = {};
+
     try {
-        beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof'));
-        if (!Array.isArray(beginrechten)) {
-            beginrechten = [];
-        }
-    } catch (error) {
-        console.error("Failed to parse localStorage settings:", error);
-        beginrechten = [];
+        beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof')) || {};
+    } catch {
+        // If parsing fails, start with empty object
+        beginrechten = {};
     }
 
-    let beginrecht = beginrechten.find(item => item.year === jaar);
+    if (typeof beginrechten !== 'object' || beginrechten === null) {
+        beginrechten = {};
+    }
 
-    if (!beginrecht) {
-        beginrecht = { year: jaar, BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0, Z: 0 };
-        beginrechten.push(beginrecht);
+    if (!beginrechten[jaar]) {
+        beginrechten[jaar] = { ...defaultValues };
         saveToLocalStorage('beginrechtVerlof', beginrechten);
     }
 
-    return {
-        BV: beginrecht.BV,
-        CS: beginrecht.CS,
-        ADV: beginrecht.ADV,
-        BF: beginrecht.BF,
-        AV: beginrecht.AV,
-        HP: beginrecht.HP,
-        Z: beginrecht.Z
-    };
-};
+    // Ensure all keys exist (in case of partial data)
+    const beginrecht = { ...defaultValues, ...beginrechten[jaar] };
+
+    return beginrecht;
+}
 
 /*export function calculateTotals(obj) {
     return Object.values(obj).reduce((acc, x) => acc + x);
@@ -96,23 +87,30 @@ export function saveToLocalStorage(key, value) {
 
 export function verwijderVerlofDatum(ploeg, date) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const array = opgenomenVerlofPerPloeg[ploegKey];
+    const ploegObj = opgenomenVerlofPerPloeg[ploegKey];
+    const yearKey = date.split('/')[2];
+    const array = ploegObj[yearKey];
     const filteredArray = array.filter(obj => !(obj.datum === date));
-    opgenomenVerlofPerPloeg[ploegKey] = filteredArray;
-    saveToLocalStorage(localStoragePloegen[ploeg], filteredArray);
+    ploegObj[yearKey] = filteredArray;
+    saveToLocalStorage(localStoragePloegen[ploeg], ploegObj);
 };
 
-export function voegVerlofDatumToe(ploeg, datum, soort) {
+export function voegVerlofDatumToe(ploeg, date, soort) {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const array = opgenomenVerlofPerPloeg[ploegKey];
-    const index = array.findIndex(obj => obj.datum === datum);
+    const ploegObj = opgenomenVerlofPerPloeg[ploegKey];
+    const yearKey = date.split('/')[2];
+    const array = ploegObj[yearKey];
+    if(!array) {
+        ploegObj[yearKey] = [];
+        return voegVerlofDatumToe(ploeg, date, soort); // Probeer opnieuw met de nieuwe array
+    }
+    const index = array.findIndex(obj => obj.datum === date);
     if (index === -1) {
-        array.push({ datum, soort });
+        array.push({ datum:date, soort });
     } else if (array[index].soort !== soort) {
         array[index].soort = soort;
     }
-    saveToLocalStorage(localStoragePloegen[ploeg], array);
-
+    saveToLocalStorage(localStoragePloegen[ploeg], ploegObj);
 };
 
 export function modalAfdrukken() {

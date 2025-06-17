@@ -138,7 +138,8 @@ function shiftenInvullen(elt, startDate, date, holidays, ploeg, shiftPattern) {
   const isHoliday = holidays.includes(myDate);
   const isReedsOpgenomen = () => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const array = opgenomenVerlofPerPloeg[ploegKey];
+    const currentYear = myDate.split('/')[2];
+    const array = opgenomenVerlofPerPloeg[ploegKey][currentYear] || [];
     return array.some(obj => obj.datum === myDate);
   };
 
@@ -157,7 +158,7 @@ function shiftenInvullen(elt, startDate, date, holidays, ploeg, shiftPattern) {
         return; // Geen verdere acties nodig
     }*/
     setShiftProperties(elt, `${shift}- fd`, myDate, shift === 'x' ? true : false);
-    voegVerlofdagToeVolgensLocalStorage(ploeg, elt, isHoliday);
+    voegVerlofdagToeVolgensLocalStorage(ploeg, myDate, elt, isHoliday);
     return;
   }
 
@@ -169,7 +170,7 @@ function shiftenInvullen(elt, startDate, date, holidays, ploeg, shiftPattern) {
     setShiftProperties(elt, shift, myDate, false);
   }
   
-  voegVerlofdagToeVolgensLocalStorage(ploeg, elt, isHoliday);
+  voegVerlofdagToeVolgensLocalStorage(ploeg, myDate, elt, isHoliday);
 };
 
 // Hulpfunctie om eigenschappen van een element in te stellen
@@ -180,11 +181,15 @@ function setShiftProperties(elt, shift, date, isHome) {
   elt.dataset.datum = date;
 };
 
-function voegVerlofdagToeVolgensLocalStorage(ploeg, cell, isHoliday) {
+function voegVerlofdagToeVolgensLocalStorage(ploeg, date, cell, isHoliday) {
+  //const dateStr = typeof date === "string" ? date : date.toLocaleDateString("nl-BE");
+  const currentYear = date.split('/')[2];
+  //console.log(`year: ${currentYear}, ploeg: ${ploeg}, date: ${date}`);
   const vrijeDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
   const herplanningen = ['N12','N','V12','V','L','D','x', 'R', 'OPL']
   const ploegKey = `verlofdagenPloeg${ploeg}`;
-  opgenomenVerlofPerPloeg[ploegKey].forEach(obj => { 
+  const verlofArray = opgenomenVerlofPerPloeg[ploegKey][currentYear] || [];
+  verlofArray.forEach(obj => { 
     if(obj.datum === cell.dataset.datum) {
       cell.textContent = isHoliday ? `${obj.soort}- fd` : obj.soort;
       const txt = cell.textContent;
@@ -194,6 +199,5 @@ function voegVerlofdagToeVolgensLocalStorage(ploeg, cell, isHoliday) {
         cell.classList.remove('x');
       }
     }
-    
   });
 };
