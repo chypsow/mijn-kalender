@@ -113,6 +113,7 @@ export function generateCalendar() {
         const currentMonth = settings.currentMonth;
         const currentYear = settings.currentYear;
         
+        emptyMiddenSecties();
         DOM.ploeg.value = selectedPloeg;
         if(tabBlad === 0 || tabBlad === 1) calendarGenerators[tabBlad](selectedPloeg, currentYear);
         if(tabBlad === 2) calendarGenerators[tabBlad](selectedPloeg, currentYear, currentMonth);
@@ -126,7 +127,7 @@ export function generateCalendar() {
 };
 const calendarGenerators = {
     0: (team, year) => {
-        emptyMiddenSecties();
+        //emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakVerlofContainer();
         maakVerlofLegende();
@@ -137,7 +138,7 @@ const calendarGenerators = {
         generateYearCalendarTable(team, year);
     },
     1: (team, year) => {
-        emptyMiddenSecties();
+        //emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
@@ -147,7 +148,7 @@ const calendarGenerators = {
         generateYearCalendar(team, year);
     },
     2: (team, year, month) => {
-        emptyMiddenSecties();
+        //emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
@@ -157,7 +158,7 @@ const calendarGenerators = {
         generateMonthCalendar(team, year, month);
     },
     3: (year, month) => {
-        emptyMiddenSecties();
+        //emptyMiddenSecties();
         DOM.ploeg.hidden = true;
         maakPloegenLegende();
         DOM.topSectie3.className = 'verborgen-sectie';
@@ -175,10 +176,10 @@ function emptyMiddenSecties() {
     DOM.topSectie3.className = '';
     DOM.topSectie3.classList.add('hidden-on-too-small');
     DOM.titel.textContent = '';
-    //DOM.container.className = '';
     DOM.calendar.className = '';
-    //DOM.ploeg.hidden = true;
+    document.querySelector('.check-div')?.remove();
 };
+
 function refreshCalendar() {
     // Reset de animatie door de klasse te verwijderen en opnieuw toe te voegen
     DOM.calendar.classList.remove("fade-animation");

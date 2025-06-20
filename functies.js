@@ -126,13 +126,13 @@ export function modalAfdrukken() {
     }, 1000); // wacht even tot printdialoog klaar is
 };
 
-export function toggleModal(show, positie = '150px', backgroundColor = 'rgb(226, 226, 226)') {
-    if (!show)  {
+export function toggleModal(show, positie = '150px', backgroundColor = '#d1d1d1') {
+    if (!show) {
         DOM.modalOverlay.classList.remove('open');
         setTimeout(() => {
             DOM.modalOverlay.style.display = 'none';
-            if (backgroundColor !== null && DOM.modal) {
-                DOM.modal.style.backgroundColor = ''; // Reset modal background to default
+            if (backgroundColor !== null) {
+                DOM.overlay.style.backgroundColor = ''; // Reset modal background to default
             }
         }, 300);
     } else {
@@ -140,8 +140,8 @@ export function toggleModal(show, positie = '150px', backgroundColor = 'rgb(226,
         setTimeout(() => {
             DOM.modalOverlay.classList.add('open');
         }, 10);
-        if (backgroundColor !== null && DOM.modal) {
-            DOM.modal.style.backgroundColor = backgroundColor; // Set modal background color
+        if (backgroundColor !== null) {
+            DOM.overlay.style.backgroundColor = backgroundColor; // Set modal background color
         }
     }
     if (DOM.modal) {

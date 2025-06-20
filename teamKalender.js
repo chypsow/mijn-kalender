@@ -9,6 +9,7 @@ export function updateTeamCalendar(year, month) {
     const shiftPattern = getArrayValues(shiftPatroon);
     const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
     const teamElementen = document.querySelectorAll('#calendar .team-row');
+    const checkRow = document.querySelector('#calendar .check-row');
     const legeCellen = new Set();
     teamElementen.forEach((team, index) => {
         const dayElementen = team.querySelectorAll('.table-cell');
@@ -42,16 +43,21 @@ export function updateTeamCalendar(year, month) {
     });
     for (let i = 31; i >= 28; i--) {
         const headerCell = teamElementen[0].children[i];
+        const checkCell = checkRow.children[i];
         if (legeCellen.has(parseInt(headerCell.textContent), 10)) {
             headerCell.classList.add('emptyDay');
+            checkCell.classList.add('emptyDay');
+            //checkCell.classList.remove('check-cell');
         } else {
             headerCell.classList.remove('emptyDay');
+            checkCell.classList.remove('emptyDay');
+            //checkCell.classList.add('check-cell');
         }
     }
 };
 
 export function generateTeamCalendar(year, month) {
-    calendar.innerHTML = '';
+    DOM.calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const shiftPattern = getArrayValues(shiftPatroon);
@@ -62,7 +68,7 @@ export function generateTeamCalendar(year, month) {
 
     const emptyHeaderCell = document.createElement("div");
     emptyHeaderCell.classList.add("team-header-cell");
-    headerRow.appendChild(emptyHeaderCell); // Lege cel voor de maandnamen
+    headerRow.appendChild(emptyHeaderCell); // Lege cel voor de ploeg namen
 
     for (let day = 1; day <= 31; day++) {
         const dayHeaderCell = document.createElement("div");
@@ -70,7 +76,7 @@ export function generateTeamCalendar(year, month) {
         dayHeaderCell.textContent = day;
         headerRow.appendChild(dayHeaderCell);
     }
-    calendar.appendChild(headerRow);
+    DOM.calendar.appendChild(headerRow);
     // Genereer rijen voor elke ploeg
     const legeCellen = new Set();
     const aantalPloegen = startDatums.length;
@@ -115,14 +121,52 @@ export function generateTeamCalendar(year, month) {
             }
             teamRow.appendChild(dayCell);
         }
-        calendar.appendChild(teamRow);
+        DOM.calendar.appendChild(teamRow);
     }
 
-    // Markeer lege dagen in de header
+    const checkRow = document.createElement("div");
+    checkRow.classList.add("check-row", "hide-check-row");
+    const teamCell = document.createElement("div");
+    teamCell.classList.add("table-cell", "title-cell-check");
+    teamCell.textContent = `Check`;
+    checkRow.appendChild(teamCell);
+    for (let day = 1; day <= 31; day++) {
+            const dayCell = document.createElement("div");
+            dayCell.classList.add("table-cell", "check-cell");
+            checkRow.appendChild(dayCell);
+    }
+    DOM.calendar.appendChild(checkRow);
+
+    // Markeer lege dagen in de header en check rij
     for (let i = 31; i >= 28; i--) {
         const headerCell = headerRow.children[i];
+        const checkCell = checkRow.children[i];
         if (legeCellen.has(parseInt(headerCell.textContent, 10))) {
             headerCell.classList.add('emptyDay');
+            checkCell.classList.add('emptyDay');
         }
     }
+
+    if(!document.querySelector('.check-div')) {
+        createCheckDiv();
+    }
+};
+export function createCheckDiv() {
+    // Controleer of de check-div al bestaat
+    if (document.querySelector('.check-div')) return;
+    const checkDiv = document.createElement("div");
+    checkDiv.classList.add("check-div");
+    /*const emptyCell = document.createElement("div");
+    emptyCell.classList.add("empty-cell");*/
+    checkDiv.innerHTML = `
+        <label class="checkbox-label"><input type="checkbox" class="checkbox-input">Nagaan of op elke dag alle 3 ploegen N, L en V aanwezig zijn.</label>
+    `;
+    //emptyRow.appendChild(emptyCell);
+    const container = document.querySelector('.hoofd-container');
+    container.insertBefore(checkDiv, DOM.calendar);
+    /*if (DOM.modalOverlay && DOM.modalOverlay.parentNode === document.body) {
+        document.body.insertBefore(checkDiv, DOM.modalOverlay);
+    } else {
+        document.body.appendChild(checkDiv);
+    }*/
 };

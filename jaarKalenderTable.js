@@ -53,7 +53,7 @@ export function updateYearCalendarTable(selectedPloeg, year) {
 };
 
 export function generateYearCalendarTable(selectedPloeg, year) {
-  calendar.innerHTML = "";
+  DOM.calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
   const shiftPattern = getArrayValues(shiftPatroon);
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
@@ -73,7 +73,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
     dayHeaderCell.textContent = day;
     headerRow.appendChild(dayHeaderCell);
   }
-  calendar.appendChild(headerRow);
+  DOM.calendar.appendChild(headerRow);
   
   const ploegObj = startDatums.find(obj => obj.ploeg === selectedPloeg);
   if (!ploegObj) return;
@@ -109,7 +109,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
       }
       monthRow.appendChild(dayCell);
     }
-    calendar.appendChild(monthRow);
+    DOM.calendar.appendChild(monthRow);
   }
 
   const geselecteerd = JSON.parse(sessionStorage.getItem('selectedCells') || 'null');

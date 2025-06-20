@@ -52,7 +52,7 @@ export function updateMonthCalendar(selectedPloeg, year, month) {
 };
 
 export function generateMonthCalendar(selectedPloeg, year, month) {
-    calendar.innerHTML = '';
+    DOM.calendar.innerHTML = '';
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
 
@@ -71,7 +71,7 @@ export function generateMonthCalendar(selectedPloeg, year, month) {
         const header = document.createElement('div');
         header.classList.add('header');
         header.textContent = day;
-        calendar.appendChild(header);
+        DOM.calendar.appendChild(header);
     });
     
     // Lege vakjes vóór de eerste dag van de maand
@@ -79,7 +79,7 @@ export function generateMonthCalendar(selectedPloeg, year, month) {
         const emptyCell = document.createElement('div');
         emptyCell.textContent = 0;
         emptyCell.classList.add("emptyCellGroot");
-        calendar.appendChild(emptyCell);
+        DOM.calendar.appendChild(emptyCell);
     }
 
     // Dagen van de maand
@@ -99,7 +99,7 @@ export function generateMonthCalendar(selectedPloeg, year, month) {
             cell.classList.add(shiftClass); // Voeg de juiste kleur toe
             if(vandaag.toLocaleDateString("nl-BE") === currentDate.toLocaleDateString("nl-BE")) cell.classList.add("vandaag");
         }
-        calendar.appendChild(cell);
+        DOM.calendar.appendChild(cell);
     }
 
     //Lege cellen om het grid compleet te maken
@@ -109,7 +109,7 @@ export function generateMonthCalendar(selectedPloeg, year, month) {
         const emptyCell = document.createElement('div');
         emptyCell.textContent = 0;
         emptyCell.classList.add("emptyCellGroot");
-        calendar.appendChild(emptyCell);
+        DOM.calendar.appendChild(emptyCell);
     }
 
     // Toon de maand en het jaar

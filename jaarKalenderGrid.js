@@ -54,7 +54,7 @@ export function updateYearCalendarGrid(selectedPloeg, year) {
 };
 
 export function generateYearCalendar(selectedPloeg, year) {
-  calendar.innerHTML = "";
+  DOM.calendar.innerHTML = "";
   DOM.monthYear.textContent = year;
   
   const ploegObj = startDatums.find(obj => obj.ploeg === selectedPloeg);
@@ -128,6 +128,6 @@ export function generateYearCalendar(selectedPloeg, year) {
     }
 
     monthContainer.appendChild(calendarGrid);
-    calendar.appendChild(monthContainer);
+    DOM.calendar.appendChild(monthContainer);
   }
 };

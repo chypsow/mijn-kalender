@@ -362,3 +362,7 @@ section {
     background-color: #000000;
     z-index: 2;
 }*/
+.verborgen-sectie {
+    width: 15em;
+    visibility: hidden;
+}

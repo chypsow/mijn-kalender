@@ -117,7 +117,7 @@
     text-align: center;
     padding: 2px 0;
     color: rgb(255, 255, 255);
-    border: 1px solid rgba(128, 128, 128, 0.671);
+    border: 3px inset rgb(160, 160, 160);
 }
 
 .inputVak:focus,
@@ -125,7 +125,7 @@
     /*box-shadow: 0 0 15px rgba(238, 238, 238, 0.9);*/
     background-color: rgba(48, 48, 48, 0.452);
     color: #d6d6d6;
-    border: 1px solid rgb(255, 255, 255);
+    border: 3px solid rgb(255, 255, 255);
 }
 .inputVak::selection {
     background-color: rgba(82, 204, 204, 0.5);
@@ -147,7 +147,7 @@
     padding: 2px 0;
     background-color: transparent;
     text-align: center;
-    border: 1px dashed rgba(128, 128, 128, 0.671);
+    border: 3px inset rgba(128, 128, 128, 0.671);
     color: rgb(255, 255, 255);
 }
 .titel {
@@ -281,21 +281,16 @@
     background-color: #F4A54E;
 }
 .x {
-    background: #cacaca;
+    background: #cfcfcf;
     color: rgba(41, 41, 41, 0.63);
 }
 .OPL {
     background-color: #e9ca3f;
 }
-/*.R {
-    background-color: #a10b0b;
-    color: white;
-}*/
 .hp {
     background-color: #e9ca3f;
     color: rgb(0, 0, 0);
 }
-
 .highlight,
 .highlight:hover {
     outline-offset: -4px;
