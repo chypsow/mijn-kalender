@@ -54,6 +54,7 @@ export function updateTeamCalendar(year, month) {
             //checkCell.classList.add('check-cell');
         }
     }
+    checkAllTeamsPresent();
 };
 
 export function generateTeamCalendar(year, month) {
@@ -125,10 +126,11 @@ export function generateTeamCalendar(year, month) {
     }
 
     const checkRow = document.createElement("div");
-    checkRow.classList.add("check-row", "hide-check-row");
+    checkRow.classList.add("check-row");
     const teamCell = document.createElement("div");
     teamCell.classList.add("table-cell", "title-cell-check");
-    teamCell.textContent = `Check`;
+    teamCell.innerHTML = `<i class="fa fa-info-circle"></i>`;
+    teamCell.title = "Nagaan of op elke dag alle 3 ploegen N, L en V aanwezig zijn";
     checkRow.appendChild(teamCell);
     for (let day = 1; day <= 31; day++) {
             const dayCell = document.createElement("div");
@@ -146,27 +148,89 @@ export function generateTeamCalendar(year, month) {
             checkCell.classList.add('emptyDay');
         }
     }
+    checkAllTeamsPresent();
 
-    if(!document.querySelector('.check-div')) {
+    /*if(!document.querySelector('.check-div')) {
         createCheckDiv();
-    }
+    }*/
 };
+
+function checkAllTeamsPresent() {
+    const teamElementen = document.querySelectorAll('#calendar .team-row');
+    const checkRow = document.querySelector('#calendar .check-row');
+    //const checkCellen = checkRow.querySelectorAll('.check-cell');
+    let columnContainer = [];
+    teamElementen.forEach(team => {
+        const dayElementen = team.querySelectorAll('.table-cell');
+        dayElementen.forEach((day, i) => {
+            if (i > 0 && !day.classList.contains('emptyDay')) {
+                const shift = day.textContent.trim();
+                if (!columnContainer[i-1]) {
+                    columnContainer[i-1] = { N: false, L: false, V: false, N12: false, V12: false };
+                }
+                if (shift.includes('N')) columnContainer[i-1].N = true;
+                if (shift.includes('L')) columnContainer[i-1].L = true;
+                if (shift.includes('V')) columnContainer[i-1].V = true;
+                if (shift.includes('N12')) columnContainer[i-1].N12 = true;
+                if (shift.includes('V12')) columnContainer[i-1].V12 = true;
+                /*if (shift.includes('N') && shift.includes('L') && shift.includes('V')) {
+                    checkCellen[i].classList.add('present');
+                } else {
+                    checkCellen[i].classList.remove('present');
+                }*/
+            }
+        });
+    });
+    //console.log(columnContainer);
+    const analyseResult = analyseercolumnen(columnContainer);
+    const checkCellen = checkRow.querySelectorAll('.check-cell');
+    checkCellen.forEach((cell, i) => {
+        cell.classList.remove('present', 'non-present');
+        if( cell.classList.contains('emptyDay') ) return; // Skip empty days
+        
+        if (analyseResult[i]) {
+            cell.classList.add('present');
+            //cell.classList.remove('non-present');
+        } else {
+            //cell.classList.remove('present');
+            cell.classList.add('non-present');
+        }
+    });
+};
+
+function analyseercolumnen(array) {
+    const result = [];
+    for (let i = 0; i < array.length; i++) {
+        //console.log(array.length);
+        //console.log(i);
+        if( array[i]['N'] && array[i]['L'] && array[i]['V'] || array[i]['N12'] && array[i]['V12']) {
+            result.push(true);
+        } else {
+            result.push(false);
+        }
+    }
+    return result;
+}
+
+
 export function createCheckDiv() {
-    // Controleer of de check-div al bestaat
     if (document.querySelector('.check-div')) return;
     const checkDiv = document.createElement("div");
     checkDiv.classList.add("check-div");
-    /*const emptyCell = document.createElement("div");
-    emptyCell.classList.add("empty-cell");*/
     checkDiv.innerHTML = `
         <label class="checkbox-label"><input type="checkbox" class="checkbox-input">Nagaan of op elke dag alle 3 ploegen N, L en V aanwezig zijn.</label>
     `;
-    //emptyRow.appendChild(emptyCell);
     const container = document.querySelector('.hoofd-container');
     container.insertBefore(checkDiv, DOM.calendar);
-    /*if (DOM.modalOverlay && DOM.modalOverlay.parentNode === document.body) {
-        document.body.insertBefore(checkDiv, DOM.modalOverlay);
-    } else {
-        document.body.appendChild(checkDiv);
-    }*/
+    const checkbox = checkDiv.querySelector('.checkbox-input');
+    checkbox.addEventListener('change', () => {
+        const checkRow = document.querySelector('#calendar .check-row');
+        if (checkbox.checked) {
+            checkRow.classList.remove('hide-check-row');
+        } else {
+            checkRow.classList.add('hide-check-row');
+        }
+    });
+    //checkbox.checked = false; // Standaard niet aangevinkt
+    //checkDiv.style.display = 'block'; // Zorg ervoor dat de div zichtbaar is
 };
