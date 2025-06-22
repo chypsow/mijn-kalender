@@ -1,6 +1,7 @@
-import { DOM, ploegenGegevens } from "./main.js";
+import { DOM } from "./main.js";
 import { getDaysSinceStart, getNaamBijSymbool, getArrayValues } from "./functies.js";
 import { shiftPatroon, startDatums } from "./makeModalSettings.js";
+import { ploegenGegevens } from "./makeModalSettings.js";
 
 export function updateMonthCalendar(selectedPloeg, year, month) {
     const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(new Date(year, month));

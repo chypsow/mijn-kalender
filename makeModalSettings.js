@@ -1,9 +1,20 @@
-import { DOM, defaultSettings, ploegenGegevens, updateCalendar } from "./main.js";
+import { DOM, defaultSettings, updateCalendar } from "./main.js";
 import { toggleModal, saveToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, getArrayValues } from "./functies.js";
-import { buildTeamDropdown, maakPloegenLegende, tabBlad } from "./componentenMaken.js";
+import { buildTeamDropdown, maakPloegenLegende, activeBlad } from "./componentenMaken.js";
 import { generateTeamCalendar } from "./teamKalender.js";
 
 // default settings
+export const ploegenGegevens = [
+    {symbool:'x', naam:'thuis', kleur:'#cfcfcf', flex: false},
+    {symbool:'R', naam:'reserve', kleur:'#a10b0b', flex: false},
+    {symbool:'OPL', naam:'opleiding', kleur:'#e9ca3f', flex: false},
+    {symbool:'D', naam:'dag', kleur:'#949494', flex: true},
+    {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb', flex: true},
+    {symbool:'N', naam:'nacht', kleur:'#4a91e2', flex: true},
+    {symbool:'V12', naam:'vroege-12u', kleur:'#bb4b00', flex: true},
+    {symbool:'V', naam:'vroege', kleur:'#ff8331', flex: true},
+    {symbool:'L', naam:'late', kleur:'#4c9182', flex: true}
+];
 const ploegSchema = [
     {week:1, schema:['N', 'N', 'N', 'x', 'x', 'V', 'V12']},
     {week:2, schema:['L', 'L', 'x', 'N', 'N', 'N', 'N12']},
@@ -18,12 +29,15 @@ const startDates = [
     {ploeg:4, startDatum:"2010-01-04"},
     {ploeg:5, startDatum:"2010-01-11"}
 ];
+export let teamData = JSON.parse(localStorage.getItem("teamData")) || ploegenGegevens;
 export let shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || ploegSchema;
 export let startDatums = JSON.parse(localStorage.getItem("startDatums")) || startDates;
 
 export function makeModalInstellingen(shiftPatroon, startDatums) {
     DOM.overlay.innerHTML = '';
     
+    const overlayContainer = document.createElement('div');
+    overlayContainer.classList.add('overlay-container-partial');
     const topHeader = document.createElement('div');
     topHeader.classList.add('top-header');
     const heading = document.createElement('h2');
@@ -58,10 +72,7 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     `;
     handleidingContainer.appendChild(handleidingMsg);
     topHeader.appendChild(handleidingContainer);*/
-    const hr = document.createElement('hr');
-    hr.classList.add('line');
-    topHeader.appendChild(hr);
-    DOM.overlay.appendChild(topHeader);
+    overlayContainer.appendChild(topHeader);
 
     const shiftPatroonContainer = document.createElement('div');
     shiftPatroonContainer.classList.add('patroon-container');
@@ -72,14 +83,14 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     const shiftBtnContainer = document.createElement('div');
     shiftBtnContainer.classList.add('knop-container');
     const shiftVerwijderen = document.createElement('button');
-    shiftVerwijderen.setAttribute('id', 'delete-shift');
-    shiftVerwijderen.innerHTML = `<i class="fa fa-minus"></i><span> shift</span>`;
-    shiftVerwijderen.addEventListener('click', deleteOneShift);
+    shiftVerwijderen.setAttribute('id', 'delete-day');
+    shiftVerwijderen.innerHTML = `<i class="fa fa-minus"></i><span> dag</span>`;
+    shiftVerwijderen.addEventListener('click', deleteOneDay);
     shiftBtnContainer.appendChild(shiftVerwijderen);
     const shiftToevoegen = document.createElement('button');
-    shiftToevoegen.setAttribute('id', 'add-shift');
-    shiftToevoegen.innerHTML = `<i class="fa fa-plus"></i><span> shift</span>`;
-    shiftToevoegen.addEventListener('click', addOneShift);
+    shiftToevoegen.setAttribute('id', 'add-day');
+    shiftToevoegen.innerHTML = `<i class="fa fa-plus"></i><span> dag</span>`;
+    shiftToevoegen.addEventListener('click', addOneDay);
     shiftBtnContainer.appendChild(shiftToevoegen);
     shiftenContainer.appendChild(shiftBtnContainer);
 
@@ -93,12 +104,12 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
         const span = document.createElement('span');
         span.textContent = `Week-${i+1}: `;
         shiftsLabel.appendChild(span);
-        week.schema.forEach((shift, j) => {
+        week.schema.forEach((dag, j) => {
             const input = document.createElement('input');
             input.type = 'text';
             input.id = `day-${i+1}${j+1}`;
             input.className = 'shift-input';
-            input.value = shift || '';
+            input.value = dag || '';
             input.addEventListener('focus', function() {
                 this.select();
             });
@@ -145,7 +156,7 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     });
     ploegenContainer.appendChild(datumsContainer);
     shiftPatroonContainer.appendChild(ploegenContainer);
-    DOM.overlay.appendChild(shiftPatroonContainer);
+    overlayContainer.appendChild(shiftPatroonContainer);
 
     const div = document.createElement('div');
     div.classList.add('modal-button-container');
@@ -159,25 +170,265 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     reset.textContent = "Standaardinstellingen terugzetten";
     reset.addEventListener('click', resetDefaultSettings);
     div.appendChild(reset);
-    DOM.overlay.appendChild(div);
-
-    const cBoxContainer = document.createElement('div');
+    overlayContainer.appendChild(div);
+    DOM.overlay.appendChild(overlayContainer);
+    /*const cBoxContainer = document.createElement('div');
     cBoxContainer.classList.add('checkbox-container');
     let html = `
         <label><input type="checkbox" id="cbVerlofRustdag" checked>Enable verlof aanvraag tijdens een rustdag.</label>
         <label><input type="checkbox" id="cbAutoBF">Enable automatisch BF invullen op een D shift die op een feestdag valt.</label>
     `;
     cBoxContainer.innerHTML = html;
-    DOM.overlay.appendChild(cBoxContainer);
+    DOM.overlay.appendChild(cBoxContainer);*/
 
     /*handleidingContainer.addEventListener('mouseover', () => {
         Array.from({length:3}).forEach( (_,i) => {
             document.getElementById(`hl${i+1}`).textContent = datumsContainer.children.length;
         });
     });*/
+
+    if(activeBlad === 1 || activeBlad === 2) {
+        /*const hr = document.createElement('hr');
+        hr.classList.add('line');
+        DOM.overlay.appendChild(hr);*/
+        const overlayContainer = document.createElement('div');
+        overlayContainer.classList.add('overlay-container-partial');
+        const topHeader = document.createElement('div');
+        topHeader.classList.add('top-header');
+        const heading = document.createElement('h2');
+        heading.classList.add('heading-modal');
+        heading.textContent = 'Ploeggegevens aanpassen:';
+        topHeader.appendChild(heading);
+        overlayContainer.appendChild(topHeader);
+        const ploegDataContainer = document.createElement('div');
+        ploegDataContainer.classList.add('ploeg-data-container');
+        const ploegDataBtnContainer = document.createElement('div');
+        ploegDataBtnContainer.classList.add('knop-container2');
+        const ploegDataVerwijderen = document.createElement('button');
+        ploegDataVerwijderen.setAttribute('id', 'delete-ploeg-data');
+        ploegDataVerwijderen.innerHTML = `<i class="fa fa-minus"></i><span> symbool</span>`;
+        ploegDataVerwijderen.addEventListener('click', deleteOneSymbol);
+        ploegDataBtnContainer.appendChild(ploegDataVerwijderen);
+        const ploegDataToevoegen = document.createElement('button');
+        ploegDataToevoegen.setAttribute('id', 'add-ploeg-data');
+        ploegDataToevoegen.innerHTML = `<i class="fa fa-plus"></i><span> symbool</span>`;
+        ploegDataToevoegen.addEventListener('click', addOneSymbol);
+        ploegDataBtnContainer.appendChild(ploegDataToevoegen);
+        ploegDataContainer.appendChild(ploegDataBtnContainer);
+        // Create input fields for each team
+        const ploegDataElts = document.createElement('div');
+        ploegDataElts.classList.add('ploeg-data-elts');
+        teamData.forEach((team, i) => {
+            const ploegData = document.createElement('div');
+            ploegData.classList.add('ploeg-data');
+            const ploegDataLabel = document.createElement('label');
+            ploegDataLabel.classList.add('ploeg-data-label');
+            ploegDataLabel.textContent = `symbool: `;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `symbool-${i+1}`;
+            input.className = 'symbool-input';
+            input.value = team.symbool || '';
+            input.disabled = team.flex === false; // Disable input for non-flex teams
+            input.addEventListener('focus', function() {
+                this.select();
+            });
+            ploegDataLabel.appendChild(input);
+            ploegData.appendChild(ploegDataLabel);
+            
+            
+            const ploegNaamLabel = document.createElement('label');
+            ploegNaamLabel.classList.add('ploeg-data-label');
+            ploegNaamLabel.textContent = `naam: `;
+            const inputNaam = document.createElement('input');
+            inputNaam.type = 'text';
+            inputNaam.id = `naam-${i+1}`;
+            inputNaam.className = 'symbool-input';
+            inputNaam.value = team.naam || '';
+            inputNaam.disabled = team.flex === false; // Disable input for non-flex teams
+            inputNaam.addEventListener('focus', function() {
+                this.select();
+            });
+            ploegNaamLabel.appendChild(inputNaam);
+            ploegData.appendChild(ploegNaamLabel);
+            
+            const ploegKleurLabel = document.createElement('label');
+            ploegKleurLabel.classList.add('ploeg-data-label');
+            ploegKleurLabel.textContent = `kleur: `;
+            const inputKleur = document.createElement('input');
+            inputKleur.type = 'color';
+            inputKleur.id = `kleur-${i+1}`;
+            inputKleur.className = 'kleur-input';
+            inputKleur.value = team.kleur || '#000000';
+            inputKleur.disabled = team.flex === false; // Disable input for non-flex teams
+            inputKleur.addEventListener('focus', function() {
+                this.select();
+            });
+            ploegKleurLabel.appendChild(inputKleur);
+            ploegData.appendChild(ploegKleurLabel);
+            ploegDataElts.appendChild(ploegData);
+        });
+        ploegDataContainer.appendChild(ploegDataElts);
+        overlayContainer.appendChild(ploegDataContainer);
+
+
+        const div = document.createElement('div');
+        div.classList.add('modal-button-container');
+        const button = document.createElement('button');
+        button.id = "savePloegData";
+        button.textContent = "Opslaan";
+        button.addEventListener('click', savePloegData);
+        div.appendChild(button);
+        const reset = document.createElement('button');
+        reset.id = "resetPloegData";
+        reset.textContent = "Standaardinstellingen terugzetten";
+        reset.addEventListener('click', resetDefaultPloegData);
+        div.appendChild(reset);
+        overlayContainer.appendChild(div);
+        DOM.overlay.appendChild(overlayContainer);
+    }
 };
 
-function addOneShift() {
+function deleteOneSymbol() {
+    const ploegDataElts = document.querySelectorAll('.ploeg-data');
+    if (ploegDataElts.length <= 3) {
+        //alert('Er moet minstens 3 symbolen overblijven!');
+        return;
+    }
+    const lastPloegData = ploegDataElts[ploegDataElts.length - 1];
+    lastPloegData.parentNode.removeChild(lastPloegData);
+    // Update teamData array
+    /*teamData.pop();
+    saveToLocalStorage('teamData', teamData);
+    // Update dropdown and legend
+    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
+    const selectedPloeg = instellingen.selectedPloeg;
+    buildTeamDropdown(teamData.length, selectedPloeg);
+    if(activeBlad === 1 || activeBlad === 2) {
+        maakPloegenLegende();
+    } else if (activeBlad === 3) {
+        const month = instellingen.currentMonth;
+        const year = instellingen.currentYear;
+        generateTeamCalendar(year, month);
+    }
+    alert("Ploeggegevens succesvol verwijderd!");
+    toggleModal(false);*/
+};
+function addOneSymbol() {
+    const ploegDataElts = document.querySelectorAll('.ploeg-data');
+    if (ploegDataElts.length >= 20) {
+        alert('Maximaal 20 symbolen zijn toegestaan!');
+        return;
+    }
+    const ploegDataContainer = document.querySelector('.ploeg-data-elts');
+    const ploegData = document.createElement('div');
+    ploegData.classList.add('ploeg-data');
+    
+    const ploegDataLabel = document.createElement('label');
+    ploegDataLabel.classList.add('ploeg-data-label');
+    ploegDataLabel.textContent = `symbool: `;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = `symbool-${ploegDataElts.length + 1}`;
+    input.className = 'symbool-input';
+    input.value = '';
+    input.addEventListener('focus', function() {
+        this.select();
+    });
+    ploegDataLabel.appendChild(input);
+    ploegData.appendChild(ploegDataLabel);
+    
+    const ploegNaamLabel = document.createElement('label');
+    ploegNaamLabel.classList.add('ploeg-data-label');
+    ploegNaamLabel.textContent = `naam: `;
+    const inputNaam = document.createElement('input');
+    inputNaam.type = 'text';
+    inputNaam.id = `naam-${ploegDataElts.length + 1}`;
+    inputNaam.className = 'symbool-input';
+    inputNaam.value = '';
+    inputNaam.addEventListener('focus', function() {
+        this.select();
+    });
+    ploegNaamLabel.appendChild(inputNaam);
+    ploegData.appendChild(ploegNaamLabel);
+    
+    const ploegKleurLabel = document.createElement('label');
+    ploegKleurLabel.classList.add('ploeg-data-label');
+    ploegKleurLabel.textContent = `kleur: `;
+    const inputKleur = document.createElement('input');
+    inputKleur.type = 'color';
+    inputKleur.id = `kleur-${ploegDataElts.length + 1}`;
+    inputKleur.className = 'kleur-input';
+    inputKleur.value = '#000000';
+    inputKleur.addEventListener('focus', function() {
+        this.select();
+    });
+    ploegKleurLabel.appendChild(inputKleur);
+    
+    ploegData.appendChild(ploegKleurLabel);
+    
+    ploegDataContainer.appendChild(ploegData);
+    
+};
+
+function savePloegData() {
+    const ploegData = [];
+    const ploegDataElts = document.querySelectorAll('.ploeg-data');
+    ploegDataElts.forEach(ploeg => {
+        const symboolInput = ploeg.querySelector('.symbool-input');
+        const naamInput = ploeg.querySelector('.naam-input');
+        const kleurInput = ploeg.querySelector('.kleur-input');
+        const symbool = symboolInput.value.trim().toUpperCase();
+        const naam = naamInput.value.trim();
+        const kleur = kleurInput.value.trim();
+        if (symbool && naam && kleur) {
+            ploegData.push({ symbool, naam, kleur });
+        }
+    });
+    if (ploegData.length === 0) {
+        alert('Geen geldige ploeggegevens ingevoerd!');
+        return;
+    }
+    // Save to localStorage
+    teamData = ploegData;
+    saveToLocalStorage('teamData', teamData);
+    // Update dropdown and legend
+    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
+    const selectedPloeg = instellingen.selectedPloeg;
+    buildTeamDropdown(ploegData.length, selectedPloeg);
+    if(activeBlad === 1 || activeBlad === 2) {
+        maakPloegenLegende();
+    } else if (activeBlad === 3) {
+        const month = instellingen.currentMonth;
+        const year = instellingen.currentYear;
+        generateTeamCalendar(year, month);
+    }
+    alert("Ploeggegevens succesvol opgeslagen!");
+    toggleModal(false);
+};
+function resetDefaultPloegData() {
+    // Reset the ploegData to default values
+    const userResponse = confirm(`Weet je zeker dat je de standaard ploeggegevens wilt terugzetten? Dit kan niet ongedaan worden gemaakt!`);
+    // If the user cancels, exit the function
+    if (!userResponse) return;
+    teamData = JSON.parse(JSON.stringify(ploegenGegevens));
+    saveToLocalStorage('teamData', teamData);
+    // Update dropdown and legend
+    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
+    const selectedPloeg = instellingen.selectedPloeg;
+    buildTeamDropdown(teamData.length, selectedPloeg);
+    if(activeBlad === 1 || activeBlad === 2) {
+        maakPloegenLegende();
+    } else if (activeBlad === 3) {
+        const month = instellingen.currentMonth;
+        const year = instellingen.currentYear;
+        generateTeamCalendar(year, month);
+    }
+    alert("Ploeggegevens succesvol teruggezet naar standaardinstellingen!");
+    toggleModal(false);
+};
+
+function addOneDay() {
     const wekenContainer = document.querySelector('.weken-container');
     const shiftInputs = document.querySelectorAll('.shift-input');
     const aantalShiften = shiftInputs.length;
@@ -216,7 +467,7 @@ function addOneShift() {
     }
 };
 
-function deleteOneShift() {
+function deleteOneDay() {
     const wekenContainer = document.querySelector('.weken-container');
     const aantalShiften = document.querySelectorAll('.shift-input').length;
     //console.log(`alle shiften: ${aantalShiften}`);
@@ -281,13 +532,13 @@ const gegevensOpslaan = (shiftObj, dateObj, bevestiging = true) => {
         });
         buildTeamDropdown(aantalPloegen, instellingen.selectedPloeg);
     } else if (aantalPloegenSelect < aantalPloegen) {
-        const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+        const selectedPloeg = getSettingsFromLocalStorage(activeBlad, defaultSettings).selectedPloeg;
         buildTeamDropdown(aantalPloegen, selectedPloeg);
     }
-    if(tabBlad === 1 || tabBlad === 2) {
+    if(activeBlad === 1 || activeBlad === 2) {
         maakPloegenLegende();
-    } else if (tabBlad === 3) {
-        const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    } else if (activeBlad === 3) {
+        const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
         const month = instellingen.currentMonth;
         const year = instellingen.currentYear;
         generateTeamCalendar(year, month);

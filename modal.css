@@ -21,6 +21,7 @@
     position: fixed;
     left: 50%;
     min-width: 800px;
+    
     padding: 10px;
     color: rgba(0, 0, 0, 0.884);
     background-color: rgb(226, 226, 226);
@@ -29,6 +30,7 @@
     z-index: 4;
     transform: translateX(-50%) scale(0); /* Start klein, gecentreerd */
     animation: zoom 0.3s forwards; /* Gebruik forwards om animatie op het einde te bewaren */
+    /*overflow-y: auto;*/
 }
 @keyframes zoom {
     0% {
@@ -50,6 +52,12 @@
    /* margin-top: 20px;*/
     max-width: 120px;
 }
+.line {
+    width: 100%;
+    height: 1px;
+    background-color: #a0a0a0;
+    margin: 10px 0 10px 0;
+}
 .fa-close {
     cursor: pointer;
     position: absolute;
@@ -67,12 +75,36 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    max-height: 90vh;
     border-radius: 5px;
     padding: 20px;
     border: 1px solid rgb(151, 151, 151);
     /*background-color: #d1d1d1;*/
     box-shadow: inset 0 0 10px rgb(155, 155, 155);
+    overflow-y: auto; /* Voeg scroll toe als de inhoud te groot is */
 }
+.overlay-container-partial {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    background-color: #d1d1d1;
+    border-radius: 5px;
+    padding: 20px;
+    border: 1px solid rgb(151, 151, 151);
+    box-shadow: inset 0 0 10px rgb(155, 155, 155);
+}
+/*.overlay-container-part2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+    background-color: #d1d1d1;
+    border-radius: 5px;
+    padding: 20px;
+    border: 1px solid rgb(151, 151, 151);
+    box-shadow: inset 0 0 10px rgb(155, 155, 155);
+}*/
 .overlay-container button {
     /*font-size: 1em;*/
     background-color: #e9e9e9;
@@ -194,7 +226,8 @@
     gap: 40px;
     margin-bottom: 20px;
 }
-.knop-container button {
+.knop-container button,
+.knop-container2 button {
     background: rgb(218, 218, 218);
     color: #000000;
     /*width: 13em;*/
@@ -203,10 +236,18 @@
     white-space: nowrap;
     box-shadow: inset 0 0 10px rgb(155, 155, 155);
 }
-.knop-container button:hover {
+.knop-container button:hover,
+.knop-container2 button:hover {
     cursor: default;
     box-shadow: none;
     background: rgb(172, 186, 189);
+}
+.knop-container2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    /*margin-bottom: 20px;*/
 }
 .label-week,
 .label-date {
@@ -235,11 +276,9 @@
 }*/
 
 .shift-input:focus,
-.date-input:focus
- {
+.date-input:focus{
     box-shadow: 0 0 15px rgb(255, 255, 255);
     background-color: rgb(255, 255, 255);
-    
 }
 .date-input {
     height: 27px;
@@ -257,7 +296,44 @@ input[type=checkbox] {
     margin: 15px;
     scale: 1.5;
 }
-
+/*css voor ploegen modal*/
+.ploeg-data-container {
+    /*width: 100%;*/
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    border-radius: 5px;
+    padding: 20px;
+    border: 1px solid rgb(179, 179, 179); 
+}
+.ploeg-data {
+    display: flex;
+    flex-direction: row;
+    
+    justify-content: space-between; /* Verspreid de items over de volledige breedte */
+    gap: 20px;
+    /*padding: 8px 0;
+    border-bottom: 1px solid #afafaf;*/
+}
+.ploeg-data-container .symbool-input {
+    padding-inline: 5px;
+    width: 80px;
+    height: 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid rgb(151, 151, 151);
+}
+.ploeg-data-container .kleur-input {
+    width: 80px;
+    /*height: 20px;*/
+    border-radius: 5px;
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid rgb(151, 151, 151);
+}
 /*css voor feestdagen rapport*/
 .feestdagen {
     margin: 0;

@@ -3,21 +3,9 @@ import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
 import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, getBeginRechtFromLocalStorage, updateLocalStorage } from './functies.js';
-import { tabBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
+import { activeBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 import { shiftData, dateData, dataVerlofdagen, dataBeginRecht} from "./config.js"
 import { startDatums } from './makeModalSettings.js';
-
-export const ploegenGegevens = [
-    {symbool:'N12', naam:'nacht-12u', kleur:'#0158bb'},
-    {symbool:'N', naam:'nacht', kleur:'#4a91e2'},
-    {symbool:'V12', naam:'vroege-12u', kleur:'#bb4b00'},
-    {symbool:'V', naam:'vroege', kleur:'#ff8331d3'},
-    {symbool:'L', naam:'late', kleur:'#4c9182cb'},
-    {symbool:'D', naam:'dag', kleur:'#949494'},
-    {symbool:'x', naam:'thuis', kleur:'#cfcfcf'},
-    {symbool:'R', naam:'reserve', kleur:'#a10b0b'},
-    {symbool:'OPL', naam:'opleiding', kleur:'#e9ca3f'}
-];
 
 export const defaultSettings = () => {
     const date = new Date();
@@ -83,7 +71,7 @@ export const DOM = {
 export const berekenSaldo = (currentYear, ploeg, key = null) => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
     const vacationsCurrentYear = opgenomenVerlofPerPloeg[ploegKey][currentYear];
-    //const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
+    //const currentYear = getSettingsFromLocalStorage(activeBlad, defaultSettings).currentYear;
     const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
     /*const vacationsCurrentYear = vacations.filter(obj => {
         const year = parseInt(obj.datum.split('/')[2]);
@@ -107,21 +95,21 @@ export const berekenSaldo = (currentYear, ploeg, key = null) => {
 };
 
 export function generateCalendar() {
-    if (calendarGenerators[tabBlad]) {
-        const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    if (calendarGenerators[activeBlad]) {
+        const settings = getSettingsFromLocalStorage(activeBlad, defaultSettings);
         const selectedPloeg = settings.selectedPloeg;
         const currentMonth = settings.currentMonth;
         const currentYear = settings.currentYear;
         
         emptyMiddenSecties();
         DOM.ploeg.value = selectedPloeg;
-        if(tabBlad === 0 || tabBlad === 1) calendarGenerators[tabBlad](selectedPloeg, currentYear);
-        if(tabBlad === 2) calendarGenerators[tabBlad](selectedPloeg, currentYear, currentMonth);
-        if(tabBlad ===  3) calendarGenerators[tabBlad](currentYear, currentMonth);
+        if(activeBlad === 0 || activeBlad === 1) calendarGenerators[activeBlad](selectedPloeg, currentYear);
+        if(activeBlad === 2) calendarGenerators[activeBlad](selectedPloeg, currentYear, currentMonth);
+        if(activeBlad ===  3) calendarGenerators[activeBlad](currentYear, currentMonth);
         refreshCalendar();
         //adjustLayout();
     } else {
-        console.error(`Geen kalendergenerator gevonden voor blad: ${tabBlad}`);
+        console.error(`Geen kalendergenerator gevonden voor blad: ${activeBlad}`);
 
     }
 };
@@ -187,11 +175,11 @@ function refreshCalendar() {
     DOM.calendar.classList.add("fade-animation");
 };
 export const updateCalendar = () => {
-    const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const team = setting.selectedPloeg;
     const year = setting.currentYear;
     const month = setting.currentMonth;
-    switch (tabBlad) {
+    switch (activeBlad) {
         case 0:
             updateYearCalendarTable(team, year);
             break;
@@ -209,42 +197,42 @@ export const updateCalendar = () => {
 function triggerPrev() {
     let currentMonth = 0;
     let currentYear = 0;
-    const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const settings = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     if (settings) {
         currentMonth = settings.currentMonth;
         currentYear = settings.currentYear;
     }
-    if(tabBlad === 2 || tabBlad === 3) {
+    if(activeBlad === 2 || activeBlad === 3) {
         currentMonth = (currentMonth - 1 + 12) % 12;
         if (currentMonth === 11) currentYear -= 1;
     } else {
         currentYear -= 1;
     }
-    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {maand:currentMonth, jaar:currentYear});
+    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
     updateCalendar();
 };
 function triggerNext() {
     let currentMonth = 0;
     let currentYear = 0;
-    const settings = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const settings = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     if (settings) {
         currentMonth = settings.currentMonth;
         currentYear = settings.currentYear;
     }
-    if(tabBlad === 2 || tabBlad === 3) {
+    if(activeBlad === 2 || activeBlad === 3) {
         currentMonth = (currentMonth + 1) % 12;
         if (currentMonth === 0) currentYear += 1;
     } else {
         currentYear += 1;
     }
-    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {maand:currentMonth, jaar:currentYear});
+    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
     updateCalendar();
 };
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
 
 DOM.ploeg.addEventListener('change', (event) => {
     const selectedPloeg = Number(event.target.value); 
-    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {ploeg:selectedPloeg});
+    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {ploeg:selectedPloeg});
     updateCalendar();
 });
 
@@ -252,12 +240,12 @@ DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 DOM.monthSelect.addEventListener("change", (event) => {
     const currentMonth = parseInt(event.target.value, 10);
-    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {maand:currentMonth});
+    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {maand:currentMonth});
     updateCalendar();
 });
 DOM.yearSelect.addEventListener("change", (event) => {
     const currentYear = parseInt(event.target.value, 10);
-    updateLocalStorage('standaardInstellingen', defaultSettings, tabBlad, {jaar:currentYear});
+    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {jaar:currentYear});
     updateCalendar();
 });
 DOM.monthYear.addEventListener("click", () => {
@@ -268,7 +256,7 @@ DOM.monthYear.addEventListener("click", () => {
     DOM.selectOverlay.style.display = 'block';
     maakDropdowns();
     DOM.dropdowns.classList.toggle("visible");
-    if(tabBlad === 2 || tabBlad === 3) {
+    if(activeBlad === 2 || activeBlad === 3) {
         DOM.monthSelect.classList.toggle("visible");
     }
     DOM.yearSelect.classList.toggle('visible');
@@ -281,7 +269,7 @@ let lastSelectedCells = [];
 let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
 
 document.addEventListener("mousedown", (event) => {
-    if (tabBlad !== 0 || !event.target.classList.contains("cell")) return;
+    if (activeBlad !== 0 || !event.target.classList.contains("cell")) return;
     const datum = event.target.dataset.datum;
     if (!datum) return;
 
@@ -418,7 +406,7 @@ function clearAllHighlights() {
 
 function getCurrentTeam() {
     const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings();
-    return settings[tabBlad].ploeg;
+    return settings[activeBlad].ploeg;
 }
 
 document.addEventListener("click", (event) => {
@@ -440,7 +428,7 @@ document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.altKey) {
         let cond1 = false, cond2 = false, cond3 = false;
         let message = "";
-        //const currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear;
+        //const currentYear = getSettingsFromLocalStorage(activeBlad, defaultSettings).currentYear;
 
         if (event.key === "1") {
             cond1 = true;

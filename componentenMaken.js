@@ -1,9 +1,9 @@
-import { ploegenGegevens, DOM, generateCalendar, defaultSettings, berekenSaldo } from './main.js';
+import { DOM, generateCalendar, defaultSettings, berekenSaldo } from './main.js';
 import { calculateTotals, getArrayValues, getBeginRechtFromLocalStorage, getSettingsFromLocalStorage, handleClickBtn } from './functies.js';
 import { handleBlur, handelVerlofAanvraag, cancelAanvraag, cancelAlleAanvragen, handelHerplanning } from './herplanningen.js';
-import { shiftPatroon } from './makeModalSettings.js';
+import { shiftPatroon, ploegenGegevens } from './makeModalSettings.js';
 
-export let tabBlad = 0;
+export let activeBlad = localStorage.getItem('activeBlad') ? parseInt(localStorage.getItem('activeBlad')) : 0;
 
 export function buildSideBar() {
     const tabArray = ['Jaarkalender-Tabel', 'Jaarkalender-Raster', 'Maandkalender', 'TeamKalender'];
@@ -14,7 +14,7 @@ export function buildSideBar() {
         hyperlink.textContent = tab;
         hyperlink.setAttribute('role', 'tab'); // Add tab role
         hyperlink.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
-        if(index === 0) hyperlink.classList.add('active');
+        if(index === activeBlad) hyperlink.classList.add('active');
         hyperlink.addEventListener('click', () => {
             if (hyperlink.classList.contains("active")) return; // Prevent reloading the same tab
             const activeLink = DOM.topNav.querySelector('.active');
@@ -22,7 +22,8 @@ export function buildSideBar() {
             activeLink.setAttribute('aria-selected', 'false');
             hyperlink.classList.add("active");
             hyperlink.setAttribute('aria-selected', 'true');
-            tabBlad = index;
+            activeBlad = index;
+            localStorage.setItem('activeBlad', activeBlad);
             generateCalendar();
         });
         DOM.topNav.appendChild(hyperlink);
@@ -80,7 +81,7 @@ export function maakVerlofContainer() {
     legeCel1.classList.add('legeCel');
     container.appendChild(legeCel1);
 
-    const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const currentYear =  instellingen.currentYear;
     const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
     const aantalZ = beginrechtVerlof['Z'] || 0; // Default to 0 if 'Z' is not defined
@@ -239,7 +240,7 @@ export function maakPloegenLegende() {
     DOM.topSectie3.innerHTML = '';
     DOM.topSectie3.classList.remove('ploegenLegende-container');
     const setShiften = new Set(getArrayValues(shiftPatroon));
-    const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool)).reverse();
+    const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool));
     if(mijnData.length < 2) return;
     mijnData.forEach(shift => {
     const legendeItem = document.createElement('div');
@@ -257,8 +258,8 @@ export function maakPloegenLegende() {
 };
 
 export function maakDropdowns() {
-    let currentMonth = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentMonth;
-    let currentYear = getSettingsFromLocalStorage(tabBlad, defaultSettings).currentYear
+    let currentMonth = getSettingsFromLocalStorage(activeBlad, defaultSettings).currentMonth;
+    let currentYear = getSettingsFromLocalStorage(activeBlad, defaultSettings).currentYear
     const months = [
         "januari", "februari", "maart", "april", "mei", "juni",
         "juli", "augustus", "september", "oktober", "november", "december"

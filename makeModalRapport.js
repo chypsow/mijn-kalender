@@ -1,8 +1,8 @@
 import { DOM, getAllValidCells } from "./main.js";
 import { getSettingsFromLocalStorage, modalAfdrukken } from "./functies.js";
 
-export function makeModalRapport(tabBlad, defaultSettings) {
-    const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+export function makeModalRapport(activeBlad, defaultSettings) {
+    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const selectedPloeg = instellingen.selectedPloeg;
     const currentYear = instellingen.currentYear;
 

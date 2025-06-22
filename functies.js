@@ -1,6 +1,6 @@
-import { DOM, berekenSaldo, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, getAllValidCells, ploegenGegevens } from "./main.js";
-import { tabBlad } from "./componentenMaken.js";
-import { makeModalInstellingen, shiftPatroon, startDatums } from "./makeModalSettings.js";
+import { DOM, berekenSaldo, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, getAllValidCells } from "./main.js";
+import { activeBlad } from "./componentenMaken.js";
+import { makeModalInstellingen, shiftPatroon, startDatums, ploegenGegevens } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { makeModalRapport } from "./makeModalRapport.js";
@@ -25,7 +25,7 @@ export function getSettingsFromLocalStorage(blad, setting) {
 
     const instelling = instellingen.find(item => item.pagina === blad);
     if (!instelling) {
-        console.warn("No matching instellingen found for tabBlad:", blad);
+        console.warn("No matching instellingen found for activeBlad:", blad);
         return null;
     }
     return {
@@ -126,7 +126,7 @@ export function modalAfdrukken() {
     }, 1000); // wacht even tot printdialoog klaar is
 };
 
-export function toggleModal(show, positie = '150px', backgroundColor = '#d1d1d1') {
+export function toggleModal(show , positie = '50px', backgroundColor = '#d1d1d1') {
     if (!show) {
         DOM.modalOverlay.classList.remove('open');
         setTimeout(() => {
@@ -155,18 +155,18 @@ export function handleClickBtn(e) {
     switch(btn) {
         case 'instellingen':
             makeModalInstellingen(shiftPatroon, startDatums);
-            toggleModal(true);
+            toggleModal(true, '10px', '#d1d1d1');  // Zet de achtergrondkleur van de modal
             break;
         case 'feestdagen':
-            makeModalFeestdagen(tabBlad, defaultSettings);
+            makeModalFeestdagen(activeBlad, defaultSettings);
             toggleModal(true);
             break;
         case 'vakanties':
-            makeModalVakanties(tabBlad, defaultSettings);
+            makeModalVakanties(activeBlad, defaultSettings);
             toggleModal(true);
             break;
         case 'rapport':
-            makeModalRapport(tabBlad, defaultSettings);
+            makeModalRapport(activeBlad, defaultSettings);
             //console.log('Rapportknop is aangeklikt');
             toggleModal(true);
             break;
@@ -181,7 +181,7 @@ export function handleClickBtn(e) {
 };
 
 function afdrukVoorbereiding() {
-    const setting = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const selectedPloeg = setting.selectedPloeg;
     const year = setting.currentYear;
     const month = setting.currentMonth;
@@ -192,7 +192,7 @@ function afdrukVoorbereiding() {
     const setShiften = new Set(getArrayValues(shiftPatroon));
     const mijnData = ploegenGegevens.filter(item => setShiften.has(item.symbool));
     
-    if((tabBlad === 1 || tabBlad === 2) && mijnData.length > 1 ) {
+    if((activeBlad === 1 || activeBlad === 2) && mijnData.length > 1 ) {
         DOM.topSectie3.classList.remove('no-print');
     } else {
         DOM.topSectie3.classList.add('no-print');
@@ -204,17 +204,17 @@ function afdrukVoorbereiding() {
     jaar.textContent = `Jaar: ${year}`;
     lijst.appendChild(jaar);
     
-    if (tabBlad === 2 || tabBlad === 3) {
+    if (activeBlad === 2 || activeBlad === 3) {
         const maand = document.createElement('li');
         maand.textContent = `Maand: ${monthStr}`;
         lijst.appendChild(maand);
     }
-    if (tabBlad !== 3 && mijnData.length > 1 && shiftPatroon.length > 1) {
+    if (activeBlad !== 3 && mijnData.length > 1 && shiftPatroon.length > 1) {
         const ploeg = document.createElement('li');
         ploeg.textContent = `Ploeg ${selectedPloeg}`;
         lijst.appendChild(ploeg);
     }
-    if(tabBlad === 0) {
+    if(activeBlad === 0) {
         const today = getAllValidCells().find(cel => cel.classList.contains('today'));
         if(today) today.classList.remove('today');
     }

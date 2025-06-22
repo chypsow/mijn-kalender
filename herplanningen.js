@@ -1,15 +1,16 @@
-import { DOM, defaultSettings, ploegenGegevens, getAllValidCells, berekenSaldo } from "./main.js";
-import { tabBlad } from "./componentenMaken.js";
+import { DOM, defaultSettings, getAllValidCells, berekenSaldo } from "./main.js";
+import { activeBlad } from "./componentenMaken.js";
 import { 
     toggleModal, getSettingsFromLocalStorage, updateLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe, 
     beginSaldoEnRestSaldoInvullen, getBeginRechtFromLocalStorage, calculateTotals 
 } from "./functies.js";
+import { ploegenGegevens } from "./makeModalSettings.js";
 
 export function handleBlur(e) {
     const verlof = e.target.id;
     const aantal = parseInt(e.target.value);
     if (isNaN(aantal) || aantal < 0) {
-        const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+        const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
         const currentYear =  instellingen.currentYear;
         const beginrechtObj = JSON.parse(localStorage.getItem('beginrechtVerlof'));
         //const index = beginrechtArray.findIndex(item => item.year === currentYear);
@@ -21,7 +22,7 @@ export function handleBlur(e) {
 
 function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
     
-    const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const currentYear =  instellingen.currentYear;
     const selectedPloeg = instellingen.selectedPloeg;
     
@@ -95,7 +96,7 @@ function behandelenRechtEnSaldoVerlofdagenNaTerugstellen(verlof) {
 };
 
 export function handelHerplanning() {
-    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const selectedPloeg = getSettingsFromLocalStorage(activeBlad, defaultSettings).selectedPloeg;
     const selectedCells = JSON.parse(sessionStorage.getItem('selectedCells'));
     if (!Array.isArray(selectedCells) || selectedCells.length === 0 || selectedCells[0].team !== selectedPloeg) return;
     makeModalHerplanning(selectedCells, selectedPloeg);
@@ -155,7 +156,7 @@ function handelAanvraag(e, selectedCells, selectedPloeg) {
 };
 
 export function handelVerlofAanvraag(e) {
-    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const selectedPloeg = getSettingsFromLocalStorage(activeBlad, defaultSettings).selectedPloeg;
     const selectedCells = JSON.parse(sessionStorage.getItem('selectedCells'));
     if (!Array.isArray(selectedCells) || selectedCells.length === 0 || selectedCells[0].team !== selectedPloeg) return;
 
@@ -163,7 +164,7 @@ export function handelVerlofAanvraag(e) {
 };
 
 export function cancelAanvraag() {
-    const selectedPloeg = getSettingsFromLocalStorage(tabBlad, defaultSettings).selectedPloeg;
+    const selectedPloeg = getSettingsFromLocalStorage(activeBlad, defaultSettings).selectedPloeg;
     const selectedCells = JSON.parse(sessionStorage.getItem('selectedCells'));
     if (!selectedCells || selectedCells.length === 0 || selectedCells[0].team !== selectedPloeg) return;
 
@@ -195,7 +196,7 @@ export function cancelAanvraag() {
 };
 
 export function cancelAlleAanvragen() {
-    const instellingen = getSettingsFromLocalStorage(tabBlad, defaultSettings);
+    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const currentYear =  instellingen.currentYear;
     const selectedPloeg = instellingen.selectedPloeg;
     const vrijeDagen = ['BV','CS','ADV','BF','AV','HP','Z','hp'];
