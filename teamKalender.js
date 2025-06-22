@@ -139,7 +139,6 @@ export function generateTeamCalendar(year, month) {
     }
     DOM.calendar.appendChild(checkRow);
 
-    // Markeer lege dagen in de header en check rij
     for (let i = 31; i >= 28; i--) {
         const headerCell = headerRow.children[i];
         const checkCell = checkRow.children[i];
@@ -149,60 +148,46 @@ export function generateTeamCalendar(year, month) {
         }
     }
     checkAllTeamsPresent();
-
-    /*if(!document.querySelector('.check-div')) {
-        createCheckDiv();
-    }*/
 };
 
 function checkAllTeamsPresent() {
     const teamElementen = document.querySelectorAll('#calendar .team-row');
     const checkRow = document.querySelector('#calendar .check-row');
-    //const checkCellen = checkRow.querySelectorAll('.check-cell');
-    let columnContainer = [];
+    let kolommen = [];
     teamElementen.forEach(team => {
         const dayElementen = team.querySelectorAll('.table-cell');
         dayElementen.forEach((day, i) => {
             if (i > 0 && !day.classList.contains('emptyDay')) {
                 const shift = day.textContent.trim();
-                if (!columnContainer[i-1]) {
-                    columnContainer[i-1] = { N: false, L: false, V: false, N12: false, V12: false };
+                if (!kolommen[i-1]) {
+                    kolommen[i-1] = { N: false, L: false, V: false, N12: false, V12: false };
                 }
-                if (shift.includes('N')) columnContainer[i-1].N = true;
-                if (shift.includes('L')) columnContainer[i-1].L = true;
-                if (shift.includes('V')) columnContainer[i-1].V = true;
-                if (shift.includes('N12')) columnContainer[i-1].N12 = true;
-                if (shift.includes('V12')) columnContainer[i-1].V12 = true;
-                /*if (shift.includes('N') && shift.includes('L') && shift.includes('V')) {
-                    checkCellen[i].classList.add('present');
-                } else {
-                    checkCellen[i].classList.remove('present');
-                }*/
+                if (shift.includes('N')) kolommen[i-1].N = true;
+                if (shift.includes('L')) kolommen[i-1].L = true;
+                if (shift.includes('V')) kolommen[i-1].V = true;
+                if (shift.includes('N12')) kolommen[i-1].N12 = true;
+                if (shift.includes('V12')) kolommen[i-1].V12 = true;
             }
         });
     });
-    //console.log(columnContainer);
-    const analyseResult = analyseercolumnen(columnContainer);
+    
+    const analyseResult = analyseerKolommen(kolommen);
     const checkCellen = checkRow.querySelectorAll('.check-cell');
     checkCellen.forEach((cell, i) => {
         cell.classList.remove('present', 'non-present');
-        if( cell.classList.contains('emptyDay') ) return; // Skip empty days
+        if (cell.classList.contains('emptyDay')) return;
         
         if (analyseResult[i]) {
             cell.classList.add('present');
-            //cell.classList.remove('non-present');
         } else {
-            //cell.classList.remove('present');
             cell.classList.add('non-present');
         }
     });
 };
 
-function analyseercolumnen(array) {
+function analyseerKolommen(array) {
     const result = [];
     for (let i = 0; i < array.length; i++) {
-        //console.log(array.length);
-        //console.log(i);
         if( array[i]['N'] && array[i]['L'] && array[i]['V'] || array[i]['N12'] && array[i]['V12']) {
             result.push(true);
         } else {
@@ -210,27 +195,4 @@ function analyseercolumnen(array) {
         }
     }
     return result;
-}
-
-
-export function createCheckDiv() {
-    if (document.querySelector('.check-div')) return;
-    const checkDiv = document.createElement("div");
-    checkDiv.classList.add("check-div");
-    checkDiv.innerHTML = `
-        <label class="checkbox-label"><input type="checkbox" class="checkbox-input">Nagaan of op elke dag alle 3 ploegen N, L en V aanwezig zijn.</label>
-    `;
-    const container = document.querySelector('.hoofd-container');
-    container.insertBefore(checkDiv, DOM.calendar);
-    const checkbox = checkDiv.querySelector('.checkbox-input');
-    checkbox.addEventListener('change', () => {
-        const checkRow = document.querySelector('#calendar .check-row');
-        if (checkbox.checked) {
-            checkRow.classList.remove('hide-check-row');
-        } else {
-            checkRow.classList.add('hide-check-row');
-        }
-    });
-    //checkbox.checked = false; // Standaard niet aangevinkt
-    //checkDiv.style.display = 'block'; // Zorg ervoor dat de div zichtbaar is
 };
