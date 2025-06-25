@@ -2,50 +2,11 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, getSettingsFromLocalStorage, saveToLocalStorage, getBeginRechtFromLocalStorage, updateLocalStorage } from './functies.js';
+import { toggleModal, defaultSettings, getSettingsFromLocalStorage, saveToLocalStorage, updateLocalStorage } from './functies.js';
 import { activeBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
 import { shiftData, dateData, dataVerlofdagen, dataBeginRecht} from "./config.js"
 import { startDatums } from './makeModalSettings.js';
-
-export const defaultSettings = () => {
-    const date = new Date();
-    const currentMonth = date.getMonth();
-    const currentYear = date.getFullYear();
-
-    return [
-        {pagina: 0, ploeg: 1, jaar: currentYear},
-        {pagina: 1, ploeg: 1, jaar: currentYear},
-        {pagina: 2, ploeg: 1, jaar: currentYear, maand: currentMonth},
-        {pagina: 3, jaar: currentYear, maand: currentMonth}
-    ];
-};
   
-export const opgenomenVerlofPerPloeg = {
-    verlofdagenPloeg1: JSON.parse(localStorage.getItem('verlofdagenPloeg1')) || {},
-    verlofdagenPloeg2: JSON.parse(localStorage.getItem('verlofdagenPloeg2')) || {},
-    verlofdagenPloeg3: JSON.parse(localStorage.getItem('verlofdagenPloeg3')) || {},
-    verlofdagenPloeg4: JSON.parse(localStorage.getItem('verlofdagenPloeg4')) || {},
-    verlofdagenPloeg5: JSON.parse(localStorage.getItem('verlofdagenPloeg5')) || {},
-    verlofdagenPloeg6: JSON.parse(localStorage.getItem('verlofdagenPloeg6')) || {},
-    verlofdagenPloeg7: JSON.parse(localStorage.getItem('verlofdagenPloeg7')) || {}
-};
-export const localStoragePloegen = {
-    1: 'verlofdagenPloeg1',
-    2: 'verlofdagenPloeg2',
-    3: 'verlofdagenPloeg3',
-    4: 'verlofdagenPloeg4',
-    5: 'verlofdagenPloeg5',
-    6: 'verlofdagenPloeg6',
-    7: 'verlofdagenPloeg7'
-};
-
-function savePloegenToLocalStorage() {
-    Object.values(localStoragePloegen).forEach((ploeg, index) => {
-        const ploegKey = ploeg;
-        saveToLocalStorage(`verlofdagenPloeg${index+1}`, opgenomenVerlofPerPloeg[ploegKey]);
-    });
-};
-
 export const DOM = {
     monthYear: document.getElementById('month-year'),
     monthSelect: document.getElementById("month-select"),
@@ -68,40 +29,15 @@ export const DOM = {
     sluiten: document.getElementById('sluiten')
 };
 
-export const berekenSaldo = (currentYear, ploeg, key = null) => {
-    const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const vacationsCurrentYear = opgenomenVerlofPerPloeg[ploegKey][currentYear];
-    //const currentYear = getSettingsFromLocalStorage(activeBlad, defaultSettings).currentYear;
-    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
-    /*const vacationsCurrentYear = vacations.filter(obj => {
-        const year = parseInt(obj.datum.split('/')[2]);
-        return year === currentYear;
-    });*/
-    if (!vacationsCurrentYear) {
-        return key ? beginrechtVerlof[key] : beginrechtVerlof;
-    }
-    const calculateSaldo = (verlofKey) => {
-        const opgenomen = vacationsCurrentYear.filter(obj => obj.soort === verlofKey).length;
-        return beginrechtVerlof[verlofKey] - opgenomen;
-    };
-    if (key) {
-        return calculateSaldo(key);
-    }
-    const saldo = {};
-    Object.keys(beginrechtVerlof).forEach(verlofKey => {
-        saldo[verlofKey] = calculateSaldo(verlofKey);
-    });
-    return saldo;
-};
-
 export function generateCalendar() {
     if (calendarGenerators[activeBlad]) {
+        emptyContainers();
+
         const settings = getSettingsFromLocalStorage(activeBlad, defaultSettings);
         const selectedPloeg = settings.selectedPloeg;
         const currentMonth = settings.currentMonth;
         const currentYear = settings.currentYear;
         
-        emptyMiddenSecties();
         DOM.ploeg.value = selectedPloeg;
         if(activeBlad === 0 || activeBlad === 1) calendarGenerators[activeBlad](selectedPloeg, currentYear);
         if(activeBlad === 2) calendarGenerators[activeBlad](selectedPloeg, currentYear, currentMonth);
@@ -115,57 +51,48 @@ export function generateCalendar() {
 };
 const calendarGenerators = {
     0: (team, year) => {
-        //emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakVerlofContainer();
         maakVerlofLegende();
         document.getElementById('rapport').hidden = false;
         DOM.titel.textContent = 'Jaarkalender';
-        //DOM.container.className = 'year-container-table';
         DOM.calendar.className = 'year-calendar-table';
         generateYearCalendarTable(team, year);
     },
     1: (team, year) => {
-        //emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Jaarkalender';
-        //DOM.container.className = 'year-container-grid';
         DOM.calendar.className = 'year-calendar-grid';
         generateYearCalendar(team, year);
     },
     2: (team, year, month) => {
-        //emptyMiddenSecties();
         DOM.ploeg.hidden = false;
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Maandkalender';
-        //DOM.container.className = 'month-container';
         DOM.calendar.className = 'month-calendar';
         generateMonthCalendar(team, year, month);
     },
     3: (year, month) => {
-        //emptyMiddenSecties();
         DOM.ploeg.hidden = true;
         maakPloegenLegende();
         DOM.topSectie3.className = 'verborgen-sectie';
         document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Teamkalender';
-        //DOM.container.className = 'team-container';
         DOM.calendar.className = 'team-calendar-table';
         generateTeamCalendar(year, month);
     }
 };
 
-function emptyMiddenSecties() {
+function emptyContainers() {
     DOM.middenSectie2.innerHTML = '';
     DOM.topSectie3.innerHTML = '';
     DOM.topSectie3.className = '';
     DOM.topSectie3.classList.add('hidden-on-too-small');
     DOM.titel.textContent = '';
     DOM.calendar.className = '';
-    document.querySelector('.check-div')?.remove();
 };
 
 function refreshCalendar() {
@@ -393,21 +320,22 @@ function syncSelectedCellsWithHighlights() {
         team: currentTeam
     }));
     sessionStorage.setItem('selectedCells', JSON.stringify(selectedCells));
-}
+};
+
 export function getAllValidCells() {
     return Array.from(DOM.calendar.querySelectorAll(".cell[data-datum]"))
         .filter(cell => cell.dataset.datum);
-}
+};
 
 function clearAllHighlights() {
     const allCells = getAllValidCells();
     allCells.forEach(cell => cell.classList.remove("highlight"));
-}
+};
 
 function getCurrentTeam() {
     const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings();
     return settings[activeBlad].ploeg;
-}
+};
 
 document.addEventListener("click", (event) => {
     //console.log("Klik gedetecteerd:", event.target);
@@ -428,7 +356,6 @@ document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.altKey) {
         let cond1 = false, cond2 = false, cond3 = false;
         let message = "";
-        //const currentYear = getSettingsFromLocalStorage(activeBlad, defaultSettings).currentYear;
 
         if (event.key === "1") {
             cond1 = true;
@@ -468,7 +395,6 @@ function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    savePloegenToLocalStorage();
     buildSideBar();
     buildTeamDropdown(startDatums.length);
     buildButtons();

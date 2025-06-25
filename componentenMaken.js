@@ -1,6 +1,6 @@
-import { DOM, generateCalendar, defaultSettings, berekenSaldo } from './main.js';
-import { calculateTotals, getArrayValues, getBeginRechtFromLocalStorage, getSettingsFromLocalStorage, handleClickBtn } from './functies.js';
-import { handleBlur, handelVerlofAanvraag, cancelAanvraag, cancelAlleAanvragen, handelHerplanning } from './herplanningen.js';
+import { DOM, generateCalendar } from './main.js';
+import { defaultSettings, calculateTotals, getArrayValues, getBeginRechtFromLocalStorage, getSettingsFromLocalStorage, handleClickBtn } from './functies.js';
+import { handleBlur, handelVerlofAanvraag, cancelAanvraag, cancelAlleAanvragen, handelHerplanning, berekenSaldo } from './herplanningen.js';
 import { shiftPatroon, ploegenGegevens } from './makeModalSettings.js';
 
 export let activeBlad = localStorage.getItem('activeBlad') ? parseInt(localStorage.getItem('activeBlad')) : 0;

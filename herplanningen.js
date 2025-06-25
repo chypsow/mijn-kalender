@@ -1,10 +1,143 @@
-import { DOM, defaultSettings, getAllValidCells, berekenSaldo } from "./main.js";
+import { DOM, getAllValidCells } from "./main.js";
 import { activeBlad } from "./componentenMaken.js";
-import { 
-    toggleModal, getSettingsFromLocalStorage, updateLocalStorage, verwijderVerlofDatum, voegVerlofDatumToe, 
-    beginSaldoEnRestSaldoInvullen, getBeginRechtFromLocalStorage, calculateTotals 
-} from "./functies.js";
+import { defaultSettings, toggleModal, getSettingsFromLocalStorage, updateBeginRechtVerlof, getBeginRechtFromLocalStorage, calculateTotals, saveToLocalStorage } from "./functies.js";
 import { ploegenGegevens } from "./makeModalSettings.js";
+
+export function getOpgenomenVerlofPerPloeg(ploeg) {
+    const ploegKey = `verlofdagenPloeg${ploeg}`;
+    const ploegObj = JSON.parse(localStorage.getItem(ploegKey)) || {};
+    if (!ploegObj) return {};
+    return ploegObj;
+};
+
+export function ophalenVerlofdagVolgensLocalStorage(ploeg, date, cell, isHoliday) {
+    const currentYear = date.split('/')[2];
+    const vrijeDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
+    const herplanningen = ['N12','N','V12','V','L','D','x', 'R', 'OPL']
+    const ploegObj = getOpgenomenVerlofPerPloeg(ploeg);
+    if (!ploegObj) return;
+
+    const verlofArray = ploegObj[currentYear] ? ploegObj[currentYear] : [];
+    if (!verlofArray || verlofArray.length === 0) return;
+
+    verlofArray.forEach(obj => { 
+        if(obj.datum === cell.dataset.datum) {
+        cell.textContent = isHoliday ? `${obj.soort}- fd` : obj.soort;
+        const txt = cell.textContent;
+        const len = txt.length;
+        herplanningen.includes(txt) || herplanningen.includes(txt.slice(0, len - 4)) ? cell.classList.add('hp') : cell.classList.add(obj.soort);
+        if(cell.classList.contains('x') && (vrijeDagen.includes(obj.soort) || herplanningen.includes(obj.soort))) {
+            cell.classList.remove('x');
+        }
+        }
+    });
+};
+
+export function verwijderVerlofDatum(ploeg, date) {
+    const yearKey = date.split('/')[2];
+    const ploegObj = getOpgenomenVerlofPerPloeg(ploeg);
+    if (!ploegObj || !ploegObj[yearKey]) {
+        console.warn(`Geen verlofdagen gevonden voor ploeg ${ploeg} in jaar ${yearKey}.`);
+        return;
+    }
+
+    // Filter de datum eruit
+    const nieuweArray = ploegObj[yearKey].filter(obj => obj.datum !== date);
+
+    if (nieuweArray.length === 0) {
+        delete ploegObj[yearKey];
+        saveToLocalStorage(`verlofdagenPloeg${ploeg}`, ploegObj);
+        if (Object.keys(ploegObj).length === 0) {
+            localStorage.removeItem(`verlofdagenPloeg${ploeg}`);
+            return;
+        }
+    } else {
+        ploegObj[yearKey] = nieuweArray;
+    }
+
+    saveToLocalStorage(`verlofdagenPloeg${ploeg}`, ploegObj);
+};
+
+export function voegVerlofDatumToe(ploeg, date, soort) {
+    const yearKey = date.split('/')[2];
+    let ploegObj = getOpgenomenVerlofPerPloeg(ploeg);
+    
+    let array = ploegObj[yearKey];
+    if(!array) {
+        array = [];
+        array.push({ datum:date, soort });
+        ploegObj[yearKey] = array;
+        saveToLocalStorage(`verlofdagenPloeg${ploeg}`, ploegObj);
+        return;
+    }
+    const index = array.findIndex(obj => obj.datum === date);
+    if (index === -1) {
+        array.push({ datum:date, soort });
+    } else if (array[index].soort !== soort) {
+        array[index].soort = soort;
+    }
+    saveToLocalStorage(`verlofdagenPloeg${ploeg}`, ploegObj);
+};
+
+export const berekenSaldo = (currentYear, ploeg, key = null) => {
+    const opgenomenVerlofPerPloeg = getOpgenomenVerlofPerPloeg(ploeg);
+    const vacationsCurrentYear = opgenomenVerlofPerPloeg[currentYear] ? opgenomenVerlofPerPloeg[currentYear] : [];
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(currentYear);
+    if (!vacationsCurrentYear || vacationsCurrentYear.length === 0) {
+        return key ? beginrechtVerlof[key] : beginrechtVerlof;
+    }
+    const calculateSaldo = (verlofKey) => {
+        const opgenomen = vacationsCurrentYear.filter(obj => obj.soort === verlofKey).length;
+        return beginrechtVerlof[verlofKey] - opgenomen;
+    };
+    if (key) {
+        return calculateSaldo(key);
+    }
+    const saldo = {};
+    Object.keys(beginrechtVerlof).forEach(verlofKey => {
+        saldo[verlofKey] = calculateSaldo(verlofKey);
+    });
+    return saldo;
+};
+
+export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
+    const beginrechtVerlof = getBeginRechtFromLocalStorage(year);
+    const aantalZ = beginrechtVerlof.Z || 0;
+    delete beginrechtVerlof.Z; // Verwijder Z uit beginrechtVerlof, want die wordt apart behandeld
+    const saldoArray = berekenSaldo(year,ploeg);
+    const saldoZ = saldoArray.Z || 0;
+    delete saldoArray.Z; // Verwijder Z uit saldoArray, want die wordt apart behandeld
+    Object.entries(beginrechtVerlof).forEach(([verlof,aantal]) => {
+        const elt = document.getElementById(verlof);
+        if(elt) {
+            elt.value = aantal;
+            //elt.textContent = aantal;
+        }
+    });
+    const beginrechtZElt = document.getElementById('Z');
+    if(beginrechtZElt) {
+        beginrechtZElt.value = aantalZ;
+        //beginrechtZElt.textContent = aantalZ;
+    }
+    const beginrechtTotaal = calculateTotals(beginrechtVerlof);
+    const beginrechtElt = document.getElementById('totaalBeginrecht');
+    beginrechtElt.textContent = ` ${beginrechtTotaal}`;
+    //beginrechtElt.style.color = beginrechtTotaal > 0 ? 'green' : 'red';
+    //beginrechtElt.style.fontWeight = beginrechtTotaal > 0 ? 'bold' : 'normal';
+    Object.entries(saldoArray).forEach(([verlof,aantal]) => {
+        const elt = document.getElementById(`saldo-${verlof}`);
+        elt.textContent = aantal;
+    });
+    const saldoTotaal = calculateTotals(saldoArray);
+    document.getElementById('totaalSaldo').textContent = ` ${saldoTotaal}`;
+    //document.getElementById('totaalSaldo').style.color = saldoTotaal > 0 ? 'green' : 'red';
+    //document.getElementById('totaalSaldo').style.fontWeight = saldoTotaal > 0 ? 'bold' : 'normal';
+    const saldoZElt = document.getElementById('saldo-Z');
+    if(saldoZElt) {
+        saldoZElt.textContent = saldoZ;
+    }
+};
+
 
 export function handleBlur(e) {
     const verlof = e.target.id;
@@ -12,9 +145,12 @@ export function handleBlur(e) {
     if (isNaN(aantal) || aantal < 0) {
         const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
         const currentYear =  instellingen.currentYear;
-        const beginrechtObj = JSON.parse(localStorage.getItem('beginrechtVerlof'));
-        //const index = beginrechtArray.findIndex(item => item.year === currentYear);
-        e.target.value = beginrechtObj[currentYear][verlof];
+        const beginrechtObj = getBeginRechtFromLocalStorage(currentYear);
+        console.log(`Beginrecht voor jaar ${currentYear}:`, beginrechtObj);
+        console.log(`Verlof type: ${beginrechtObj[currentYear]}`);
+        const targetValue = beginrechtObj[currentYear] ? beginrechtObj[currentYear][verlof] : 0;
+        e.target.value = targetValue;
+        //e.target.value = beginrechtObj[currentYear][verlof];
         return;
     }
     behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal);
@@ -33,7 +169,7 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
 
     const update = {};
     update[verlof] = aantal;
-    updateLocalStorage('beginrechtVerlof', null, currentYear, update);
+    updateBeginRechtVerlof(currentYear, update);
     
     const saldoNieuw = berekenSaldo(currentYear, selectedPloeg, verlof);
     mySaldoElt.textContent = saldoNieuw;

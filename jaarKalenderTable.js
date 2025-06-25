@@ -1,7 +1,8 @@
-import { DOM, opgenomenVerlofPerPloeg } from "./main.js";
-import { getDaysSinceStart, verwijderVerlofDatum, voegVerlofDatumToe, beginSaldoEnRestSaldoInvullen, getArrayValues } from "./functies.js";
+import { DOM } from "./main.js";
+import { getDaysSinceStart, getArrayValues } from "./functies.js";
 import { feestdagenLijstDatums } from "./makeModalHolidays.js";
 import { shiftPatroon, startDatums } from "./makeModalSettings.js";
+import { beginSaldoEnRestSaldoInvullen, ophalenVerlofdagVolgensLocalStorage } from "./herplanningen.js";
 
 export function updateYearCalendarTable(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
@@ -136,12 +137,12 @@ function shiftenInvullen(elt, startDate, date, holidays, ploeg, shiftPattern) {
   const shiftIndex = daysSinceStart % cyclus;
   let shift = shiftPattern[shiftIndex];
   const isHoliday = holidays.includes(myDate);
-  const isReedsOpgenomen = () => {
+  /*const isReedsOpgenomen = () => {
     const ploegKey = `verlofdagenPloeg${ploeg}`;
     const currentYear = myDate.split('/')[2];
     const array = opgenomenVerlofPerPloeg[ploegKey][currentYear] || [];
     return array.some(obj => obj.datum === myDate);
-  };
+  };*/
 
   if (isHoliday) {
      //disable verlof tijdens een inactiviteitsdag & enable Automatisch BF invullen als 
@@ -154,11 +155,11 @@ function shiftenInvullen(elt, startDate, date, holidays, ploeg, shiftPattern) {
     if (shift === 'D') {
         setShiftProperties(elt, 'D- fd', myDate, false);
         if(!isReedsOpgenomen()) voegVerlofDatumToe(ploeg, myDate, 'BF');
-        voegVerlofdagToeVolgensLocalStorage(ploeg, elt, isHoliday);
+        ophalenVerlofdagVolgensLocalStorage(ploeg, elt, isHoliday);
         return; // Geen verdere acties nodig
     }*/
     setShiftProperties(elt, `${shift}- fd`, myDate, shift === 'x' ? true : false);
-    voegVerlofdagToeVolgensLocalStorage(ploeg, myDate, elt, isHoliday);
+    ophalenVerlofdagVolgensLocalStorage(ploeg, myDate, elt, isHoliday);
     return;
   }
 
@@ -170,7 +171,7 @@ function shiftenInvullen(elt, startDate, date, holidays, ploeg, shiftPattern) {
     setShiftProperties(elt, shift, myDate, false);
   }
   
-  voegVerlofdagToeVolgensLocalStorage(ploeg, myDate, elt, isHoliday);
+  ophalenVerlofdagVolgensLocalStorage(ploeg, myDate, elt, isHoliday);
 };
 
 // Hulpfunctie om eigenschappen van een element in te stellen
@@ -181,23 +182,3 @@ function setShiftProperties(elt, shift, date, isHome) {
   elt.dataset.datum = date;
 };
 
-function voegVerlofdagToeVolgensLocalStorage(ploeg, date, cell, isHoliday) {
-  //const dateStr = typeof date === "string" ? date : date.toLocaleDateString("nl-BE");
-  const currentYear = date.split('/')[2];
-  //console.log(`year: ${currentYear}, ploeg: ${ploeg}, date: ${date}`);
-  const vrijeDagen = ['BV', 'CS', 'ADV', 'BF', 'AV', 'HP', 'Z', 'hp'];
-  const herplanningen = ['N12','N','V12','V','L','D','x', 'R', 'OPL']
-  const ploegKey = `verlofdagenPloeg${ploeg}`;
-  const verlofArray = opgenomenVerlofPerPloeg[ploegKey][currentYear] || [];
-  verlofArray.forEach(obj => { 
-    if(obj.datum === cell.dataset.datum) {
-      cell.textContent = isHoliday ? `${obj.soort}- fd` : obj.soort;
-      const txt = cell.textContent;
-      const len = txt.length;
-      herplanningen.includes(txt) || herplanningen.includes(txt.slice(0, len - 4)) ? cell.classList.add('hp') : cell.classList.add(obj.soort);
-      if(cell.classList.contains('x') && (vrijeDagen.includes(obj.soort) || herplanningen.includes(obj.soort))) {
-        cell.classList.remove('x');
-      }
-    }
-  });
-};

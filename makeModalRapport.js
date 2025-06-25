@@ -1,13 +1,11 @@
 import { DOM, getAllValidCells } from "./main.js";
 import { getSettingsFromLocalStorage, modalAfdrukken } from "./functies.js";
 
-export function makeModalRapport(activeBlad, defaultSettings) {
-    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
+export function makeModalRapport(activePage, defaultSet) {
+    const instellingen = getSettingsFromLocalStorage(activePage, defaultSet);
     const selectedPloeg = instellingen.selectedPloeg;
     const currentYear = instellingen.currentYear;
-
     const dayElementen = getAllValidCells();
-    //const filteredDayElementen = Array.from(dayElementen).filter(day => day.dataset.datum !== '0');
 
     const prestaties = ['N', 'N12', 'N- fd', 'N12- fd', 'V', 'V12', 'V- fd', 'V12- fd', 'L', 'L- fd', 'D', 'D- fd', 'OPL'];
     const afwezigheden = ['BV', 'BV- fd', 'CS', 'CS- fd', 'ADV','ADV- fd', 'BF','BF- fd', 'AV', 'AV- fd', 'HP', 'HP- fd', 'x', 'x- fd', 'Z', 'Z- fd'];

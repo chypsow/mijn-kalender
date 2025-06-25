@@ -1,9 +1,22 @@
-import { DOM, berekenSaldo, defaultSettings, opgenomenVerlofPerPloeg, localStoragePloegen, updateCalendar, getAllValidCells } from "./main.js";
+import { DOM, updateCalendar, getAllValidCells } from "./main.js";
 import { activeBlad } from "./componentenMaken.js";
 import { makeModalInstellingen, shiftPatroon, startDatums, ploegenGegevens } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { makeModalRapport } from "./makeModalRapport.js";
+
+export const defaultSettings = () => {
+    const date = new Date();
+    const currentMonth = date.getMonth();
+    const currentYear = date.getFullYear();
+
+    return [
+        {pagina: 0, ploeg: 1, jaar: currentYear},
+        {pagina: 1, ploeg: 1, jaar: currentYear},
+        {pagina: 2, ploeg: 1, jaar: currentYear, maand: currentMonth},
+        {pagina: 3, jaar: currentYear, maand: currentMonth}
+    ];
+};
 
 export function updateLocalStorage(obj, defaultSet = null, index, updates = {}) {
     const getObject = JSON.parse(localStorage.getItem(obj)) || defaultSet();
@@ -13,6 +26,59 @@ export function updateLocalStorage(obj, defaultSet = null, index, updates = {}) 
     saveToLocalStorage(obj, getObject);
 };
 
+export function updateBeginRechtVerlof(jaar, updates = {}) {
+    // Haal alle beginrechten op uit localStorage
+    let alleBeginrechten = {};
+    try {
+        alleBeginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof')) || {};
+    } catch {
+        alleBeginrechten = {};
+    }
+    // Haal bestaande rechten voor het jaar op, of gebruik defaults
+    const beginrechten = getBeginRechtFromLocalStorage(jaar);
+    // Merge updates met bestaande rechten
+    const newBeginrechten = { ...beginrechten, ...updates };
+    // Update alleen het geselecteerde jaar
+    alleBeginrechten[jaar] = newBeginrechten;
+    // Sla alles terug op
+    //check if all key values are 0
+    const allZero = Object.values(newBeginrechten).every(value => value === 0);
+    if (allZero) {
+        delete alleBeginrechten[jaar]; // Verwijder het jaar als alle waarden 0 zijn
+    }
+    // check if alleBeginrechten is empty
+    if (Object.keys(alleBeginrechten).length === 0) {
+        localStorage.removeItem('beginrechtVerlof'); // Verwijder de key als er geen rechten zijn
+        return;
+    }
+    localStorage.setItem('beginrechtVerlof', JSON.stringify(alleBeginrechten));
+};
+
+export function getBeginRechtFromLocalStorage(jaar) {
+    const defaultValues = { BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0, Z: 0 };
+    let beginrechten = {};
+
+    try {
+        beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof')) || {};
+    } catch {
+        // If parsing fails, start with empty object
+        beginrechten = {};
+    }
+
+    if (typeof beginrechten !== 'object' || beginrechten === null) {
+        beginrechten = {};
+    }
+
+    if (!beginrechten[jaar]) {
+        beginrechten[jaar] = { ...defaultValues };
+        //saveToLocalStorage('beginrechtVerlof', beginrechten);
+    }
+
+    // Ensure all keys exist (in case of partial data)
+    const beginrecht = { ...defaultValues, ...beginrechten[jaar] };  // Merge with default values
+    return beginrecht;
+};
+  
 export function getSettingsFromLocalStorage(blad, setting) {
     let instellingen;
     try {
@@ -33,43 +99,15 @@ export function getSettingsFromLocalStorage(blad, setting) {
         currentYear: instelling.jaar,
         currentMonth: instelling.maand ?? 0
     };
-}
+};
 
-export function getBeginRechtFromLocalStorage(jaar) {
-    const defaultValues = { BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0, Z: 0 };
-    let beginrechten = {};
-
-    try {
-        beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof')) || {};
-    } catch {
-        // If parsing fails, start with empty object
-        beginrechten = {};
-    }
-
-    if (typeof beginrechten !== 'object' || beginrechten === null) {
-        beginrechten = {};
-    }
-
-    if (!beginrechten[jaar]) {
-        beginrechten[jaar] = { ...defaultValues };
-        saveToLocalStorage('beginrechtVerlof', beginrechten);
-    }
-
-    // Ensure all keys exist (in case of partial data)
-    const beginrecht = { ...defaultValues, ...beginrechten[jaar] };
-
-    return beginrecht;
-}
-
-/*export function calculateTotals(obj) {
-    return Object.values(obj).reduce((acc, x) => acc + x);
-};*/
 export function calculateTotals(obj) {
     const values = Object.values(obj);
     // Exclude the last item
     //return values.slice(0, -1).reduce((acc, x) => acc + x, 0);
     return values.reduce((acc, x) => acc + x, 0);
 };
+
 export function saveArrayToSessionStorage(key, arr) {
     if (!Array.isArray(arr)) return;
 
@@ -85,33 +123,7 @@ export function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
 };
 
-export function verwijderVerlofDatum(ploeg, date) {
-    const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const ploegObj = opgenomenVerlofPerPloeg[ploegKey];
-    const yearKey = date.split('/')[2];
-    const array = ploegObj[yearKey];
-    const filteredArray = array.filter(obj => !(obj.datum === date));
-    ploegObj[yearKey] = filteredArray;
-    saveToLocalStorage(localStoragePloegen[ploeg], ploegObj);
-};
 
-export function voegVerlofDatumToe(ploeg, date, soort) {
-    const ploegKey = `verlofdagenPloeg${ploeg}`;
-    const ploegObj = opgenomenVerlofPerPloeg[ploegKey];
-    const yearKey = date.split('/')[2];
-    const array = ploegObj[yearKey];
-    if(!array) {
-        ploegObj[yearKey] = [];
-        return voegVerlofDatumToe(ploeg, date, soort); // Probeer opnieuw met de nieuwe array
-    }
-    const index = array.findIndex(obj => obj.datum === date);
-    if (index === -1) {
-        array.push({ datum:date, soort });
-    } else if (array[index].soort !== soort) {
-        array[index].soort = soort;
-    }
-    saveToLocalStorage(localStoragePloegen[ploeg], ploegObj);
-};
 
 export function modalAfdrukken() {
     document.getElementById("printPreview").classList.add("no-print");
@@ -219,44 +231,6 @@ function afdrukVoorbereiding() {
         if(today) today.classList.remove('today');
     }
     afdrukken.appendChild(lijst);
-}
-
-export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
-    const beginrechtVerlof = getBeginRechtFromLocalStorage(year);
-    const aantalZ = beginrechtVerlof.Z || 0;
-    delete beginrechtVerlof.Z; // Verwijder Z uit beginrechtVerlof, want die wordt apart behandeld
-    const saldoArray = berekenSaldo(year,ploeg);
-    const saldoZ = saldoArray.Z || 0;
-    delete saldoArray.Z; // Verwijder Z uit saldoArray, want die wordt apart behandeld
-    Object.entries(beginrechtVerlof).forEach(([verlof,aantal]) => {
-        const elt = document.getElementById(verlof);
-        if(elt) {
-            elt.value = aantal;
-            //elt.textContent = aantal;
-        }
-    });
-    const beginrechtZElt = document.getElementById('Z');
-    if(beginrechtZElt) {
-        beginrechtZElt.value = aantalZ;
-        //beginrechtZElt.textContent = aantalZ;
-    }
-    const beginrechtTotaal = calculateTotals(beginrechtVerlof);
-    const beginrechtElt = document.getElementById('totaalBeginrecht');
-    beginrechtElt.textContent = ` ${beginrechtTotaal}`;
-    //beginrechtElt.style.color = beginrechtTotaal > 0 ? 'green' : 'red';
-    //beginrechtElt.style.fontWeight = beginrechtTotaal > 0 ? 'bold' : 'normal';
-    Object.entries(saldoArray).forEach(([verlof,aantal]) => {
-        const elt = document.getElementById(`saldo-${verlof}`);
-        elt.textContent = aantal;
-    });
-    const saldoTotaal = calculateTotals(saldoArray);
-    document.getElementById('totaalSaldo').textContent = ` ${saldoTotaal}`;
-    //document.getElementById('totaalSaldo').style.color = saldoTotaal > 0 ? 'green' : 'red';
-    //document.getElementById('totaalSaldo').style.fontWeight = saldoTotaal > 0 ? 'bold' : 'normal';
-    const saldoZElt = document.getElementById('saldo-Z');
-    if(saldoZElt) {
-        saldoZElt.textContent = saldoZ;
-    }
 };
 
 export const getArrayValues = (obj) => {

@@ -1,5 +1,5 @@
-import { DOM, defaultSettings, updateCalendar } from "./main.js";
-import { toggleModal, saveToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, getArrayValues } from "./functies.js";
+import { DOM, updateCalendar } from "./main.js";
+import { defaultSettings, toggleModal, saveToLocalStorage, updateLocalStorage, getSettingsFromLocalStorage, getArrayValues } from "./functies.js";
 import { buildTeamDropdown, maakPloegenLegende, activeBlad } from "./componentenMaken.js";
 import { generateTeamCalendar } from "./teamKalender.js";
 
@@ -29,7 +29,7 @@ const startDates = [
     {ploeg:4, startDatum:"2010-01-04"},
     {ploeg:5, startDatum:"2010-01-11"}
 ];
-export let teamData = JSON.parse(localStorage.getItem("teamData")) || ploegenGegevens;
+//export let teamData = JSON.parse(localStorage.getItem("teamData")) || ploegenGegevens;
 export let shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || ploegSchema;
 export let startDatums = JSON.parse(localStorage.getItem("startDatums")) || startDates;
 
@@ -187,10 +187,8 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
         });
     });*/
 
-    if(activeBlad === 1 || activeBlad === 2) {
-        /*const hr = document.createElement('hr');
-        hr.classList.add('line');
-        DOM.overlay.appendChild(hr);*/
+    /*if(activeBlad === 1 || activeBlad === 2) {
+        
         const overlayContainer = document.createElement('div');
         overlayContainer.classList.add('overlay-container-partial');
         const topHeader = document.createElement('div');
@@ -286,10 +284,10 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
         div.appendChild(reset);
         overlayContainer.appendChild(div);
         DOM.overlay.appendChild(overlayContainer);
-    }
+    }*/
 };
 
-function deleteOneSymbol() {
+/*function deleteOneSymbol() {
     const ploegDataElts = document.querySelectorAll('.ploeg-data');
     if (ploegDataElts.length <= 3) {
         //alert('Er moet minstens 3 symbolen overblijven!');
@@ -297,23 +295,8 @@ function deleteOneSymbol() {
     }
     const lastPloegData = ploegDataElts[ploegDataElts.length - 1];
     lastPloegData.parentNode.removeChild(lastPloegData);
-    // Update teamData array
-    /*teamData.pop();
-    saveToLocalStorage('teamData', teamData);
-    // Update dropdown and legend
-    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
-    const selectedPloeg = instellingen.selectedPloeg;
-    buildTeamDropdown(teamData.length, selectedPloeg);
-    if(activeBlad === 1 || activeBlad === 2) {
-        maakPloegenLegende();
-    } else if (activeBlad === 3) {
-        const month = instellingen.currentMonth;
-        const year = instellingen.currentYear;
-        generateTeamCalendar(year, month);
-    }
-    alert("Ploeggegevens succesvol verwijderd!");
-    toggleModal(false);*/
-};
+}*/
+
 function addOneSymbol() {
     const ploegDataElts = document.querySelectorAll('.ploeg-data');
     if (ploegDataElts.length >= 20) {
@@ -371,7 +354,7 @@ function addOneSymbol() {
     
 };
 
-function savePloegData() {
+/*function savePloegData() {
     const ploegData = [];
     const ploegDataElts = document.querySelectorAll('.ploeg-data');
     ploegDataElts.forEach(ploeg => {
@@ -405,8 +388,8 @@ function savePloegData() {
     }
     alert("Ploeggegevens succesvol opgeslagen!");
     toggleModal(false);
-};
-function resetDefaultPloegData() {
+};*/
+/*function resetDefaultPloegData() {
     // Reset the ploegData to default values
     const userResponse = confirm(`Weet je zeker dat je de standaard ploeggegevens wilt terugzetten? Dit kan niet ongedaan worden gemaakt!`);
     // If the user cancels, exit the function
@@ -426,7 +409,7 @@ function resetDefaultPloegData() {
     }
     alert("Ploeggegevens succesvol teruggezet naar standaardinstellingen!");
     toggleModal(false);
-};
+};*/
 
 function addOneDay() {
     const wekenContainer = document.querySelector('.weken-container');

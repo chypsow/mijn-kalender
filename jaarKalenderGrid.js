@@ -1,7 +1,6 @@
 import { DOM } from "./main.js";
 import { getDaysSinceStart, getNaamBijSymbool, getArrayValues } from "./functies.js";
-import { shiftPatroon, startDatums } from "./makeModalSettings.js";
-import { ploegenGegevens } from "./makeModalSettings.js";
+import { shiftPatroon, startDatums, ploegenGegevens } from "./makeModalSettings.js";
 
 export function updateYearCalendarGrid(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
