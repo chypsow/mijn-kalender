@@ -8,11 +8,21 @@ export function updateTeamCalendar(year, month) {
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const shiftPattern = getArrayValues(shiftPatroon);
     const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
+    const today = new Date().toLocaleDateString("nl-BE");
     const teamElementen = document.querySelectorAll('#calendar .team-row');
     const checkRow = document.querySelector('#calendar .check-row');
     const legeCellen = new Set();
     teamElementen.forEach((team, index) => {
+        if (index === 0) {
+            const dayElts = team.querySelectorAll('.team-header-cell');
+            dayElts.forEach(day => {
+                const currentDate = new Date(year, month, parseInt(day.textContent, 10));
+                day.classList.remove('today');
+                if (today === currentDate.toLocaleDateString("nl-BE")) day.classList.add("today");
+            });
+        }
         const dayElementen = team.querySelectorAll('.table-cell');
+        //console.log(`day Elementen: ${dayElementen.length}`);
         dayElementen.forEach((day, i) => {
             if(i > 0) {
                 day.textContent = '';
@@ -63,6 +73,7 @@ export function generateTeamCalendar(year, month) {
     DOM.monthYear.innerHTML = `${monthName}&nbsp;&nbsp;&nbsp;${year}`;
     const shiftPattern = getArrayValues(shiftPatroon);
     const hollydays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
+    const today = new Date().toLocaleDateString("nl-BE");
     // Header rij (1–31 voor de dagen van de maand)
     const headerRow = document.createElement("div");
     headerRow.classList.add("team-row");
@@ -75,6 +86,10 @@ export function generateTeamCalendar(year, month) {
         const dayHeaderCell = document.createElement("div");
         dayHeaderCell.classList.add("team-header-cell");
         dayHeaderCell.textContent = day;
+        const currentDate = new Date(year, month, day);
+        if (today === currentDate.toLocaleDateString("nl-BE")) {
+          dayHeaderCell.classList.add("today");
+        }
         headerRow.appendChild(dayHeaderCell);
     }
     DOM.calendar.appendChild(headerRow);

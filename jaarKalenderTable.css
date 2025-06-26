@@ -14,6 +14,7 @@
 }
 
 /* Celstijl + headerstijl*/
+
 .year-calendar-table .cell, .header-cell {
     display: table-cell;
     /*border: 1px solid #ccc;*/
@@ -22,7 +23,19 @@
     max-width: 30px;
     height: 33px;
 }
-
+.cell {
+    cursor: cell;
+    user-select: none;
+    background-color: #ebebeb;
+    color: #000;
+    border: 2px solid #ffffff;
+    text-align: left;
+    /*transition: all 0.1s ease-out;*/
+}
+/*.cell:hover {
+    outline-offset: -4px;
+    outline: 3px solid #949494;
+}*/
 /* Header voor de dagen */
 .year-calendar-table .header-cell {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -49,21 +62,6 @@
 .year-calendar-table .header-cell:first-of-type {
     background-color:transparent;
     border: none;
-}
-.cell {
-    cursor: default;
-    user-select: none;
-    background-color: #ebebeb;
-    color: #000;
-    border: 2px solid #ffffff;
-    /*border-radius: 4px;*/
-    text-align: left;
-    /*transition: all 0.1s ease-out;*/
-}
-.cell:hover {
-    outline-offset: -4px;
-    outline: 3px solid #949494;
-    /*cursor: cell;*/
 }
 
 .year-calendar-table .emptyDay {

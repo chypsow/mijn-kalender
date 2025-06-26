@@ -235,11 +235,10 @@
     .team-calendar-table .team-cell{
         max-width: 15px;
     }
-    .cell:hover {
+    /*.cell:hover {
     outline-offset: -3px;
     outline: 2px solid #949494;
-    /*cursor: cell;*/
-    }
+    }*/
     .highlight,
     .highlight:hover {
         outline-offset: -3px;

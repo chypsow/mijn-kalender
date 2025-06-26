@@ -1,16 +1,16 @@
 export const shiftData = [
-    {week:1, schema:['N', 'N', 'N', 'x', 'x', 'V', 'V12']},
-    {week:2, schema:['x', 'x', 'x', 'N', 'N', 'N', 'N12']},
-    {week:3, schema:['x', 'x', 'L', 'L', 'L', 'L', 'x']},
-    {week:4, schema:['V', 'V', 'V', 'V', 'V', 'x', 'x']},
-    {week:5, schema:['x', 'D', 'x', 'x', 'x', 'x', 'x']}
+    {"week":1, "schema":['N', 'N', 'N', 'x', 'x', 'V', 'V12']},
+    {"week":2, "schema":['x', 'x', 'x', 'N', 'N', 'N', 'N12']},
+    {"week":3, "schema":['x', 'x', 'L', 'L', 'L', 'L', 'x']},
+    {"week":4, "schema":['V', 'V', 'V', 'V', 'V', 'x', 'x']},
+    {"week":5, "schema":['x', 'D', 'x', 'x', 'x', 'x', 'x']}
 ];
 export const dateData = [
-    {ploeg:1, startDatum:"2010-02-01"},
-    {ploeg:2, startDatum:"2010-01-18"},
-    {ploeg:3, startDatum:"2010-01-25"},
-    {ploeg:4, startDatum:"2010-01-04"},
-    {ploeg:5, startDatum:"2010-01-11"}
+    {"ploeg":1, "startDatum":"2010-02-01"},
+    {"ploeg":2, "startDatum":"2010-01-18"},
+    {"ploeg":3, "startDatum":"2010-01-25"},
+    {"ploeg":4, "startDatum":"2010-01-04"},
+    {"ploeg":5, "startDatum":"2010-01-11"}
 ];
 
 export const dataBeginRecht = {

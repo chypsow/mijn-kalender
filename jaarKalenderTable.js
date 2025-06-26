@@ -8,8 +8,7 @@ export function updateYearCalendarTable(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
   const shiftPattern = getArrayValues(shiftPatroon);
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const vandaag = new Date();
-  const today = vandaag.toLocaleDateString("nl-BE");
+  const today = new Date().toLocaleDateString("nl-BE");
   const monthElementen = document.querySelectorAll('#calendar .row');
   const ploegObj = startDatums.find(obj => obj.ploeg === selectedPloeg);
   if (!ploegObj) return;
@@ -58,8 +57,7 @@ export function generateYearCalendarTable(selectedPloeg, year) {
   DOM.monthYear.textContent = year;
   const shiftPattern = getArrayValues(shiftPatroon);
   const holidays = feestdagenLijstDatums(year).map(date => date.toLocaleDateString("nl-BE"));
-  const vandaag = new Date();
-  const today = vandaag.toLocaleDateString("nl-BE");
+  const today = new Date().toLocaleDateString("nl-BE");
   // Header rij (1–31 voor de dagen van de maand)
   const headerRow = document.createElement("div");
   headerRow.classList.add("row");

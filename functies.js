@@ -5,6 +5,10 @@ import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { makeModalRapport } from "./makeModalRapport.js";
 
+export function saveToLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+};
+
 export const defaultSettings = () => {
     const date = new Date();
     const currentMonth = date.getMonth();
@@ -71,7 +75,6 @@ export function getBeginRechtFromLocalStorage(jaar) {
 
     if (!beginrechten[jaar]) {
         beginrechten[jaar] = { ...defaultValues };
-        //saveToLocalStorage('beginrechtVerlof', beginrechten);
     }
 
     // Ensure all keys exist (in case of partial data)
@@ -118,12 +121,6 @@ export function saveArrayToSessionStorage(key, arr) {
 
     sessionStorage.setItem(key, JSON.stringify(unique));
 };
-
-export function saveToLocalStorage(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-};
-
-
 
 export function modalAfdrukken() {
     document.getElementById("printPreview").classList.add("no-print");
