@@ -109,7 +109,7 @@ export function maakVerlofContainer() {
 
     const beginRecht = document.createElement('div');
     beginRecht.classList.add('titel');
-    beginRecht.textContent = 'Beginrecht';
+    beginRecht.textContent = 'Beginrecht :';
     container.appendChild(beginRecht);
 
     
@@ -129,7 +129,7 @@ export function maakVerlofContainer() {
     
     const totaal1 = document.createElement('div');
     totaal1.classList.add('totaal');
-    totaal1.textContent = 'Totaal:';
+    totaal1.textContent = 'Totaal :';
 
     const beginrechtTotaal = calculateTotals(beginrechtVerlof);
     //console.log(`totaal beginrecht: ${beginrechtTotaal}`);
@@ -153,7 +153,7 @@ export function maakVerlofContainer() {
 
     const saldo = document.createElement('div');
     saldo.classList.add('titel');
-    saldo.textContent = 'Saldo';
+    saldo.textContent = 'Saldo :';
     container.appendChild(saldo);
 
     const selectedPloeg = instellingen.selectedPloeg;
@@ -171,7 +171,7 @@ export function maakVerlofContainer() {
 
     const totaal2 = document.createElement('div');
     totaal2.classList.add('totaal');
-    totaal2.textContent = 'Rest:';
+    totaal2.textContent = 'Rest :';
 
     const saldoTotaal = calculateTotals(saldoArray);
     const span2 = document.createElement('span');

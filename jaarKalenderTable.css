@@ -143,9 +143,9 @@
     font-size: 1em;
     width: 45px;
     padding: 2px 0;
-    background-color: transparent;
+    background-color: rgba(128, 128, 128, 0.144);
     text-align: center;
-    border: 3px inset rgba(128, 128, 128, 0.671);
+    border: 3px inset rgba(128, 128, 128, 0);
     color: rgb(255, 255, 255);
 }
 .titel {

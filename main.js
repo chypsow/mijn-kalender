@@ -137,7 +137,6 @@ function triggerPrev() {
         currentYear -= 1;
         updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {jaar:currentYear});
     }
-    //updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
     updateCalendar();
 };
 function triggerNext() {
@@ -156,7 +155,6 @@ function triggerNext() {
         currentYear += 1;
         updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {jaar:currentYear});
     }
-    //updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
     updateCalendar();
 };
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
