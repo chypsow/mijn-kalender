@@ -41,12 +41,10 @@ export function verwijderVerlofDatum(ploeg, date) {
         return;
     }
 
-    // Filter de datum eruit
     const nieuweArray = ploegObj[yearKey].filter(obj => obj.datum !== date);
 
     if (nieuweArray.length === 0) {
         delete ploegObj[yearKey];
-        saveToLocalStorage(`verlofdagenPloeg${ploeg}`, ploegObj);
         if (Object.keys(ploegObj).length === 0) {
             localStorage.removeItem(`verlofdagenPloeg${ploeg}`);
             return;
@@ -111,13 +109,11 @@ export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
         const elt = document.getElementById(verlof);
         if(elt) {
             elt.value = aantal;
-            //elt.textContent = aantal;
         }
     });
     const beginrechtZElt = document.getElementById('Z');
     if(beginrechtZElt) {
         beginrechtZElt.value = aantalZ;
-        //beginrechtZElt.textContent = aantalZ;
     }
     const beginrechtTotaal = calculateTotals(beginrechtVerlof);
     const beginrechtElt = document.getElementById('totaalBeginrecht');
@@ -138,19 +134,21 @@ export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
     }
 };
 
-
 export function handleBlur(e) {
+    if (e.target.value === "") {
+        e.target.value = 0;
+        behandelBeginrechtEnSaldoVerlofdagen(verlof, 0);
+        return;
+    }
+    
     const verlof = e.target.id;
     const aantal = parseInt(e.target.value);
     if (isNaN(aantal) || aantal < 0) {
         const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
         const currentYear =  instellingen.currentYear;
         const beginrechtObj = getBeginRechtFromLocalStorage(currentYear);
-        console.log(`Beginrecht voor jaar ${currentYear}:`, beginrechtObj);
-        console.log(`Verlof type: ${beginrechtObj[currentYear]}`);
-        const targetValue = beginrechtObj[currentYear] ? beginrechtObj[currentYear][verlof] : 0;
+        const targetValue = beginrechtObj ? beginrechtObj[verlof] : 0;
         e.target.value = targetValue;
-        //e.target.value = beginrechtObj[currentYear][verlof];
         return;
     }
     behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal);
