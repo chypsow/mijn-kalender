@@ -511,7 +511,7 @@ const gegevensOpslaan = (shiftObj, dateObj, bevestiging = true) => {
     if(aantalPloegenSelect > aantalPloegen) {
         Array.from({length:4}).forEach((_, i) => {
             const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
-            if(instellingen.selectedPloeg > aantalPloegen) updateLocalStorage('standaardInstellingen', defaultSettings, i, {ploeg:1});
+            if(instellingen.selectedPloeg > aantalPloegen) updateLocalStorage('paginaInstellingen', defaultSettings, i, {ploeg:1});
         });
         buildTeamDropdown(aantalPloegen, instellingen.selectedPloeg);
     } else if (aantalPloegenSelect < aantalPloegen) {

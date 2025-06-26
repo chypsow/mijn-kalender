@@ -85,11 +85,11 @@ export function getBeginRechtFromLocalStorage(jaar) {
 export function getSettingsFromLocalStorage(blad, setting) {
     let instellingen;
     try {
-        instellingen = JSON.parse(localStorage.getItem('standaardInstellingen'));
+        instellingen = JSON.parse(localStorage.getItem('paginaInstellingen'));
         if (!Array.isArray(instellingen)) throw new Error();
     } catch {
         instellingen = setting();
-        saveToLocalStorage('standaardInstellingen', instellingen);
+        saveToLocalStorage('paginaInstellingen', instellingen);
     }
 
     const instelling = instellingen.find(item => item.pagina === blad);

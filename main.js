@@ -132,10 +132,12 @@ function triggerPrev() {
     if(activeBlad === 2 || activeBlad === 3) {
         currentMonth = (currentMonth - 1 + 12) % 12;
         if (currentMonth === 11) currentYear -= 1;
+        updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
     } else {
         currentYear -= 1;
+        updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {jaar:currentYear});
     }
-    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
+    //updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
     updateCalendar();
 };
 function triggerNext() {
@@ -149,17 +151,19 @@ function triggerNext() {
     if(activeBlad === 2 || activeBlad === 3) {
         currentMonth = (currentMonth + 1) % 12;
         if (currentMonth === 0) currentYear += 1;
+        updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
     } else {
         currentYear += 1;
+        updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {jaar:currentYear});
     }
-    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
+    //updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {maand:currentMonth, jaar:currentYear});
     updateCalendar();
 };
 DOM.sluiten.addEventListener('click', () => toggleModal(false));
 
 DOM.ploeg.addEventListener('change', (event) => {
     const selectedPloeg = Number(event.target.value); 
-    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {ploeg:selectedPloeg});
+    updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {ploeg:selectedPloeg});
     updateCalendar();
 });
 
@@ -167,12 +171,12 @@ DOM.prev.addEventListener("click", triggerPrev);
 DOM.next.addEventListener("click", triggerNext);
 DOM.monthSelect.addEventListener("change", (event) => {
     const currentMonth = parseInt(event.target.value, 10);
-    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {maand:currentMonth});
+    updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {maand:currentMonth});
     updateCalendar();
 });
 DOM.yearSelect.addEventListener("change", (event) => {
     const currentYear = parseInt(event.target.value, 10);
-    updateLocalStorage('standaardInstellingen', defaultSettings, activeBlad, {jaar:currentYear});
+    updateLocalStorage('paginaInstellingen', defaultSettings, activeBlad, {jaar:currentYear});
     updateCalendar();
 });
 DOM.monthYear.addEventListener("click", () => {
@@ -333,7 +337,7 @@ function clearAllHighlights() {
 };
 
 function getCurrentTeam() {
-    const settings = JSON.parse(localStorage.getItem('standaardInstellingen')) || defaultSettings();
+    const settings = JSON.parse(localStorage.getItem('paginaInstellingen')) || defaultSettings();
     return settings[activeBlad].ploeg;
 };
 
@@ -388,7 +392,7 @@ function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 
         const lengte = startDatums.length;
         Array.from({length:4}).forEach((_, i) => {
             const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
-            if(instellingen.selectedPloeg > lengte) updateLocalStorage('standaardInstellingen', defaultSettings, i, {ploeg:1});
+            if(instellingen.selectedPloeg > lengte) updateLocalStorage('paginaInstellingen', defaultSettings, i, {ploeg:1});
         }); 
     }
     location.reload(true); // of location.href = location.href;
