@@ -5,8 +5,13 @@ import { berekenPaasdatum, formatter } from "./makeModalHolidays.js";
 export function makeModalVakanties(tab, setting) {
     DOM.overlay.innerHTML = '';
     let jaar = getSettingsFromLocalStorage(tab, setting).currentYear;
-    //const container = document.createElement('div');
-    //container.classList.add('overlay-container');
+    const topHeader = document.createElement('div');
+    const heading = document.createElement('h2');
+    heading.classList.add('heading-feestdagen');
+    heading.textContent = 'Schoolvakanties';
+    topHeader.appendChild(heading);
+    DOM.overlay.appendChild(topHeader);
+
     let html = `
         <div class="calendar-nav">
             <button class="vorig no-print"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
@@ -18,8 +23,7 @@ export function makeModalVakanties(tab, setting) {
         <table class="andereInfo"></table>
         <button class="print-modal-button">Afdrukken</button>
     `;
-    //container.innerHTML = html;
-    DOM.overlay.innerHTML = html;
+    DOM.overlay.innerHTML += html;
     const printButton = document.querySelector(".print-modal-button");
     printButton.addEventListener("click", modalAfdrukken);
     printButton.classList.add('no-print');

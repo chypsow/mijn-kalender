@@ -39,7 +39,6 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     const overlayContainer = document.createElement('div');
     overlayContainer.classList.add('overlay-container-partial');
     const topHeader = document.createElement('div');
-    topHeader.classList.add('top-header');
     const heading = document.createElement('h2');
     heading.classList.add('heading-modal');
     heading.textContent = 'Ploegschema aanpassen:';

@@ -126,7 +126,9 @@
     /*background-color: #acacac;;
     color: #070707;*/
 }
-
+.heading-feestdagen {
+    text-align: center;
+}
 /*css voor instellingen modal*/
 .heading-modal {
     display: inline-block;
