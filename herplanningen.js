@@ -1,6 +1,6 @@
 import { DOM, getAllValidCells } from "./main.js";
 import { activeBlad } from "./componentenMaken.js";
-import { defaultSettings, toggleModal, getSettingsFromLocalStorage, updateBeginRechtVerlof, getBeginRechtFromLocalStorage, calculateTotals, saveToLocalStorage } from "./functies.js";
+import { defaultSettings, toggleModal, getSettingsFromLocalStorage, updateBeginrechtVerlofLocalStorage, getBeginRechtFromLocalStorage, calculateTotals, saveToLocalStorage } from "./functies.js";
 import { ploegenGegevens } from "./makeModalSettings.js";
 
 export function getOpgenomenVerlofPerPloeg(ploeg) {
@@ -167,7 +167,7 @@ function behandelBeginrechtEnSaldoVerlofdagen(verlof, aantal) {
 
     const update = {};
     update[verlof] = aantal;
-    updateBeginRechtVerlof(currentYear, update);
+    updateBeginrechtVerlofLocalStorage(currentYear, update);
     
     const saldoNieuw = berekenSaldo(currentYear, selectedPloeg, verlof);
     mySaldoElt.textContent = saldoNieuw;

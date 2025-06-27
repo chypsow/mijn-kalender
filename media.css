@@ -31,10 +31,6 @@
         margin-top: 0;
     }
     .month-year {
-        /*position: absolute;
-        left: 50%;
-        transform: translateX(-50px);*/
-        /*justify-self: center;*/
         color: black;
     }
     #calendar {
@@ -47,7 +43,6 @@
         color: black;
     }
     #calendar .header {
-        /*background: rgb(44, 44, 44);*/
         color: rgb(255, 255, 255);
     }
     #calendar .day-klein {
@@ -67,18 +62,22 @@
         color: rgb(0, 0, 0);
         margin-right: 0;
         background: none;
-        /*border: 1px solid rgb(207, 207, 207);*/
         position: absolute;
         top: 90px;
         right: 10px;
     }
     .vandaag {
-        outline: none !important;
-        box-shadow: none !important;
+        outline: none;
+        box-shadow: none;
+    }
+    .today::before {
+        border: none;
     }
     .highlight {
         outline: none;
     }
+
+    /*CSS voor de modal en andere elementen die geprint moeten worden*/
     .modal {
         position: static !important;
         top: auto !important;
@@ -119,17 +118,11 @@
     .feestdag .spanLinks {
         color: rgb(63, 63, 63);
     }
-    
     .rapport,
     .rapport-header,
     .rapport span {
         color: black !important
     }
-     
-    /*.rapport hr {
-        display: none;
-    }*/
-
 }
 
 @media screen and (max-width: 1900px) {

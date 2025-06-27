@@ -1,28 +1,32 @@
-import { DOM, updateCalendar, getAllValidCells } from "./main.js";
+import { DOM, updateCalendar } from "./main.js";
 import { activeBlad } from "./componentenMaken.js";
 import { makeModalInstellingen, shiftPatroon, startDatums, ploegenGegevens } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { makeModalRapport } from "./makeModalRapport.js";
 
-export function saveToLocalStorage(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+export function updateBeginrechtVerlofLocalStorage(jaar, updates = {}) {
+    let alleBeginrechten = {};
+    try {
+        alleBeginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof')) || {};
+    } catch {
+        alleBeginrechten = {};
+    }
+    const beginrechten = getBeginRechtFromLocalStorage(jaar);
+    const newBeginrechten = { ...beginrechten, ...updates }; // Merge updates met bestaande rechten
+    alleBeginrechten[jaar] = newBeginrechten;
+    const allZero = Object.values(newBeginrechten).every(value => value === 0);
+    if (allZero) {
+        delete alleBeginrechten[jaar];
+    }
+    if (Object.keys(alleBeginrechten).length === 0) {
+        localStorage.removeItem('beginrechtVerlof');
+        return;
+    }
+    saveToLocalStorage('beginrechtVerlof', alleBeginrechten);
 };
 
-export const defaultSettings = () => {
-    const date = new Date();
-    const currentMonth = date.getMonth();
-    const currentYear = date.getFullYear();
-
-    return [
-        {pagina: 0, ploeg: 1, jaar: currentYear},
-        {pagina: 1, ploeg: 1, jaar: currentYear},
-        {pagina: 2, ploeg: 1, jaar: currentYear, maand: currentMonth},
-        {pagina: 3, jaar: currentYear, maand: currentMonth}
-    ];
-};
-
-export function updateLocalStorage(obj, defaultSet = null, index, updates = {}) {
+export function updatePaginaInstLocalStorage(obj, defaultSet = null, index, updates = {}) {
     const getObject = JSON.parse(localStorage.getItem(obj)) || defaultSet();
     Object.entries(updates).forEach(([key, value]) => {
         getObject[index][key] = value;
@@ -30,33 +34,6 @@ export function updateLocalStorage(obj, defaultSet = null, index, updates = {}) 
     saveToLocalStorage(obj, getObject);
 };
 
-export function updateBeginRechtVerlof(jaar, updates = {}) {
-    // Haal alle beginrechten op uit localStorage
-    let alleBeginrechten = {};
-    try {
-        alleBeginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof')) || {};
-    } catch {
-        alleBeginrechten = {};
-    }
-    // Haal bestaande rechten voor het jaar op, of gebruik defaults
-    const beginrechten = getBeginRechtFromLocalStorage(jaar);
-    // Merge updates met bestaande rechten
-    const newBeginrechten = { ...beginrechten, ...updates };
-    // Update alleen het geselecteerde jaar
-    alleBeginrechten[jaar] = newBeginrechten;
-    // Sla alles terug op
-    //check if all key values are 0
-    const allZero = Object.values(newBeginrechten).every(value => value === 0);
-    if (allZero) {
-        delete alleBeginrechten[jaar]; // Verwijder het jaar als alle waarden 0 zijn
-    }
-    // check if alleBeginrechten is empty
-    if (Object.keys(alleBeginrechten).length === 0) {
-        localStorage.removeItem('beginrechtVerlof'); // Verwijder de key als er geen rechten zijn
-        return;
-    }
-    localStorage.setItem('beginrechtVerlof', JSON.stringify(alleBeginrechten));
-};
 
 export function getBeginRechtFromLocalStorage(jaar) {
     const defaultValues = { BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0, Z: 0 };
@@ -65,7 +42,6 @@ export function getBeginRechtFromLocalStorage(jaar) {
     try {
         beginrechten = JSON.parse(localStorage.getItem('beginrechtVerlof')) || {};
     } catch {
-        // If parsing fails, start with empty object
         beginrechten = {};
     }
 
@@ -77,7 +53,6 @@ export function getBeginRechtFromLocalStorage(jaar) {
         beginrechten[jaar] = { ...defaultValues };
     }
 
-    // Ensure all keys exist (in case of partial data)
     const beginrecht = { ...defaultValues, ...beginrechten[jaar] };  // Merge with default values
     return beginrecht;
 };
@@ -102,37 +77,6 @@ export function getSettingsFromLocalStorage(blad, setting) {
         currentYear: instelling.jaar,
         currentMonth: instelling.maand ?? 0
     };
-};
-
-export function calculateTotals(obj) {
-    const values = Object.values(obj);
-    // Exclude the last item
-    //return values.slice(0, -1).reduce((acc, x) => acc + x, 0);
-    return values.reduce((acc, x) => acc + x, 0);
-};
-
-export function saveArrayToSessionStorage(key, arr) {
-    if (!Array.isArray(arr)) return;
-
-    // Verwijder duplicaten op basis van combinatie van datum en team
-    const unique = Array.from(
-        new Map(arr.map(item => [`${item.datum}-${item.team}`, item])).values()
-    );
-
-    sessionStorage.setItem(key, JSON.stringify(unique));
-};
-
-export function modalAfdrukken() {
-    document.getElementById("printPreview").classList.add("no-print");
-    document.querySelector(".top-secties").classList.add("no-print");
-    DOM.calendar.classList.add("no-print");
-    window.print();
-    // Reset na printen
-    setTimeout(() => {
-    document.getElementById("printPreview").classList.remove("no-print");
-    document.querySelector(".top-secties").classList.remove("no-print");
-    DOM.calendar.classList.remove("no-print");
-    }, 1000); // wacht even tot printdialoog klaar is
 };
 
 export function toggleModal(show , positie = '50px', backgroundColor = '#d1d1d1') {
@@ -164,7 +108,7 @@ export function handleClickBtn(e) {
     switch(btn) {
         case 'instellingen':
             makeModalInstellingen(shiftPatroon, startDatums);
-            toggleModal(true, '10px', '#d1d1d1');  // Zet de achtergrondkleur van de modal
+            toggleModal(true, '10px', '#d1d1d1');
             break;
         case 'feestdagen':
             makeModalFeestdagen(activeBlad, defaultSettings);
@@ -176,7 +120,6 @@ export function handleClickBtn(e) {
             break;
         case 'rapport':
             makeModalRapport(activeBlad, defaultSettings);
-            //console.log('Rapportknop is aangeklikt');
             toggleModal(true);
             break;
         case 'afdrukken':
@@ -218,16 +161,43 @@ function afdrukVoorbereiding() {
         maand.textContent = `Maand: ${monthStr}`;
         lijst.appendChild(maand);
     }
-    if (activeBlad !== 3 && mijnData.length > 1 && shiftPatroon.length > 1) {
+    if (activeBlad !== 3 && mijnData.length > 1 && startDatums.length > 1) {
         const ploeg = document.createElement('li');
         ploeg.textContent = `Ploeg ${selectedPloeg}`;
         lijst.appendChild(ploeg);
     }
-    if(activeBlad === 0) {
-        const today = getAllValidCells().find(cel => cel.classList.contains('today'));
-        if(today) today.classList.remove('today');
-    }
     afdrukken.appendChild(lijst);
+};
+
+export function modalAfdrukken() {
+    document.getElementById("printPreview").classList.add("no-print");
+    document.querySelector(".top-secties").classList.add("no-print");
+    DOM.calendar.classList.add("no-print");
+    window.print();
+    // Reset na printen
+    setTimeout(() => {
+    document.getElementById("printPreview").classList.remove("no-print");
+    document.querySelector(".top-secties").classList.remove("no-print");
+    DOM.calendar.classList.remove("no-print");
+    }, 1000); // wacht even tot printdialoog klaar is
+};
+
+export const defaultSettings = () => {
+    const date = new Date();
+    const currentMonth = date.getMonth();
+    const currentYear = date.getFullYear();
+
+    return [
+        {pagina: 0, ploeg: 1, jaar: currentYear},
+        {pagina: 1, ploeg: 1, jaar: currentYear},
+        {pagina: 2, ploeg: 1, jaar: currentYear, maand: currentMonth},
+        {pagina: 3, jaar: currentYear, maand: currentMonth}
+    ];
+};
+
+export function calculateTotals(obj) {
+    const values = Object.values(obj);
+    return values.reduce((acc, x) => acc + x, 0);
 };
 
 export const getArrayValues = (obj) => {
@@ -250,4 +220,16 @@ export function getDaysSinceStart(date, date0) {
     }
     const diffTime = date - date0;
     return Math.round(diffTime / (1000 * 60 * 60 * 24));
+};
+
+export function saveToLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+};
+
+export function saveArrayToSessionStorage(key, arr) {
+    if (!Array.isArray(arr)) return;
+
+    // Verwijder duplicaten op basis van combinatie van datum en team
+    const unique = Array.from(new Map(arr.map(item => [`${item.datum}-${item.team}`, item])).values());
+    sessionStorage.setItem(key, JSON.stringify(unique));
 };
