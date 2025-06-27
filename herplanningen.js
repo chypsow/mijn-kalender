@@ -135,13 +135,13 @@ export function beginSaldoEnRestSaldoInvullen(year, ploeg) {
 };
 
 export function handleBlur(e) {
+    const verlof = e.target.id;
     if (e.target.value === "") {
         e.target.value = 0;
         behandelBeginrechtEnSaldoVerlofdagen(verlof, 0);
         return;
     }
     
-    const verlof = e.target.id;
     const aantal = parseInt(e.target.value);
     if (isNaN(aantal) || aantal < 0) {
         const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
