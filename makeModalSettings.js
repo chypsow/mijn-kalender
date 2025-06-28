@@ -1,7 +1,8 @@
 import { DOM, updateCalendar } from "./main.js";
 import { defaultSettings, toggleModal, saveToLocalStorage, updatePaginaInstLocalStorage, getSettingsFromLocalStorage, getArrayValues } from "./functies.js";
-import { buildTeamDropdown, maakPloegenLegende, activeBlad } from "./componentenMaken.js";
+import { maakPloegenLegende, activeBlad } from "./componentenMaken.js";
 import { generateTeamCalendar } from "./teamKalender.js";
+import { shiftData, dateData, dataVerlofdagen, dataBeginRecht} from "./config.js"
 
 // default settings
 export const ploegenGegevens = [
@@ -29,9 +30,29 @@ const startDates = [
     {ploeg:4, startDatum:"2010-01-04"},
     {ploeg:5, startDatum:"2010-01-11"}
 ];
-//export let teamData = JSON.parse(localStorage.getItem("teamData")) || ploegenGegevens;
+
 export let shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || ploegSchema;
 export let startDatums = JSON.parse(localStorage.getItem("startDatums")) || startDates;
+
+export function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 = true) {
+    if(cond1) {
+        shiftPatroon = shiftData;
+        startDatums = dateData;
+        saveToLocalStorage('shiftPatroon', shiftData);
+        saveToLocalStorage('startDatums', dateData);
+        const lengte = startDatums.length;
+        Array.from({length:4}).forEach((_, i) => {
+            const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
+            if(instellingen.selectedPloeg > lengte) updatePaginaInstLocalStorage('paginaInstellingen', defaultSettings, i, {ploeg:1});
+        }); 
+    }
+    if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
+    if(cond3) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
+
+    //location.reload(true); // of location.href = location.href;
+    if(DOM.modal.style.display !== 'none') toggleModal();
+    updateCalendar(true);
+};
 
 export function makeModalInstellingen(shiftPatroon, startDatums) {
     DOM.overlay.innerHTML = '';
@@ -39,38 +60,16 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     const overlayContainer = document.createElement('div');
     overlayContainer.classList.add('overlay-container-partial');
     const topHeader = document.createElement('div');
+    topHeader.classList.add('top-header');
     const heading = document.createElement('h2');
     heading.classList.add('heading-modal');
     heading.textContent = 'Ploegschema aanpassen:';
     topHeader.appendChild(heading);
-    /*const handleidingContainer = document.createElement('div');
-    handleidingContainer.classList.add('handleiding-container');
-    const icoon = document.createElement('i');
-    icoon.classList.add('fa');
-    icoon.classList.add('fa-question-circle');
-    icoon.setAttribute('aria-hidden', 'true');
-    handleidingContainer.appendChild(icoon);
-
-    const handleidingMsg = document.createElement('div');
-    handleidingMsg.classList.add('handleiding-msg');
-    handleidingMsg.innerHTML = `
-    <ul style='list-style-type: none;'>
-        <li><h4>Volledige cyclus (<span id="hl1"></span> weken):</h4> 
-            Een volledige cyclus bestaat uit <span id="hl2"></span> weken. 
-            Elke ploeg werkt en rust in een specifiek patroon dat zich herhaalt na <span id="hl3"></span> weken.
-        </li>
-        <li><h4>Startdatum:</h4>
-            Welke ploeg in welke week actief is, wordt bepaald door de gekozen startdatum.
-            Bijvoorbeeld: als we 1 februari 2010 als ploeg-1 startdatum kiezen,
-            begint Ploeg-1 op die datum met het ploegschema (week-1, week-2 ...). Als we ploeg-2 startdatum ingeven met een verschil
-            van 7 dagen, begint Ploeg-2 7 dagen eerder met het ploegschema (week1, week2 ...) en zo voort.
-            <br><br><span style="color:rgb(172, 186, 189); font-weight:bold;">Opmerking:</span> In ons geval zijn de startdatums 
-            zo gekozen dat het ploegschema overeenkomt met de werkelijkheid.
-        </li>
-    </ul>
-    `;
-    handleidingContainer.appendChild(handleidingMsg);
-    topHeader.appendChild(handleidingContainer);*/
+    const customize = document.createElement('button');
+    customize.id = "customize";
+    customize.textContent = "Eigen voorkeuren ophalen";
+    customize.addEventListener('click', makeModalCustomize);
+    topHeader.appendChild(customize);
     overlayContainer.appendChild(topHeader);
 
     const shiftPatroonContainer = document.createElement('div');
@@ -164,6 +163,7 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     button.textContent = "Opslaan";
     button.addEventListener('click', ploegSysteemOpslaan);
     div.appendChild(button);
+    
     const reset = document.createElement('button');
     reset.id = "reset";
     reset.textContent = "Standaardinstellingen terugzetten";
@@ -171,244 +171,57 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     div.appendChild(reset);
     overlayContainer.appendChild(div);
     DOM.overlay.appendChild(overlayContainer);
-    /*const cBoxContainer = document.createElement('div');
-    cBoxContainer.classList.add('checkbox-container');
+};
+
+const makeModalCustomize = () => {
+    DOM.overlay.innerHTML = '';
     let html = `
-        <label><input type="checkbox" id="cbVerlofRustdag" checked>Enable verlof aanvraag tijdens een rustdag.</label>
-        <label><input type="checkbox" id="cbAutoBF">Enable automatisch BF invullen op een D shift die op een feestdag valt.</label>
+        <div class="customize-container">
+            <div class="checkbox-container">
+                <label><input type="checkbox" id="checkbox0">Alles ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+0}</span></label>
+                <label><input type="checkbox" id="checkbox1">Shiftpatroon ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+1}</span></label>
+                <label><input type="checkbox" id="checkbox2">Beginrechten verlofdagen ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+2}</span></label>
+                <label><input type="checkbox" id="checkbox3">Verlofdagen en herplanningen ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+3}</span></label>
+            </div>
+        </div>
+        <div class="customize-button-container">
+            <button id="apply-customize">Toepassen</button>
+            <button id="cancel-customize">Annuleren</button>
+        </div>
     `;
-    cBoxContainer.innerHTML = html;
-    DOM.overlay.appendChild(cBoxContainer);*/
+    DOM.overlay.innerHTML = html;
+    
+    document.getElementById('cancel-customize').addEventListener('click', () => {
+        makeModalInstellingen(shiftPatroon, startDatums);
+    });
+    document.getElementById('apply-customize').addEventListener('click', () => {
+        const isChecked1 = document.getElementById('checkbox1').checked;
+        const isChecked2 = document.getElementById('checkbox2').checked;
+        const isChecked3 = document.getElementById('checkbox3').checked;
+        if (!isChecked1 && !isChecked2 && !isChecked3) return;
+        //console.log(`checkbox1: ${isChecked1}, checkbox2: ${isChecked2}, checkbox3: ${isChecked3}`);
+        localStorageAanpassenVolgensConfigJS(isChecked1, isChecked2, isChecked3);
+    });
+    const checkboxes = DOM.overlay.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const allCheckbox = checkboxes[0]; // eerste checkbox is "All"
+            const otherCheckboxes = Array.from(checkboxes).slice(1);
 
-    /*handleidingContainer.addEventListener('mouseover', () => {
-        Array.from({length:3}).forEach( (_,i) => {
-            document.getElementById(`hl${i+1}`).textContent = datumsContainer.children.length;
+            if (checkbox === allCheckbox) {
+            // Als "All" wordt gewijzigd
+                otherCheckboxes.forEach(cb => cb.checked = allCheckbox.checked);
+            } else {
+            // Als een andere checkbox wordt gewijzigd
+                if (!checkbox.checked) {
+                    allCheckbox.checked = false;
+                } else if (otherCheckboxes.every(cb => cb.checked)) {
+                    allCheckbox.checked = true;
+                }
+            }
         });
-    });*/
-
-    /*if(activeBlad === 1 || activeBlad === 2) {
-        
-        const overlayContainer = document.createElement('div');
-        overlayContainer.classList.add('overlay-container-partial');
-        const topHeader = document.createElement('div');
-        topHeader.classList.add('top-header');
-        const heading = document.createElement('h2');
-        heading.classList.add('heading-modal');
-        heading.textContent = 'Ploeggegevens aanpassen:';
-        topHeader.appendChild(heading);
-        overlayContainer.appendChild(topHeader);
-        const ploegDataContainer = document.createElement('div');
-        ploegDataContainer.classList.add('ploeg-data-container');
-        const ploegDataBtnContainer = document.createElement('div');
-        ploegDataBtnContainer.classList.add('knop-container2');
-        const ploegDataVerwijderen = document.createElement('button');
-        ploegDataVerwijderen.setAttribute('id', 'delete-ploeg-data');
-        ploegDataVerwijderen.innerHTML = `<i class="fa fa-minus"></i><span> symbool</span>`;
-        ploegDataVerwijderen.addEventListener('click', deleteOneSymbol);
-        ploegDataBtnContainer.appendChild(ploegDataVerwijderen);
-        const ploegDataToevoegen = document.createElement('button');
-        ploegDataToevoegen.setAttribute('id', 'add-ploeg-data');
-        ploegDataToevoegen.innerHTML = `<i class="fa fa-plus"></i><span> symbool</span>`;
-        ploegDataToevoegen.addEventListener('click', addOneSymbol);
-        ploegDataBtnContainer.appendChild(ploegDataToevoegen);
-        ploegDataContainer.appendChild(ploegDataBtnContainer);
-        // Create input fields for each team
-        const ploegDataElts = document.createElement('div');
-        ploegDataElts.classList.add('ploeg-data-elts');
-        teamData.forEach((team, i) => {
-            const ploegData = document.createElement('div');
-            ploegData.classList.add('ploeg-data');
-            const ploegDataLabel = document.createElement('label');
-            ploegDataLabel.classList.add('ploeg-data-label');
-            ploegDataLabel.textContent = `symbool: `;
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.id = `symbool-${i+1}`;
-            input.className = 'symbool-input';
-            input.value = team.symbool || '';
-            input.disabled = team.flex === false; // Disable input for non-flex teams
-            input.addEventListener('focus', function() {
-                this.select();
-            });
-            ploegDataLabel.appendChild(input);
-            ploegData.appendChild(ploegDataLabel);
-            
-            
-            const ploegNaamLabel = document.createElement('label');
-            ploegNaamLabel.classList.add('ploeg-data-label');
-            ploegNaamLabel.textContent = `naam: `;
-            const inputNaam = document.createElement('input');
-            inputNaam.type = 'text';
-            inputNaam.id = `naam-${i+1}`;
-            inputNaam.className = 'symbool-input';
-            inputNaam.value = team.naam || '';
-            inputNaam.disabled = team.flex === false; // Disable input for non-flex teams
-            inputNaam.addEventListener('focus', function() {
-                this.select();
-            });
-            ploegNaamLabel.appendChild(inputNaam);
-            ploegData.appendChild(ploegNaamLabel);
-            
-            const ploegKleurLabel = document.createElement('label');
-            ploegKleurLabel.classList.add('ploeg-data-label');
-            ploegKleurLabel.textContent = `kleur: `;
-            const inputKleur = document.createElement('input');
-            inputKleur.type = 'color';
-            inputKleur.id = `kleur-${i+1}`;
-            inputKleur.className = 'kleur-input';
-            inputKleur.value = team.kleur || '#000000';
-            inputKleur.disabled = team.flex === false; // Disable input for non-flex teams
-            inputKleur.addEventListener('focus', function() {
-                this.select();
-            });
-            ploegKleurLabel.appendChild(inputKleur);
-            ploegData.appendChild(ploegKleurLabel);
-            ploegDataElts.appendChild(ploegData);
-        });
-        ploegDataContainer.appendChild(ploegDataElts);
-        overlayContainer.appendChild(ploegDataContainer);
-
-
-        const div = document.createElement('div');
-        div.classList.add('modal-button-container');
-        const button = document.createElement('button');
-        button.id = "savePloegData";
-        button.textContent = "Opslaan";
-        button.addEventListener('click', savePloegData);
-        div.appendChild(button);
-        const reset = document.createElement('button');
-        reset.id = "resetPloegData";
-        reset.textContent = "Standaardinstellingen terugzetten";
-        reset.addEventListener('click', resetDefaultPloegData);
-        div.appendChild(reset);
-        overlayContainer.appendChild(div);
-        DOM.overlay.appendChild(overlayContainer);
-    }*/
+    });
 };
-
-/*function deleteOneSymbol() {
-    const ploegDataElts = document.querySelectorAll('.ploeg-data');
-    if (ploegDataElts.length <= 3) {
-        //alert('Er moet minstens 3 symbolen overblijven!');
-        return;
-    }
-    const lastPloegData = ploegDataElts[ploegDataElts.length - 1];
-    lastPloegData.parentNode.removeChild(lastPloegData);
-}*/
-
-function addOneSymbol() {
-    const ploegDataElts = document.querySelectorAll('.ploeg-data');
-    if (ploegDataElts.length >= 20) {
-        alert('Maximaal 20 symbolen zijn toegestaan!');
-        return;
-    }
-    const ploegDataContainer = document.querySelector('.ploeg-data-elts');
-    const ploegData = document.createElement('div');
-    ploegData.classList.add('ploeg-data');
-    
-    const ploegDataLabel = document.createElement('label');
-    ploegDataLabel.classList.add('ploeg-data-label');
-    ploegDataLabel.textContent = `symbool: `;
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = `symbool-${ploegDataElts.length + 1}`;
-    input.className = 'symbool-input';
-    input.value = '';
-    input.addEventListener('focus', function() {
-        this.select();
-    });
-    ploegDataLabel.appendChild(input);
-    ploegData.appendChild(ploegDataLabel);
-    
-    const ploegNaamLabel = document.createElement('label');
-    ploegNaamLabel.classList.add('ploeg-data-label');
-    ploegNaamLabel.textContent = `naam: `;
-    const inputNaam = document.createElement('input');
-    inputNaam.type = 'text';
-    inputNaam.id = `naam-${ploegDataElts.length + 1}`;
-    inputNaam.className = 'symbool-input';
-    inputNaam.value = '';
-    inputNaam.addEventListener('focus', function() {
-        this.select();
-    });
-    ploegNaamLabel.appendChild(inputNaam);
-    ploegData.appendChild(ploegNaamLabel);
-    
-    const ploegKleurLabel = document.createElement('label');
-    ploegKleurLabel.classList.add('ploeg-data-label');
-    ploegKleurLabel.textContent = `kleur: `;
-    const inputKleur = document.createElement('input');
-    inputKleur.type = 'color';
-    inputKleur.id = `kleur-${ploegDataElts.length + 1}`;
-    inputKleur.className = 'kleur-input';
-    inputKleur.value = '#000000';
-    inputKleur.addEventListener('focus', function() {
-        this.select();
-    });
-    ploegKleurLabel.appendChild(inputKleur);
-    
-    ploegData.appendChild(ploegKleurLabel);
-    
-    ploegDataContainer.appendChild(ploegData);
-    
-};
-
-/*function savePloegData() {
-    const ploegData = [];
-    const ploegDataElts = document.querySelectorAll('.ploeg-data');
-    ploegDataElts.forEach(ploeg => {
-        const symboolInput = ploeg.querySelector('.symbool-input');
-        const naamInput = ploeg.querySelector('.naam-input');
-        const kleurInput = ploeg.querySelector('.kleur-input');
-        const symbool = symboolInput.value.trim().toUpperCase();
-        const naam = naamInput.value.trim();
-        const kleur = kleurInput.value.trim();
-        if (symbool && naam && kleur) {
-            ploegData.push({ symbool, naam, kleur });
-        }
-    });
-    if (ploegData.length === 0) {
-        alert('Geen geldige ploeggegevens ingevoerd!');
-        return;
-    }
-    // Save to localStorage
-    teamData = ploegData;
-    saveToLocalStorage('teamData', teamData);
-    // Update dropdown and legend
-    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
-    const selectedPloeg = instellingen.selectedPloeg;
-    buildTeamDropdown(ploegData.length, selectedPloeg);
-    if(activeBlad === 1 || activeBlad === 2) {
-        maakPloegenLegende();
-    } else if (activeBlad === 3) {
-        const month = instellingen.currentMonth;
-        const year = instellingen.currentYear;
-        generateTeamCalendar(year, month);
-    }
-    alert("Ploeggegevens succesvol opgeslagen!");
-    toggleModal(false);
-};*/
-/*function resetDefaultPloegData() {
-    // Reset the ploegData to default values
-    const userResponse = confirm(`Weet je zeker dat je de standaard ploeggegevens wilt terugzetten? Dit kan niet ongedaan worden gemaakt!`);
-    // If the user cancels, exit the function
-    if (!userResponse) return;
-    teamData = JSON.parse(JSON.stringify(ploegenGegevens));
-    saveToLocalStorage('teamData', teamData);
-    // Update dropdown and legend
-    const instellingen = getSettingsFromLocalStorage(activeBlad, defaultSettings);
-    const selectedPloeg = instellingen.selectedPloeg;
-    buildTeamDropdown(teamData.length, selectedPloeg);
-    if(activeBlad === 1 || activeBlad === 2) {
-        maakPloegenLegende();
-    } else if (activeBlad === 3) {
-        const month = instellingen.currentMonth;
-        const year = instellingen.currentYear;
-        generateTeamCalendar(year, month);
-    }
-    alert("Ploeggegevens succesvol teruggezet naar standaardinstellingen!");
-    toggleModal(false);
-};*/
 
 function addOneDay() {
     const wekenContainer = document.querySelector('.weken-container');
@@ -452,13 +265,11 @@ function addOneDay() {
 function deleteOneDay() {
     const wekenContainer = document.querySelector('.weken-container');
     const aantalShiften = document.querySelectorAll('.shift-input').length;
-    //console.log(`alle shiften: ${aantalShiften}`);
     
     if(aantalShiften === 1) return;
     if((aantalShiften - 1) % 7 === 0) {
         wekenContainer.removeChild(wekenContainer.lastElementChild);
     } else {
-        //console.log(`kolom index: ${(aantalShiften - 1) % 7}`);
         const lastWeekContainer = wekenContainer.lastElementChild;
         const lastLabelContainer = lastWeekContainer.lastElementChild;
         lastLabelContainer.removeChild(lastLabelContainer.lastElementChild);
@@ -490,13 +301,11 @@ function deleteOneTeam() {
 };
 
 function resetDefaultSettings() {
-    // Reset the input fields to default values
     const userResponse = confirm(`Weet je zeker dat je de standaardinstellingen wilt terugzetten? Dit kan niet ongedaan worden gemaakt!`);
-    // If the user cancels, exit the function
     if (!userResponse) return;
     
     gegevensOpslaan(ploegSchema, startDates, false);
-    toggleModal(false);
+    toggleModal();
 };
 
 const gegevensOpslaan = (shiftObj, dateObj, bevestiging = true) => {
@@ -512,11 +321,8 @@ const gegevensOpslaan = (shiftObj, dateObj, bevestiging = true) => {
             const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
             if(instellingen.selectedPloeg > aantalPloegen) updatePaginaInstLocalStorage('paginaInstellingen', defaultSettings, i, {ploeg:1});
         });
-        buildTeamDropdown(aantalPloegen, instellingen.selectedPloeg);
-    } else if (aantalPloegenSelect < aantalPloegen) {
-        const selectedPloeg = getSettingsFromLocalStorage(activeBlad, defaultSettings).selectedPloeg;
-        buildTeamDropdown(aantalPloegen, selectedPloeg);
     }
+
     if(activeBlad === 1 || activeBlad === 2) {
         maakPloegenLegende();
     } else if (activeBlad === 3) {
@@ -527,8 +333,8 @@ const gegevensOpslaan = (shiftObj, dateObj, bevestiging = true) => {
         if(bevestiging) alert("Wijzigingen succesvol opgeslagen!");
         return;
     }
-    updateCalendar();
 
+    updateCalendar(true);
     if(bevestiging) alert("Wijzigingen succesvol opgeslagen!");
 };
 
@@ -557,7 +363,7 @@ function ploegSysteemOpslaan() {
         const shiftObj = shiftenOmzettenNaarObject(shiften);
         const dateObj = datumsOmzettenNaarObject(datums);
         gegevensOpslaan(shiftObj, dateObj);
-        toggleModal(false);
+        toggleModal();
     } else {
         alert('Sommige shift-inputs waren niet correct ingevuld !');
     }

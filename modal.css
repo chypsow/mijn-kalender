@@ -44,9 +44,13 @@
     }
 }
 .modal-button-container {
-    /*margin-top: 40px;*/
     display: flex;
     justify-content: space-between;
+}
+.customize-button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
 }
 .print-modal-button {
    /* margin-top: 20px;*/
@@ -130,6 +134,10 @@
     text-align: center;
 }
 /*css voor instellingen modal*/
+.top-header {
+    display: flex;
+    justify-content: space-between;
+}
 .heading-modal {
     display: inline-block;
     margin: 0;
@@ -473,15 +481,22 @@ input[type=checkbox] {
     cursor: default;
     box-shadow: none;
 }
-
+#customize {
+    background-color: rgb(172, 186, 189);
+    /*color: #e0e0e0;*/
+}
+#customize:hover {
+    box-shadow: none;
+    background-color: #99a8ac;
+}
 .checkbox-container {
-    display: none;
+    /*display: none;*/
     /*margin-top: 20px;*/
     border-radius: 5px;
     padding: 10px;
-    border: 1px solid rgb(151, 151, 151);
+    /*border: 1px solid rgb(151, 151, 151);*/
     background-color: #d3d3d3;
-    box-shadow: 0 0 10px rgb(155, 155, 155);
+    /*box-shadow: 0 0 10px rgb(155, 155, 155);*/
 }
 .checkbox-container label{
     display: block;

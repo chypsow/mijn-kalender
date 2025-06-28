@@ -15,8 +15,8 @@ export const dateData = [
 
 export const dataBeginRecht = {
     2024: {"BV": 16, "CS": 0, "ADV": 16, "BF": 6, "AV": 0, "HP": 3, "Z": 6},
-    2025: {"BV": 16, "CS": 0, "ADV": 17, "BF": 6, "AV": 1, "HP": 0, "Z": 0},
-    2026: {"BV": 16, "CS": 0, "ADV": 14, "BF": 6, "AV": 2, "HP": 0, "Z": 0}
+    2025: {"BV": 16, "CS": 0, "ADV": 16, "BF": 6, "AV": 0, "HP": 0, "Z": 0},
+    2026: {"BV": 16, "CS": 0, "ADV": 14, "BF": 6, "AV": 0, "HP": 0, "Z": 0}
 };
 
 export const dataVerlofdagen = {
@@ -56,6 +56,7 @@ export const dataVerlofdagen = {
         {"datum": "21/8/2025", "soort": "ADV"},
         {"datum": "23/8/2025", "soort": "BF"},
         {"datum": "24/8/2025", "soort": "ADV"},
+        {"datum": "28/8/2025", "soort": "BV"},
         {"datum": "26/9/2025", "soort": "ADV"},
         {"datum": "31/10/2025", "soort": "ADV"},
         {"datum": "4/12/2025", "soort": "BF"},
@@ -69,7 +70,7 @@ export const dataVerlofdagen = {
         {"datum": "6/3/2025", "soort": "V"},
         {"datum": "7/3/2025", "soort": "V"},
         {"datum": "1/3/2025", "soort": "ADV"},
-        {"datum": "30/10/2025", "soort": "ADV"},
+        {"datum": "30/10/2025", "soort": "BV"},
         {"datum": "3/1/2025", "soort": "ADV"},
         {"datum": "4/4/2025", "soort": "L"},
         {"datum": "5/4/2025", "soort": "L"},
@@ -80,7 +81,8 @@ export const dataVerlofdagen = {
         {"datum": "13/6/2025", "soort": "BV"},
         {"datum": "30/4/2025", "soort": "BV"},
         {"datum": "12/6/2025", "soort": "ADV"},
-        {"datum": "19/5/2025", "soort": "BV"}
+        {"datum": "19/5/2025", "soort": "BV"},
+        {"datum": "31/12/2025", "soort": "BF"}
     ],
     2024: [
         {"datum": "1/1/2024","soort": "V"},

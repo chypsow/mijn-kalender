@@ -5,7 +5,7 @@ import { shiftPatroon, ploegenGegevens } from './makeModalSettings.js';
 
 export let activeBlad = localStorage.getItem('activeBlad') ? parseInt(localStorage.getItem('activeBlad')) : 0;
 
-export function buildSideBar() {
+export function maakSideBar() {
     const tabArray = ['Jaarkalender-Tabel', 'Jaarkalender-Raster', 'Maandkalender', 'TeamKalender'];
     DOM.topNav.setAttribute('role', 'tablist');
     tabArray.forEach((tab, index) => {
@@ -30,7 +30,7 @@ export function buildSideBar() {
     });
 };
 
-export function buildTeamDropdown(numberOfTeams, selectedTeam = 1) {
+export function maakPloegDropdown(numberOfTeams, selectedTeam = 1) {
     DOM.ploeg.innerHTML = '';
     if (numberOfTeams <= 1) {
         DOM.ploeg.style.display = 'none';
@@ -44,10 +44,10 @@ export function buildTeamDropdown(numberOfTeams, selectedTeam = 1) {
         option.textContent = `Ploeg ${i}`;
         DOM.ploeg.appendChild(option);
     }
-    DOM.ploeg.selectedIndex = Math.max(0, selectedTeam - 1);
-}
+    DOM.ploeg.selectedIndex = selectedTeam - 1;
+};
 
-export function buildButtons() {
+export function maakKnoppen() {
     const knoppen = [
         ['instellingen', 'fa-cog', 'Instellingen'],
         ['feestdagen', 'fa-calendar', 'Feestdagen'],

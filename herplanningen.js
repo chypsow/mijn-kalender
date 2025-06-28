@@ -248,7 +248,7 @@ function makeModalHerplanning(selectedCells, selectedPloeg) {
         herplanning.classList.add('verlofCollection');
         herplanning.addEventListener('click', (e) => {
             handelAanvraag(e, selectedCells, selectedPloeg);
-            toggleModal(false);
+            toggleModal();
         });
         container.appendChild(herplanning);
     });

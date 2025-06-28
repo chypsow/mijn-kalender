@@ -2,11 +2,16 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, defaultSettings, getSettingsFromLocalStorage, saveToLocalStorage, updatePaginaInstLocalStorage } from './functies.js';
-import { activeBlad, buildSideBar, buildTeamDropdown, buildButtons, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
-import { shiftData, dateData, dataVerlofdagen, dataBeginRecht} from "./config.js"
-import { startDatums } from './makeModalSettings.js';
-  
+import { toggleModal, defaultSettings, getSettingsFromLocalStorage, updatePaginaInstLocalStorage } from './functies.js';
+import { activeBlad, maakSideBar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
+import { startDatums, localStorageAanpassenVolgensConfigJS } from './makeModalSettings.js';
+
+// Variabels voor muis event listeners voor het selecteren van cellen
+let isSelecting = false;
+let selectionStart = null; // zoals ActiveCell in excel
+let lastSelectedCells = [];
+let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
+
 export const DOM = {
     monthYear: document.getElementById('month-year'),
     monthSelect: document.getElementById("month-select"),
@@ -32,26 +37,23 @@ export const DOM = {
 export function generateCalendar() {
     if (calendarGenerators[activeBlad]) {
         emptyContainers();
-
         const settings = getSettingsFromLocalStorage(activeBlad, defaultSettings);
         const selectedPloeg = settings.selectedPloeg;
         const currentMonth = settings.currentMonth;
         const currentYear = settings.currentYear;
-        
-        DOM.ploeg.value = selectedPloeg;
+        maakPloegDropdown(activeBlad === 3 ? 1 : startDatums.length, selectedPloeg);
+
         if(activeBlad === 0 || activeBlad === 1) calendarGenerators[activeBlad](selectedPloeg, currentYear);
         if(activeBlad === 2) calendarGenerators[activeBlad](selectedPloeg, currentYear, currentMonth);
         if(activeBlad ===  3) calendarGenerators[activeBlad](currentYear, currentMonth);
         refreshCalendar();
-        //adjustLayout();
     } else {
         console.error(`Geen kalendergenerator gevonden voor blad: ${activeBlad}`);
-
     }
 };
+
 const calendarGenerators = {
     0: (team, year) => {
-        DOM.ploeg.hidden = false;
         maakVerlofContainer();
         maakVerlofLegende();
         document.getElementById('rapport').hidden = false;
@@ -60,7 +62,6 @@ const calendarGenerators = {
         generateYearCalendarTable(team, year);
     },
     1: (team, year) => {
-        DOM.ploeg.hidden = false;
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Jaarkalender';
@@ -68,7 +69,6 @@ const calendarGenerators = {
         generateYearCalendar(team, year);
     },
     2: (team, year, month) => {
-        DOM.ploeg.hidden = false;
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
         DOM.titel.textContent = 'Maandkalender';
@@ -76,7 +76,6 @@ const calendarGenerators = {
         generateMonthCalendar(team, year, month);
     },
     3: (year, month) => {
-        DOM.ploeg.hidden = true;
         maakPloegenLegende();
         DOM.topSectie3.className = 'verborgen-sectie';
         document.getElementById('rapport').hidden = true;
@@ -101,20 +100,22 @@ function refreshCalendar() {
     void DOM.calendar.offsetWidth; // Forceer een reflow (truc om animatie te resetten)
     DOM.calendar.classList.add("fade-animation");
 };
-export const updateCalendar = () => {
+export const updateCalendar = (makeDropdown = false) => {
     const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
-    const team = setting.selectedPloeg;
+    const selectedPloeg = setting.selectedPloeg;
     const year = setting.currentYear;
     const month = setting.currentMonth;
+    if (makeDropdown) maakPloegDropdown(startDatums.length, selectedPloeg);
+
     switch (activeBlad) {
         case 0:
-            updateYearCalendarTable(team, year);
+            updateYearCalendarTable(selectedPloeg, year);
             break;
         case 1:
-            updateYearCalendarGrid(team, year);
+            updateYearCalendarGrid(selectedPloeg, year);
             break;
         case 2:
-            updateMonthCalendar(team, year, month);
+            updateMonthCalendar(selectedPloeg, year, month);
             break;
         case 3:
             updateTeamCalendar(year, month);
@@ -157,7 +158,7 @@ function triggerNext() {
     }
     updateCalendar();
 };
-DOM.sluiten.addEventListener('click', () => toggleModal(false));
+DOM.sluiten.addEventListener('click', () => toggleModal());
 
 DOM.ploeg.addEventListener('change', (event) => {
     const selectedPloeg = Number(event.target.value); 
@@ -190,12 +191,6 @@ DOM.monthYear.addEventListener("click", () => {
     }
     DOM.yearSelect.classList.toggle('visible');
 });
-
-// Event listeners voor het selecteren van cellen
-let isSelecting = false;
-let selectionStart = null; // zoals ActiveCell in excel
-let lastSelectedCells = [];
-let selectedCells = JSON.parse(sessionStorage.getItem("selectedCells")) || [];
 
 document.addEventListener("mousedown", (event) => {
     if (activeBlad !== 0 || !event.target.classList.contains("cell")) return;
@@ -348,9 +343,8 @@ document.addEventListener("click", (event) => {
         DOM.monthSelect.classList.remove("visible");
         DOM.yearSelect.classList.remove("visible");
     }
-    if(DOM.modalOverlay.contains(event.target) && !DOM.modal.contains(event.target)) {
-        toggleModal(false);
-    }
+    if(DOM.modalOverlay.contains(event.target) && !DOM.modal.contains(event.target)) toggleModal();
+    
 });
 
 //local storage aanpassen volgens het bestand config.js
@@ -361,13 +355,13 @@ document.addEventListener('keydown', (event) => {
 
         if (event.key === "1") {
             cond1 = true;
-            message = `Alleen verlofdagen van ploeg 1 worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
+            message = "Alleen shiftPatroon en datums worden aangepast volgens configCommon.js. Weet je zeker dat je dit wilt doen?";
         } else if (event.key === "2") {
             cond2 = true;
             message = `Alleen beginrecht verlof wordt aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
         } else if (event.key === "3") {
             cond3 = true;
-            message = "Alleen shiftPatroon en datums worden aangepast volgens configCommon.js. Weet je zeker dat je dit wilt doen?";
+            message = `Alleen verlofdagen van ploeg 1 worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
         } else if (event.key === "0") {
             cond1 = cond2 = cond3 = true;
             message = `Alle instellingen worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
@@ -381,25 +375,10 @@ document.addEventListener('keydown', (event) => {
         localStorageAanpassenVolgensConfigJS(cond1, cond2, cond3);
     }
 });
-function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 = true) {
-    if(cond1) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
-    if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
-    if(cond3) {
-        saveToLocalStorage('shiftPatroon', shiftData);
-        saveToLocalStorage('startDatums', dateData);
-        const lengte = startDatums.length;
-        Array.from({length:4}).forEach((_, i) => {
-            const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
-            if(instellingen.selectedPloeg > lengte) updatePaginaInstLocalStorage('paginaInstellingen', defaultSettings, i, {ploeg:1});
-        }); 
-    }
-    location.reload(true); // of location.href = location.href;
-};
 
 document.addEventListener('DOMContentLoaded', () => {
-    buildSideBar();
-    buildTeamDropdown(startDatums.length);
-    buildButtons();
+    maakSideBar();
+    maakKnoppen();
     generateCalendar();
 });
 

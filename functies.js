@@ -79,7 +79,7 @@ export function getSettingsFromLocalStorage(blad, setting) {
     };
 };
 
-export function toggleModal(show , positie = '50px', backgroundColor = '#d1d1d1') {
+export function toggleModal(show = false, positie = '50px', backgroundColor = '#d1d1d1') {
     if (!show) {
         DOM.modalOverlay.classList.remove('open');
         setTimeout(() => {
@@ -108,7 +108,7 @@ export function handleClickBtn(e) {
     switch(btn) {
         case 'instellingen':
             makeModalInstellingen(shiftPatroon, startDatums);
-            toggleModal(true, '10px', '#d1d1d1');
+            toggleModal(true);
             break;
         case 'feestdagen':
             makeModalFeestdagen(activeBlad, defaultSettings);
