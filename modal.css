@@ -20,8 +20,7 @@
     display: none; /* Verborgen standaard */
     position: fixed;
     left: 50%;
-    min-width: 800px;
-    
+    min-width: 900px;
     padding: 10px;
     color: rgba(0, 0, 0, 0.884);
     background-color: rgb(226, 226, 226);
