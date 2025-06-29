@@ -334,6 +334,32 @@ function getCurrentTeam() {
     return settings[activeBlad].ploeg;
 };
 
+//Modal verplaatsen
+
+//const header = document.querySelector(".modal-header");
+let isDragging = false;
+let offsetX, offsetY;
+// Start slepen bij muisklik op de header
+
+function onMouseMove(e) {
+    if (isDragging) {
+        DOM.modal.style.left = `${e.clientX - offsetX}px`;
+        DOM.modal.style.top = `${e.clientY - offsetY}px`;
+    }
+}
+function onMouseUp() {
+    isDragging = false;
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+}
+DOM.modal.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  offsetX = e.clientX - DOM.modal.offsetLeft;
+  offsetY = e.clientY - DOM.modal.offsetTop;
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
+});
+
 document.addEventListener("click", (event) => {
     //console.log("Klik gedetecteerd:", event.target);
    if (DOM.selectOverlay.contains(event.target) && event.target !== DOM.yearSelect && event.target !== DOM.monthSelect) {

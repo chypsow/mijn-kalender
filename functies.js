@@ -79,27 +79,46 @@ export function getSettingsFromLocalStorage(blad, setting) {
     };
 };
 
-export function toggleModal(show = false, positie = '50px', backgroundColor = '#d1d1d1') {
+export function toggleModal(show = false, positie = '50px', bg = '#d1d1d1') {
+    if (!DOM.modal) return;
+
     if (!show) {
         DOM.modalOverlay.classList.remove('open');
         setTimeout(() => {
             DOM.modalOverlay.style.display = 'none';
-            if (backgroundColor !== null) {
-                DOM.overlay.style.backgroundColor = ''; // Reset modal background to default
+            DOM.modal.style.display = 'none';
+            DOM.modal.style.animation = ''; // Reset animatie
+            if (bg !== null) {
+                DOM.overlay.style.backgroundColor = ''; // Reset achtergrondkleur
             }
         }, 300);
     } else {
+        // 1. Toon overlay direct (maar zonder animatie)
         DOM.modalOverlay.style.display = 'block';
+
+        // 2. Voorbereiding modal: tijdelijk zichtbaar maken voor meting
+        DOM.modal.style.visibility = 'hidden';
+        DOM.modal.style.display = 'block';
+        DOM.modal.style.transform = 'scale(1)'; // Zet animatie uit tijdelijk
+
+        // 3. Bereken en zet positie
+        const centerX = (window.innerWidth - DOM.modal.offsetWidth) / 2;
+        DOM.modal.style.left = `${centerX}px`;
+        DOM.modal.style.top = positie;
+
+        // 4. Modal weer echt tonen met animatie
+        DOM.modal.style.visibility = 'visible';
+        DOM.modal.style.transform = 'scale(0)'; // Start zoom-animatie
+        DOM.modal.style.animation = 'zoom 0.3s forwards';
+
+        // 5. Start overlay fade-in
         setTimeout(() => {
             DOM.modalOverlay.classList.add('open');
         }, 10);
-        if (backgroundColor !== null) {
-            DOM.overlay.style.backgroundColor = backgroundColor; // Set modal background color
+
+        if (bg !== null) {
+            DOM.overlay.style.backgroundColor = bg;
         }
-    }
-    if (DOM.modal) {
-        DOM.modal.style.top = positie;
-        DOM.modal.style.display = show ? "block" : "none";
     }
 };
 

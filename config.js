@@ -54,7 +54,8 @@ export const dataVerlofdagen = {
         { "datum": "15/10/2026", "soort": "ADV" },
         { "datum": "16/10/2026", "soort": "ADV" },
         { "datum": "7/8/2026", "soort": "ADV" },
-        { "datum": "11/9/2026", "soort": "BV" }
+        { "datum": "11/9/2026", "soort": "BV" },
+        { "datum": "31/12/2026", "soort": "BF" }
     ],
     2025: [
         { "datum": "7/1/2025", "soort": "ADV" },
