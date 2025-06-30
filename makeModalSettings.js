@@ -1,4 +1,4 @@
-import { DOM, updateCalendar } from "./main.js";
+import { DOM, generateCalendar, updateCalendar } from "./main.js";
 import { defaultSettings, toggleModal, saveToLocalStorage, updatePaginaInstLocalStorage, getSettingsFromLocalStorage, getArrayValues } from "./functies.js";
 import { maakPloegenLegende, activeBlad } from "./componentenMaken.js";
 import { generateTeamCalendar } from "./teamKalender.js";
@@ -51,7 +51,7 @@ export function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true,
 
     //location.reload(true); // of location.href = location.href;
     if(DOM.modal.style.display !== 'none') toggleModal();
-    updateCalendar(true);
+    generateCalendar();
 };
 
 export function makeModalInstellingen(shiftPatroon, startDatums) {
@@ -179,9 +179,9 @@ const makeModalCustomize = () => {
         <div class="customize-container">
             <div class="checkbox-container">
                 <label><input type="checkbox" id="checkbox0">Alles ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+0}</span></label>
-                <label><input type="checkbox" id="checkbox1">Shiftpatroon ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+1}</span></label>
-                <label><input type="checkbox" id="checkbox2">Beginrechten verlofdagen ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+2}</span></label>
-                <label><input type="checkbox" id="checkbox3">Verlofdagen en herplanningen ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+3}</span></label>
+                <label><input type="checkbox" id="checkbox1">Eigen ploegschema ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+1}</span></label>
+                <label><input type="checkbox" id="checkbox2">Eigen beginrechten ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+2}</span></label>
+                <label><input type="checkbox" id="checkbox3">Eigen ingeplande verlofdagen ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+3}</span></label>
             </div>
         </div>
         <div class="customize-button-container">

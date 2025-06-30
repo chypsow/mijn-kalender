@@ -469,27 +469,14 @@ input[type=checkbox] {
     margin-bottom: auto;
 }
 
-#btnOverlay[disabled] {
-    background-color: #b0b0b0;
-    color: #7a7a7a;
-    cursor: default;
-    box-shadow: none;
-}
-#reset[disabled] {
-    background-color: #b0b0b0;
-    color: #7a7a7a;
-    cursor: default;
-    box-shadow: none;
-}
 #customize,
 #reset {
     background: linear-gradient(180deg, rgb(197, 197, 197), rgb(148, 148, 148));
-    /*color: #e0e0e0;*/
+    box-shadow: inset 0 0 10px rgb(97, 97, 97);
 }
 #customize:hover,
 #reset:hover {
-    box-shadow: inset 0 0 10px rgb(97, 97, 97);
-    /*background: #dddddd;*/
+    background: linear-gradient(180deg, rgb(209, 209, 209), rgb(170, 170, 170));
 }
 .checkbox-container {
     /*display: none;*/
