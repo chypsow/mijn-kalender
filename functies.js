@@ -102,11 +102,13 @@ export function toggleModal(show = false, positie = '50px', bg = '#d1d1d1') {
         DOM.modal.style.transform = 'scale(1)'; // Zet animatie uit tijdelijk
 
         // 3. Bereken en zet positie
-        const centerX = (window.innerWidth - DOM.modal.offsetWidth) / 2;
+        const modalWidth = DOM.modal.offsetWidth;
+        const centerX = (window.innerWidth - modalWidth) / 2;
         DOM.modal.style.left = `${centerX}px`;
         DOM.modal.style.top = positie;
 
         // 4. Modal weer echt tonen met animatie
+        //DOM.modal.style.width = modalWidth;
         DOM.modal.style.visibility = 'visible';
         DOM.modal.style.transform = 'scale(0)'; // Start zoom-animatie
         DOM.modal.style.animation = 'zoom 0.3s forwards';
