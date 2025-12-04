@@ -34,6 +34,11 @@ const startDates = [
 export let shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || ploegSchema;
 export let startDatums = JSON.parse(localStorage.getItem("startDatums")) || startDates;
 
+export function gegevensLaden() {
+    shiftPatroon = JSON.parse(localStorage.getItem("shiftPatroon")) || ploegSchema;
+    startDatums = JSON.parse(localStorage.getItem("startDatums")) || startDates;
+};
+
 export function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 = true) {
     if(cond1) {
         shiftPatroon = shiftData;

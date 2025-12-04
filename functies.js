@@ -1,6 +1,6 @@
 import { DOM, generateCalendar, updateCalendar } from "./main.js";
 import { activeBlad } from "./componentenMaken.js";
-import { makeModalInstellingen, shiftPatroon, startDatums, ploegenGegevens } from "./makeModalSettings.js";
+import { makeModalInstellingen, shiftPatroon, startDatums, ploegenGegevens, gegevensLaden } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
 import { makeModalVakanties } from "./makeModalVakanties.js";
 import { makeModalRapport } from "./makeModalRapport.js";
@@ -160,6 +160,7 @@ export function handleClickBtn(e) {
                 .then(result => console.log('Import resultaat:', result))
                 .catch(err => console.error('Import fout:', err))
                 .finally(() => {
+                    gegevensLaden(); // herlaad de instellingen na import
                     generateCalendar(); // wordt altijd aan het einde uitgevoerd
                 });
             break;
