@@ -163,7 +163,7 @@ export function handleClickBtn(e) {
                     generateCalendar(); // wordt altijd aan het einde uitgevoerd
                 });
             break;
-            
+
         case 'afdrukken':
             afdrukVoorbereiding();
             window.print();
@@ -324,7 +324,7 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
         };
 
         const showChooser = (payloadObj, initialOverwrite) => {
-            // create overlay
+            // overlay
             const overlay = document.createElement('div');
             overlay.style.position = 'fixed';
             overlay.style.inset = '0';
@@ -333,117 +333,233 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
             overlay.style.display = 'flex';
             overlay.style.alignItems = 'center';
             overlay.style.justifyContent = 'center';
+            overlay.style.padding = '20px';
 
+            // panel
             const panel = document.createElement('div');
-            panel.style.width = '90%';
-            panel.style.maxWidth = '720px';
-            panel.style.maxHeight = '80%';
+            panel.style.width = '100%';
+            panel.style.maxWidth = '860px';
+            panel.style.maxHeight = '90%';
             panel.style.overflow = 'auto';
             panel.style.background = '#fff';
-            panel.style.borderRadius = '6px';
-            panel.style.padding = '16px';
-            panel.style.boxShadow = '0 8px 24px rgba(0,0,0,0.3)';
+            panel.style.borderRadius = '8px';
+            panel.style.padding = '18px';
+            panel.style.boxShadow = '0 10px 30px rgba(0,0,0,0.35)';
+            panel.style.color = '#111';
             overlay.appendChild(panel);
 
+            // title / info
             const title = document.createElement('h3');
-            title.textContent = 'Import localStorage - kies items';
-            title.style.marginTop = '0';
+            title.textContent = 'Import localStorage — kies items';
+            title.style.margin = '0 0 8px 0';
             panel.appendChild(title);
 
             const info = document.createElement('p');
-            info.textContent = 'Selecteer de items die je wilt importeren en klik op "Importeer geselecteerd".';
+            info.textContent = 'Kies welke keys je wilt importeren. Klik op een sleutel om de inhoud te tonen/verborgen.';
+            info.style.margin = '0 0 12px 0';
             panel.appendChild(info);
 
-            // overwrite checkbox
+            // options row
+            const optionsRow = document.createElement('div');
+            optionsRow.style.display = 'flex';
+            optionsRow.style.gap = '12px';
+            optionsRow.style.alignItems = 'center';
+            optionsRow.style.marginBottom = '12px';
+            panel.appendChild(optionsRow);
+
             const overwriteLabel = document.createElement('label');
-            overwriteLabel.style.display = 'block';
-            overwriteLabel.style.margin = '8px 0 12px 0';
+            overwriteLabel.style.display = 'flex';
+            overwriteLabel.style.alignItems = 'center';
+            overwriteLabel.style.gap = '8px';
             const overwriteCheckbox = document.createElement('input');
             overwriteCheckbox.type = 'checkbox';
             overwriteCheckbox.checked = !!initialOverwrite;
-            overwriteCheckbox.style.marginRight = '8px';
             overwriteLabel.appendChild(overwriteCheckbox);
-            overwriteLabel.appendChild(document.createTextNode('Overschrijf bestaande keys (overwrite)'));
-            panel.appendChild(overwriteLabel);
-
-            // select all button
-            const controlsDiv = document.createElement('div');
-            controlsDiv.style.display = 'flex';
-            controlsDiv.style.gap = '8px';
-            controlsDiv.style.marginBottom = '8px';
-            panel.appendChild(controlsDiv);
+            overwriteLabel.appendChild(document.createTextNode('Overschrijf bestaande keys'));
+            optionsRow.appendChild(overwriteLabel);
 
             const selectAllBtn = document.createElement('button');
             selectAllBtn.type = 'button';
             selectAllBtn.textContent = 'Selecteer alles';
-            selectAllBtn.addEventListener('click', () => {
-                listItems.forEach(i => i.checkbox.checked = true);
-            });
-            controlsDiv.appendChild(selectAllBtn);
+            selectAllBtn.style.cursor = 'pointer';
+            optionsRow.appendChild(selectAllBtn);
 
             const clearAllBtn = document.createElement('button');
             clearAllBtn.type = 'button';
             clearAllBtn.textContent = 'Wis selectie';
-            clearAllBtn.addEventListener('click', () => {
-                listItems.forEach(i => i.checkbox.checked = false);
-            });
-            controlsDiv.appendChild(clearAllBtn);
+            clearAllBtn.style.cursor = 'pointer';
+            optionsRow.appendChild(clearAllBtn);
 
-            // list keys
+            // list container (styled like object inspector)
             const listContainer = document.createElement('div');
             listContainer.style.display = 'grid';
-            listContainer.style.gap = '6px';
-            listContainer.style.marginBottom = '12px';
+            listContainer.style.gap = '10px';
             panel.appendChild(listContainer);
 
             const listItems = [];
+
+            // helper: render value in object-tree style
+            const renderNode = (value, container, level = 0) => {
+                const indent = 12 * level;
+                if (value === null || typeof value !== 'object') {
+                    const span = document.createElement('div');
+                    span.textContent = String(value);
+                    span.style.fontFamily = 'monospace';
+                    span.style.fontSize = '13px';
+                    span.style.marginLeft = `${indent}px`;
+                    container.appendChild(span);
+                    return;
+                }
+                // array or object
+                const isArray = Array.isArray(value);
+                const summary = document.createElement('div');
+                summary.style.display = 'flex';
+                summary.style.alignItems = 'center';
+                summary.style.gap = '8px';
+                summary.style.marginLeft = `${indent}px`;
+
+                const toggle = document.createElement('button');
+                toggle.type = 'button';
+                toggle.textContent = isArray ? `[${value.length}] ▸` : `{${Object.keys(value).length}} ▸`;
+                toggle.style.border = 'none';
+                toggle.style.background = 'transparent';
+                toggle.style.cursor = 'pointer';
+                toggle.style.fontFamily = 'monospace';
+                toggle.style.fontSize = '13px';
+                toggle.style.padding = '0';
+                toggle.style.color = '#0b63d0';
+                summary.appendChild(toggle);
+
+                const label = document.createElement('span');
+                label.textContent = isArray ? 'Array' : 'Object';
+                label.style.fontFamily = 'monospace';
+                label.style.fontSize = '13px';
+                summary.appendChild(label);
+
+                container.appendChild(summary);
+
+                const content = document.createElement('div');
+                content.style.marginLeft = `${indent + 12}px`;
+                content.style.borderLeft = '1px dotted #ddd';
+                content.style.paddingLeft = '8px';
+                content.style.display = 'none';
+                content.style.gap = '6px';
+                content.style.marginTop = '6px';
+                container.appendChild(content);
+
+                toggle.addEventListener('click', () => {
+                    const open = content.style.display === 'block';
+                    content.style.display = open ? 'none' : 'block';
+                    toggle.textContent = (isArray ? `[${value.length}]` : `{${Object.keys(value).length}}`) + (open ? ' ▸' : ' ▾');
+                });
+
+                if (isArray) {
+                    value.forEach((v, i) => {
+                        const row = document.createElement('div');
+                        row.style.display = 'flex';
+                        row.style.gap = '8px';
+                        const idx = document.createElement('div');
+                        idx.textContent = `${i}:`;
+                        idx.style.opacity = '0.7';
+                        idx.style.minWidth = '28px';
+                        idx.style.fontFamily = 'monospace';
+                        row.appendChild(idx);
+                        const valWrap = document.createElement('div');
+                        row.appendChild(valWrap);
+                        content.appendChild(row);
+                        renderNode(v, valWrap, level + 1);
+                    });
+                } else {
+                    Object.entries(value).forEach(([k, v]) => {
+                        const row = document.createElement('div');
+                        row.style.display = 'flex';
+                        row.style.gap = '8px';
+                        row.style.alignItems = 'flex-start';
+                        const keyDiv = document.createElement('div');
+                        keyDiv.textContent = `${k}:`;
+                        keyDiv.style.fontWeight = '600';
+                        keyDiv.style.minWidth = '120px';
+                        keyDiv.style.opacity = '0.85';
+                        keyDiv.style.fontFamily = 'monospace';
+                        row.appendChild(keyDiv);
+                        const valWrap = document.createElement('div');
+                        row.appendChild(valWrap);
+                        content.appendChild(row);
+                        renderNode(v, valWrap, level + 1);
+                    });
+                }
+            };
+
+            // populate list
             Object.entries(payloadObj).forEach(([key, value]) => {
-                const row = document.createElement('div');
-                row.style.display = 'flex';
-                row.style.alignItems = 'flex-start';
-                row.style.gap = '8px';
-                row.style.borderBottom = '1px solid #eee';
-                row.style.paddingBottom = '8px';
-                row.style.marginBottom = '8px';
+                const item = document.createElement('div');
+                item.style.border = '1px solid #eee';
+                item.style.borderRadius = '6px';
+                item.style.padding = '8px';
+                item.style.background = '#fafafa';
+
+                const topRow = document.createElement('div');
+                topRow.style.display = 'flex';
+                topRow.style.alignItems = 'center';
+                topRow.style.justifyContent = 'space-between';
+                topRow.style.gap = '12px';
+
+                const leftGroup = document.createElement('div');
+                leftGroup.style.display = 'flex';
+                leftGroup.style.alignItems = 'center';
+                leftGroup.style.gap = '8px';
 
                 const cb = document.createElement('input');
                 cb.type = 'checkbox';
                 cb.checked = true;
-                row.appendChild(cb);
+                leftGroup.appendChild(cb);
 
-                const keyLabel = document.createElement('div');
-                keyLabel.style.flex = '1';
-                const kTitle = document.createElement('strong');
-                kTitle.textContent = key;
-                keyLabel.appendChild(kTitle);
+                const keySpan = document.createElement('span');
+                keySpan.textContent = key;
+                keySpan.style.fontWeight = '700';
+                keySpan.style.fontFamily = 'monospace';
+                leftGroup.appendChild(keySpan);
 
-                // small preview
-                const preview = document.createElement('pre');
-                preview.style.whiteSpace = 'pre-wrap';
-                preview.style.wordBreak = 'break-word';
-                preview.style.margin = '6px 0 0 0';
-                preview.style.fontSize = '12px';
-                preview.style.maxHeight = '120px';
-                preview.style.overflow = 'auto';
-                try {
-                    preview.textContent = JSON.stringify(value, null, 2);
-                } catch {
-                    preview.textContent = String(value);
-                }
-                keyLabel.appendChild(preview);
+                topRow.appendChild(leftGroup);
 
-                row.appendChild(keyLabel);
-                listContainer.appendChild(row);
+                const rightGroup = document.createElement('div');
+                rightGroup.style.display = 'flex';
+                rightGroup.style.alignItems = 'center';
+                rightGroup.style.gap = '8px';
 
+                const togglePreviewBtn = document.createElement('button');
+                togglePreviewBtn.type = 'button';
+                togglePreviewBtn.textContent = 'Toon inhoud';
+                togglePreviewBtn.style.cursor = 'pointer';
+                rightGroup.appendChild(togglePreviewBtn);
+
+                topRow.appendChild(rightGroup);
+                item.appendChild(topRow);
+
+                const previewWrap = document.createElement('div');
+                previewWrap.style.marginTop = '8px';
+                previewWrap.style.display = 'none';
+                item.appendChild(previewWrap);
+
+                togglePreviewBtn.addEventListener('click', () => {
+                    const isOpen = previewWrap.style.display === 'block';
+                    previewWrap.style.display = isOpen ? 'none' : 'block';
+                    togglePreviewBtn.textContent = isOpen ? 'Toon inhoud' : 'Verberg inhoud';
+                });
+
+                // render pretty object layout
+                renderNode(value, previewWrap, 0);
+
+                listContainer.appendChild(item);
                 listItems.push({ key, checkbox: cb, value });
             });
 
-            // buttons
-            const btns = document.createElement('div');
-            btns.style.display = 'flex';
-            btns.style.justifyContent = 'flex-end';
-            btns.style.gap = '8px';
-            panel.appendChild(btns);
+            // controls: cancel / import
+            const actions = document.createElement('div');
+            actions.style.display = 'flex';
+            actions.style.justifyContent = 'flex-end';
+            actions.style.gap = '8px';
+            actions.style.marginTop = '12px';
 
             const cancelBtn = document.createElement('button');
             cancelBtn.type = 'button';
@@ -452,13 +568,16 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
                 document.body.removeChild(overlay);
                 reject(new Error('Import geannuleerd door gebruiker'));
             });
-            btns.appendChild(cancelBtn);
+            actions.appendChild(cancelBtn);
 
             const importBtn = document.createElement('button');
             importBtn.type = 'button';
             importBtn.textContent = 'Importeer geselecteerd';
             importBtn.style.background = '#0b63d0';
             importBtn.style.color = '#fff';
+            importBtn.style.border = 'none';
+            importBtn.style.padding = '8px 12px';
+            importBtn.style.cursor = 'pointer';
             importBtn.addEventListener('click', () => {
                 const selected = listItems.filter(i => i.checkbox.checked);
                 if (selected.length === 0) {
@@ -491,9 +610,14 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
                 document.body.removeChild(overlay);
                 resolve(result);
             });
-            btns.appendChild(importBtn);
+            actions.appendChild(importBtn);
 
+            panel.appendChild(actions);
             document.body.appendChild(overlay);
+
+            // select/clear handlers
+            selectAllBtn.addEventListener('click', () => listItems.forEach(i => i.checkbox.checked = true));
+            clearAllBtn.addEventListener('click', () => listItems.forEach(i => i.checkbox.checked = false));
         };
 
         const handleText = async (text) => {
