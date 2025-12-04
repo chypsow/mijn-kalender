@@ -57,6 +57,8 @@ const calendarGenerators = {
         maakVerlofContainer();
         maakVerlofLegende();
         document.getElementById('rapport').hidden = false;
+        document.getElementById('export').hidden = false;
+        document.getElementById('import').hidden = false;
         DOM.titel.textContent = 'Jaarkalender';
         DOM.calendar.className = 'year-calendar-table';
         generateYearCalendarTable(team, year);
@@ -64,6 +66,8 @@ const calendarGenerators = {
     1: (team, year) => {
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
+        document.getElementById('export').hidden = true;
+        document.getElementById('import').hidden = true;
         DOM.titel.textContent = 'Jaarkalender';
         DOM.calendar.className = 'year-calendar-grid';
         generateYearCalendar(team, year);
@@ -71,6 +75,8 @@ const calendarGenerators = {
     2: (team, year, month) => {
         maakPloegenLegende();
         document.getElementById('rapport').hidden = true;
+        document.getElementById('export').hidden = true;
+        document.getElementById('import').hidden = true;
         DOM.titel.textContent = 'Maandkalender';
         DOM.calendar.className = 'month-calendar';
         generateMonthCalendar(team, year, month);
@@ -79,6 +85,8 @@ const calendarGenerators = {
         maakPloegenLegende();
         DOM.topSectie3.className = 'verborgen-sectie';
         document.getElementById('rapport').hidden = true;
+        document.getElementById('export').hidden = true;
+        document.getElementById('import').hidden = true;
         DOM.titel.textContent = 'Teamkalender';
         DOM.calendar.className = 'team-calendar-table';
         generateTeamCalendar(year, month);

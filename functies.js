@@ -1,4 +1,4 @@
-import { DOM, updateCalendar } from "./main.js";
+import { DOM, generateCalendar, updateCalendar } from "./main.js";
 import { activeBlad } from "./componentenMaken.js";
 import { makeModalInstellingen, shiftPatroon, startDatums, ploegenGegevens } from "./makeModalSettings.js";
 import { makeModalFeestdagen } from "./makeModalHolidays.js";
@@ -33,7 +33,6 @@ export function updatePaginaInstLocalStorage(obj, defaultSet = null, index, upda
     });
     saveToLocalStorage(obj, getObject);
 };
-
 
 export function getBeginRechtFromLocalStorage(jaar) {
     const defaultValues = { BV: 0, CS: 0, ADV: 0, BF: 0, AV: 0, HP: 0, Z: 0 };
@@ -143,6 +142,28 @@ export function handleClickBtn(e) {
             makeModalRapport(activeBlad, defaultSettings);
             toggleModal(true);
             break;
+        case 'export':
+            // haal geselecteerde ploeg uit de instellingen en bepaal de key
+            const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
+            const selectedPloeg = setting?.selectedPloeg ?? 1;
+            const verlofdagenKey = `verlofdagenPloeg${selectedPloeg}`;
+
+            // exporteer de gewenste items, inclusief het dynamische verlofdagen-item
+            exportLocalStorageItemsToFile(
+                ['beginrechtVerlof', 'shiftPatroon', 'startDatums', verlofdagenKey],
+                true,
+                `Instellingen ploeg${selectedPloeg}-${new Date().toISOString().slice(0,10)}.txt`
+            );
+            break;
+        case 'import':
+            importLocalStorageItemsFromFile(null, { overwrite: true })
+                .then(result => console.log('Import resultaat:', result))
+                .catch(err => console.error('Import fout:', err))
+                .finally(() => {
+                    generateCalendar(); // wordt altijd aan het einde uitgevoerd
+                });
+            break;
+            
         case 'afdrukken':
             afdrukVoorbereiding();
             window.print();
@@ -254,3 +275,264 @@ export function saveArrayToSessionStorage(key, arr) {
     const unique = Array.from(new Map(arr.map(item => [`${item.datum}-${item.team}`, item])).values());
     sessionStorage.setItem(key, JSON.stringify(unique));
 };
+
+export function exportLocalStorageItemsToFile(
+    keys = ['beginrechtVerlof','shiftPatroon','startDatums','verlofdagenPloeg1'],
+    pretty = true,
+    filename = null
+) {
+    const payload = {};
+    keys.forEach(key => {
+        const raw = localStorage.getItem(key);
+        if (raw === null) {
+            payload[key] = null;
+            return;
+        }
+        try {
+            payload[key] = JSON.parse(raw);
+        } catch {
+            // als het geen JSON is, bewaar ruwe string
+            payload[key] = raw;
+        }
+    });
+
+    const content = pretty ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
+    const name = filename || `localstorage-export-${new Date().toISOString().slice(0,10)}.txt`;
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    return true;
+}
+
+export function importLocalStorageItemsFromFile(file = null, { overwrite = true } = {}) {
+    return new Promise((resolve, reject) => {
+        const readTextFromFile = (f) => {
+            return new Promise((res, rej) => {
+                const reader = new FileReader();
+                reader.onload = () => res(String(reader.result));
+                reader.onerror = () => rej(new Error('Fout bij lezen van bestand'));
+                reader.readAsText(f);
+            });
+        };
+
+        const showChooser = (payloadObj, initialOverwrite) => {
+            // create overlay
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.inset = '0';
+            overlay.style.background = 'rgba(0,0,0,0.5)';
+            overlay.style.zIndex = 9999;
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+
+            const panel = document.createElement('div');
+            panel.style.width = '90%';
+            panel.style.maxWidth = '720px';
+            panel.style.maxHeight = '80%';
+            panel.style.overflow = 'auto';
+            panel.style.background = '#fff';
+            panel.style.borderRadius = '6px';
+            panel.style.padding = '16px';
+            panel.style.boxShadow = '0 8px 24px rgba(0,0,0,0.3)';
+            overlay.appendChild(panel);
+
+            const title = document.createElement('h3');
+            title.textContent = 'Import localStorage - kies items';
+            title.style.marginTop = '0';
+            panel.appendChild(title);
+
+            const info = document.createElement('p');
+            info.textContent = 'Selecteer de items die je wilt importeren en klik op "Importeer geselecteerd".';
+            panel.appendChild(info);
+
+            // overwrite checkbox
+            const overwriteLabel = document.createElement('label');
+            overwriteLabel.style.display = 'block';
+            overwriteLabel.style.margin = '8px 0 12px 0';
+            const overwriteCheckbox = document.createElement('input');
+            overwriteCheckbox.type = 'checkbox';
+            overwriteCheckbox.checked = !!initialOverwrite;
+            overwriteCheckbox.style.marginRight = '8px';
+            overwriteLabel.appendChild(overwriteCheckbox);
+            overwriteLabel.appendChild(document.createTextNode('Overschrijf bestaande keys (overwrite)'));
+            panel.appendChild(overwriteLabel);
+
+            // select all button
+            const controlsDiv = document.createElement('div');
+            controlsDiv.style.display = 'flex';
+            controlsDiv.style.gap = '8px';
+            controlsDiv.style.marginBottom = '8px';
+            panel.appendChild(controlsDiv);
+
+            const selectAllBtn = document.createElement('button');
+            selectAllBtn.type = 'button';
+            selectAllBtn.textContent = 'Selecteer alles';
+            selectAllBtn.addEventListener('click', () => {
+                listItems.forEach(i => i.checkbox.checked = true);
+            });
+            controlsDiv.appendChild(selectAllBtn);
+
+            const clearAllBtn = document.createElement('button');
+            clearAllBtn.type = 'button';
+            clearAllBtn.textContent = 'Wis selectie';
+            clearAllBtn.addEventListener('click', () => {
+                listItems.forEach(i => i.checkbox.checked = false);
+            });
+            controlsDiv.appendChild(clearAllBtn);
+
+            // list keys
+            const listContainer = document.createElement('div');
+            listContainer.style.display = 'grid';
+            listContainer.style.gap = '6px';
+            listContainer.style.marginBottom = '12px';
+            panel.appendChild(listContainer);
+
+            const listItems = [];
+            Object.entries(payloadObj).forEach(([key, value]) => {
+                const row = document.createElement('div');
+                row.style.display = 'flex';
+                row.style.alignItems = 'flex-start';
+                row.style.gap = '8px';
+                row.style.borderBottom = '1px solid #eee';
+                row.style.paddingBottom = '8px';
+                row.style.marginBottom = '8px';
+
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.checked = true;
+                row.appendChild(cb);
+
+                const keyLabel = document.createElement('div');
+                keyLabel.style.flex = '1';
+                const kTitle = document.createElement('strong');
+                kTitle.textContent = key;
+                keyLabel.appendChild(kTitle);
+
+                // small preview
+                const preview = document.createElement('pre');
+                preview.style.whiteSpace = 'pre-wrap';
+                preview.style.wordBreak = 'break-word';
+                preview.style.margin = '6px 0 0 0';
+                preview.style.fontSize = '12px';
+                preview.style.maxHeight = '120px';
+                preview.style.overflow = 'auto';
+                try {
+                    preview.textContent = JSON.stringify(value, null, 2);
+                } catch {
+                    preview.textContent = String(value);
+                }
+                keyLabel.appendChild(preview);
+
+                row.appendChild(keyLabel);
+                listContainer.appendChild(row);
+
+                listItems.push({ key, checkbox: cb, value });
+            });
+
+            // buttons
+            const btns = document.createElement('div');
+            btns.style.display = 'flex';
+            btns.style.justifyContent = 'flex-end';
+            btns.style.gap = '8px';
+            panel.appendChild(btns);
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.type = 'button';
+            cancelBtn.textContent = 'Annuleer';
+            cancelBtn.addEventListener('click', () => {
+                document.body.removeChild(overlay);
+                reject(new Error('Import geannuleerd door gebruiker'));
+            });
+            btns.appendChild(cancelBtn);
+
+            const importBtn = document.createElement('button');
+            importBtn.type = 'button';
+            importBtn.textContent = 'Importeer geselecteerd';
+            importBtn.style.background = '#0b63d0';
+            importBtn.style.color = '#fff';
+            importBtn.addEventListener('click', () => {
+                const selected = listItems.filter(i => i.checkbox.checked);
+                if (selected.length === 0) {
+                    alert('Selecteer minstens één item om te importeren.');
+                    return;
+                }
+                const result = { written: [], removed: [], skipped: [] };
+                const doOverwrite = overwriteCheckbox.checked;
+
+                selected.forEach(({ key, value }) => {
+                    if (value === null) {
+                        localStorage.removeItem(key);
+                        result.removed.push(key);
+                        return;
+                    }
+                    if (!doOverwrite && localStorage.getItem(key) !== null) {
+                        result.skipped.push(key);
+                        return;
+                    }
+                    if (typeof value === 'object') {
+                        localStorage.setItem(key, JSON.stringify(value));
+                    } else if (typeof value === 'string') {
+                        localStorage.setItem(key, value);
+                    } else {
+                        localStorage.setItem(key, JSON.stringify(value));
+                    }
+                    result.written.push(key);
+                });
+
+                document.body.removeChild(overlay);
+                resolve(result);
+            });
+            btns.appendChild(importBtn);
+
+            document.body.appendChild(overlay);
+        };
+
+        const handleText = async (text) => {
+            let payload;
+            try {
+                payload = JSON.parse(text);
+                if (typeof payload !== 'object' || payload === null) throw new Error('Invalid payload');
+            } catch (err) {
+                return reject(new Error('Bestand is geen geldige JSON of heeft geen object-structuur'));
+            }
+            // Toon chooser UI en laat gebruiker kiezen
+            showChooser(payload, overwrite);
+        };
+
+        if (file instanceof File) {
+            readTextFromFile(file).then(handleText).catch(err => reject(err));
+            return;
+        }
+
+        // geen file => laat gebruiker kiezen
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json,.txt,application/json,text/plain';
+        input.style.display = 'none';
+        document.body.appendChild(input);
+        input.addEventListener('change', () => {
+            const f = input.files && input.files[0];
+            if (!f) {
+                document.body.removeChild(input);
+                return reject(new Error('Geen bestand geselecteerd'));
+            }
+            readTextFromFile(f).then(text => {
+                document.body.removeChild(input);
+                handleText(text);
+            }).catch(err => {
+                document.body.removeChild(input);
+                reject(err);
+            });
+        });
+        input.click();
+    });
+}

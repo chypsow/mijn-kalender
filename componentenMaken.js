@@ -53,7 +53,9 @@ export function maakKnoppen() {
         ['feestdagen', 'fa-calendar', 'Feestdagen'],
         ['vakanties', 'fa-plane', 'School vakanties'],
         ['afdrukken', 'fa-print', 'Afdrukken'],
-        ['rapport', 'fa-calendar-check-o', 'Genereer rapport']
+        ['rapport', 'fa-calendar-check-o', 'Genereer rapport'],
+        ['export', 'fa-download', 'Export instellingen'],
+        ['import', 'fa-upload', 'Import instellingen']
     ];
     
     knoppen.forEach(knop => {
@@ -62,7 +64,6 @@ export function maakKnoppen() {
         btn.classList.add('btnGreen');
         const icoon = document.createElement('i');
         icoon.classList.add('fa', knop[1]);
-        //icoon.classList.add(knop[1]);
         btn.appendChild(icoon);
         const tekst = document.createElement('span');
         tekst.classList.add('knopTekst');
