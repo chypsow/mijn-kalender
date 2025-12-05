@@ -299,7 +299,7 @@ export function exportLocalStorageItemsToFile() {
     const prettyText = document.createElement('span');
     prettyText.textContent = 'leesbaar formaat';
     prettyText.style.fontWeight = 'bold';
-    prettyText.style.color = '#0b56b3ff';
+    //prettyText.style.color = '#0b56b3ff';
     prettyLabel.appendChild(prettyText);
     topHeader.appendChild(prettyLabel);
     DOM.overlay.appendChild(topHeader);
@@ -639,7 +639,7 @@ export function importLocalStorageItemsFromFile() {
             const overwriteText = document.createElement('span');
             overwriteText.textContent = 'Overschrijf bestaande keys';
             overwriteText.style.fontWeight = 'bold';
-            overwriteText.style.color = '#0b56b3ff';
+            //overwriteText.style.color = '#0b56b3ff';
             overwriteLabel.appendChild(overwriteText);
 
             // controls: cancel / import
