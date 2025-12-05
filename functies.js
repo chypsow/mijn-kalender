@@ -685,13 +685,11 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
                 resolve(result);
             });
             actions.appendChild(importBtn);
-
             DOM.overlay.appendChild(actions);
             
             // select/clear handlers
             selectAllBtn.addEventListener('click', () => listItems.forEach(i => i.checkbox.checked = true));
             clearAllBtn.addEventListener('click', () => listItems.forEach(i => i.checkbox.checked = false));
-
             toggleModal(true);
         };
 
@@ -701,6 +699,7 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
                 payload = JSON.parse(text);
                 if (typeof payload !== 'object' || payload === null) throw new Error('Invalid payload');
             } catch (err) {
+                alert('Bestand is geen geldige JSON of heeft geen object-structuur');
                 return reject(new Error('Bestand is geen geldige JSON of heeft geen object-structuur'));
             }
             // Toon chooser UI en laat gebruiker kiezen
@@ -709,7 +708,6 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
 
         if (file instanceof File) {
             readTextFromFile(file).then(handleText).catch(err => reject(err));
-            //toggleModal(false);
             return;
         }
 
