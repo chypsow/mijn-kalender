@@ -143,17 +143,7 @@ export function handleClickBtn(e) {
             toggleModal(true);
             break;
         case 'export':
-            // haal geselecteerde ploeg uit de instellingen en bepaal de key
-            const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
-            const selectedPloeg = setting?.selectedPloeg ?? 1;
-            const verlofdagenKey = `verlofdagenPloeg${selectedPloeg}`;
-
-            // exporteer de gewenste items, inclusief het dynamische verlofdagen-item
-            exportLocalStorageItemsToFile(
-                ['beginrechtVerlof', 'shiftPatroon', 'startDatums', verlofdagenKey],
-                true,
-                `Instellingen ploeg${selectedPloeg}-${new Date().toISOString().slice(0,10)}.txt`
-            );
+            exportLocalStorageItemsToFile(true);
             break;
         case 'import':
             importLocalStorageItemsFromFile(null, { overwrite: true })
@@ -276,39 +266,145 @@ export function saveArrayToSessionStorage(key, arr) {
     sessionStorage.setItem(key, JSON.stringify(unique));
 };
 
-export function exportLocalStorageItemsToFile(
-    keys = ['beginrechtVerlof','shiftPatroon','startDatums','verlofdagenPloeg1'],
-    pretty = true,
-    filename = null
-) {
-    const payload = {};
-    keys.forEach(key => {
-        const raw = localStorage.getItem(key);
-        if (raw === null) {
-            payload[key] = null;
-            return;
-        }
-        try {
-            payload[key] = JSON.parse(raw);
-        } catch {
-            // als het geen JSON is, bewaar ruwe string
-            payload[key] = raw;
-        }
+export function exportLocalStorageItemsToFile(pretty = true, filename = null) {
+    // haal geselecteerde ploeg uit de instellingen en bepaal de key
+    const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
+    const selectedPloeg = setting?.selectedPloeg ?? 1;
+    const keys = ['beginrechtVerlof','shiftPatroon','startDatums','verlofdagenPloeg1','verlofdagenPloeg2','verlofdagenPloeg3','verlofdagenPloeg4','verlofdagenPloeg5'];
+    // Check welke items aanwezig zijn
+    const availableItems = keys.filter(key => localStorage.getItem(key) !== null);
+    
+    if (availableItems.length === 0) {
+        alert('Geen items beschikbaar om te exporteren.');
+        return false;
+    }
+
+    // Toon keuze-dialoog aan gebruiker
+    DOM.overlay.innerHTML = '';
+    const topHeader = document.createElement('div');
+    topHeader.classList.add('top-header');
+    
+    const title = document.createElement('h2');
+    title.textContent = `Export instellingen Ploeg${selectedPloeg} naar bestand — kies items`;
+    topHeader.appendChild(title);
+    DOM.overlay.appendChild(topHeader);
+
+    const info = document.createElement('p');
+    info.textContent = 'Selecteer welke items je wilt exporteren:';
+    info.style.margin = '0 0 12px 0';
+    DOM.overlay.appendChild(info);
+
+    // options row
+    const optionsRow = document.createElement('div');
+    optionsRow.style.display = 'flex';
+    optionsRow.style.gap = '12px';
+    optionsRow.style.alignItems = 'center';
+    optionsRow.style.marginBottom = '12px';
+    DOM.overlay.appendChild(optionsRow);
+
+    const selectAllBtn = document.createElement('button');
+    selectAllBtn.type = 'button';
+    selectAllBtn.textContent = 'Selecteer alles';
+    selectAllBtn.style.cursor = 'pointer';
+    optionsRow.appendChild(selectAllBtn);
+
+    const clearAllBtn = document.createElement('button');
+    clearAllBtn.type = 'button';
+    clearAllBtn.textContent = 'Wis selectie';
+    clearAllBtn.style.cursor = 'pointer';
+    optionsRow.appendChild(clearAllBtn);
+    selectAllBtn.addEventListener('click', () => {
+        Object.values(checkboxes).forEach(cb => cb.checked = true);
+    });
+    clearAllBtn.addEventListener('click', () => {
+        Object.values(checkboxes).forEach(cb => cb.checked = false);
     });
 
-    const content = pretty ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
-    const name = filename || `localstorage-export-${new Date().toISOString().slice(0,10)}.txt`;
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
+    // Checkboxen voor beschikbare items
+    const itemsContainer = document.createElement('div');
+    itemsContainer.style.display = 'grid';
+    itemsContainer.style.gap = '10px';
+    itemsContainer.style.marginBottom = '12px';
+    DOM.overlay.appendChild(itemsContainer);
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const checkboxes = {};
+    availableItems.forEach(key => {
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = true;
+        label.appendChild(cb);
+        checkboxes[key] = cb;
+        
+        const span = document.createElement('span');
+        span.textContent = key;
+        span.style.fontFamily = 'monospace';
+        label.appendChild(span);
+        
+        itemsContainer.appendChild(label);
+    });
 
+    // Knoppen
+    const actions = document.createElement('div');
+    actions.style.display = 'flex';
+    actions.style.justifyContent = 'flex-end';
+    actions.style.gap = '8px';
+    DOM.overlay.appendChild(actions);
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.textContent = 'Annuleer';
+    cancelBtn.addEventListener('click', () => toggleModal(false));
+    actions.appendChild(cancelBtn);
+
+    const exportBtn = document.createElement('button');
+    exportBtn.type = 'button';
+    exportBtn.textContent = 'Exporteer';
+    exportBtn.style.background = '#0b63d0';
+    exportBtn.style.color = '#fff';
+    exportBtn.addEventListener('click', () => {
+        const selectedKeys = Object.entries(checkboxes)
+            .filter(([_, cb]) => cb.checked)
+            .map(([key, _]) => key);
+
+        if (selectedKeys.length === 0) {
+            alert('Selecteer minstens één item om te exporteren.');
+            return;
+        }
+
+        const payload = {};
+        selectedKeys.forEach(key => {
+            const raw = localStorage.getItem(key);
+            try {
+                payload[key] = JSON.parse(raw);
+            } catch {
+                payload[key] = raw;
+            }
+        });
+
+        const content = pretty ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
+        const name = filename || `Instellingen-ploeg${selectedPloeg}-${new Date().toISOString().slice(0,10)}.txt`
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        toggleModal(false);
+    });
+    actions.appendChild(exportBtn);
+
+    toggleModal(true);
     return true;
 }
 
@@ -328,8 +424,8 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
             const topHeader = document.createElement('div');
             topHeader.classList.add('top-header');
             // title / info + checkbox
-            const title = document.createElement('h3');
-            title.textContent = 'Import localStorage — kies items';
+            const title = document.createElement('h2');
+            title.textContent = 'Import data to localStorage';
             topHeader.appendChild(title);
             const overwriteLabel = document.createElement('label');
             overwriteLabel.style.display = 'flex';
@@ -339,12 +435,15 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
             overwriteCheckbox.type = 'checkbox';
             overwriteCheckbox.checked = !!initialOverwrite;
             overwriteLabel.appendChild(overwriteCheckbox);
-            overwriteLabel.appendChild(document.createTextNode('Overschrijf bestaande keys'));
+            const overwriteText = document.createElement('span');
+            overwriteText.textContent = 'Overschrijf bestaande keys';
+            overwriteText.style.fontWeight = 'bold';
+            overwriteLabel.appendChild(overwriteText);
             topHeader.appendChild(overwriteLabel);
             DOM.overlay.appendChild(topHeader);
 
             const info = document.createElement('p');
-            info.textContent = 'Kies welke keys je wilt importeren. Klik op een sleutel om de inhoud te tonen/verborgen.';
+            info.textContent = 'Kies welke keys je wilt importeren. Klik op een sleutel om de inhoud te tonen/verbergen.';
             info.style.margin = '0 0 12px 0';
             DOM.overlay.appendChild(info);
             
@@ -553,9 +652,6 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
             importBtn.textContent = 'Importeer geselecteerd';
             importBtn.style.background = '#0b63d0';
             importBtn.style.color = '#fff';
-            //importBtn.style.border = 'none';
-            //importBtn.style.padding = '8px 12px';
-            //importBtn.style.cursor = 'pointer';
             importBtn.addEventListener('click', () => {
                 const selected = listItems.filter(i => i.checkbox.checked);
                 if (selected.length === 0) {
@@ -585,7 +681,7 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
                     result.written.push(key);
                 });
 
-                //document.body.removeChild(overlay);
+                toggleModal(false);
                 resolve(result);
             });
             actions.appendChild(importBtn);
@@ -613,6 +709,7 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
 
         if (file instanceof File) {
             readTextFromFile(file).then(handleText).catch(err => reject(err));
+            //toggleModal(false);
             return;
         }
 
