@@ -147,7 +147,7 @@ export function handleClickBtn(e) {
             toggleModal(true);
             break;
         case 'import':
-            importLocalStorageItemsFromFile(true)
+            importLocalStorageItemsFromFile()
                 .then(result => {
                     console.log('Import resultaat:', result);
                     gegevensLaden(); // herlaad de instellingen na import
@@ -267,7 +267,7 @@ export function saveArrayToSessionStorage(key, arr) {
     sessionStorage.setItem(key, JSON.stringify(unique));
 };
 
-export function exportLocalStorageItemsToFile(pretty = false) {
+export function exportLocalStorageItemsToFile() {
     // haal geselecteerde ploeg uit de instellingen en bepaal de key
     const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const selectedPloeg = setting?.selectedPloeg ?? 1;
@@ -283,13 +283,26 @@ export function exportLocalStorageItemsToFile(pretty = false) {
     // Toon keuze-dialoog aan gebruiker
     DOM.overlay.innerHTML = '';
     const topHeader = document.createElement('div');
-    topHeader.classList.add('top-header');
-    
+    // title / info + checkbox
     const title = document.createElement('h2');
-    title.textContent = `Export instellingen-Ploeg${selectedPloeg} naar bestand`;
+    title.textContent = `Export instellingen-Ploeg${selectedPloeg} naar bestand - Kies items`;
     topHeader.appendChild(title);
     DOM.overlay.appendChild(topHeader);
-
+    const prettyLabel = document.createElement('label');
+    prettyLabel.style.display = 'flex';
+    prettyLabel.style.alignItems = 'center';
+    prettyLabel.style.gap = '8px';
+    const prettyCheckbox = document.createElement('input');
+    prettyCheckbox.type = 'checkbox';
+    prettyCheckbox.checked = false; 
+    prettyLabel.appendChild(prettyCheckbox);
+    const prettyText = document.createElement('span');
+    prettyText.textContent = 'leesbaar formaat';
+    prettyText.style.fontWeight = 'bold';
+    prettyText.style.color = '#0b56b3ff';
+    prettyLabel.appendChild(prettyText);
+    topHeader.appendChild(prettyLabel);
+    DOM.overlay.appendChild(topHeader);
     const info = document.createElement('p');
     info.textContent = 'Selecteer welke items je wilt exporteren:';
     info.style.margin = '0 0 12px 0';
@@ -388,7 +401,7 @@ export function exportLocalStorageItemsToFile(pretty = false) {
             }
         });
 
-        const content = pretty ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
+        const content = prettyCheckbox.checked ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
         const name = `Instellingen-ploeg${selectedPloeg}-${new Date().toISOString().slice(0,10)}.txt`
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
@@ -403,11 +416,10 @@ export function exportLocalStorageItemsToFile(pretty = false) {
         toggleModal(false);
     });
     actions.appendChild(exportBtn);
-    //toggleModal(true);
     return true;
 }
 
-export function importLocalStorageItemsFromFile(overwrite = true) {
+export function importLocalStorageItemsFromFile() {
     return new Promise((resolve, reject) => {
         const readTextFromFile = (f) => {
             return new Promise((res, rej) => {
@@ -418,28 +430,13 @@ export function importLocalStorageItemsFromFile(overwrite = true) {
             });
         };
 
-        const showChooser = (payloadObj, initialOverwrite) => {
+        const makeChooser = (payloadObj) => {
             DOM.overlay.innerHTML = ''; // clear previous content
-            const topHeader = document.createElement('div');
-            topHeader.classList.add('top-header');
             // title / info + checkbox
             const title = document.createElement('h2');
-            title.textContent = 'Import data to localStorage';
-            topHeader.appendChild(title);
-            const overwriteLabel = document.createElement('label');
-            overwriteLabel.style.display = 'flex';
-            overwriteLabel.style.alignItems = 'center';
-            overwriteLabel.style.gap = '8px';
-            const overwriteCheckbox = document.createElement('input');
-            overwriteCheckbox.type = 'checkbox';
-            overwriteCheckbox.checked = !!initialOverwrite;
-            overwriteLabel.appendChild(overwriteCheckbox);
-            const overwriteText = document.createElement('span');
-            overwriteText.textContent = 'Overschrijf bestaande keys';
-            overwriteText.style.fontWeight = 'bold';
-            overwriteLabel.appendChild(overwriteText);
-            topHeader.appendChild(overwriteLabel);
-            DOM.overlay.appendChild(topHeader);
+            title.textContent = 'Import data to localStorage - Kies items';
+            title.style.marginBottom = '18px';
+            DOM.overlay.appendChild(title);
 
             const info = document.createElement('p');
             info.textContent = 'Kies welke keys je wilt importeren. Klik op een sleutel om de inhoud te tonen/verbergen.';
@@ -630,12 +627,34 @@ export function importLocalStorageItemsFromFile(overwrite = true) {
                 listItems.push({ key, checkbox: cb, value });
             });
 
+            // overwrite checkbox
+            const overwriteLabel = document.createElement('label');
+            overwriteLabel.style.display = 'flex';
+            overwriteLabel.style.alignItems = 'center';
+            overwriteLabel.style.gap = '8px';
+            const overwriteCheckbox = document.createElement('input');
+            overwriteCheckbox.type = 'checkbox';
+            overwriteCheckbox.checked = true;
+            overwriteLabel.appendChild(overwriteCheckbox);
+            const overwriteText = document.createElement('span');
+            overwriteText.textContent = 'Overschrijf bestaande keys';
+            overwriteText.style.fontWeight = 'bold';
+            overwriteText.style.color = '#0b56b3ff';
+            overwriteLabel.appendChild(overwriteText);
+
             // controls: cancel / import
             const actions = document.createElement('div');
             actions.style.display = 'flex';
-            actions.style.justifyContent = 'flex-end';
+            actions.style.justifyContent = 'space-between';
+            actions.style.alignItems = 'center';
             actions.style.gap = '8px';
-            actions.style.marginTop = '12px';
+            actions.style.marginTop = '64px';
+
+            actions.appendChild(overwriteLabel);
+
+            const buttonsGroup = document.createElement('div');
+            buttonsGroup.style.display = 'flex';
+            buttonsGroup.style.gap = '8px';
 
             const cancelBtn = document.createElement('button');
             cancelBtn.type = 'button';
@@ -644,7 +663,7 @@ export function importLocalStorageItemsFromFile(overwrite = true) {
                 toggleModal(false);
                 reject(new Error('Import geannuleerd door gebruiker'));
             });
-            actions.appendChild(cancelBtn);
+            buttonsGroup.appendChild(cancelBtn);
 
             const importBtn = document.createElement('button');
             importBtn.type = 'button';
@@ -683,13 +702,13 @@ export function importLocalStorageItemsFromFile(overwrite = true) {
                 toggleModal(false);
                 resolve(result);
             });
-            actions.appendChild(importBtn);
+            buttonsGroup.appendChild(importBtn);
+            actions.appendChild(buttonsGroup);
             DOM.overlay.appendChild(actions);
             
             // select/clear handlers
             selectAllBtn.addEventListener('click', () => listItems.forEach(i => i.checkbox.checked = true));
             clearAllBtn.addEventListener('click', () => listItems.forEach(i => i.checkbox.checked = false));
-            toggleModal(true);
         };
 
         const handleText = async (text) => {
@@ -702,7 +721,8 @@ export function importLocalStorageItemsFromFile(overwrite = true) {
                 return reject(new Error('Bestand is geen geldige JSON of heeft geen object-structuur'));
             }
             // Toon chooser UI en laat gebruiker kiezen
-            showChooser(payload, overwrite);
+            makeChooser(payload);
+            toggleModal(true);
         };
 
         //if (file instanceof File) {
