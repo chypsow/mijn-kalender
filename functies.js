@@ -143,10 +143,11 @@ export function handleClickBtn(e) {
             toggleModal(true);
             break;
         case 'export':
-            exportLocalStorageItemsToFile(true);
+            exportLocalStorageItemsToFile();
+            toggleModal(true);
             break;
         case 'import':
-            importLocalStorageItemsFromFile(null, { overwrite: true })
+            importLocalStorageItemsFromFile(true)
                 .then(result => {
                     console.log('Import resultaat:', result);
                     gegevensLaden(); // herlaad de instellingen na import
@@ -266,7 +267,7 @@ export function saveArrayToSessionStorage(key, arr) {
     sessionStorage.setItem(key, JSON.stringify(unique));
 };
 
-export function exportLocalStorageItemsToFile(pretty = true, filename = null) {
+export function exportLocalStorageItemsToFile(pretty = false) {
     // haal geselecteerde ploeg uit de instellingen en bepaal de key
     const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const selectedPloeg = setting?.selectedPloeg ?? 1;
@@ -285,7 +286,7 @@ export function exportLocalStorageItemsToFile(pretty = true, filename = null) {
     topHeader.classList.add('top-header');
     
     const title = document.createElement('h2');
-    title.textContent = `Export instellingen Ploeg${selectedPloeg} naar bestand — kies items`;
+    title.textContent = `Export instellingen-Ploeg${selectedPloeg} naar bestand`;
     topHeader.appendChild(title);
     DOM.overlay.appendChild(topHeader);
 
@@ -388,7 +389,7 @@ export function exportLocalStorageItemsToFile(pretty = true, filename = null) {
         });
 
         const content = pretty ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
-        const name = filename || `Instellingen-ploeg${selectedPloeg}-${new Date().toISOString().slice(0,10)}.txt`
+        const name = `Instellingen-ploeg${selectedPloeg}-${new Date().toISOString().slice(0,10)}.txt`
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
 
@@ -399,16 +400,14 @@ export function exportLocalStorageItemsToFile(pretty = true, filename = null) {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-
         toggleModal(false);
     });
     actions.appendChild(exportBtn);
-
-    toggleModal(true);
+    //toggleModal(true);
     return true;
 }
 
-export function importLocalStorageItemsFromFile(file = null, { overwrite = true } = {}) {
+export function importLocalStorageItemsFromFile(overwrite = true) {
     return new Promise((resolve, reject) => {
         const readTextFromFile = (f) => {
             return new Promise((res, rej) => {
@@ -706,10 +705,10 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
             showChooser(payload, overwrite);
         };
 
-        if (file instanceof File) {
-            readTextFromFile(file).then(handleText).catch(err => reject(err));
-            return;
-        }
+        //if (file instanceof File) {
+            //readTextFromFile(file).then(handleText).catch(err => reject(err));
+            //return;
+        //}
 
         // geen file => laat gebruiker kiezen
         const input = document.createElement('input');
