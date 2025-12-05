@@ -360,13 +360,13 @@ function onMouseUp() {
     document.removeEventListener("mousemove", onMouseMove);
     document.removeEventListener("mouseup", onMouseUp);
 }
-DOM.modal.addEventListener("mousedown", (e) => {
-  isDragging = true;
-  offsetX = e.clientX - DOM.modal.offsetLeft;
-  offsetY = e.clientY - DOM.modal.offsetTop;
-  document.addEventListener("mousemove", onMouseMove);
-  document.addEventListener("mouseup", onMouseUp);
-});
+//DOM.modal.addEventListener("mousedown", (e) => {
+  //isDragging = true;
+  //offsetX = e.clientX - DOM.modal.offsetLeft;
+  //offsetY = e.clientY - DOM.modal.offsetTop;
+  //document.addEventListener("mousemove", onMouseMove);
+  //document.addEventListener("mouseup", onMouseUp);
+//});
 
 document.addEventListener("click", (event) => {
     //console.log("Klik gedetecteerd:", event.target);
