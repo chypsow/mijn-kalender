@@ -72,6 +72,7 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     topHeader.appendChild(heading);
     const customize = document.createElement('button');
     customize.id = "customize";
+    customize.style.display = 'none';
     customize.textContent = "Eigen voorkeuren ophalen";
     customize.addEventListener('click', makeModalCustomize);
     topHeader.appendChild(customize);
