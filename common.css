@@ -130,6 +130,9 @@ body {
     box-shadow: 0 0 15px rgba(113, 136, 139, 0.9);
     background: #0221248a;
 }
+.lastBtnsGroup {
+    margin-bottom: 50px;
+}
 section {
     display: flex;
     justify-content: space-between;

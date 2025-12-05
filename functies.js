@@ -157,14 +157,13 @@ export function handleClickBtn(e) {
             break;
         case 'import':
             importLocalStorageItemsFromFile(null, { overwrite: true })
-                .then(result => console.log('Import resultaat:', result))
-                .catch(err => console.error('Import fout:', err))
-                .finally(() => {
+                .then(result => {
+                    console.log('Import resultaat:', result);
                     gegevensLaden(); // herlaad de instellingen na import
                     generateCalendar(); // wordt altijd aan het einde uitgevoerd
-                });
+                })
+                .catch(err => console.error('Import fout:', err));
             break;
-
         case 'afdrukken':
             afdrukVoorbereiding();
             window.print();
@@ -325,49 +324,13 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
         };
 
         const showChooser = (payloadObj, initialOverwrite) => {
-            // overlay
-            const overlay = document.createElement('div');
-            overlay.style.position = 'fixed';
-            overlay.style.inset = '0';
-            overlay.style.background = 'rgba(0,0,0,0.5)';
-            overlay.style.zIndex = 9999;
-            overlay.style.display = 'flex';
-            overlay.style.alignItems = 'center';
-            overlay.style.justifyContent = 'center';
-            overlay.style.padding = '20px';
-
-            // panel
-            const panel = document.createElement('div');
-            panel.style.width = '100%';
-            panel.style.maxWidth = '860px';
-            panel.style.maxHeight = '90%';
-            panel.style.overflow = 'auto';
-            panel.style.background = '#fff';
-            panel.style.borderRadius = '8px';
-            panel.style.padding = '18px';
-            panel.style.boxShadow = '0 10px 30px rgba(0,0,0,0.35)';
-            panel.style.color = '#111';
-            overlay.appendChild(panel);
-
-            // title / info
+            DOM.overlay.innerHTML = ''; // clear previous content
+            const topHeader = document.createElement('div');
+            topHeader.classList.add('top-header');
+            // title / info + checkbox
             const title = document.createElement('h3');
             title.textContent = 'Import localStorage — kies items';
-            title.style.margin = '0 0 8px 0';
-            panel.appendChild(title);
-
-            const info = document.createElement('p');
-            info.textContent = 'Kies welke keys je wilt importeren. Klik op een sleutel om de inhoud te tonen/verborgen.';
-            info.style.margin = '0 0 12px 0';
-            panel.appendChild(info);
-
-            // options row
-            const optionsRow = document.createElement('div');
-            optionsRow.style.display = 'flex';
-            optionsRow.style.gap = '12px';
-            optionsRow.style.alignItems = 'center';
-            optionsRow.style.marginBottom = '12px';
-            panel.appendChild(optionsRow);
-
+            topHeader.appendChild(title);
             const overwriteLabel = document.createElement('label');
             overwriteLabel.style.display = 'flex';
             overwriteLabel.style.alignItems = 'center';
@@ -377,7 +340,21 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
             overwriteCheckbox.checked = !!initialOverwrite;
             overwriteLabel.appendChild(overwriteCheckbox);
             overwriteLabel.appendChild(document.createTextNode('Overschrijf bestaande keys'));
-            optionsRow.appendChild(overwriteLabel);
+            topHeader.appendChild(overwriteLabel);
+            DOM.overlay.appendChild(topHeader);
+
+            const info = document.createElement('p');
+            info.textContent = 'Kies welke keys je wilt importeren. Klik op een sleutel om de inhoud te tonen/verborgen.';
+            info.style.margin = '0 0 12px 0';
+            DOM.overlay.appendChild(info);
+            
+            // options row
+            const optionsRow = document.createElement('div');
+            optionsRow.style.display = 'flex';
+            optionsRow.style.gap = '12px';
+            optionsRow.style.alignItems = 'center';
+            optionsRow.style.marginBottom = '12px';
+            DOM.overlay.appendChild(optionsRow);
 
             const selectAllBtn = document.createElement('button');
             selectAllBtn.type = 'button';
@@ -395,7 +372,7 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
             const listContainer = document.createElement('div');
             listContainer.style.display = 'grid';
             listContainer.style.gap = '10px';
-            panel.appendChild(listContainer);
+            DOM.overlay.appendChild(listContainer);
 
             const listItems = [];
 
@@ -566,7 +543,7 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
             cancelBtn.type = 'button';
             cancelBtn.textContent = 'Annuleer';
             cancelBtn.addEventListener('click', () => {
-                document.body.removeChild(overlay);
+                toggleModal(false);
                 reject(new Error('Import geannuleerd door gebruiker'));
             });
             actions.appendChild(cancelBtn);
@@ -576,9 +553,9 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
             importBtn.textContent = 'Importeer geselecteerd';
             importBtn.style.background = '#0b63d0';
             importBtn.style.color = '#fff';
-            importBtn.style.border = 'none';
-            importBtn.style.padding = '8px 12px';
-            importBtn.style.cursor = 'pointer';
+            //importBtn.style.border = 'none';
+            //importBtn.style.padding = '8px 12px';
+            //importBtn.style.cursor = 'pointer';
             importBtn.addEventListener('click', () => {
                 const selected = listItems.filter(i => i.checkbox.checked);
                 if (selected.length === 0) {
@@ -608,17 +585,18 @@ export function importLocalStorageItemsFromFile(file = null, { overwrite = true 
                     result.written.push(key);
                 });
 
-                document.body.removeChild(overlay);
+                //document.body.removeChild(overlay);
                 resolve(result);
             });
             actions.appendChild(importBtn);
 
-            panel.appendChild(actions);
-            document.body.appendChild(overlay);
-
+            DOM.overlay.appendChild(actions);
+            
             // select/clear handlers
             selectAllBtn.addEventListener('click', () => listItems.forEach(i => i.checkbox.checked = true));
             clearAllBtn.addEventListener('click', () => listItems.forEach(i => i.checkbox.checked = false));
+
+            toggleModal(true);
         };
 
         const handleText = async (text) => {

@@ -58,10 +58,11 @@ export function maakKnoppen() {
         ['import', 'fa-upload', 'Import instellingen']
     ];
     
-    knoppen.forEach(knop => {
+    knoppen.forEach((knop, i) => {
         const btn = document.createElement('div');
         btn.id = knop[0];
         btn.classList.add('btnGreen');
+        if (i === 4) btn.classList.add('lastBtnsGroup');
         const icoon = document.createElement('i');
         icoon.classList.add('fa', knop[1]);
         btn.appendChild(icoon);
