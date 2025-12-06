@@ -285,7 +285,7 @@ export function exportLocalStorageItemsToFile() {
     const topHeader = document.createElement('div');
     // title / info + checkbox
     const title = document.createElement('h2');
-    title.textContent = `Export instellingen-Ploeg${selectedPloeg} naar bestand - Kies items`;
+    title.textContent = `Data-Ploeg${selectedPloeg} exporteren naar bestand(.txt) - Kies items`;
     topHeader.appendChild(title);
     DOM.overlay.appendChild(topHeader);
     const prettyLabel = document.createElement('label');
@@ -402,7 +402,7 @@ export function exportLocalStorageItemsToFile() {
         });
 
         const content = prettyCheckbox.checked ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
-        const name = `Instellingen-ploeg${selectedPloeg}-${new Date().toISOString().slice(0,10)}.txt`
+        const name = `Data-ploeg${selectedPloeg}-${new Date().toISOString().slice(0,10)}.txt`
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
 
@@ -434,7 +434,7 @@ export function importLocalStorageItemsFromFile() {
             DOM.overlay.innerHTML = ''; // clear previous content
             // title / info + checkbox
             const title = document.createElement('h2');
-            title.textContent = 'Import data to localStorage - Kies items';
+            title.textContent = 'Data importeren naar localStorage - Kies items';
             title.style.marginBottom = '18px';
             DOM.overlay.appendChild(title);
 

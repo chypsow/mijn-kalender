@@ -54,8 +54,8 @@ export function maakKnoppen() {
         ['vakanties', 'fa-plane', 'School vakanties'],
         ['afdrukken', 'fa-print', 'Afdrukken'],
         ['rapport', 'fa-calendar-check-o', 'Genereer rapport'],
-        ['export', 'fa-download', 'Export instellingen'],
-        ['import', 'fa-upload', 'Import instellingen']
+        ['export', 'fa-download', 'Gegevens exporteren'],
+        ['import', 'fa-upload', 'Gegevens importeren']
     ];
     
     knoppen.forEach((knop, i) => {
