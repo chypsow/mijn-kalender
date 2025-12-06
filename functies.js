@@ -143,11 +143,11 @@ export function handleClickBtn(e) {
             toggleModal(true);
             break;
         case 'export':
-            exportLocalStorageItemsToFile();
+            exportLocalStorageItemsToFile(false);
             toggleModal(true);
             break;
         case 'import':
-            importLocalStorageItemsFromFile()
+            importLocalStorageItemsFromFile(null, true)
                 .then(result => {
                     console.log('Import resultaat:', result);
                     gegevensLaden(); // herlaad de instellingen na import
@@ -267,7 +267,7 @@ export function saveArrayToSessionStorage(key, arr) {
     sessionStorage.setItem(key, JSON.stringify(unique));
 };
 
-export function exportLocalStorageItemsToFile() {
+export function exportLocalStorageItemsToFile(pretty = false) {
     // haal geselecteerde ploeg uit de instellingen en bepaal de key
     const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const selectedPloeg = setting?.selectedPloeg ?? 1;
@@ -285,7 +285,7 @@ export function exportLocalStorageItemsToFile() {
     const topHeader = document.createElement('div');
     // title / info + checkbox
     const title = document.createElement('h2');
-    title.textContent = `Data-Ploeg${selectedPloeg} exporteren naar bestand(.txt) - Kies items`;
+    title.textContent = `LocalStorage Ploeg${selectedPloeg} exporteren naar bestand(.txt) - Kies items`;
     topHeader.appendChild(title);
     DOM.overlay.appendChild(topHeader);
     const prettyLabel = document.createElement('label');
@@ -294,7 +294,7 @@ export function exportLocalStorageItemsToFile() {
     prettyLabel.style.gap = '8px';
     const prettyCheckbox = document.createElement('input');
     prettyCheckbox.type = 'checkbox';
-    prettyCheckbox.checked = false; 
+    prettyCheckbox.checked = pretty; 
     prettyLabel.appendChild(prettyCheckbox);
     const prettyText = document.createElement('span');
     prettyText.textContent = 'leesbaar formaat';
@@ -402,7 +402,7 @@ export function exportLocalStorageItemsToFile() {
         });
 
         const content = prettyCheckbox.checked ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
-        const name = `Data-ploeg${selectedPloeg}-${new Date().toISOString().slice(0,10)}.txt`
+        const name = `LocalStorage-items ploeg${selectedPloeg} ${new Date().toISOString().slice(0,10)}.txt`
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
 
@@ -419,7 +419,7 @@ export function exportLocalStorageItemsToFile() {
     return true;
 }
 
-export function importLocalStorageItemsFromFile() {
+export function importLocalStorageItemsFromFile(file = null, overwrite = true) {
     return new Promise((resolve, reject) => {
         const readTextFromFile = (f) => {
             return new Promise((res, rej) => {
@@ -430,11 +430,11 @@ export function importLocalStorageItemsFromFile() {
             });
         };
 
-        const makeChooser = (payloadObj) => {
+        const makeModalChooser = (payloadObj, initialOverwrite) => {
             DOM.overlay.innerHTML = ''; // clear previous content
             // title / info + checkbox
             const title = document.createElement('h2');
-            title.textContent = 'Data importeren naar localStorage - Kies items';
+            title.textContent = 'Gegevens importeren naar localStorage - Kies items';
             title.style.marginBottom = '18px';
             DOM.overlay.appendChild(title);
 
@@ -634,12 +634,11 @@ export function importLocalStorageItemsFromFile() {
             overwriteLabel.style.gap = '8px';
             const overwriteCheckbox = document.createElement('input');
             overwriteCheckbox.type = 'checkbox';
-            overwriteCheckbox.checked = true;
+            overwriteCheckbox.checked = !!initialOverwrite;
             overwriteLabel.appendChild(overwriteCheckbox);
             const overwriteText = document.createElement('span');
             overwriteText.textContent = 'Overschrijf bestaande keys';
             overwriteText.style.fontWeight = 'bold';
-            //overwriteText.style.color = '#0b56b3ff';
             overwriteLabel.appendChild(overwriteText);
 
             // controls: cancel / import
@@ -721,14 +720,14 @@ export function importLocalStorageItemsFromFile() {
                 return reject(new Error('Bestand is geen geldige JSON of heeft geen object-structuur'));
             }
             // Toon chooser UI en laat gebruiker kiezen
-            makeChooser(payload);
+            makeModalChooser(payload, overwrite);
             toggleModal(true);
         };
 
-        //if (file instanceof File) {
-            //readTextFromFile(file).then(handleText).catch(err => reject(err));
-            //return;
-        //}
+        if (file instanceof File) {
+            readTextFromFile(file).then(handleText).catch(err => reject(err));
+            return;
+        }
 
         // geen file => laat gebruiker kiezen
         const input = document.createElement('input');
