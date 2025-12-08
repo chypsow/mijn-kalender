@@ -147,13 +147,12 @@ export function handleClickBtn(e) {
             toggleModal(true);
             break;
         case 'import':
-            importLocalStorageItemsFromFile(null, true, false)
+            importLocalStorageItemsFromFile()
                 .then(resultaat => {
                     console.log('Import resultaat:', resultaat);
                     gegevensLaden(); // herlaad de instellingen na import
                     generateCalendar(); // wordt altijd aan het einde uitgevoerd
-                })
-                .catch(err => console.error('Import fout:', err));
+                });
             break;
         case 'afdrukken':
             afdrukVoorbereiding();
@@ -277,7 +276,7 @@ export function exportLocalStorageItemsToFile(pretty = false) {
     
     if (availableItems.length === 0) {
         alert('Geen items beschikbaar om te exporteren.');
-        return false;
+        return;
     }
 
     // Toon keuze-dialoog aan gebruiker
@@ -378,7 +377,7 @@ export function exportLocalStorageItemsToFile(pretty = false) {
 
     const exportBtn = document.createElement('button');
     exportBtn.type = 'button';
-    exportBtn.textContent = 'Exporteer';
+    exportBtn.textContent = 'Exporteer geselecteerd';
     exportBtn.style.background = '#0b63d0';
     exportBtn.style.color = '#fff';
     exportBtn.addEventListener('click', () => {
@@ -416,10 +415,9 @@ export function exportLocalStorageItemsToFile(pretty = false) {
         toggleModal(false);
     });
     actions.appendChild(exportBtn);
-    return true;
 }
 
-export function importLocalStorageItemsFromFile(file = null, overwrite = true, jsonBestand = false) {
+export function importLocalStorageItemsFromFile({ file = null, overwrite = true, jsonBestand = false } = {}) {
     return new Promise((resolve, reject) => {
         const readTextFromFile = (f) => {
             return new Promise((res, rej) => {
@@ -434,7 +432,7 @@ export function importLocalStorageItemsFromFile(file = null, overwrite = true, j
             DOM.overlay.innerHTML = ''; // clear previous content
             // title / info + checkbox
             const title = document.createElement('h2');
-            title.textContent =  jsonBestand ? 'Eigen gegevens importeren van config.json naar localStorage :' :  'Gegevens importeren naar localStorage - Kies items';
+            title.textContent =  jsonBestand ? 'Gegevens importeren van config.json naar localStorage:' :  'Gegevens importeren naar localStorage - Kies items';
             title.style.marginBottom = '18px';
             DOM.overlay.appendChild(title);
 
@@ -660,7 +658,7 @@ export function importLocalStorageItemsFromFile(file = null, overwrite = true, j
             cancelBtn.textContent = 'Annuleer';
             cancelBtn.addEventListener('click', () => {
                 toggleModal(false);
-                reject(new Error('Import geannuleerd door gebruiker'));
+                //reject(new Error('Import geannuleerd door gebruiker'));
             });
             buttonsGroup.appendChild(cancelBtn);
 

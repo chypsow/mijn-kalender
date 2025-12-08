@@ -112,7 +112,7 @@ body {
 .buttons-container {
     display: flex;
     flex-direction: column;
-    width: 13em;
+    width: 14em;
 }
 .btnGreen {
     font-family: serif;

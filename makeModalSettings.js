@@ -221,15 +221,7 @@ export const makeModalCustomize = () => {
         const isChecked2 = document.getElementById('checkbox2').checked;
         const isChecked3 = document.getElementById('checkbox3').checked;
         if (!isChecked1 && !isChecked2 && !isChecked3) return;
-        
-        const jsonGegevensOphalen = async () => {
-            const response = await fetch('config.json');
-            const text = await response.text();  
-            importLocalStorageItemsFromFile(null, true, text)
-        };
-        jsonGegevensOphalen().then(() => {
-            toggleModal(true);
-        });
+        // vervolgens de import functie aanroepen met de juiste parameters
     });
 };
 

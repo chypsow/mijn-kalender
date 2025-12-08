@@ -386,13 +386,12 @@ document.addEventListener("click", (event) => {
 document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.altKey && event.key === '0') {
         event.preventDefault();
-        importLocalStorageItemsFromFile(null, true, true)
+        importLocalStorageItemsFromFile({jsonBestand: true})
             .then(result => {
                 console.log('Import resultaat:', result);
                 gegevensLaden(); // herlaad de instellingen na import
                 generateCalendar(); // wordt altijd aan het einde uitgevoerd
-            })
-            .catch(err => console.error('Import fout:', err));
+            });
     }
 });
 
