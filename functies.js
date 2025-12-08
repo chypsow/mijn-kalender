@@ -147,9 +147,9 @@ export function handleClickBtn(e) {
             toggleModal(true);
             break;
         case 'import':
-            importLocalStorageItemsFromFile(null, true)
-                .then(result => {
-                    console.log('Import resultaat:', result);
+            importLocalStorageItemsFromFile(null, true, false)
+                .then(resultaat => {
+                    console.log('Import resultaat:', resultaat);
                     gegevensLaden(); // herlaad de instellingen na import
                     generateCalendar(); // wordt altijd aan het einde uitgevoerd
                 })
@@ -419,7 +419,7 @@ export function exportLocalStorageItemsToFile(pretty = false) {
     return true;
 }
 
-export function importLocalStorageItemsFromFile(file = null, overwrite = true) {
+export function importLocalStorageItemsFromFile(file = null, overwrite = true, jsonBestand = false) {
     return new Promise((resolve, reject) => {
         const readTextFromFile = (f) => {
             return new Promise((res, rej) => {
@@ -434,7 +434,7 @@ export function importLocalStorageItemsFromFile(file = null, overwrite = true) {
             DOM.overlay.innerHTML = ''; // clear previous content
             // title / info + checkbox
             const title = document.createElement('h2');
-            title.textContent = 'Gegevens importeren naar localStorage - Kies items';
+            title.textContent =  jsonBestand ? 'Eigen gegevens importeren van config.json naar localStorage :' :  'Gegevens importeren naar localStorage - Kies items';
             title.style.marginBottom = '18px';
             DOM.overlay.appendChild(title);
 
@@ -726,6 +726,17 @@ export function importLocalStorageItemsFromFile(file = null, overwrite = true) {
 
         if (file instanceof File) {
             readTextFromFile(file).then(handleText).catch(err => reject(err));
+            return;
+        }
+
+        if (jsonBestand) {
+            fetch('config.json')
+            .then(res => {
+                if (!res.ok) throw new Error('Fout bij ophalen van config.json');
+                return res.text();
+            })
+            .then(handleText)
+            .catch(err => reject(err));
             return;
         }
 

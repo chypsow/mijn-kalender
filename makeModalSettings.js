@@ -1,8 +1,7 @@
 import { DOM, generateCalendar, updateCalendar } from "./main.js";
-import { defaultSettings, toggleModal, saveToLocalStorage, updatePaginaInstLocalStorage, getSettingsFromLocalStorage, getArrayValues } from "./functies.js";
+import { defaultSettings, toggleModal, saveToLocalStorage, updatePaginaInstLocalStorage, getSettingsFromLocalStorage, getArrayValues, importLocalStorageItemsFromFile } from "./functies.js";
 import { maakPloegenLegende, activeBlad } from "./componentenMaken.js";
 import { generateTeamCalendar } from "./teamKalender.js";
-import { shiftData, dateData, dataVerlofdagen, dataBeginRecht} from "./config.js"
 
 // default settings
 export const ploegenGegevens = [
@@ -39,26 +38,6 @@ export function gegevensLaden() {
     startDatums = JSON.parse(localStorage.getItem("startDatums")) || startDates;
 };
 
-export function localStorageAanpassenVolgensConfigJS(cond1 = true, cond2 = true, cond3 = true) {
-    if(cond1) {
-        shiftPatroon = shiftData;
-        startDatums = dateData;
-        saveToLocalStorage('shiftPatroon', shiftData);
-        saveToLocalStorage('startDatums', dateData);
-        const lengte = startDatums.length;
-        Array.from({length:4}).forEach((_, i) => {
-            const instellingen = getSettingsFromLocalStorage(i, defaultSettings);
-            if(instellingen.selectedPloeg > lengte) updatePaginaInstLocalStorage('paginaInstellingen', defaultSettings, i, {ploeg:1});
-        }); 
-    }
-    if(cond2) saveToLocalStorage('beginrechtVerlof', dataBeginRecht);
-    if(cond3) saveToLocalStorage('verlofdagenPloeg1', dataVerlofdagen);
-
-    //location.reload(true); // of location.href = location.href;
-    if(DOM.modal.style.display !== 'none') toggleModal();
-    generateCalendar();
-};
-
 export function makeModalInstellingen(shiftPatroon, startDatums) {
     DOM.overlay.innerHTML = '';
     
@@ -70,12 +49,11 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     heading.classList.add('heading-modal');
     heading.textContent = 'Ploegschema aanpassen:';
     topHeader.appendChild(heading);
-    const customize = document.createElement('button');
-    customize.id = "customize";
-    customize.style.display = 'none';
-    customize.textContent = "Eigen voorkeuren ophalen";
-    customize.addEventListener('click', makeModalCustomize);
-    topHeader.appendChild(customize);
+    //const customize = document.createElement('button');
+    //customize.id = "customize";
+    //customize.textContent = "Eigen voorkeuren ophalen";
+    //customize.addEventListener('click', makeModalCustomize);
+    //topHeader.appendChild(customize);
     overlayContainer.appendChild(topHeader);
 
     const shiftPatroonContainer = document.createElement('div');
@@ -162,32 +140,49 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     shiftPatroonContainer.appendChild(ploegenContainer);
     overlayContainer.appendChild(shiftPatroonContainer);
 
-    const div = document.createElement('div');
-    div.classList.add('modal-button-container');
-    const button = document.createElement('button');
-    button.id = "btnOverlay";
-    button.textContent = "Opslaan";
-    button.addEventListener('click', ploegSysteemOpslaan);
-    div.appendChild(button);
-    
+    const divSpacer = document.createElement('div');
+    //divSpacer.classList.add('spacer-div');
+    divSpacer.style.display = 'flex';
+    divSpacer.style.justifyContent = 'space-between';
+    divSpacer.style.alignItems = 'center';
+    divSpacer.style.marginTop = '20px';
     const reset = document.createElement('button');
     reset.id = "reset";
     reset.textContent = "Standaardinstellingen terugzetten";
+    reset.style.background = '#0b63d0';
+    reset.style.color = '#fff';
     reset.addEventListener('click', resetDefaultSettings);
-    div.appendChild(reset);
-    overlayContainer.appendChild(div);
+    divSpacer.appendChild(reset);
+    const div = document.createElement('div');
+    div.style.display = 'flex';
+    div.style.gap = '10px';
+    //div.classList.add('modal-button-container');
+    const button1 = document.createElement('button');
+    button1.id = "btnCancel";
+    button1.textContent = "Annuleer";
+    button1.addEventListener('click', () => toggleModal());
+    div.appendChild(button1);
+    const button2 = document.createElement('button');
+    button2.style.background = '#0b63d0';
+    button2.style.color = '#fff';
+    button2.id = "btnOverlay";
+    button2.textContent = "Opslaan";
+    button2.addEventListener('click', ploegSysteemOpslaan);
+    div.appendChild(button2);
+    divSpacer.appendChild(div);
+    overlayContainer.appendChild(divSpacer);
     DOM.overlay.appendChild(overlayContainer);
 };
 
-const makeModalCustomize = () => {
+export const makeModalCustomize = () => {
     DOM.overlay.innerHTML = '';
     let html = `
         <div class="customize-container">
             <div class="checkbox-container">
-                <label><input type="checkbox" id="checkbox0">Alles ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+0}</span></label>
-                <label><input type="checkbox" id="checkbox1">Eigen ploegschema ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+1}</span></label>
-                <label><input type="checkbox" id="checkbox2">Eigen beginrechten ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+2}</span></label>
-                <label><input type="checkbox" id="checkbox3">Eigen ingeplande verlofdagen ophalen <span style="color:rgb(120,120,120);">{Ctrl+Alt+3}</span></label>
+                <label><input type="checkbox" id="checkbox0">Alles ophalen</label>
+                <label><input type="checkbox" id="checkbox1">Eigen ploegschema ophalen</label>
+                <label><input type="checkbox" id="checkbox2">Eigen beginrechten ophalen</label>
+                <label><input type="checkbox" id="checkbox3">Eigen ingeplande verlofdagen</label>
             </div>
         </div>
         <div class="customize-button-container">
@@ -196,18 +191,7 @@ const makeModalCustomize = () => {
         </div>
     `;
     DOM.overlay.innerHTML = html;
-    
-    document.getElementById('cancel-customize').addEventListener('click', () => {
-        makeModalInstellingen(shiftPatroon, startDatums);
-    });
-    document.getElementById('apply-customize').addEventListener('click', () => {
-        const isChecked1 = document.getElementById('checkbox1').checked;
-        const isChecked2 = document.getElementById('checkbox2').checked;
-        const isChecked3 = document.getElementById('checkbox3').checked;
-        if (!isChecked1 && !isChecked2 && !isChecked3) return;
-        //console.log(`checkbox1: ${isChecked1}, checkbox2: ${isChecked2}, checkbox3: ${isChecked3}`);
-        localStorageAanpassenVolgensConfigJS(isChecked1, isChecked2, isChecked3);
-    });
+
     const checkboxes = DOM.overlay.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
@@ -225,6 +209,26 @@ const makeModalCustomize = () => {
                     allCheckbox.checked = true;
                 }
             }
+        });
+    });
+
+    document.getElementById('cancel-customize').addEventListener('click', () => {
+        //makeModalInstellingen(shiftPatroon, startDatums);
+        toggleModal();
+    });
+    document.getElementById('apply-customize').addEventListener('click', () => {
+        const isChecked1 = document.getElementById('checkbox1').checked;
+        const isChecked2 = document.getElementById('checkbox2').checked;
+        const isChecked3 = document.getElementById('checkbox3').checked;
+        if (!isChecked1 && !isChecked2 && !isChecked3) return;
+        
+        const jsonGegevensOphalen = async () => {
+            const response = await fetch('config.json');
+            const text = await response.text();  
+            importLocalStorageItemsFromFile(null, true, text)
+        };
+        jsonGegevensOphalen().then(() => {
+            toggleModal(true);
         });
     });
 };

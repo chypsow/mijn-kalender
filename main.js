@@ -2,9 +2,9 @@ import { generateTeamCalendar, updateTeamCalendar } from './teamKalender.js';
 import { generateYearCalendar, updateYearCalendarGrid } from './jaarKalenderGrid.js';
 import { generateYearCalendarTable, updateYearCalendarTable, } from './jaarKalenderTable.js';
 import { generateMonthCalendar, updateMonthCalendar } from './maandKalender.js';
-import { toggleModal, defaultSettings, getSettingsFromLocalStorage, updatePaginaInstLocalStorage } from './functies.js';
+import { toggleModal, defaultSettings, getSettingsFromLocalStorage, updatePaginaInstLocalStorage, importLocalStorageItemsFromFile } from './functies.js';
 import { activeBlad, maakSideBar, maakPloegDropdown, maakKnoppen, maakPloegenLegende, maakDropdowns, maakVerlofContainer, maakVerlofLegende } from './componentenMaken.js';
-import { startDatums, localStorageAanpassenVolgensConfigJS } from './makeModalSettings.js';
+import { startDatums, gegevensLaden } from './makeModalSettings.js';
 
 // Variabels voor muis event listeners voor het selecteren van cellen
 let isSelecting = false;
@@ -23,6 +23,7 @@ export const DOM = {
     topNav: document.getElementById("top-nav"),
     container: document.getElementById('calendar-container'),
     buttonContainer: document.getElementById('buttons-container'),
+
     middenSectie2: document.getElementById('midden-sectie2'),
     topSectie3: document.getElementById('top-sectie3'),
     ploeg: document.getElementById('ploeg'),
@@ -383,30 +384,15 @@ document.addEventListener("click", (event) => {
 
 //local storage aanpassen volgens het bestand config.js
 document.addEventListener('keydown', (event) => {
-    if (event.ctrlKey && event.altKey) {
-        let cond1 = false, cond2 = false, cond3 = false;
-        let message = "";
-
-        if (event.key === "1") {
-            cond1 = true;
-            message = "Alleen shiftPatroon en datums worden aangepast volgens configCommon.js. Weet je zeker dat je dit wilt doen?";
-        } else if (event.key === "2") {
-            cond2 = true;
-            message = `Alleen beginrecht verlof wordt aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
-        } else if (event.key === "3") {
-            cond3 = true;
-            message = `Alleen verlofdagen van ploeg 1 worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
-        } else if (event.key === "0") {
-            cond1 = cond2 = cond3 = true;
-            message = `Alle instellingen worden aangepast volgens config.js. Weet je zeker dat je dit wilt doen?`;
-        } else {
-            return;
-        }
-
+    if (event.ctrlKey && event.altKey && event.key === '0') {
         event.preventDefault();
-        const userResponse = confirm(message);
-        if (!userResponse) return;
-        localStorageAanpassenVolgensConfigJS(cond1, cond2, cond3);
+        importLocalStorageItemsFromFile(null, true, true)
+            .then(result => {
+                console.log('Import resultaat:', result);
+                gegevensLaden(); // herlaad de instellingen na import
+                generateCalendar(); // wordt altijd aan het einde uitgevoerd
+            })
+            .catch(err => console.error('Import fout:', err));
     }
 });
 
