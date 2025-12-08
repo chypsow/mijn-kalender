@@ -1,6 +1,8 @@
 import { DOM, getAllValidCells } from "./main.js";
 import { activeBlad } from "./componentenMaken.js";
-import { defaultSettings, toggleModal, getSettingsFromLocalStorage, updateBeginrechtVerlofLocalStorage, getBeginRechtFromLocalStorage, calculateTotals, saveToLocalStorage } from "./functies.js";
+import {
+    defaultSettings, toggleModal, getSettingsFromLocalStorage, updateBeginrechtVerlofLocalStorage, getBeginRechtFromLocalStorage, calculateTotals, saveToLocalStorage
+} from "./functies.js";
 import { ploegenGegevens } from "./makeModalSettings.js";
 
 export function getOpgenomenVerlofPerPloeg(ploeg) {
