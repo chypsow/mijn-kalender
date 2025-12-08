@@ -400,7 +400,7 @@ export function exportLocalStorageItemsToFile(pretty = false) {
         });
 
         const content = prettyCheckbox.checked ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
-        const name = `LocalStorage-items ploeg${selectedPloeg} ${new Date().toISOString().slice(0,10)}.txt`
+        const name = `LocalStorage-items ploeg${selectedPloeg}.txt`     // ${new Date().toISOString().slice(0,10)}
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
 
