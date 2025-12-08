@@ -143,7 +143,7 @@ export function handleClickBtn(e) {
             toggleModal(true);
             break;
         case 'export':
-            exportLocalStorageItemsToFile(false);
+            exportLocalStorageItemsToFile();
             toggleModal(true);
             break;
         case 'import':
@@ -293,12 +293,11 @@ export function exportLocalStorageItemsToFile(pretty = false) {
     prettyLabel.style.gap = '8px';
     const prettyCheckbox = document.createElement('input');
     prettyCheckbox.type = 'checkbox';
-    prettyCheckbox.checked = pretty; 
+    prettyCheckbox.checked = !!pretty; // om zeker te zijn dat de waarde een boolean is
     prettyLabel.appendChild(prettyCheckbox);
     const prettyText = document.createElement('span');
     prettyText.textContent = 'leesbaar formaat';
     prettyText.style.fontWeight = 'bold';
-    //prettyText.style.color = '#0b56b3ff';
     prettyLabel.appendChild(prettyText);
     topHeader.appendChild(prettyLabel);
     DOM.overlay.appendChild(topHeader);
@@ -497,7 +496,7 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
                 toggle.style.cursor = 'pointer';
                 toggle.style.fontFamily = 'monospace';
                 toggle.style.fontSize = '13px';
-                toggle.style.padding = '0';
+                toggle.style.padding = '5px 8px';
                 toggle.style.color = '#0b63d0';
                 summary.appendChild(toggle);
 
@@ -511,7 +510,7 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
 
                 const content = document.createElement('div');
                 content.style.marginLeft = `${indent + 12}px`;
-                content.style.borderLeft = '1px dotted #ddd';
+                content.style.borderLeft = '1px dotted #a3a3a3ff';
                 content.style.paddingLeft = '8px';
                 content.style.display = 'none';
                 content.style.gap = '6px';
@@ -619,7 +618,7 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
                 });
 
                 // render pretty object layout
-                renderNode(value, previewWrap, 0);
+                renderNode(value, previewWrap, 3);
 
                 listContainer.appendChild(item);
                 listItems.push({ key, checkbox: cb, value });
