@@ -1047,20 +1047,24 @@
         "soort": "BF"
       },
       {
+        "datum": "9/3/2026",
+        "soort": "ADV"
+      },
+      {
         "datum": "10/3/2026",
-        "soort": "BV"
+        "soort": "ADV"
       },
       {
         "datum": "11/3/2026",
-        "soort": "BV"
+        "soort": "ADV"
       },
       {
         "datum": "14/3/2026",
-        "soort": "ADV"
+        "soort": "BV"
       },
       {
         "datum": "15/3/2026",
-        "soort": "ADV"
+        "soort": "BV"
       },
       {
         "datum": "19/3/2026",
@@ -1116,11 +1120,11 @@
       },
       {
         "datum": "28/5/2026",
-        "soort": "BV"
+        "soort": "BF"
       },
       {
         "datum": "29/5/2026",
-        "soort": "BF"
+        "soort": "ADV"
       },
       {
         "datum": "2/7/2026",
@@ -1167,40 +1171,36 @@
         "soort": "BF"
       },
       {
+        "datum": "12/2/2026",
+        "soort": "BV"
+      },
+      {
         "datum": "8/1/2026",
-        "soort": "BF"
+        "soort": "BV"
       },
       {
         "datum": "9/1/2026",
-        "soort": "BV"
+        "soort": "BF"
       },
       {
-        "datum": "13/2/2026",
-        "soort": "BV"
-      },
-      {
-        "datum": "6/8/2026",
-        "soort": "BV"
-      },
-      {
-        "datum": "10/9/2026",
-        "soort": "ADV"
-      },
-      {
-        "datum": "9/3/2026",
-        "soort": "ADV"
-      },
-      {
-        "datum": "12/2/2026",
-        "soort": "AV"
+        "datum": "26/1/2026",
+        "soort": "OPL"
       },
       {
         "datum": "27/1/2026",
         "soort": "x"
       },
       {
-        "datum": "26/1/2026",
-        "soort": "OPL"
+        "datum": "13/2/2026",
+        "soort": "AV"
+      },
+      {
+        "datum": "10/9/2026",
+        "soort": "BV"
+      },
+      {
+        "datum": "6/8/2026",
+        "soort": "BV"
       }
     ]
   }
