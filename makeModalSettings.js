@@ -163,8 +163,9 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     button1.addEventListener('click', () => toggleModal());
     div.appendChild(button1);
     const button2 = document.createElement('button');
-    button2.style.background = '#0b63d0';
-    button2.style.color = '#fff';
+    button2.classList.add('print-modal-button');
+    //button2.style.background = '#0b63d0';
+    //button2.style.color = '#fff';
     button2.id = "btnOverlay";
     button2.textContent = "Opslaan";
     button2.addEventListener('click', ploegSysteemOpslaan);

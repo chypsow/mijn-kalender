@@ -377,8 +377,9 @@ export function exportLocalStorageItemsToFile(pretty = false) {
     const exportBtn = document.createElement('button');
     exportBtn.type = 'button';
     exportBtn.textContent = 'Exporteer geselecteerd';
-    exportBtn.style.background = '#0b63d0';
-    exportBtn.style.color = '#fff';
+    exportBtn.classList.add('print-modal-button');
+    //exportBtn.style.background = '#0b63d0';
+    //exportBtn.style.color = '#fff';
     exportBtn.addEventListener('click', () => {
         const selectedKeys = Object.entries(checkboxes)
             .filter(([_, cb]) => cb.checked)
@@ -673,8 +674,9 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
             const importBtn = document.createElement('button');
             importBtn.type = 'button';
             importBtn.textContent = 'Importeer geselecteerd';
-            importBtn.style.background = '#0b63d0';
-            importBtn.style.color = '#fff';
+            importBtn.classList.add('print-modal-button');
+            //importBtn.style.background = '#0b63d0';
+            //importBtn.style.color = '#fff';
             importBtn.addEventListener('click', () => {
                 const selected = listItems.filter(i => i.checkbox.checked);
                 if (selected.length === 0) {

@@ -1,5 +1,5 @@
 import { DOM } from "./main.js";
-import { getSettingsFromLocalStorage, modalAfdrukken } from "./functies.js";
+import { getSettingsFromLocalStorage, modalAfdrukken, toggleModal } from "./functies.js";
 
 export function makeModalFeestdagen(tab, setting) {
     DOM.overlay.innerHTML = '';
@@ -17,12 +17,16 @@ export function makeModalFeestdagen(tab, setting) {
             <button class="volgend no-print"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
         </div>
         <ul class="feestdagen"></ul>
-        <button class="print-modal-button">Afdrukken</button>
+        <div class="modal-footer">
+            <button class="close-modal-button no-print">Sluiten</button>
+            <button class="print-modal-button no-print">Afdrukken</button>
+        </div>
     `;
     DOM.overlay.innerHTML += html;
-    const printButton = document.querySelector(".print-modal-button");
+    const printButton = DOM.overlay.querySelector(".print-modal-button");
     printButton.addEventListener("click", modalAfdrukken);
-    printButton.classList.add('no-print');
+    const closeButton = DOM.overlay.querySelector('.close-modal-button');
+    closeButton.onclick = () => toggleModal(false);
 
     const lijst = DOM.overlay.querySelector('.feestdagen');
     const updateFeestdagen = (newYear) => {

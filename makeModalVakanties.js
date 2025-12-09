@@ -1,5 +1,5 @@
 import { DOM } from "./main.js";
-import { getSettingsFromLocalStorage, modalAfdrukken } from "./functies.js";
+import { getSettingsFromLocalStorage, modalAfdrukken, toggleModal } from "./functies.js";
 import { berekenPaasdatum, formatter } from "./makeModalHolidays.js";
 
 export function makeModalVakanties(tab, setting) {
@@ -21,12 +21,16 @@ export function makeModalVakanties(tab, setting) {
         
         <table class="vakanties"></table>
         <table class="andereInfo"></table>
-        <button class="print-modal-button">Afdrukken</button>
+        <div class="modal-footer">
+            <button class="close-modal-button no-print">Sluiten</button>
+            <button class="print-modal-button no-print">Afdrukken</button>
+        </div>
     `;
     DOM.overlay.innerHTML += html;
-    const printButton = document.querySelector(".print-modal-button");
+    const closeButton = DOM.overlay.querySelector('.close-modal-button');
+    closeButton.onclick = () => toggleModal(false);
+    const printButton = DOM.overlay.querySelector(".print-modal-button");
     printButton.addEventListener("click", modalAfdrukken);
-    printButton.classList.add('no-print');
 
     const lijst1 = DOM.overlay.querySelector('.vakanties');
     const lijst2 = DOM.overlay.querySelector('.andereInfo');

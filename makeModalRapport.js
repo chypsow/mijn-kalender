@@ -1,5 +1,5 @@
 import { DOM, getAllValidCells } from "./main.js";
-import { getSettingsFromLocalStorage, modalAfdrukken } from "./functies.js";
+import { getSettingsFromLocalStorage, modalAfdrukken, toggleModal } from "./functies.js";
 
 export function makeModalRapport(activePage, defaultSet) {
     const instellingen = getSettingsFromLocalStorage(activePage, defaultSet);
@@ -70,12 +70,18 @@ export function makeModalRapport(activePage, defaultSet) {
             <div class="rapport-footer">
                 <p><em>Dit rapport is gegenereerd op ${new Date().toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}.</em></p>
             </div>
-             
-        <button class="print-modal-button no-print">Afdrukken</button>
+        <div class="modal-footer">
+            <button class="close-modal-button no-print">Sluiten</button>     
+            <button class="print-modal-button no-print">Afdrukken</button>
+        </div>
     `;
     DOM.overlay.innerHTML = html;
     setTimeout(() => {
-        const printButton = document.querySelector(".print-modal-button");
+        const closeButton = DOM.overlay.querySelector(".close-modal-button");
+        const printButton = DOM.overlay.querySelector(".print-modal-button");
+        if (closeButton) {
+        closeButton.addEventListener("click", () => toggleModal(false));
+        }
         if (printButton) {
         printButton.addEventListener("click", modalAfdrukken);
         }
