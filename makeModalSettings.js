@@ -149,8 +149,8 @@ export function makeModalInstellingen(shiftPatroon, startDatums) {
     const reset = document.createElement('button');
     reset.id = "reset";
     reset.textContent = "Standaardinstellingen terugzetten";
-    reset.style.background = '#0b63d0';
-    reset.style.color = '#fff';
+    //reset.style.background = '#0b63d0';
+    //reset.style.color = '#fff';
     reset.addEventListener('click', resetDefaultSettings);
     divSpacer.appendChild(reset);
     const div = document.createElement('div');

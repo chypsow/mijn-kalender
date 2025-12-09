@@ -469,14 +469,16 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
             const listItems = [];
 
             // helper: render value in object-tree style
-            const renderNode = (value, container, level = 0) => {
-                const indent = 12 * level;
+            const renderNode = (value, container) => {
+                //const indent = 12 * level;
                 if (value === null || typeof value !== 'object') {
                     const span = document.createElement('div');
                     span.textContent = String(value);
                     span.style.fontFamily = 'monospace';
+                    span.style.fontWeight = 'bold';
+                    span.style.alignSelf = 'center';
                     span.style.fontSize = '13px';
-                    span.style.marginLeft = `${indent}px`;
+                    //span.style.marginLeft = `${indent}px`;
                     container.appendChild(span);
                     return;
                 }
@@ -486,7 +488,7 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
                 summary.style.display = 'flex';
                 summary.style.alignItems = 'center';
                 summary.style.gap = '8px';
-                summary.style.marginLeft = `${indent}px`;
+                //summary.style.marginLeft = `${indent}px`;
 
                 const toggle = document.createElement('button');
                 toggle.type = 'button';
@@ -496,7 +498,7 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
                 toggle.style.cursor = 'pointer';
                 toggle.style.fontFamily = 'monospace';
                 toggle.style.fontSize = '13px';
-                toggle.style.padding = '5px 8px';
+                toggle.style.padding = '0';
                 toggle.style.color = '#0b63d0';
                 summary.appendChild(toggle);
 
@@ -504,12 +506,15 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
                 label.textContent = isArray ? 'Array' : 'Object';
                 label.style.fontFamily = 'monospace';
                 label.style.fontSize = '13px';
+                label.style.fontWeight = '600';
+                label.style.opacity = '0.7';
                 summary.appendChild(label);
 
                 container.appendChild(summary);
 
                 const content = document.createElement('div');
-                content.style.marginLeft = `${indent + 12}px`;
+                //content.style.marginLeft = `${indent + 12}px`;
+                content.style.marginLeft = '12px';
                 content.style.borderLeft = '1px dotted #a3a3a3ff';
                 content.style.paddingLeft = '8px';
                 content.style.display = 'none';
@@ -533,11 +538,12 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
                         idx.style.opacity = '0.7';
                         idx.style.minWidth = '28px';
                         idx.style.fontFamily = 'monospace';
+                        idx.style.fontSize = '15px';    //added
                         row.appendChild(idx);
                         const valWrap = document.createElement('div');
                         row.appendChild(valWrap);
                         content.appendChild(row);
-                        renderNode(v, valWrap, level + 1);
+                        renderNode(v, valWrap);
                     });
                 } else {
                     Object.entries(value).forEach(([k, v]) => {
@@ -548,14 +554,16 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
                         const keyDiv = document.createElement('div');
                         keyDiv.textContent = `${k}:`;
                         keyDiv.style.fontWeight = '600';
-                        keyDiv.style.minWidth = '120px';
-                        keyDiv.style.opacity = '0.85';
+                        keyDiv.style.minWidth = '80px'; //120
+                        //keyDiv.style.opacity = '0.85';
+                        keyDiv.style.color = '#0b63d0';
                         keyDiv.style.fontFamily = 'monospace';
+                        keyDiv.style.fontSize = '13px';
                         row.appendChild(keyDiv);
                         const valWrap = document.createElement('div');
                         row.appendChild(valWrap);
                         content.appendChild(row);
-                        renderNode(v, valWrap, level + 1);
+                        renderNode(v, valWrap);
                     });
                 }
             };
@@ -608,6 +616,7 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
 
                 const previewWrap = document.createElement('div');
                 previewWrap.style.marginTop = '8px';
+                previewWrap.style.marginLeft = '12px';
                 previewWrap.style.display = 'none';
                 item.appendChild(previewWrap);
 
@@ -618,7 +627,7 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
                 });
 
                 // render pretty object layout
-                renderNode(value, previewWrap, 3);
+                renderNode(value, previewWrap);
 
                 listContainer.appendChild(item);
                 listItems.push({ key, checkbox: cb, value });
