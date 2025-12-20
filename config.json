@@ -1059,22 +1059,6 @@
         "soort": "BV"
       },
       {
-        "datum": "14/3/2026",
-        "soort": "ADV"
-      },
-      {
-        "datum": "15/3/2026",
-        "soort": "ADV"
-      },
-      {
-        "datum": "19/3/2026",
-        "soort": "ADV"
-      },
-      {
-        "datum": "20/3/2026",
-        "soort": "ADV"
-      },
-      {
         "datum": "12/8/2026",
         "soort": "BV"
       },
@@ -1201,6 +1185,22 @@
       {
         "datum": "6/8/2026",
         "soort": "BV"
+      },
+      {
+        "datum": "3/3/2026",
+        "soort": "ADV"
+      },
+      {
+        "datum": "7/4/2026",
+        "soort": "ADV"
+      },
+      {
+        "datum": "8/12/2026",
+        "soort": "ADV"
+      },
+      {
+        "datum": "3/11/2026",
+        "soort": "ADV"
       }
     ]
   }

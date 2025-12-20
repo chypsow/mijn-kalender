@@ -77,7 +77,7 @@ async function writeJsonFile(filePath, obj) {
 async function main() {
     const args = parseArgs(process.argv);
     // standaardbestand (Windows-pad). Pas aan indien gewenst.
-    const defaultSource = 'C:\\Users\\chyps\\OneDrive\\Attachments\\Instellingen mijn kalender\\LocalStorage-items Ploeg1.txt';
+    const defaultSource = 'C:\\Users\\chyps\\OneDrive\\Attachments\\Instellingen mijn kalender\\Downloaded-items Ploeg1.txt';
 
     if (args.help) {
         usage();
