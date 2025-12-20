@@ -144,7 +144,6 @@ export function handleClickBtn(e) {
             break;
         case 'export':
             exportLocalStorageItemsToFile();
-            toggleModal(true);
             break;
         case 'import':
             importLocalStorageItemsFromFile()
@@ -270,9 +269,10 @@ export function exportLocalStorageItemsToFile(pretty = false) {
     // haal geselecteerde ploeg uit de instellingen en bepaal de key
     const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const selectedPloeg = setting?.selectedPloeg ?? 1;
-    const keys = ['beginrechtVerlof','shiftPatroon','startDatums','verlofdagenPloeg1','verlofdagenPloeg2','verlofdagenPloeg3','verlofdagenPloeg4','verlofdagenPloeg5'];
-    // Check welke items aanwezig zijn
+    const keys = ['beginrechtVerlof', 'verlofdagenPloeg1', 'verlofdagenPloeg2', 'verlofdagenPloeg3', 'verlofdagenPloeg4', 'verlofdagenPloeg5'];
+    // Check welke items aanwezig zijn; zorg dat shiftPatroon en startDatums altijd beschikbaar zijn
     const availableItems = keys.filter(key => localStorage.getItem(key) !== null);
+    //['shiftPatroon','startDatums'].forEach(k => { if (!availableItems.includes(k)) availableItems.push(k); });
     
     if (availableItems.length === 0) {
         alert('Geen items beschikbaar om te exporteren.');
@@ -378,8 +378,6 @@ export function exportLocalStorageItemsToFile(pretty = false) {
     exportBtn.type = 'button';
     exportBtn.textContent = 'Exporteer geselecteerd';
     exportBtn.classList.add('print-modal-button');
-    //exportBtn.style.background = '#0b63d0';
-    //exportBtn.style.color = '#fff';
     exportBtn.addEventListener('click', () => {
         const selectedKeys = Object.entries(checkboxes)
             .filter(([_, cb]) => cb.checked)
@@ -399,9 +397,11 @@ export function exportLocalStorageItemsToFile(pretty = false) {
                 payload[key] = raw;
             }
         });
+        payload['shiftPatroon'] = shiftPatroon;
+        payload['startDatums'] = startDatums;
 
         const content = prettyCheckbox.checked ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
-        const name = `LocalStorage-items ploeg${selectedPloeg}.txt`     // ${new Date().toISOString().slice(0,10)}
+        const name = `Downloaded-items ploeg${selectedPloeg}.txt`     // ${new Date().toISOString().slice(0,10)}
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
 
@@ -415,6 +415,7 @@ export function exportLocalStorageItemsToFile(pretty = false) {
         toggleModal(false);
     });
     actions.appendChild(exportBtn);
+    toggleModal(true);
 }
 
 export function importLocalStorageItemsFromFile({ file = null, overwrite = true, jsonBestand = false } = {}) {
@@ -430,14 +431,28 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
 
         const makeModalChooser = (payloadObj, initialOverwrite) => {
             DOM.overlay.innerHTML = ''; // clear previous content
+            
+            // Scheid de vaste items (shiftPatroon, startDatums) van de rest
+            const fixedKeys = ['shiftPatroon', 'startDatums'];
+            const fixedPayload = {};
+            const visiblePayload = {};
+            
+            Object.entries(payloadObj).forEach(([key, value]) => {
+                if (fixedKeys.includes(key)) {
+                    fixedPayload[key] = value;
+                } else {
+                    visiblePayload[key] = value;
+                }
+            });
+            
             // title / info + checkbox
             const title = document.createElement('h2');
-            title.textContent =  jsonBestand ? 'Gegevens importeren van config.json naar localStorage:' :  'Gegevens importeren naar localStorage - Kies items';
+            title.textContent =  jsonBestand ? 'Gegevens importeren van config.json naar localStorage:' :  'Gegevens importeren naar mijn ploegrooster - Kies items';
             title.style.marginBottom = '18px';
             DOM.overlay.appendChild(title);
 
             const info = document.createElement('p');
-            info.textContent = 'Kies welke keys je wilt importeren. Klik op een sleutel om de inhoud te tonen/verbergen.';
+            info.innerHTML = `Kies welke keys je wilt importeren. Klik op een sleutel om de inhoud te tonen/verbergen.<br><span style="font-style: italic; font-size: 14px">(shiftPatroon en startDatums worden automatisch meegevoerd)</span>`;
             info.style.margin = '0 0 12px 0';
             DOM.overlay.appendChild(info);
             
@@ -570,7 +585,7 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
             };
 
             // populate list
-            Object.entries(payloadObj).forEach(([key, value]) => {
+            Object.entries(visiblePayload).forEach(([key, value]) => {
                 const item = document.createElement('div');
                 item.style.border = '1px solid #eee';
                 item.style.borderRadius = '6px';
@@ -675,14 +690,18 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
             importBtn.type = 'button';
             importBtn.textContent = 'Importeer geselecteerd';
             importBtn.classList.add('print-modal-button');
-            //importBtn.style.background = '#0b63d0';
-            //importBtn.style.color = '#fff';
             importBtn.addEventListener('click', () => {
                 const selected = listItems.filter(i => i.checkbox.checked);
+                
                 if (selected.length === 0) {
                     alert('Selecteer minstens één item om te importeren.');
                     return;
                 }
+                
+                // Voeg altijd de vaste items toe
+                Object.entries(fixedPayload).forEach(([key, value]) => {
+                    selected.push({ key, checkbox: { checked: true }, value });
+                });
                 const result = { written: [], removed: [], skipped: [] };
                 const doOverwrite = overwriteCheckbox.checked;
 
@@ -692,7 +711,10 @@ export function importLocalStorageItemsFromFile({ file = null, overwrite = true,
                         result.removed.push(key);
                         return;
                     }
-                    if (!doOverwrite && localStorage.getItem(key) !== null) {
+                    // Vaste items worden altijd overschreven
+                    const isFixed = fixedKeys.includes(key);
+                    
+                    if (!isFixed && !doOverwrite && localStorage.getItem(key) !== null) {
                         result.skipped.push(key);
                         return;
                     }

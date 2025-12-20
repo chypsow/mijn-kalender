@@ -1,5 +1,5 @@
-import { DOM, generateCalendar, updateCalendar } from "./main.js";
-import { defaultSettings, toggleModal, saveToLocalStorage, updatePaginaInstLocalStorage, getSettingsFromLocalStorage, getArrayValues, importLocalStorageItemsFromFile } from "./functies.js";
+import { DOM, updateCalendar } from "./main.js";
+import { defaultSettings, toggleModal, saveToLocalStorage, updatePaginaInstLocalStorage, getSettingsFromLocalStorage, getArrayValues } from "./functies.js";
 import { maakPloegenLegende, activeBlad } from "./componentenMaken.js";
 import { generateTeamCalendar } from "./teamKalender.js";
 
