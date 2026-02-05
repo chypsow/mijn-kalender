@@ -146,6 +146,17 @@ export function handleClickBtn(e) {
             exportLocalStorageItemsToFile();
             break;
         case 'import':
+            //ask user from where to import jsonBestand = true (config.json) or file
+            const importChoice = confirm('Wil je de gegevens importeren vanuit het bestand "config.json"? Klik op "Annuleer" om een lokaal bestand te kiezen.');
+            if (importChoice) {
+                importLocalStorageItemsFromFile({ jsonBestand: true })
+                .then(resultaat => {
+                    console.log('Import resultaat:', resultaat);
+                    gegevensLaden();
+                    generateCalendar(); // wordt altijd aan het einde uitgevoerd
+                });
+                return;
+            }
             importLocalStorageItemsFromFile()
                 .then(resultaat => {
                     console.log('Import resultaat:', resultaat);
