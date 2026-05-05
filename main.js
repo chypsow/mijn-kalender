@@ -109,6 +109,7 @@ function refreshCalendar() {
     void DOM.calendar.offsetWidth; // Forceer een reflow (truc om animatie te resetten)
     DOM.calendar.classList.add("fade-animation");
 };
+
 export const updateCalendar = (makeDropdown = false) => {
     const setting = getSettingsFromLocalStorage(activeBlad, defaultSettings);
     const selectedPloeg = setting.selectedPloeg;
