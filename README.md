@@ -1,32 +1,32 @@
 # Mijn Kalender
-Een handige online kalender waarmee je ploegenschema's kunt beheren. Het ondersteunt verschillende weergaven zoals een maandkalender, jaarkalender en teamschema.
+A handy online calendar for managing shift schedules. It supports various views, such as a monthly calendar, yearly calendar, and team schedule.
 
-## Functionaliteiten
-- **Ploegenschema beheren:** Voeg ploegenschema's toe en pas ze aan.
-- **Maand- en jaarweergaven:** Bekijk je ploegenschema's op maand- of jaarniveau.
-- **Verlofdagen beheren:** Voeg verlofdagen toe en krijg een overzicht van de verdeling gedurende het jaar.
-- **Wettelijke feestdagen bekijken:** Raadpleeg wettelijke feestdagen van het huidige of andere jaren.
-- **Schoolvakanties raadplegen:** Bekijk schoolvakanties van het huidige of andere jaren.
-- **Rapport genereren:** Maak een rapport van gewerkte dagen en rustdagen gedurende het jaar.
+## Features
+- **Manage shift schedules:** Add and adjust shift schedules.
+- **Monthly and yearly views:** View your shift schedules at monthly or yearly level.
+- **Manage vacation days:** Add vacation days and get an overview of their distribution throughout the year.
+- **View public holidays:** Consult public holidays for the current year or other years in Belgium.
+- **Check school holidays:** View school holidays for the current year or other years in Belgium.
+- **Generate reports:** Create a report of working days and rest days throughout the year.
 
-## Live Versie
-Je kunt de kalender bekijken en gebruiken via deze link: [Mijn Kalender](https://chypsow.github.io/mijn-kalender).
+## Live Version
+You can view and use the calendar via this link: [Mijn Kalender](https://chypsow.github.io/mijn-kalender).
 
-## Installatie
-1. Clone deze repository:
+## Installation
+1. Clone this repository:
    git clone https://github.com/chypsow/mijn-kalender.git
 
-## Gebruik
-1. Selecteer een ploegnummer in de dropdown-menu.
-2. Blader door de kalender met de knoppen **Vorige** en **Volgende**.
-3. Gebruik het modalvenster om ploegenschema's te bewerken en op te slaan.
-4. Gebruik het modalvenster om wetteleijke feestdagen te bekijken.
-5. Gebruik het modalvenster om schoolvakanties te bekijken.
-6. Gebruik het modalvenster om rapport te maken.
-7. Data wordt opgeslagen in je browser (localStorage).
+## Usage
+1. Select a shift number from the dropdown menu.
+2. Navigate through the calendar using the **Previous** and **Next** buttons.
+3. Use the modal window to edit and save shift schedules.
+4. Use the modal window to view public holidays.
+5. Use the modal window to view school holidays.
+6. Use the modal window to generate a report.
+7. Data is stored in your browser (localStorage).
 
-## Gebruikte Technologieën
-- **HTML5**: Voor de structuur van de pagina.
-- **CSS3**: Voor styling.
-- **JavaScript (ES6)**: Voor de interacties en functionaliteiten.
-- **GitHub Pages**: Voor het hosten van de website.
+## Technologies Used
+- **HTML5**: For the structure of the page.
+- **CSS3**: For styling.
+- **JavaScript (ES6)**: For interactions and functionality.
+- **GitHub Pages**: For hosting the website.
