@@ -18,7 +18,7 @@ export function makeModalFeestdagen(tab, setting) {
         </div>
         <ul class="feestdagen"></ul>
         <div class="modal-footer">
-            <button class="close-modal-button no-print">Sluiten</button>
+            <button class="close-modal-button no-print">Afsluiten</button>
             <button class="print-modal-button no-print">Afdrukken</button>
         </div>
     `;

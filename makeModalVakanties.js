@@ -22,7 +22,7 @@ export function makeModalVakanties(tab, setting) {
         <table class="vakanties"></table>
         <table class="andereInfo"></table>
         <div class="modal-footer">
-            <button class="close-modal-button no-print">Sluiten</button>
+            <button class="close-modal-button no-print">Afsluiten</button>
             <button class="print-modal-button no-print">Afdrukken</button>
         </div>
     `;

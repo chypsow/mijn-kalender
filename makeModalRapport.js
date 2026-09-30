@@ -71,7 +71,7 @@ export function makeModalRapport(activePage, defaultSet) {
                 <p><em>Dit rapport is gegenereerd op ${new Date().toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}.</em></p>
             </div>
         <div class="modal-footer">
-            <button class="close-modal-button no-print">Sluiten</button>     
+            <button class="close-modal-button no-print">Afsluiten</button>     
             <button class="print-modal-button no-print">Afdrukken</button>
         </div>
     `;
